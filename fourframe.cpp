@@ -1,0 +1,63 @@
+#include "fourframe.h"
+
+FourFrame::FourFrame()
+{
+
+}
+
+FourFrame::FourFrame(Vector3D r01, Vector3D r11, Vector3D r21, Vector3D r31, double eps)
+{
+    vortons.resize(4);
+    anglesNum=4;
+    vortons[0]=Vorton((r01+r31)*0.5,r01,0,eps);
+    vortons[1]=Vorton((r01+r11)*0.5,r11,0,eps);
+    vortons[2]=Vorton((r11+r21)*0.5,r21,0,eps);
+    vortons[3]=Vorton((r21+r31)*0.5,r31,0,eps);
+    center=0.5*(vortons[0].getTail()+vortons[2].getTail());
+}
+
+Vector3D FourFrame::q(const Vector3D& point) const
+{
+    return (vortons[0].q(point)+vortons[1].q(point)+vortons[2].q(point)+vortons[3].q(point));
+}
+
+Vector3D FourFrame::qHelp(const Vector3D& point) const
+{
+    return (vortons[0].qHelp(point)+vortons[1].qHelp(point)+vortons[2].qHelp(point)+vortons[3].qHelp(point));
+}
+
+Vector3D FourFrame::velocity(const Vector3D& point) const
+{
+    return (vortons[0].velocity(point)+vortons[1].velocity(point)+vortons[2].velocity(point)+vortons[3].velocity(point));
+}
+
+void FourFrame::setVorticity(const double _vorticity)
+{
+    vorticity=_vorticity;
+    for (int i=0; i<4; i++)
+        vortons[i].setVorticity(_vorticity);
+}
+
+VelBsym FourFrame::VelAndBsym(const Vector3D& point) const
+{
+    VelBsym res (Vector3D(0,0,0),0,0,0,0,0,0,0,0,0);
+    for (int i=0; i<4; i++)
+        res=res+vortons[i].velAndBsym(point);
+    return res;
+}
+
+double FourFrame::solidAngleFrame(const Vector3D& point) const
+{
+    return (solidAngle(vortons[0].getTail(),vortons[1].getTail(),vortons[2].getTail(),point)
+            +solidAngle(vortons[0].getTail(),vortons[2].getTail(), vortons[3].getTail(),point));
+}
+
+QVector<Vorton> FourFrame::getVortons() const
+{
+    return vortons;
+}
+
+
+
+
+

@@ -1,0 +1,48 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file>icons/cancel-64.jpg</file>
+        <file>icons/save-64.jpg</file>
+        <file>icons/save-as-64.jpg</file>
+        <file>icons/screenshot-64.jpg</file>
+        <file>icons/zoom-in-64.jpg</file>
+        <file>icons/zoom-out-64.jpg</file>
+        <file>icons/check.jpg</file>
+        <file>icons/clear_black_54x54.jpg</file>
+        <file>icons/check-mark-6-64.jpg</file>
+        <file>icons/copy-64.jpg</file>
+        <file>icons/edit-property-64.jpg</file>
+        <file>icons/end-64.jpg</file>
+        <file>icons/lock-7-64.jpg</file>
+        <file>icons/lock-unlocked-64.jpg</file>
+        <file>icons/media-skip-backward-64.jpg</file>
+        <file>icons/media-skip-forward-64.jpg</file>
+        <file>icons/pause-64.jpg</file>
+        <file>icons/play-6-64.jpg</file>
+        <file>icons/skip-to-start-64.jpg</file>
+    </qresource>
+    <qresource prefix="/icons/grid">
+        <file>icons/grid_CE.png</file>
+        <file>icons/grid_CG.png</file>
+        <file>icons/grid_CN.png</file>
+        <file>icons/grid_LE.png</file>
+        <file>icons/grid_LG.png</file>
+        <file>icons/grid_LN.png</file>
+        <file>icons/grid_N.png</file>
+        <file>icons/grid_NE.png</file>
+        <file>icons/grid_NG.png</file>
+    </qresource>
+    <qresource prefix="/shaders">
+        <file>shaders/shaderBorder.fsh</file>
+        <file>shaders/shaderFace.fsh</file>
+        <file>shaders/shaderFace.vsh</file>
+        <file>shaders/shaderShadow.fsh</file>
+        <file>shaders/shaderShadow.vsh</file>
+        <file>shaders/shaderTexture.fsh</file>
+        <file>shaders/shaderTexture.vsh</file>
+        <file>shaders/shaderBorder.vsh</file>
+        <file>shaders/shaderLine.fsh</file>
+        <file>shaders/shaderLine.vsh</file>
+        <file>shaders/shaderDepthTexture.fsh</file>
+        <file>shaders/shaderDepthTexture.vsh</file>
+    </qresource>
+</RCC>
