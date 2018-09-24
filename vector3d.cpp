@@ -69,6 +69,13 @@ double Vector3D::z() const
     return Z;
 }
 
+void Vector3D::translate(const Vector3D &translation)
+{
+    X+=translation.x();
+    Y+=translation.y();
+    Z+=translation.z();
+}
+
 double Vector3D::dotProduct(const Vector3D &vec1, const Vector3D &vec2)
 {
     return vec1.x()*vec2.x()+vec1.y()*vec2.y()+vec1.z()*vec2.z();

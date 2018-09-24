@@ -110,6 +110,7 @@ void Logger::writeLogs(const int stepNum, const double stepTime, const Counters 
     *logTextStream.get()<<"С рамок объединилось "+QString::number(beforeIntegrC.unitedNum)+" вортонов \n";
     *logTextStream.get()<<"По гамме c рамок удалилось "+QString::number(beforeIntegrC.vorticityEliminated)+" вортонов \n";
     *logTextStream.get()<<"Из фигуры назад возвращено "+QString::number(afterIntegrC.gotBackNum)+" вортонов \n";
+    *logTextStream.get()<<"Из слоя развернуто относительно поверхности "+QString::number(afterIntegrC.rotatedNum)+" вортонов \n";
     *logTextStream.get()<<"В слое объединилось "+QString::number(afterIntegrC.unitedNum)+" вортонов \n";
     *logTextStream.get()<<"В слое удалилось по гамме "+QString::number(afterIntegrC.vorticityEliminated)+" вортонов \n";
     *logTextStream.get()<<"По причине большой дальности удалено"+QString::number(afterIntegrC.tooFarNum)+" вортонов \n\n";
@@ -122,7 +123,6 @@ void Logger::writeLogs(const int stepNum, const double stepTime, const Counters 
     *logTextStream.get()<<"Удаление по гамме вортонов с рамок заняло "+QString::number(beforeIntegrT.removeVorticityTimer)+" с.\n";
     *logTextStream.get()<<"Расчет перемещений и удлинений занял "+QString::number(beforeIntegrT.integrationTimer)+" с.\n";
     *logTextStream.get()<<"Расчет сил занял "+QString::number(beforeIntegrT.forceTimer)+" с.\n";
-    *logTextStream.get()<<"Из слоя развернуто относительно поверхности "+QString::number(afterIntegrC.rotatedNum)+" вортонов \n";
     *logTextStream.get()<<"Разворот и возвращение в поток заняло "+QString::number(afterIntegrT.getBackAndRotateTimer)+" с.\n";
     *logTextStream.get()<<"Объединение вортонов в слое заняло "+QString::number(afterIntegrT.unionTimer)+" с.\n";
     *logTextStream.get()<<"Удаление по гамме вортонов с рамок заняло "+QString::number(afterIntegrT.removeVorticityTimer)+" с.\n";
@@ -168,13 +168,22 @@ void Logger::writePassport(const SolverParameters& solvPar,const FragmentationPa
     }
     case ROTATIONBOTTOMCUT:
     {
-        //TO DO
+        *passportTextStream.get()<<QString("Тип тела: Тело вращения со срезом \n\n");
+        *passportTextStream.get()<<"Количество разбиений по фи: "+QString::number(fragPar.rotationBodyFiFragNum)+"\n";
+        *passportTextStream.get()<<"Количество разбиений по частям: "+QString::number(fragPar.rotationBodyPartFragNum)+"\n";
+        *passportTextStream.get()<<"Количество разбиений по радиусу на срезе: "+QString::number(fragPar.rotationBodyRFragNum)+"\n";
+        *passportTextStream.get()<<"Начальная точка по х: "+QString::number(fragPar.rotationBodyXBeg)+"\n";
+        *passportTextStream.get()<<"Конечная точка по х: "+QString::number(fragPar.rotationBodyXEnd)+"\n";
+        *passportTextStream.get()<<"Высота среза: "+QString::number(fragPar.rotationBodySectionDistance)+"\n";
         break;
     }
     default:
     {
-        QMessageBox::critical(new QWidget(), tr("Ошибка"), tr("Попытка записи паспорта несоответствующего тела"));
-        exit(1);
+        *passportTextStream.get()<<QString("Тип тела: Финальные параметры после варьирования для сферы \n\n");
+        *passportTextStream.get()<<"Количество разбиений по фи: "+QString::number(fragPar.sphereFiFragNum)+"\n";
+        *passportTextStream.get()<<"Количество разбиений по тета: "+QString::number(fragPar.sphereTetaFragNum)+"\n";
+        *passportTextStream.get()<<"Радиус сферы: "+QString::number(fragPar.sphereRad)+"\n";
+        break;
     }
     }
 
@@ -199,6 +208,13 @@ void Logger::writePassport(const SolverParameters& solvPar,const FragmentationPa
 
 }
 
+void Logger::writePassport(const SolverParameters &solvPar, const FragmentationParameters &fragPar, const FreeMotionParameters &freeMotionPar)
+{
+    writePassport(solvPar,fragPar);
+    *passportTextStream.get()<<"Cкорость тела: "+QString::number(freeMotionPar.bodyVel.x())+" "+QString::number(freeMotionPar.bodyVel.y())+" "+QString::number(freeMotionPar.bodyVel.z())+"\n";
+    passportTextStream.get()->flush();
+}
+
 void Logger::writeForces(const Vector3D forces,const Vector3D c)
 {
     *forcesTextStream.get()<<QString::number(forces.x())+"\t";
@@ -218,5 +234,6 @@ void Logger::writeSolverTime(const double solvTime)
 void Logger::closeFiles()
 {
     logFile->close();
+    forcesFile->close();
     passportFile->close();
 }

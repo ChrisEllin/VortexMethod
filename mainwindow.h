@@ -47,15 +47,17 @@ private slots:
     void showSphere();
     void openPassport();
     void on_cylinderSolverPushButton_clicked();
-
-    void on_variateSphereSolverPushButton_clicked();
-
+    void on_variateSphereSolverPushButton_clicked();    
     void on_rotationBodySolverPushButton_clicked();
+    void on_rotationCutBodySolverPushButton_clicked();
+    void on_rotationCutBodyFreeMotionSolverPushButton_clicked();
 
 public slots:
+    void showInfo();
     void recieveProgressSphere(const int percentage);
     void recieveProgressCylinder(const int percentage);
     void recieveProgressRotationBody(const int percentage);
+    void recieveProgressRotationCutBody(const int percentage);
     void drawGUI(const QVector<Vorton>& vortons, const QVector<std::shared_ptr<MultiFrame>>& frames);
 signals:
     void setPlaneXY();

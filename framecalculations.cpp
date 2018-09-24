@@ -131,6 +131,11 @@ void FrameCalculations::removeFarRotationBody(QVector<Vorton>& vortons, const do
     removeFarSphere(vortons,farDistance,bodyCenter);
 }
 
+void FrameCalculations::removeFarRotationCutBody(QVector<Vorton> &vortons, const double farDistance, const Vector3D bodyCenter)
+{
+    removeFarSphere(vortons,farDistance,bodyCenter);
+}
+
 void FrameCalculations::displacementCalc(QVector<Vorton> &freeVortons, QVector<Vorton> &newVortons, double step, Vector3D streamVel, double eDelta, double fiMax, double maxMove)
 {
     QTime start = QTime::currentTime();
@@ -303,6 +308,28 @@ void FrameCalculations::getBackAndRotateRotationBody(QVector<Vorton>& vortons, c
     timers.getBackAndRotateTimer=start.elapsed()*0.001;
 }
 
+void FrameCalculations::getBackAndRotateRotationCutBody(QVector<Vorton> &vortons, const double xBeg, const double xEnd, const double layerHeight, const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals)
+{
+    QTime start=QTime::currentTime();
+    for (int i=0; i<vortons.size(); i++)
+    {
+        if (FrameCalculations::insideRotationCutBody(vortons[i],xBeg,xEnd))
+        {
+            QPair<double,int> closest=BodyFragmentation::findClosest(vortons[i].getMid(),controlPoints, normals);
+            vortons[i].setMid(vortons[i].getMid()+2.0*closest.first*normals[closest.second]);
+            vortons[i].setTail(vortons[i].getTail()+2.0*closest.first*normals[closest.second]);
+            counters.gotBackNum++;
+        }
+        if(FrameCalculations::insideRotationCutBodyLayer(vortons[i],xBeg,xEnd,layerHeight))
+        {
+            QPair<double,int> closest=BodyFragmentation::findClosest(vortons[i].getMid(),controlPoints, normals);
+            vortons[i].rotateAroundNormal(normals[closest.second]);
+            counters.rotatedNum++;
+        }
+    }
+    timers.getBackAndRotateTimer=start.elapsed()*0.001;
+}
+
 void FrameCalculations::addToVortonsVec(QVector<Vorton> &vortons, const Vorton vort)
 {
     vortons.push_back(vort);
@@ -386,14 +413,28 @@ bool FrameCalculations::insideCylinderLayer(const Vorton &vort, const double hei
 
 bool FrameCalculations::insideRotationBody(const Vorton &vort, const double xBeg, const double xEnd)
 {
-    if((vort.getMid().x()>=xBeg) && (vort.getMid().x()<=xEnd) && ((pow(vort.getMid().z(),2)+pow(vort.getMid().y(),2))<pow(BodyFragmentation::presetFunction(vort.getMid().x()),2)))
+    if((vort.getMid().x()>=xBeg) && (vort.getMid().x()<=xEnd) && ((pow(vort.getMid().z(),2)+pow(vort.getMid().y(),2))<pow(BodyFragmentation::presetFunctionF(vort.getMid().x()),2)))
         return true;
     return false;
 }
 
 bool FrameCalculations::insideRotationBodyLayer(const Vorton &vort, const double xBeg, const double xEnd, const double layerHeight)
 {
-    if((vort.getMid().x()>=xBeg-layerHeight) && (vort.getMid().x()<=xEnd+layerHeight) && ((pow(vort.getMid().z(),2)+pow(vort.getMid().y(),2))<pow(BodyFragmentation::presetFunction(vort.getMid().x())+layerHeight,2)))
+    if((vort.getMid().x()>=xBeg-layerHeight) && (vort.getMid().x()<=xEnd+layerHeight) && ((pow(vort.getMid().z(),2)+pow(vort.getMid().y(),2))<pow(BodyFragmentation::presetFunctionF(vort.getMid().x())+layerHeight,2)))
+        return true;
+    return false;
+}
+
+bool FrameCalculations::insideRotationCutBody(const Vorton &vort, const double xBeg, const double xEnd)
+{
+    if((vort.getMid().x()>=xBeg) && (vort.getMid().x()<=xEnd) && ((pow(vort.getMid().z(),2)+pow(vort.getMid().y(),2))<pow(BodyFragmentation::presetFunctionG(vort.getMid().x()),2)))
+        return true;
+    return false;
+}
+
+bool FrameCalculations::insideRotationCutBodyLayer(const Vorton &vort, const double xBeg, const double xEnd, const double layerHeight)
+{
+    if((vort.getMid().x()>=xBeg-layerHeight) && (vort.getMid().x()<=xEnd+layerHeight) && ((pow(vort.getMid().z(),2)+pow(vort.getMid().y(),2))<pow(BodyFragmentation::presetFunctionG(vort.getMid().x())+layerHeight,2)))
         return true;
     return false;
 }
@@ -430,6 +471,24 @@ double FrameCalculations::calcDispersion(const QVector<Vector3D> &cAerodynamics)
         dispersion+=(cAerodynamics[i]-cAver).lengthSquared()/cAver.length();
     }
     return dispersion;
+}
+
+void FrameCalculations::translateBody(const Vector3D &translation, QVector<std::shared_ptr<MultiFrame> > &frames, QVector<Vector3D> &controlPoints, QVector<Vector3D> &controlPointsRaised, Vector3D &center)
+{
+    for (int i=0; i<frames.size(); i++)
+        frames[i]->translate(translation);
+    for (int i=0; i<controlPoints.size(); i++)
+    {
+        controlPoints[i].translate(translation);
+        controlPointsRaised[i].translate(translation);
+    }
+    center+=translation;
+}
+
+void FrameCalculations::translateVortons(const Vector3D &translation, QVector<Vorton> &vortons)
+{
+    for (int i=0; i<vortons.size(); i++)
+        vortons[i].translate(translation);
 }
 
 Counters FrameCalculations::getCounters() const

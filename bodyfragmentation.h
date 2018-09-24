@@ -27,6 +27,8 @@ struct FragmentationParameters
     double rotationBodyXEnd;
     double rotationBodySectionDistance;
 
+    //для тела вращения со срезом
+    int rotationBodyRFragNum;
     //общие
     double vortonsRad;
     double delta;
@@ -70,6 +72,20 @@ struct RotationBodyParameters
     void setData(const int i, const double value);
 };
 
+struct RotationCutBodyParameters
+{
+    int fiFragNum;
+    int partFragNum;
+    int rFragNum;
+    double xBeg;
+    double xEnd;
+    double sectionDistance;
+    double delta;
+    double raise;
+    double vortonsRad;
+    void setData(const int i, const double value);
+};
+
 class BodyFragmentation: public QObject
 {
     Q_OBJECT
@@ -84,10 +100,13 @@ public:
     void sphereFragmentation(const SphereParameters& param);
     void cylinderFragmentation(const CylinderParameters& param);
     void rotationBodyFragmantation(const RotationBodyParameters& rotBodyPar);
+    void rotationCutBodyFragmantation(const RotationCutBodyParameters &rotBodyPar);
     void clearVectors();
 
-    static double presetFunction(double x);
-    static double presetDeriveFunction(double x);
+    static double presetFunctionF(double x);
+    static double presetDeriveFunctionF(double x);
+    static double presetFunctionG(double x);
+    static double presetDeriveFunctionG(double x);
     QVector<Vector3D> getControlPoints() const;
     QVector<Vector3D> getNormals() const;
     QVector<double> getSquares() const;

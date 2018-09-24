@@ -24,6 +24,12 @@ struct SolverParameters
     void setData(const Vector3D value);
 };
 
+struct FreeMotionParameters
+{
+    Vector3D bodyVel;
+    void setData(const Vector3D value);
+};
+
 namespace Ui {
 class SolverSettings;
 }
@@ -35,20 +41,24 @@ class SolverSettings : public QDialog
 public:
     explicit SolverSettings(QWidget *parent = 0);
     SolverParameters getSolverParameters();
+    FreeMotionParameters getFreeMotionParameters();
     ~SolverSettings();
-    Ui::SolverSettings getSettingsUI() const;
+
 public slots:
     void setSolverParameters(SolverParameters& newSolvPar);
 private slots:
     void on_saveSolverSettingsPushButton_clicked();
-
     void on_resetSettingsPushButton_clicked();
+    void on_saveFreeMotionSettingsPushButton_clicked();
+    void on_resetFreeMotionSettingsPushButton_clicked();
 
 private:
     Ui::SolverSettings *ui;
     bool entirety;
     SolverParameters standartPar;
     SolverParameters solvPar;
+    FreeMotionParameters freeMotionPar;
+    FreeMotionParameters standartFreeMotionPar;
 };
 
 #endif // SOLVERSETTINGS_H

@@ -52,12 +52,17 @@ void SolverParameters::setData(const Vector3D value)
     streamVel=value;
 }
 
+void FreeMotionParameters::setData(const Vector3D value)
+{
+    bodyVel=value;
+}
+
 SolverSettings::SolverSettings(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::SolverSettings)
 {
     ui->setupUi(this);
-    setWindowTitle("Настройки расчета");
+    setWindowTitle(tr("Настройки расчета"));
     standartPar.maxMove=ui->maxMoveLineEdit->text().toDouble();
     standartPar.minVorticity=ui->gammaMinLineEdit->text().toDouble();
     standartPar.density=ui->densityLineEdit->text().toDouble();
@@ -73,7 +78,9 @@ SolverSettings::SolverSettings(QWidget *parent) :
     standartPar.streamPres=ui->pressureStreamLineEdit->text().toDouble();
     standartPar.streamVel=Vector3D(ui->xVelStreamLineEdit->text().toDouble(),ui->yVelStreamLineEdit->text().toDouble(),ui->zVelStreamLineEdit->text().toDouble());
 
+    standartFreeMotionPar.bodyVel=Vector3D(ui->xVelBodyLineEdit->text().toDouble(),ui->yVelBodyLineEdit->text().toDouble(),ui->zVelBodyLineEdit->text().toDouble());
     solvPar=standartPar;
+    freeMotionPar=standartFreeMotionPar;
 }
 
 SolverParameters SolverSettings::getSolverParameters()
@@ -81,14 +88,14 @@ SolverParameters SolverSettings::getSolverParameters()
     return solvPar;
 }
 
+FreeMotionParameters SolverSettings::getFreeMotionParameters()
+{
+    return freeMotionPar;
+}
+
 SolverSettings::~SolverSettings()
 {
     delete ui;
-}
-
-Ui::SolverSettings SolverSettings::getSettingsUI() const
-{
-    return *ui;
 }
 
 void SolverSettings::setSolverParameters(SolverParameters &newSolvPar)
@@ -227,4 +234,22 @@ void SolverSettings::on_resetSettingsPushButton_clicked()
     ui->zVelStreamLineEdit->setText(QString::number(solvPar.streamVel.z()));
 }
 
+void SolverSettings::on_saveFreeMotionSettingsPushButton_clicked()
+{
+    if (ui->xVelBodyLineEdit->text().isEmpty()||ui->yVelBodyLineEdit->text().isEmpty()||ui->zVelBodyLineEdit->text().isEmpty())
+    {
+        QMessageBox::critical(this, tr("Ошибка"), tr("Не введено значение скорости тела"));
+        return;
+    }
 
+    freeMotionPar.bodyVel=Vector3D(ui->xVelBodyLineEdit->text().toDouble(),ui->yVelBodyLineEdit->text().toDouble(),ui->zVelBodyLineEdit->text().toDouble());
+    hide();
+}
+
+void SolverSettings::on_resetFreeMotionSettingsPushButton_clicked()
+{
+    freeMotionPar=standartFreeMotionPar;
+    ui->xVelBodyLineEdit->setText(QString::number(freeMotionPar.bodyVel.x()));
+    ui->yVelBodyLineEdit->setText(QString::number(freeMotionPar.bodyVel.y()));
+    ui->zVelBodyLineEdit->setText(QString::number(freeMotionPar.bodyVel.z()));
+}

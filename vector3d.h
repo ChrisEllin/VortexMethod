@@ -28,6 +28,7 @@ public:
     double y() const;
     double z() const;
 
+    void translate(const Vector3D &translation);
     static double dotProduct(const Vector3D& vec1,const Vector3D& vec2);
     static Vector3D crossProduct(const Vector3D& vec1,const Vector3D& vec2);
     static double mixedProduct(const Vector3D& vec1, const Vector3D& vec2, const Vector3D& vec3);
