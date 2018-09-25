@@ -188,6 +188,61 @@ void FrameCalculations::displacementCalc(QVector<Vorton> &freeVortons, QVector<V
     timers.integrationTimer=start.elapsed()*0.01;
 }
 
+void FrameCalculations::displacementLaunchCalc(QVector<Vorton> &freeVortons, QVector<Vorton> &newVortons, QVector<Vorton> &symFreeVortons, QVector<Vorton> &symNewVortons, double step, Vector3D streamVel, double eDelta, double fiMax, double maxMove)
+{
+    QTime start = QTime::currentTime();
+    QVector<Vorton> vortons;
+    vortons.append(freeVortons);
+    vortons.append(newVortons);
+    vortons.append(symFreeVortons);
+    vortons.append(symNewVortons);
+    int phantomSize=symFreeVortons.size()+symNewVortons.size();
+    QVector<Parallel> paralVec;
+    for (int i=0; i<vortons.size()-phantomSize; i++)
+    {
+        Parallel element {&vortons,nullptr, nullptr, i, streamVel, step};
+        paralVec.push_back(element);
+    }
+    QVector<Vorton> resultedVec=QtConcurrent::blockingMappedReduced(paralVec, parallelDisplacement, addToVortonsVec, QtConcurrent::OrderedReduce);
+
+    for (int i=0; i<resultedVec.size(); i++)
+    {
+        Vector3D selfLenBef=resultedVec[i].getTail()-resultedVec[i].getMid();
+        Vector3D selfLenAft=resultedVec[i].getElongation()+selfLenBef;
+        double turnAngle=acos(Vector3D::dotProduct(selfLenBef.normalized(), selfLenAft.normalized()));
+        double lengthChange=fabs(selfLenBef.length()-selfLenAft.length());
+        if (turnAngle>fiMax)
+        {
+            resultedVec[i].setElongation(Vector3D());
+            restrictions.turnRestr++;
+        }
+        if (lengthChange>eDelta)
+        {
+            resultedVec[i].setElongation(Vector3D());
+            restrictions.elongationRestr++;
+        }
+        if (resultedVec[i].getMove().length()>maxMove)
+        {
+            resultedVec[i].setMove(Vector3D());
+            restrictions.moveRestr++;
+        }
+
+    }
+
+    for (int i=0; i<freeVortons.size(); i++)
+    {
+        freeVortons[i].setMove(resultedVec[i].getMove());
+        freeVortons[i].setElongation(resultedVec[i].getElongation());
+    }
+
+    for (int i=0; i<newVortons.size(); i++)
+    {
+        newVortons[i].setMove(resultedVec[i+freeVortons.size()].getMove());
+        newVortons[i].setElongation(resultedVec[i+freeVortons.size()].getElongation());
+    }
+    timers.integrationTimer=start.elapsed()*0.01;
+}
+
 void FrameCalculations::setMatrixSize(int size)
 {
     matrixSize=size;
@@ -231,7 +286,7 @@ Vector3D FrameCalculations::forceCalc(const Vector3D streamVel, double streamPre
 {
     QTime start = QTime::currentTime();
     Vector3D force;
-    for (int i=0; i<frames.size(); i++)
+    for (int i=0; i<controlPointsRaised.size(); i++)
     {
         double pressure=FrameCalculations::pressureCalc(controlPointsRaised[i], streamVel, streamPres, density, frames, freeVortons, tau);
         force-=pressure*squares[i]*normals[i];
@@ -471,6 +526,16 @@ double FrameCalculations::calcDispersion(const QVector<Vector3D> &cAerodynamics)
         dispersion+=(cAerodynamics[i]-cAver).lengthSquared()/cAver.length();
     }
     return dispersion;
+}
+
+QVector<std::shared_ptr<MultiFrame> > FrameCalculations::copyFrames(QVector<std::shared_ptr<MultiFrame> > frames)
+{
+    QVector<std::shared_ptr<MultiFrame>> copyingFrames;
+    for (int i=0; i<frames.size(); i++)
+    {
+        copyingFrames.push_back(std::make_shared<MultiFrame>(*frames[i].get()));
+    }
+    return copyingFrames;
 }
 
 void FrameCalculations::translateBody(const Vector3D &translation, QVector<std::shared_ptr<MultiFrame> > &frames, QVector<Vector3D> &controlPoints, QVector<Vector3D> &controlPointsRaised, Vector3D &center)

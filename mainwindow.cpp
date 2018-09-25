@@ -643,6 +643,7 @@ void MainWindow::recieveProgressRotationCutBody(const int percentage)
         ui->xEndRotationCutBodyLineEdit->setDisabled(false);
         ui->rotationCutBodySolverPushButton->setDisabled(false);
         ui->rotationCutBodyFreeMotionSolverPushButton->setDisabled(false);
+        ui->rotationCutBodyLaunchSolverPushButton->setDisabled(false);
     }
 }
 
@@ -832,4 +833,89 @@ void MainWindow::on_rotationCutBodyFreeMotionSolverPushButton_clicked()
     ui->xEndRotationCutBodyLineEdit->setDisabled(true);
     ui->rotationCutBodySolverPushButton->setDisabled(true);
     ui->rotationCutBodyFreeMotionSolverPushButton->setDisabled(true);
+    ui->rotationCutBodyLaunchSolverPushButton->setDisabled(true);
+}
+
+void MainWindow::on_rotationCutBodyLaunchSolverPushButton_clicked()
+{
+    if(ui->fiRotationCutBodyLineEdit->text().isEmpty())
+    {
+        QMessageBox::critical(this, tr("Ошибка"), tr("Не введено количество разбиений по фи"));
+        return;
+    }
+
+    if(ui->partRotationCutBodyLineEdit->text().isEmpty())
+    {
+        QMessageBox::critical(this, tr("Ошибка"), tr("Не введено количество разбиений по частям"));
+        return;
+    }
+
+    if(ui->radRotationCutBodyLineEdit->text().isEmpty())
+    {
+        QMessageBox::critical(this, tr("Ошибка"), tr("Не введено количество разбиений по радиусу"));
+        return;
+    }
+
+    if(ui->xBegRotationCutBodyLineEdit->text().isEmpty())
+    {
+        QMessageBox::critical(this, tr("Ошибка"), tr("Не введена начальная координата по Х"));
+        return;
+    }
+
+    if (ui->deltaRotationCutBodyFragmLineEdit->text().isEmpty())
+    {
+        QMessageBox::critical(this, tr("Ошибка"), tr("Не введена высота для подъема отрезков при разбиении"));
+        return;
+    }
+    if (ui->epsilonRotationCutBodyLineEdit->text().isEmpty())
+    {
+        QMessageBox::critical(this, tr("Ошибка"), tr("Не введено значение радиуса вортона"));
+        return;
+    }
+    if (ui->pointsRaisingRotationCutBodyLineEdit->text().isEmpty())
+    {
+        QMessageBox::critical(this, tr("Ошибка"), tr("Не введена высота подъема точек для вычисления давления"));
+        return;
+    }
+
+    if (ui->xEndRotationCutBodyLineEdit->text().isEmpty())
+    {
+        QMessageBox::critical(this, tr("Ошибка"), tr("Не введена конечная координата по X"));
+        return;
+    }
+
+    if (ui->sectionDistanceRotationCutBodyLineEdit->text().isEmpty())
+    {
+        QMessageBox::critical(this, tr("Ошибка"), tr("Не введена высота среза"));
+        return;
+    }
+
+    FragmentationParameters fragPar;
+    fragPar.rotationBodyFiFragNum=ui->fiRotationCutBodyLineEdit->text().toInt();
+    fragPar.rotationBodyPartFragNum=ui->partRotationCutBodyLineEdit->text().toInt();
+    fragPar.rotationBodyRFragNum=ui->radRotationCutBodyLineEdit->text().toInt();
+    fragPar.rotationBodyXBeg=ui->xBegRotationCutBodyLineEdit->text().toDouble();
+    fragPar.rotationBodyXEnd=ui->xEndRotationCutBodyLineEdit->text().toDouble();
+    fragPar.rotationBodySectionDistance=ui->sectionDistanceRotationCutBodyLineEdit->text().toDouble();
+    fragPar.vortonsRad=ui->epsilonRotationCutBodyLineEdit->text().toDouble();
+    fragPar.delta=ui->deltaRotationCutBodyFragmLineEdit->text().toDouble();
+    fragPar.pointsRaising=ui->pointsRaisingRotationCutBodyLineEdit->text().toDouble();
+
+    SolverParameters solvPar=settings->getSolverParameters();
+    FreeMotionParameters freeMotionPar=settings->getFreeMotionParameters();
+    *solver=Solver(solvPar,freeMotionPar);
+    QFuture<void> rotationCutBodyFuture=QtConcurrent::run(solver,&Solver::rotationCutBodyLaunchSolver, fragPar);
+
+    ui->pointsRaisingRotationCutBodyLineEdit->setDisabled(true);
+    ui->radRotationCutBodyLineEdit->setDisabled(true);
+    ui->epsilonRotationCutBodyLineEdit->setDisabled(true);
+    ui->deltaRotationCutBodyFragmLineEdit->setDisabled(true);
+    ui->partRotationCutBodyLineEdit->setDisabled(true);
+    ui->fiRotationCutBodyLineEdit->setDisabled(true);
+    ui->sectionDistanceRotationCutBodyLineEdit->setDisabled(true);
+    ui->xBegRotationCutBodyLineEdit->setDisabled(true);
+    ui->xEndRotationCutBodyLineEdit->setDisabled(true);
+    ui->rotationCutBodySolverPushButton->setDisabled(true);
+    ui->rotationCutBodyFreeMotionSolverPushButton->setDisabled(true);
+    ui->rotationCutBodyLaunchSolverPushButton->setDisabled(true);
 }

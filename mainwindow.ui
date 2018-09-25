@@ -1145,6 +1145,19 @@
             <string>Рассчитать свободное движение</string>
            </property>
           </widget>
+          <widget class="QPushButton" name="rotationCutBodyLaunchSolverPushButton">
+           <property name="geometry">
+            <rect>
+             <x>90</x>
+             <y>390</y>
+             <width>191</width>
+             <height>23</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Рассчитать задачу выхода</string>
+           </property>
+          </widget>
          </widget>
          <widget class="QProgressBar" name="rotationCutBodyProgressBar">
           <property name="geometry">

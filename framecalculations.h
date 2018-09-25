@@ -81,6 +81,7 @@ public:
     void removeFarRotationBody(QVector<Vorton>& vortons, const double farDistance, const Vector3D bodyCenter);
     void removeFarRotationCutBody(QVector<Vorton>& vortons, const double farDistance, const Vector3D bodyCenter);
     void displacementCalc(QVector<Vorton> &freeVortons, QVector<Vorton> &newVortons, double step, Vector3D streamVel, double eDelta, double fiMax, double maxMove);
+    void displacementLaunchCalc(QVector<Vorton> &freeVortons, QVector<Vorton> &newVortons,QVector<Vorton> &symFreeVortons, QVector<Vorton> &symNewVortons, double step, Vector3D streamVel, double eDelta, double fiMax, double maxMove);
     void setMatrixSize(int size);
     Vector3D forceCalc(const Vector3D streamVel, double streamPres, double density, QVector<std::shared_ptr<MultiFrame>> frames, const QVector<Vorton>& freeVortons, const double tau,
                        const QVector<double>& squares , const QVector <Vector3D>& controlPointsRaised, const QVector <Vector3D>& normals);
@@ -110,6 +111,7 @@ public:
     static bool exploseSphere(const QVector<Vorton>& vortons);
     static double calcDispersion(const QVector<Vector3D> &cAerodynamics);
 
+    static QVector<std::shared_ptr<MultiFrame>> copyFrames(QVector<std::shared_ptr<MultiFrame>> frames);
     static void translateBody(const Vector3D &translation, QVector<std::shared_ptr<MultiFrame>>& frames, QVector<Vector3D>& controlPoints, QVector<Vector3D>& controlPointsRaised, Vector3D& center);
     static void translateVortons(const Vector3D &translation, QVector<Vorton>& vortons);
     Counters getCounters() const;

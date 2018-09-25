@@ -95,12 +95,20 @@ private:
     QVector<Vector3D> normals;
     QVector<double> squares;
     QVector<Vector3D> controlPointsRaised;
+
+    SphereParameters sphere;
+    CylinderParameters cylinder;
+    RotationBodyParameters rotationBody;
+    RotationCutBodyParameters rotationBottomCutBody;
+    bool launch;
 public:
-    BodyFragmentation(BodyType body, const FragmentationParameters& param);
-    void sphereFragmentation(const SphereParameters& param);
-    void cylinderFragmentation(const CylinderParameters& param);
-    void rotationBodyFragmantation(const RotationBodyParameters& rotBodyPar);
-    void rotationCutBodyFragmantation(const RotationCutBodyParameters &rotBodyPar);
+    BodyFragmentation(BodyType body, const FragmentationParameters& param, bool launch=false);
+//    BodyFragmentation(const FragmentationParameters& param, const int i, const Vector3D &bodyVel, const double tau);
+    void sphereFragmentation();
+    void cylinderFragmentation();
+    void rotationBodyFragmantation();
+    void rotationCutBodyFragmantation();
+    void rotationCutBodyLaunchFragmentation(const int i, const Vector3D &bodyVel, const double tau);
     void clearVectors();
 
     static double presetFunctionF(double x);

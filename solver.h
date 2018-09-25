@@ -20,8 +20,10 @@ public:
     void rotationBodySolver(const FragmentationParameters& fragPar);
     void rotationCutBodySolver(const FragmentationParameters& fragPar);
     void rotationCutBodyFreeMotionSolver(const FragmentationParameters& fragPar);
+    void rotationCutBodyLaunchSolver(const FragmentationParameters& fragPar);
     void variateSphereParameters(FragmentationParameters fragPar);
 
+    void reflect(QVector<Vorton>& symFreeVortons, QVector<Vorton>& symNewVortons, QVector<std::shared_ptr<MultiFrame>> symFrames);
     void operator = (const Solver &solver);
     static bool explosion;
     bool checkingVariate(double& dispersion, double& oldDispersion,FragmentationParameters &fragPar, FragmentationParameters &resultFrag, SolverParameters& resultSolv);

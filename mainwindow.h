@@ -52,6 +52,8 @@ private slots:
     void on_rotationCutBodySolverPushButton_clicked();
     void on_rotationCutBodyFreeMotionSolverPushButton_clicked();
 
+    void on_rotationCutBodyLaunchSolverPushButton_clicked();
+
 public slots:
     void showInfo();
     void recieveProgressSphere(const int percentage);
