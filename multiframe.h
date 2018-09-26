@@ -28,6 +28,8 @@ public:
     virtual QVector<Vorton> getLiftedVortons(const Vector3D& translation) const;
     virtual double getVorticity() const;
     virtual int getAnglesNum() const;
+    virtual void setCenter(const Vector3D& _center);
+    virtual Vector3D getCenter() const;
 };
 
 #endif // MultiFrame_H

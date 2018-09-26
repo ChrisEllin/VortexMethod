@@ -640,6 +640,7 @@ void MainWindow::recieveProgressRotationCutBody(const int percentage)
         ui->fiRotationCutBodyLineEdit->setDisabled(false);
         ui->sectionDistanceRotationCutBodyLineEdit->setDisabled(false);
         ui->xBegRotationCutBodyLineEdit->setDisabled(false);
+        ui->radRotationCutBodyLineEdit->setDisabled(false);
         ui->xEndRotationCutBodyLineEdit->setDisabled(false);
         ui->rotationCutBodySolverPushButton->setDisabled(false);
         ui->rotationCutBodyFreeMotionSolverPushButton->setDisabled(false);

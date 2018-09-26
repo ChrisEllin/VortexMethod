@@ -385,6 +385,29 @@ void FrameCalculations::getBackAndRotateRotationCutBody(QVector<Vorton> &vortons
     timers.getBackAndRotateTimer=start.elapsed()*0.001;
 }
 
+void FrameCalculations::getBackAndRotateRotationCutLaunchedBody(QVector<Vorton> &vortons, const double xBeg, const double xEnd, const double layerHeight, const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals)
+{
+    QTime start=QTime::currentTime();
+    for (int i=0; i<vortons.size(); i++)
+    {
+        if (FrameCalculations::insideRotationCutBody(vortons[i],xBeg,xEnd))
+        {
+            QPair<double,int> closest=BodyFragmentation::findClosest(vortons[i].getMid(),controlPoints, normals);
+            vortons[i].setMid(vortons[i].getMid()+2.0*closest.first*normals[closest.second]);
+            vortons[i].setTail(vortons[i].getTail()+2.0*closest.first*normals[closest.second]);
+            counters.gotBackNum++;
+        }
+        if(FrameCalculations::insideRotationCutBodyLayer(vortons[i],xBeg,xEnd,layerHeight))
+        {
+            QPair<double,int> closest=BodyFragmentation::findClosest(vortons[i].getMid(),controlPoints, normals);
+            vortons[i].rotateAroundNormal(normals[closest.second]);
+            counters.rotatedNum++;
+        }
+        FrameCalculations::insideScreen(vortons[i]);
+    }
+    timers.getBackAndRotateTimer=start.elapsed()*0.001;
+}
+
 void FrameCalculations::addToVortonsVec(QVector<Vorton> &vortons, const Vorton vort)
 {
     vortons.push_back(vort);
@@ -494,6 +517,23 @@ bool FrameCalculations::insideRotationCutBodyLayer(const Vorton &vort, const dou
     return false;
 }
 
+void FrameCalculations::insideScreen(Vorton &vort)
+{
+    if (vort.getMid().x()<0.0)
+    {
+        Vector3D mid=vort.getMid();
+        mid.translate(Vector3D(-2.0*vort.getMid().x(), 0.0, 0.0));
+        vort.setMid(mid);
+    }
+
+    if (vort.getTail().x()<0.0)
+    {
+        Vector3D tail=vort.getTail();
+        tail.translate(Vector3D(-2.0*vort.getTail().x(), 0.0, 0.0));
+        vort.setTail(tail);
+    }
+}
+
 
 bool FrameCalculations::exploseSphere(const QVector<Vorton> &vortons)
 {
@@ -547,7 +587,7 @@ void FrameCalculations::translateBody(const Vector3D &translation, QVector<std::
         controlPoints[i].translate(translation);
         controlPointsRaised[i].translate(translation);
     }
-    center+=translation;
+   center+=translation;
 }
 
 void FrameCalculations::translateVortons(const Vector3D &translation, QVector<Vorton> &vortons)

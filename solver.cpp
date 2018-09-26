@@ -207,7 +207,7 @@ void Solver::rotationBodySolver(const FragmentationParameters &fragPar)
         Timers timersAfterIntegration=functions.getTimers();
 
         functions.clear();
-
+        logger.writeForces(force,Vector3D(0.0,0.0,0.0));
         logger.writeLogs(i,stepTime.elapsed()*0.001,countersBeforeIntegration,countersAfterIntegration, timersBeforeIntegration, timersAfterIntegration, restrictions);
 
         emit sendProgressRotationBody(i);
@@ -274,6 +274,7 @@ void Solver::rotationCutBodySolver(const FragmentationParameters &fragPar)
 
         functions.clear();
 
+        logger.writeForces(force,Vector3D(0.0,0.0,0.0));
         logger.writeLogs(i,stepTime.elapsed()*0.001,countersBeforeIntegration,countersAfterIntegration, timersBeforeIntegration, timersAfterIntegration, restrictions);
 
         emit sendProgressRotationCutBody(i);
@@ -343,6 +344,7 @@ void Solver::rotationCutBodyFreeMotionSolver(const FragmentationParameters &frag
             FrameCalculations::translateBody(translation, frames, controlPoints, controlPointsRaised, center);
             FrameCalculations::translateVortons(translation, freeVortons);
 
+            logger.writeForces(force,Vector3D(0.0,0.0,0.0));
             logger.writeLogs(i,stepTime.elapsed()*0.001,countersBeforeIntegration,countersAfterIntegration, timersBeforeIntegration, timersAfterIntegration, restrictions);
 
             emit sendProgressRotationCutBody(i);
@@ -369,7 +371,6 @@ void Solver::rotationCutBodyLaunchSolver(const FragmentationParameters &fragPar)
     BodyFragmentation fragmentation(BodyType::ROTATIONBOTTOMCUT, fragPar, true);
     for (int i=0; i<solvPar.stepsNum; i++)
     {
-
         fragmentation.rotationCutBodyLaunchFragmentation(i,freeMotionPar.bodyVel,solvPar.tau);
         QVector<Vector3D> controlPoints=fragmentation.getControlPoints();
         QVector<Vector3D> normals=fragmentation.getNormals();
@@ -379,16 +380,18 @@ void Solver::rotationCutBodyLaunchSolver(const FragmentationParameters &fragPar)
 
         Vector3D translation=freeMotionPar.bodyVel*solvPar.tau*(i+1);
         Vector3D relVel=solvPar.streamVel-freeMotionPar.bodyVel;
-        FrameCalculations::translateBody(translation, frames, controlPoints, controlPointsRaised, center);
+
 
         FrameCalculations functions;
         functions.matrixCalc(frames,controlPoints,normals);
 
 
         QTime stepTime=QTime::currentTime();
-        newVortons.clear();
+
         Eigen::VectorXd column=functions.columnCalc(relVel,freeVortons,normals,controlPoints);
         Eigen::VectorXd vorticities=functions.vorticitiesCalc(column);
+
+        newVortons.clear();
         FrameCalculations::setVorticity(frames,vorticities);
 
         newVortons=FrameCalculations::getLiftedFrameVortons(frames,normals,solvPar.deltaUp);
@@ -412,7 +415,7 @@ void Solver::rotationCutBodyLaunchSolver(const FragmentationParameters &fragPar)
         functions.clear();
 
         functions.displace(freeVortons);
-        functions.getBackAndRotateRotationCutBody(freeVortons, fragPar.rotationBodyXBeg, fragPar.rotationBodyXEnd, solvPar.layerHeight, controlPoints,normals);
+        functions.getBackAndRotateRotationCutLaunchedBody(freeVortons, fragPar.rotationBodyXBeg, fragPar.rotationBodyXEnd, solvPar.layerHeight, controlPoints,normals);
         functions.unionVortons(freeVortons, solvPar.eStar,solvPar.eDoubleStar,fragPar.vortonsRad);
         functions.removeSmallVorticity(freeVortons,solvPar.minVorticity);
         functions.removeFarRotationCutBody(freeVortons,solvPar.farDistance,center);
@@ -423,12 +426,11 @@ void Solver::rotationCutBodyLaunchSolver(const FragmentationParameters &fragPar)
         functions.clear();
 
         FrameCalculations::translateBody(translation, frames, controlPoints, controlPointsRaised, center);
-        FrameCalculations::translateVortons(translation, freeVortons);
-
+        FrameCalculations::translateVortons(translation,freeVortons);
         logger.writeLogs(i,stepTime.elapsed()*0.001,countersBeforeIntegration,countersAfterIntegration, timersBeforeIntegration, timersAfterIntegration, restrictions);
 
         emit sendProgressRotationCutBody(i);
-        emit repaintGUI(freeVortons+symFreeVortons, frames+symFrames);
+        emit repaintGUI(freeVortons+symFreeVortons, frames/*+symFrames*/);
 
 
     }
@@ -590,12 +592,14 @@ void Solver::reflect(QVector<Vorton> &symFreeVortons, QVector<Vorton> &symNewVor
     {
         symFreeVortons[i].setMid(Vector3D(-symFreeVortons[i].getMid().x(),symFreeVortons[i].getMid().y(),symFreeVortons[i].getMid().z()));
         symFreeVortons[i].setTail(Vector3D(-symFreeVortons[i].getTail().x(),symFreeVortons[i].getTail().y(),symFreeVortons[i].getTail().z()));
+        symFreeVortons[i].setVorticity(-symFreeVortons[i].getVorticity());
     }
 
     for (int i=0; i<symNewVortons.size(); i++)
     {
         symNewVortons[i].setMid(Vector3D(-symNewVortons[i].getMid().x(),symNewVortons[i].getMid().y(),symNewVortons[i].getMid().z()));
         symNewVortons[i].setTail(Vector3D(-symNewVortons[i].getTail().x(),symNewVortons[i].getTail().y(),symNewVortons[i].getTail().z()));
+        symNewVortons[i].setVorticity(-symNewVortons[i].getVorticity());
     }
 
     for (int i=0; i<symFrames.size(); i++)
@@ -604,6 +608,8 @@ void Solver::reflect(QVector<Vorton> &symFreeVortons, QVector<Vorton> &symNewVor
         {
             symFrames[i]->at(j).setMid(Vector3D(-symFrames[i]->at(j).getMid().x(),symFrames[i]->at(j).getMid().y(),symFrames[i]->at(j).getMid().z()));
             symFrames[i]->at(j).setTail(Vector3D(-symFrames[i]->at(j).getTail().x(),symFrames[i]->at(j).getTail().y(),symFrames[i]->at(j).getTail().z()));
+            symFrames[i]->setCenter(Vector3D(-symFrames[i]->getCenter().x(), symFrames[i]->getCenter().y(), symFrames[i]->getCenter().z()));
+            symFrames[i]->at(j).setVorticity(-symFrames[i]->at(j).getVorticity());
         }
     }
 }

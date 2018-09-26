@@ -458,7 +458,7 @@ void BodyFragmentation::rotationCutBodyFragmantation()
     squares.push_back((0.5*Vector3D::crossProduct(r11-r0,r21-r0).length()*rotationBottomCutBody.fiFragNum));
     controlPointsRaised.push_back(controlPoint+rotationBottomCutBody.raise*normal);
 
-    double rad0=part.last().y()/rotationBottomCutBody.partFragNum;
+    double rad0=part.last().y()/rotationBottomCutBody.rFragNum;
 
     r0 = Vector3D(part[rotationBottomCutBody.partFragNum-1].x(), 0.0, 0.0);
     r11 = Vector3D(part[rotationBottomCutBody.partFragNum-1].x(), rad0, 0.0);
@@ -496,12 +496,13 @@ void BodyFragmentation::rotationCutBodyLaunchFragmentation(const int i, const Ve
 {
 
     double ledge=bodyVel.length()*tau*(i+1);
+
     if (ledge<rotationBottomCutBody.xEnd-rotationBottomCutBody.xBeg)
     {
         clearVectors();
         QVector<Vector2D> part(rotationBottomCutBody.partFragNum);
-        QVector<Vector2D> forNormals(rotationBottomCutBody.partFragNum);
-        QVector<Vector2D> forControlPoint(rotationBottomCutBody.partFragNum);
+        QVector<Vector2D> forNormals(rotationBottomCutBody.partFragNum-1);
+        QVector<Vector2D> forControlPoint(rotationBottomCutBody.partFragNum-1);
         QVector<Vector2D> forUp(rotationBottomCutBody.partFragNum);
         const int NFRAG=400;
 
@@ -557,10 +558,11 @@ void BodyFragmentation::rotationCutBodyLaunchFragmentation(const int i, const Ve
         part.push_back(Vector2D(ledge, BodyFragmentation::presetFunctionG(ledge)));
         forUp.push_back(Vector2D(-BodyFragmentation::presetDeriveFunctionG(ledge),1.0).normalized());
         forControlPoint.push_back(Vector2D(0.5*(part[end]+part[end+1])));
-        forNormals.push_back(Vector2D(-BodyFragmentation::presetDeriveFunctionG(forControlPoint[i].x()),1).normalized());
+        forNormals.push_back(Vector2D(-BodyFragmentation::presetDeriveFunctionG(forControlPoint.last().x()),1).normalized());
 
         for (int i=0; i<part.size(); i++)
             part[i]+=forUp[i]*rotationBottomCutBody.delta;
+
         int newPartFragmNum = part.size()-1;
 
         for (int j=0; j<newPartFragmNum; j++)
@@ -593,7 +595,7 @@ void BodyFragmentation::rotationCutBodyLaunchFragmentation(const int i, const Ve
         squares.push_back((0.5*Vector3D::crossProduct(r11-r0,r21-r0).length()*rotationBottomCutBody.fiFragNum));
         controlPointsRaised.push_back(controlPoint+rotationBottomCutBody.raise*normal);
 
-        double rad0=part.last().y()/rotationBottomCutBody.partFragNum;
+        double rad0=part.last().y()/rotationBottomCutBody.rFragNum;
 
         Vector3D r00 (part[newPartFragmNum].x(),0.0,0.0);
         r11=Vector3D(part[newPartFragmNum].x(),rad0,0);

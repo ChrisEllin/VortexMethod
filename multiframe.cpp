@@ -144,4 +144,14 @@ int MultiFrame::getAnglesNum() const
     return anglesNum;
 }
 
+void MultiFrame::setCenter(const Vector3D &_center)
+{
+    center=_center;
+}
+
+Vector3D MultiFrame::getCenter() const
+{
+    return center;
+}
+
 
