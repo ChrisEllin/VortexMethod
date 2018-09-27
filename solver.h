@@ -19,7 +19,7 @@ public:
     void cylinderSolver(const FragmentationParameters& fragPar);
     void rotationBodySolver(const FragmentationParameters& fragPar);
     void rotationCutBodySolver(const FragmentationParameters& fragPar);
-    void rotationCutBodyFreeMotionSolver(const FragmentationParameters& fragPar);
+    void rotationCutBodyFreeMotionSolver(FragmentationParameters &fragPar);
     void rotationCutBodyLaunchSolver(const FragmentationParameters& fragPar);
     void variateSphereParameters(FragmentationParameters fragPar);
 

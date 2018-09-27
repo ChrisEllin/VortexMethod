@@ -286,7 +286,7 @@ void Solver::rotationCutBodySolver(const FragmentationParameters &fragPar)
     logger.closeFiles();
 }
 
-void Solver::rotationCutBodyFreeMotionSolver(const FragmentationParameters &fragPar)
+void Solver::rotationCutBodyFreeMotionSolver(FragmentationParameters &fragPar)
 {
         QTime start=QTime::currentTime();
         Logger logger(BodyType::ROTATIONBOTTOMCUT);
@@ -340,8 +340,7 @@ void Solver::rotationCutBodyFreeMotionSolver(const FragmentationParameters &frag
             Timers timersAfterIntegration=functions.getTimers();
 
             functions.clear();
-
-            FrameCalculations::translateBody(translation, frames, controlPoints, controlPointsRaised, center);
+            FrameCalculations::translateBody(translation, frames, controlPoints, controlPointsRaised, center, fragPar.rotationBodyXBeg, fragPar.rotationBodyXEnd);
             FrameCalculations::translateVortons(translation, freeVortons);
 
             logger.writeForces(force,Vector3D(0.0,0.0,0.0));
@@ -425,7 +424,7 @@ void Solver::rotationCutBodyLaunchSolver(const FragmentationParameters &fragPar)
 
         functions.clear();
 
-        FrameCalculations::translateBody(translation, frames, controlPoints, controlPointsRaised, center);
+        //FrameCalculations::translateBody(translation, frames, controlPoints, controlPointsRaised, center);
         FrameCalculations::translateVortons(translation,freeVortons);
         logger.writeLogs(i,stepTime.elapsed()*0.001,countersBeforeIntegration,countersAfterIntegration, timersBeforeIntegration, timersAfterIntegration, restrictions);
 
