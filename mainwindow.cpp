@@ -25,6 +25,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->openGLWidget->setFormat(format);
     solver=new Solver();
     settings =new SolverSettings();
+    variateSettings = new VariateSettings();
     connect (this, SIGNAL(setPlaneXY()), ui->openGLWidget, SLOT(setPlaneXY()));
     connect (this, SIGNAL(setPlaneYX()), ui->openGLWidget, SLOT(setPlaneYX()));
     connect (this, SIGNAL(setPlaneXZ()), ui->openGLWidget, SLOT(setPlaneXZ()));
@@ -41,6 +42,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect (this, SIGNAL(setHeight(double)), ui->openGLWidget, SLOT(setHeight(double)));
     connect (this, SIGNAL(setRadius(double)), ui->openGLWidget, SLOT(setRadius(double)));
     connect (ui->settingsOpenAction, SIGNAL(triggered(bool)), this, SLOT(showSettings()));
+    connect (ui->variationSettingsOpenAction, SIGNAL(triggered(bool)), this, SLOT(showVariateSettings()));
     connect (solver, SIGNAL(sendProgressSphere(const int)), this, SLOT(recieveProgressSphere(const int)), Qt::BlockingQueuedConnection);
     connect (solver, SIGNAL(sendProgressCylinder(const int)), this, SLOT(recieveProgressCylinder(const int)), Qt::BlockingQueuedConnection);
     connect (solver, SIGNAL(sendProgressRotationBody(const int)), this, SLOT(recieveProgressRotationBody(const int)), Qt::BlockingQueuedConnection);
@@ -134,6 +136,9 @@ MainWindow::~MainWindow()
     delete settings;
     delete solver;
     delete keyCtrlO;
+    delete keyCtrlH;
+    delete keyCtrlR;
+    delete variateSettings;
 }
 
 void MainWindow::setParameters(SphereParameters& sphPar)
@@ -227,6 +232,7 @@ void MainWindow::on_sphereSolverPushButton_clicked()
     ui->tetaSphereLineEdit->setDisabled(true);
     ui->fiSphereLineEdit->setDisabled(true);
     ui->sphereSolverPushButton->setDisabled(true);
+    ui->sphereFreeMotionSolverPushButton->setDisabled(true);
     ui->variateSphereSolverPushButton->setDisabled(true);
 }
 
@@ -277,7 +283,7 @@ void MainWindow::on_variateSphereSolverPushButton_clicked()
 
     *solver=Solver(solvPar);
     ui->sphereProgressBar->setEnabled(false);
-    QFuture<void> sphereFuture=QtConcurrent::run(solver,&Solver::variateSphereParameters, fragPar);
+    QFuture<void> sphereFuture=QtConcurrent::run(solver,&Solver::variateSphereParameters, fragPar,variateSettings->getInfo());
 
 }
 
@@ -351,6 +357,7 @@ void MainWindow::on_cylinderSolverPushButton_clicked()
     ui->heightFragmCylinderLineEdit->setDisabled(true);
     ui->diameterCylinderLineEdit->setDisabled(true);
     ui->cylinderSolverPushButton->setDisabled(true);
+    ui->variateCylinderSolverPushButton->setDisabled(true);
 }
 
 void MainWindow::on_rotationBodySolverPushButton_clicked()
@@ -423,6 +430,7 @@ void MainWindow::on_rotationBodySolverPushButton_clicked()
     ui->xBegRotationBodyLineEdit->setDisabled(true);
     ui->xEndRotationBodyLineEdit->setDisabled(true);
     ui->rotationBodySolverPushButton->setDisabled(true);
+    ui->rotationBodySolverPushButton->setDisabled(true);
 }
 
 void MainWindow::showInfo()
@@ -442,6 +450,11 @@ void MainWindow::showSphere()
         emit changeShape(MainField::Sphere);
     else
         emit changeShape(MainField::None);
+}
+
+void MainWindow::showVariateSettings()
+{
+    variateSettings->show();
 }
 
 void MainWindow::openPassport()
@@ -591,6 +604,7 @@ void MainWindow::recieveProgressSphere(const int percentage)
         ui->fiSphereLineEdit->setDisabled(false);
         ui->sphereSolverPushButton->setDisabled(false);
         ui->variateSphereSolverPushButton->setDisabled(false);
+        ui->sphereFreeMotionSolverPushButton->setDisabled(false);
     }
 }
 
@@ -608,6 +622,7 @@ void MainWindow::recieveProgressCylinder(const int percentage)
         ui->fiCylinderLineEdit->setDisabled(false);
         ui->diameterCylinderLineEdit->setDisabled(false);
         ui->cylinderSolverPushButton->setDisabled(false);
+        ui->variateCylinderSolverPushButton->setDisabled(false);
     }
 }
 
@@ -625,6 +640,7 @@ void MainWindow::recieveProgressRotationBody(const int percentage)
         ui->xBegRotationBodyLineEdit->setDisabled(false);
         ui->xEndRotationBodyLineEdit->setDisabled(false);
         ui->rotationBodySolverPushButton->setDisabled(false);
+        ui->variateRotationBodySolverPushButton->setDisabled(false);
     }
 }
 
@@ -645,6 +661,9 @@ void MainWindow::recieveProgressRotationCutBody(const int percentage)
         ui->rotationCutBodySolverPushButton->setDisabled(false);
         ui->rotationCutBodyFreeMotionSolverPushButton->setDisabled(false);
         ui->rotationCutBodyLaunchSolverPushButton->setDisabled(false);
+        ui->rotationCutBodyLaunchSolverPushButton->setDisabled(false);
+        ui->rotationCutBodyNearScreenPushButton->setDisabled(false);
+        ui->variateRotationCutBodySolverPushButton->setDisabled(false);
     }
 }
 
@@ -919,4 +938,347 @@ void MainWindow::on_rotationCutBodyLaunchSolverPushButton_clicked()
     ui->rotationCutBodySolverPushButton->setDisabled(true);
     ui->rotationCutBodyFreeMotionSolverPushButton->setDisabled(true);
     ui->rotationCutBodyLaunchSolverPushButton->setDisabled(true);
+}
+
+void MainWindow::on_sphereFreeMotionSolverPushButton_clicked()
+{
+    if(ui->fiSphereLineEdit->text().isEmpty())
+    {
+        QMessageBox::critical(this, tr("Ошибка"), tr("Не введено количество разбиений по фи"));
+        return;
+    }
+    if(ui->tetaSphereLineEdit->text().isEmpty())
+    {
+        QMessageBox::critical(this, tr("Ошибка"), tr("Не введено количество разбиений по тета"));
+        return;
+    }
+    if(ui->radSphereLineEdit->text().isEmpty())
+    {
+        QMessageBox::critical(this, tr("Ошибка"), tr("Не введен радиус сферы"));
+        return;
+    }
+    if (ui->deltaSphereFragmLineEdit->text().isEmpty())
+    {
+        QMessageBox::critical(this, tr("Ошибка"), tr("Не введена высота для подъема отрезков при разбиении"));
+        return;
+    }
+    if (ui->epsilonSphereLineEdit->text().isEmpty())
+    {
+        QMessageBox::critical(this, tr("Ошибка"), tr("Не введено значение радиуса вортона"));
+        return;
+    }
+    if (ui->pointsRaisingSphereLineEdit->text().isEmpty())
+    {
+        QMessageBox::critical(this, tr("Ошибка"), tr("Не введена высота подъема точек для вычисления давления"));
+        return;
+    }
+
+
+    FragmentationParameters fragPar;
+    fragPar.sphereFiFragNum=ui->fiSphereLineEdit->text().toInt();
+    fragPar.sphereTetaFragNum=ui->tetaSphereLineEdit->text().toInt();
+    fragPar.sphereRad=ui->radSphereLineEdit->text().toDouble();
+
+    fragPar.vortonsRad=ui->epsilonSphereLineEdit->text().toDouble();
+    fragPar.delta=ui->deltaSphereFragmLineEdit->text().toDouble();
+    fragPar.pointsRaising=ui->pointsRaisingSphereLineEdit->text().toDouble();
+
+    SolverParameters solvPar=settings->getSolverParameters();
+
+    FreeMotionParameters freeMotionPar=settings->getFreeMotionParameters();
+    *solver=Solver(solvPar,freeMotionPar);
+    QFuture<void> sphereFuture=QtConcurrent::run(solver,&Solver::sphereFreeMotionSolver, fragPar);
+    ui->pointsRaisingSphereLineEdit->setDisabled(true);
+    ui->epsilonSphereLineEdit->setDisabled(true);
+    ui->deltaSphereFragmLineEdit->setDisabled(true);
+    ui->radSphereLineEdit->setDisabled(true);
+    ui->tetaSphereLineEdit->setDisabled(true);
+    ui->fiSphereLineEdit->setDisabled(true);
+    ui->sphereSolverPushButton->setDisabled(true);
+    ui->sphereFreeMotionSolverPushButton->setDisabled(true);
+    ui->variateSphereSolverPushButton->setDisabled(true);
+}
+
+void MainWindow::on_variateCylinderSolverPushButton_clicked()
+{
+    if(ui->fiCylinderLineEdit->text().isEmpty())
+    {
+        QMessageBox::critical(this, tr("Ошибка"), tr("Не введено количество разбиений по фи"));
+        return;
+    }
+
+    if(ui->radiusCylinderLineEdit->text().isEmpty())
+    {
+        QMessageBox::critical(this, tr("Ошибка"), tr("Не введено количество разбиений по радиусу"));
+        return;
+    }
+    if(ui->heightFragmCylinderLineEdit->text().isEmpty())
+    {
+        QMessageBox::critical(this, tr("Ошибка"), tr("Не введено количество разбиений по высоте"));
+        return;
+    }
+
+    if (ui->deltaCylinderFragmLineEdit->text().isEmpty())
+    {
+        QMessageBox::critical(this, tr("Ошибка"), tr("Не введена высота для подъема отрезков при разбиении"));
+        return;
+    }
+    if (ui->epsilonCylinderLineEdit->text().isEmpty())
+    {
+        QMessageBox::critical(this, tr("Ошибка"), tr("Не введено значение радиуса вортона"));
+        return;
+    }
+    if (ui->pointsRaisingCylinderLineEdit->text().isEmpty())
+    {
+        QMessageBox::critical(this, tr("Ошибка"), tr("Не введена высота подъема точек для вычисления давления"));
+        return;
+    }
+
+    if (ui->diameterCylinderLineEdit->text().isEmpty())
+    {
+        QMessageBox::critical(this, tr("Ошибка"), tr("Не введен диаметр цилиндра"));
+        return;
+    }
+    if (ui->heightCylinderLineEdit->text().isEmpty())
+    {
+        QMessageBox::critical(this, tr("Ошибка"), tr("Не введена высота цилиндра"));
+        return;
+    }
+
+    FragmentationParameters fragPar;
+    fragPar.cylinderFiFragNum=ui->fiCylinderLineEdit->text().toInt();
+    fragPar.cylinderRadFragNum=ui->radiusCylinderLineEdit->text().toInt();
+    fragPar.cylinderHeight=ui->heightCylinderLineEdit->text().toDouble();
+    fragPar.cylinderHeightFragNum=ui->heightFragmCylinderLineEdit->text().toInt();
+    fragPar.cylinderDiameter=ui->diameterCylinderLineEdit->text().toDouble();
+
+    fragPar.vortonsRad=ui->epsilonCylinderLineEdit->text().toDouble();
+    fragPar.delta=ui->deltaCylinderFragmLineEdit->text().toDouble();
+    fragPar.pointsRaising=ui->pointsRaisingCylinderLineEdit->text().toDouble();
+
+    SolverParameters solvPar=settings->getSolverParameters();
+
+    *solver=Solver(solvPar);
+    ui->cylinderProgressBar->setEnabled(false);
+    QFuture<void> cylinderFuture=QtConcurrent::run(solver,&Solver::variateCylinderParameters, fragPar,variateSettings->getInfo());
+}
+
+void MainWindow::on_variateRotationBodySolverPushButton_clicked()
+{
+    if(ui->fiRotationBodyLineEdit->text().isEmpty())
+    {
+        QMessageBox::critical(this, tr("Ошибка"), tr("Не введено количество разбиений по фи"));
+        return;
+    }
+
+    if(ui->partRotationBodyLineEdit->text().isEmpty())
+    {
+        QMessageBox::critical(this, tr("Ошибка"), tr("Не введено количество разбиений по частям"));
+        return;
+    }
+    if(ui->xBegRotationBodyLineEdit->text().isEmpty())
+    {
+        QMessageBox::critical(this, tr("Ошибка"), tr("Не введена начальная координата по Х"));
+        return;
+    }
+
+    if (ui->deltaRotationBodyFragmLineEdit->text().isEmpty())
+    {
+        QMessageBox::critical(this, tr("Ошибка"), tr("Не введена высота для подъема отрезков при разбиении"));
+        return;
+    }
+    if (ui->epsilonRotationBodyLineEdit->text().isEmpty())
+    {
+        QMessageBox::critical(this, tr("Ошибка"), tr("Не введено значение радиуса вортона"));
+        return;
+    }
+    if (ui->pointsRaisingRotationBodyLineEdit->text().isEmpty())
+    {
+        QMessageBox::critical(this, tr("Ошибка"), tr("Не введена высота подъема точек для вычисления давления"));
+        return;
+    }
+
+    if (ui->xEndRotationBodyLineEdit->text().isEmpty())
+    {
+        QMessageBox::critical(this, tr("Ошибка"), tr("Не введена конечная координата по X"));
+        return;
+    }
+    if (ui->sectionDistanceRotationBodyLineEdit->text().isEmpty())
+    {
+        QMessageBox::critical(this, tr("Ошибка"), tr("Не введена высота среза"));
+        return;
+    }
+
+
+    FragmentationParameters fragPar;
+    fragPar.rotationBodyFiFragNum=ui->fiRotationBodyLineEdit->text().toInt();
+    fragPar.rotationBodyPartFragNum=ui->partRotationBodyLineEdit->text().toInt();
+    fragPar.rotationBodyXBeg=ui->xBegRotationBodyLineEdit->text().toDouble();
+    fragPar.rotationBodyXEnd=ui->xEndRotationBodyLineEdit->text().toDouble();
+    fragPar.rotationBodySectionDistance=ui->sectionDistanceRotationBodyLineEdit->text().toDouble();
+    fragPar.vortonsRad=ui->epsilonRotationBodyLineEdit->text().toDouble();
+    fragPar.delta=ui->deltaRotationBodyFragmLineEdit->text().toDouble();
+    fragPar.pointsRaising=ui->pointsRaisingRotationBodyLineEdit->text().toDouble();
+
+    SolverParameters solvPar=settings->getSolverParameters();
+
+    *solver=Solver(solvPar);
+    QFuture<void> rotationBodyFuture=QtConcurrent::run(solver,&Solver::variateRotationBodyParameters, fragPar,variateSettings->getInfo());
+}
+
+void MainWindow::on_variateRotationCutBodySolverPushButton_clicked()
+{
+    if(ui->fiRotationCutBodyLineEdit->text().isEmpty())
+    {
+        QMessageBox::critical(this, tr("Ошибка"), tr("Не введено количество разбиений по фи"));
+        return;
+    }
+
+    if(ui->partRotationCutBodyLineEdit->text().isEmpty())
+    {
+        QMessageBox::critical(this, tr("Ошибка"), tr("Не введено количество разбиений по частям"));
+        return;
+    }
+
+    if(ui->radRotationCutBodyLineEdit->text().isEmpty())
+    {
+        QMessageBox::critical(this, tr("Ошибка"), tr("Не введено количество разбиений по радиусу"));
+        return;
+    }
+
+    if(ui->xBegRotationCutBodyLineEdit->text().isEmpty())
+    {
+        QMessageBox::critical(this, tr("Ошибка"), tr("Не введена начальная координата по Х"));
+        return;
+    }
+
+    if (ui->deltaRotationCutBodyFragmLineEdit->text().isEmpty())
+    {
+        QMessageBox::critical(this, tr("Ошибка"), tr("Не введена высота для подъема отрезков при разбиении"));
+        return;
+    }
+    if (ui->epsilonRotationCutBodyLineEdit->text().isEmpty())
+    {
+        QMessageBox::critical(this, tr("Ошибка"), tr("Не введено значение радиуса вортона"));
+        return;
+    }
+    if (ui->pointsRaisingRotationCutBodyLineEdit->text().isEmpty())
+    {
+        QMessageBox::critical(this, tr("Ошибка"), tr("Не введена высота подъема точек для вычисления давления"));
+        return;
+    }
+
+    if (ui->xEndRotationCutBodyLineEdit->text().isEmpty())
+    {
+        QMessageBox::critical(this, tr("Ошибка"), tr("Не введена конечная координата по X"));
+        return;
+    }
+
+    if (ui->sectionDistanceRotationCutBodyLineEdit->text().isEmpty())
+    {
+        QMessageBox::critical(this, tr("Ошибка"), tr("Не введена высота среза"));
+        return;
+    }
+
+    FragmentationParameters fragPar;
+    fragPar.rotationBodyFiFragNum=ui->fiRotationCutBodyLineEdit->text().toInt();
+    fragPar.rotationBodyPartFragNum=ui->partRotationCutBodyLineEdit->text().toInt();
+    fragPar.rotationBodyRFragNum=ui->radRotationCutBodyLineEdit->text().toInt();
+    fragPar.rotationBodyXBeg=ui->xBegRotationCutBodyLineEdit->text().toDouble();
+    fragPar.rotationBodyXEnd=ui->xEndRotationCutBodyLineEdit->text().toDouble();
+    fragPar.rotationBodySectionDistance=ui->sectionDistanceRotationCutBodyLineEdit->text().toDouble();
+    fragPar.vortonsRad=ui->epsilonRotationCutBodyLineEdit->text().toDouble();
+    fragPar.delta=ui->deltaRotationCutBodyFragmLineEdit->text().toDouble();
+    fragPar.pointsRaising=ui->pointsRaisingRotationCutBodyLineEdit->text().toDouble();
+
+    SolverParameters solvPar=settings->getSolverParameters();
+
+    *solver=Solver(solvPar);
+    QFuture<void> rotationCutBodyFuture=QtConcurrent::run(solver,&Solver::variateRotationCutBodyParameters, fragPar, variateSettings->getInfo());
+}
+
+void MainWindow::on_rotationCutBodyNearScreenPushButton_clicked()
+{
+    if(ui->fiRotationCutBodyLineEdit->text().isEmpty())
+    {
+        QMessageBox::critical(this, tr("Ошибка"), tr("Не введено количество разбиений по фи"));
+        return;
+    }
+
+    if(ui->partRotationCutBodyLineEdit->text().isEmpty())
+    {
+        QMessageBox::critical(this, tr("Ошибка"), tr("Не введено количество разбиений по частям"));
+        return;
+    }
+
+    if(ui->radRotationCutBodyLineEdit->text().isEmpty())
+    {
+        QMessageBox::critical(this, tr("Ошибка"), tr("Не введено количество разбиений по радиусу"));
+        return;
+    }
+
+    if(ui->xBegRotationCutBodyLineEdit->text().isEmpty())
+    {
+        QMessageBox::critical(this, tr("Ошибка"), tr("Не введена начальная координата по Х"));
+        return;
+    }
+
+    if (ui->deltaRotationCutBodyFragmLineEdit->text().isEmpty())
+    {
+        QMessageBox::critical(this, tr("Ошибка"), tr("Не введена высота для подъема отрезков при разбиении"));
+        return;
+    }
+    if (ui->epsilonRotationCutBodyLineEdit->text().isEmpty())
+    {
+        QMessageBox::critical(this, tr("Ошибка"), tr("Не введено значение радиуса вортона"));
+        return;
+    }
+    if (ui->pointsRaisingRotationCutBodyLineEdit->text().isEmpty())
+    {
+        QMessageBox::critical(this, tr("Ошибка"), tr("Не введена высота подъема точек для вычисления давления"));
+        return;
+    }
+
+    if (ui->xEndRotationCutBodyLineEdit->text().isEmpty())
+    {
+        QMessageBox::critical(this, tr("Ошибка"), tr("Не введена конечная координата по X"));
+        return;
+    }
+
+    if (ui->sectionDistanceRotationCutBodyLineEdit->text().isEmpty())
+    {
+        QMessageBox::critical(this, tr("Ошибка"), tr("Не введена высота среза"));
+        return;
+    }
+
+    FragmentationParameters fragPar;
+    fragPar.rotationBodyFiFragNum=ui->fiRotationCutBodyLineEdit->text().toInt();
+    fragPar.rotationBodyPartFragNum=ui->partRotationCutBodyLineEdit->text().toInt();
+    fragPar.rotationBodyRFragNum=ui->radRotationCutBodyLineEdit->text().toInt();
+    fragPar.rotationBodyXBeg=ui->xBegRotationCutBodyLineEdit->text().toDouble();
+    fragPar.rotationBodyXEnd=ui->xEndRotationCutBodyLineEdit->text().toDouble();
+    fragPar.rotationBodySectionDistance=ui->sectionDistanceRotationCutBodyLineEdit->text().toDouble();
+    fragPar.vortonsRad=ui->epsilonRotationCutBodyLineEdit->text().toDouble();
+    fragPar.delta=ui->deltaRotationCutBodyFragmLineEdit->text().toDouble();
+    fragPar.pointsRaising=ui->pointsRaisingRotationCutBodyLineEdit->text().toDouble();
+
+    SolverParameters solvPar=settings->getSolverParameters();
+
+    *solver=Solver(solvPar);
+    QFuture<void> rotationCutBodyFuture=QtConcurrent::run(solver,&Solver::rotationCutBodySolverNearScreen, fragPar);
+
+    ui->pointsRaisingRotationCutBodyLineEdit->setDisabled(true);
+    ui->radRotationCutBodyLineEdit->setDisabled(true);
+    ui->epsilonRotationCutBodyLineEdit->setDisabled(true);
+    ui->deltaRotationCutBodyFragmLineEdit->setDisabled(true);
+    ui->partRotationCutBodyLineEdit->setDisabled(true);
+    ui->fiRotationCutBodyLineEdit->setDisabled(true);
+    ui->sectionDistanceRotationCutBodyLineEdit->setDisabled(true);
+    ui->xBegRotationCutBodyLineEdit->setDisabled(true);
+    ui->xEndRotationCutBodyLineEdit->setDisabled(true);
+    ui->rotationCutBodySolverPushButton->setDisabled(true);
+    ui->rotationCutBodyFreeMotionSolverPushButton->setDisabled(true);
+    ui->rotationCutBodyLaunchSolverPushButton->setDisabled(true);
+    ui->rotationCutBodyNearScreenPushButton->setDisabled(true);
+    ui->variateRotationCutBodySolverPushButton->setDisabled(true);
 }

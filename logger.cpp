@@ -1,58 +1,110 @@
 #include "logger.h"
 
-Logger::Logger()
+Logger::Logger(const BodyType _type, const SolvType _stype)
 {
-    path = QCoreApplication::applicationDirPath();
-    QDir folder(path);
+    type=_type;
+    QDir folder(QCoreApplication::applicationDirPath());
     folder.cdUp();
     path=folder.absolutePath();
-    path.append("/Results");
-    folder.mkdir("Results");
+    if (_stype==NOOPTIMIZATION)
+    {
+
+        switch (type)
+        {
+        case SPHERE:
+        {
+            path.append("/Sphere_");
+            path+=QDateTime::currentDateTime().toString("dd.MM.yyyy_hh.mm.ss");
+            folder.mkdir("Sphere_"+QDateTime::currentDateTime().toString("dd.MM.yyyy_hh.mm.ss"));
+            break;
+        }
+        case CYLINDER:
+        {
+            path.append("/Cylinder_");
+            path+=QDateTime::currentDateTime().toString("dd.MM.yyyy_hh.mm.ss");
+            folder.mkdir("Cylinder_"+QDateTime::currentDateTime().toString("dd.MM.yyyy_hh.mm.ss"));
+            break;
+        }
+        case ROTATIONBODY:
+        {
+            path.append("/RotationBody_");
+            path+=QDateTime::currentDateTime().toString("dd.MM.yyyy_hh.mm.ss");
+            folder.mkdir("RotationBody_"+QDateTime::currentDateTime().toString("dd.MM.yyyy_hh.mm.ss"));
+            break;
+        }
+        case ROTATIONBOTTOMCUT:
+        {
+            path.append("/RotationBottomCut_");
+            path+=QDateTime::currentDateTime().toString("dd.MM.yyyy_hh.mm.ss");
+            folder.mkdir("RotationBottomCut_"+QDateTime::currentDateTime().toString("dd.MM.yyyy_hh.mm.ss"));
+            break;
+        }
+        default:
+        {
+            QMessageBox::critical(new QWidget(), tr("Ошибка"), tr("Попытка записи несоответствующего тела"));
+            exit(1);
+        }
+        }
+    }
+    else
+    {
+        path.append("/Results_");
+        path+=QDateTime::currentDateTime().toString("dd.MM.yyyy_hh.mm.ss");
+        folder.mkdir("Results_"+QDateTime::currentDateTime().toString("dd.MM.yyyy_hh.mm.ss"));
+    }
     createFiles();
 }
 
-Logger::Logger(const BodyType _type)
+Logger::Logger(BodyType _type, QString _path, SolvType _stype)
 {
     type=_type;
-    path = QCoreApplication::applicationDirPath();
+    path=_path;
     QDir folder(path);
-    folder.cdUp();
-    path=folder.absolutePath();
-    switch (type)
+    if (_stype==NOOPTIMIZATION)
     {
-    case SPHERE:
+
+        switch (type)
+        {
+        case SPHERE:
+        {
+            path.append("/Sphere_");
+            path+=QDateTime::currentDateTime().toString("dd.MM.yyyy_hh.mm.ss");
+            folder.mkdir("Sphere_"+QDateTime::currentDateTime().toString("dd.MM.yyyy_hh.mm.ss"));
+            break;
+        }
+        case CYLINDER:
+        {
+            path.append("/Cylinder_");
+            path+=QDateTime::currentDateTime().toString("dd.MM.yyyy_hh.mm.ss");
+            folder.mkdir("Cylinder_"+QDateTime::currentDateTime().toString("dd.MM.yyyy_hh.mm.ss"));
+            break;
+        }
+        case ROTATIONBODY:
+        {
+            path.append("/RotationBody_");
+            path+=QDateTime::currentDateTime().toString("dd.MM.yyyy_hh.mm.ss");
+            folder.mkdir("RotationBody_"+QDateTime::currentDateTime().toString("dd.MM.yyyy_hh.mm.ss"));
+            break;
+        }
+        case ROTATIONBOTTOMCUT:
+        {
+            path.append("/RotationBottomCut_");
+            path+=QDateTime::currentDateTime().toString("dd.MM.yyyy_hh.mm.ss");
+            folder.mkdir("RotationBottomCut_"+QDateTime::currentDateTime().toString("dd.MM.yyyy_hh.mm.ss"));
+            break;
+        }
+        default:
+        {
+            QMessageBox::critical(new QWidget(), tr("Ошибка"), tr("Попытка записи несоответствующего тела"));
+            exit(1);
+        }
+        }
+    }
+    else
     {
-        path.append("/Sphere_");
+        path.append("/Results_");
         path+=QDateTime::currentDateTime().toString("dd.MM.yyyy_hh.mm.ss");
-        folder.mkdir("Sphere_"+QDateTime::currentDateTime().toString("dd.MM.yyyy_hh.mm.ss"));
-        break;
-    }
-    case CYLINDER:
-    {
-        path.append("/Cylinder_");
-        path+=QDateTime::currentDateTime().toString("dd.MM.yyyy_hh.mm.ss");
-        folder.mkdir("Cylinder_"+QDateTime::currentDateTime().toString("dd.MM.yyyy_hh.mm.ss"));
-        break;
-    }
-    case ROTATIONBODY:
-    {
-        path.append("/RotationBody_");
-        path+=QDateTime::currentDateTime().toString("dd.MM.yyyy_hh.mm.ss");
-        folder.mkdir("RotationBody_"+QDateTime::currentDateTime().toString("dd.MM.yyyy_hh.mm.ss"));
-        break;
-    }
-    case ROTATIONBOTTOMCUT:
-    {
-        path.append("/RotationBottomCut_");
-        path+=QDateTime::currentDateTime().toString("dd.MM.yyyy_hh.mm.ss");
-        folder.mkdir("RotationBottomCut_"+QDateTime::currentDateTime().toString("dd.MM.yyyy_hh.mm.ss"));
-        break;
-    }
-    default:
-    {
-        QMessageBox::critical(new QWidget(), tr("Ошибка"), tr("Попытка записи несоответствующего тела"));
-        exit(1);
-    }
+        folder.mkdir("Results_"+QDateTime::currentDateTime().toString("dd.MM.yyyy_hh.mm.ss"));
     }
     createFiles();
 }
@@ -62,6 +114,22 @@ void Logger::createFiles()
     logFile=std::shared_ptr<QFile>(new QFile(path+"/logs.txt"));
     passportFile=std::shared_ptr<QFile>(new QFile(path+"/passport.txt"));
     forcesFile=std::shared_ptr<QFile>(new QFile(path+"/forces.csv"));
+    if (type==SPHERE)
+    {
+        cpFile=std::shared_ptr<QFile>(new QFile(path+"/cp.csv"));
+        if (cpFile->open(QIODevice::WriteOnly))
+        {
+            cpTextStream=std::shared_ptr<QTextStream>(new QTextStream(cpFile.get()));
+            *cpTextStream.get()<<"Файл для сил создан в "+QTime::currentTime().toString("H:m:s a")+"\n\n";
+            *cpTextStream.get()<<QString("Cp \t");
+            *cpTextStream.get()<<QString("teta \n");
+        }
+        else
+        {
+            QMessageBox::critical(new QWidget(),tr("Ошибка"), tr("Не удалось создать файл для записи сил"));
+            exit(1);
+        }
+    }
 
     if (logFile->open(QIODevice::WriteOnly))
     {
@@ -102,6 +170,16 @@ void Logger::createFiles()
         QMessageBox::critical(new QWidget(),tr("Ошибка"), tr("Не удалось создать файл для записи сил"));
         exit(1);
     }
+}
+
+void Logger::writeCpFile(const QVector<double> cp, const QVector<double> tetas)
+{
+    for (int i=0; i<cp.size(); i++)
+    {
+         *cpTextStream.get()<<QString::number(cp[i])+"\t";
+         *cpTextStream.get()<<QString::number(tetas[i])+"\n";
+    }
+    cpTextStream.get()->flush();
 }
 
 void Logger::writeLogs(const int stepNum, const double stepTime, const Counters beforeIntegrC, const Counters afterIntegrC, const Timers beforeIntegrT, const Timers afterIntegrT, const Restrictions restr)
@@ -223,6 +301,7 @@ void Logger::writeForces(const Vector3D forces,const Vector3D c)
     *forcesTextStream.get()<<QString::number(c.x())+"\t";
     *forcesTextStream.get()<<QString::number(c.y())+"\t";
     *forcesTextStream.get()<<QString::number(c.z())+"\n";
+    forcesTextStream.get()->flush();
 }
 
 void Logger::writeSolverTime(const double solvTime)
@@ -233,7 +312,17 @@ void Logger::writeSolverTime(const double solvTime)
 
 void Logger::closeFiles()
 {
-    logFile->close();
-    forcesFile->close();
-    passportFile->close();
+    if (logFile->isOpen())
+        logFile->close();
+    if (forcesFile->isOpen())
+        forcesFile->close();
+    if (passportFile->isOpen())
+        passportFile->close();
+    if (cpFile->isOpen())
+        cpFile->close();
+}
+
+QString Logger::getPath()
+{
+    return path;
 }

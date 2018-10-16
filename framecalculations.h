@@ -30,6 +30,7 @@ struct Counters
     int vorticityEliminated;
     int tooFarNum;
     int rotatedNum;
+    int underScreenNum;
     int gotBackNum;
     void clear();
 };
@@ -71,6 +72,8 @@ private:
 
 public:
     FrameCalculations();
+
+    QVector<double> calcTetas(const int tetaFragNum);
     void matrixCalc(QVector<std::shared_ptr<MultiFrame>> frames, const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals);
     Eigen::VectorXd columnCalc(const Vector3D streamVel, const QVector<Vorton> &vortons, const QVector<Vector3D> &normals, const QVector<Vector3D> controlPoints);
     Eigen::VectorXd vorticitiesCalc(const Eigen::VectorXd& column);
@@ -85,6 +88,9 @@ public:
     void setMatrixSize(int size);
     Vector3D forceCalc(const Vector3D streamVel, double streamPres, double density, QVector<std::shared_ptr<MultiFrame>> frames, const QVector<Vorton>& freeVortons, const double tau,
                        const QVector<double>& squares , const QVector <Vector3D>& controlPointsRaised, const QVector <Vector3D>& normals);
+    void cpSum(const int stepNum, QVector<double>& cp, const int fiFragNum, const double radius, const double pointsRaising, const QVector<double> &tetas, const Vector3D streamVel,
+                    const double streamPres, const double density, const QVector<std::shared_ptr<MultiFrame>> frames, QVector<Vorton> freeVortons, double tau, const Vector3D center);
+    void cpAverage(QVector<double>& cp, const int stepsNum);
     void getBackAndRotateSphere(QVector<Vorton>& vortons, const Vector3D center, const double radius, const double layerHeight, const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals);
     void getBackAndRotateCylinder(QVector<Vorton>& vortons, const double height, const double diameter, const double layerHeight, const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals);
     void getBackAndRotateRotationBody(QVector<Vorton> &vortons, const double xBeg, const double xEnd, const double layerHeight, const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals);
@@ -109,12 +115,12 @@ public:
     static bool insideRotationBodyLayer(const Vorton& vort, const double xBeg, const double xEnd, const double layerHeight);
     static bool insideRotationCutBody(const Vorton& vort, const double xBeg, const double xEnd);
     static bool insideRotationCutBodyLayer(const Vorton& vort, const double xBeg, const double xEnd, const double layerHeight);
-    static void insideScreen(Vorton &vort);
+    static bool insideScreen(Vorton &vort);
     static bool exploseSphere(const QVector<Vorton>& vortons);
     static double calcDispersion(const QVector<Vector3D> &cAerodynamics);
 
     static QVector<std::shared_ptr<MultiFrame>> copyFrames(QVector<std::shared_ptr<MultiFrame>> frames);
-    static void translateBody(const Vector3D &translation, QVector<std::shared_ptr<MultiFrame>>& frames, QVector<Vector3D>& controlPoints, QVector<Vector3D>& controlPointsRaised, Vector3D& center, double& xbeg, double& xend);
+    static void translateBody(const Vector3D &translation, QVector<std::shared_ptr<MultiFrame>>& frames, QVector<Vector3D>& controlPoints, QVector<Vector3D>& controlPointsRaised, Vector3D& center);
     static void translateVortons(const Vector3D &translation, QVector<Vorton>& vortons);
     Counters getCounters() const;
     Restrictions getRestrictions() const;

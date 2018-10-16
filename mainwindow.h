@@ -6,6 +6,7 @@
 #include "solver.h"
 #include <QFileDialog>
 #include <QShortcut>
+#include "variatesettings.h"
 
 namespace Ui {
 class MainWindow;
@@ -23,6 +24,7 @@ private:
     Ui::MainWindow *ui;
     SolverSettings *settings;
     Solver *solver;
+    VariateSettings *variateSettings;
     bool displaySphere;
     QShortcut *keyCtrlO;
     QShortcut *keyCtrlR;
@@ -45,14 +47,23 @@ private slots:
     void on_sphereSolverPushButton_clicked();
     void showSettings();
     void showSphere();
+    void showVariateSettings();
     void openPassport();
     void on_cylinderSolverPushButton_clicked();
     void on_variateSphereSolverPushButton_clicked();    
     void on_rotationBodySolverPushButton_clicked();
     void on_rotationCutBodySolverPushButton_clicked();
     void on_rotationCutBodyFreeMotionSolverPushButton_clicked();
-
     void on_rotationCutBodyLaunchSolverPushButton_clicked();
+    void on_sphereFreeMotionSolverPushButton_clicked();
+
+    void on_variateCylinderSolverPushButton_clicked();
+
+    void on_variateRotationBodySolverPushButton_clicked();
+
+    void on_variateRotationCutBodySolverPushButton_clicked();
+
+    void on_rotationCutBodyNearScreenPushButton_clicked();
 
 public slots:
     void showInfo();

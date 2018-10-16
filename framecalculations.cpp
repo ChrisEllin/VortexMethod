@@ -2,7 +2,7 @@
 
 void Counters::clear()
 {
-    unitedNum=vorticityEliminated=tooFarNum=rotatedNum=gotBackNum=0;
+    unitedNum=vorticityEliminated=tooFarNum=rotatedNum=gotBackNum=underScreenNum=0;
 }
 
 void Restrictions::clear()
@@ -21,6 +21,16 @@ FrameCalculations::FrameCalculations()
     counters.clear();
     restrictions.clear();
     timers.clear();
+}
+
+QVector<double> FrameCalculations::calcTetas(const int tetaFragNum)
+{
+    QVector<double> tetas;
+    tetas.push_back(0.0);
+    for (int i=1; i<tetaFragNum+2;i++)
+        tetas.push_back(M_PI/(tetaFragNum+2)*(0.5+i));
+    tetas.push_back(M_PI);
+    return tetas;
 }
 
 void FrameCalculations::matrixCalc(QVector<std::shared_ptr<MultiFrame> > frames, const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals)
@@ -295,6 +305,27 @@ Vector3D FrameCalculations::forceCalc(const Vector3D streamVel, double streamPre
     return force;
 }
 
+void FrameCalculations::cpSum(const int stepNum, QVector<double> &cp, const int fiFragNum, const double radius, const double pointsRaising, const QVector<double> &tetas, const Vector3D streamVel, const double streamPres, const double density, const QVector<std::shared_ptr<MultiFrame>> frames, QVector<Vorton> freeVortons, double tau, const Vector3D center)
+{
+    if (stepNum>=200)
+    {
+        double fi=M_PI*5.0/fiFragNum;
+        for (int i=0; i<tetas.size();i++)
+        {
+            Vector3D point((radius+pointsRaising)*sin(tetas[i])*cos(fi), (radius+pointsRaising)*sin(tetas[i])*sin(fi),(radius+pointsRaising)*cos(tetas[i]));
+            point+=center;
+            double pres=pressureCalc(point, streamVel,streamPres,density,frames,freeVortons,tau);
+            cp[i]+=(pres-streamPres)/(density*Vector3D::dotProduct(streamVel,streamVel)*0.5);
+        }
+    }
+}
+
+void FrameCalculations::cpAverage(QVector<double> &cp, const int stepsNum)
+{
+    for (int i=0; i<cp.size(); i++)
+        cp[i]/=stepsNum-200;
+}
+
 void FrameCalculations::getBackAndRotateSphere(QVector<Vorton> &vortons, const Vector3D center, const double radius, const double layerHeight, const QVector<Vector3D>& controlPoints, const QVector<Vector3D>& normals)
 {
     QTime start=QTime::currentTime();
@@ -388,7 +419,7 @@ void FrameCalculations::getBackAndRotateRotationCutBody(QVector<Vorton> &vortons
 void FrameCalculations::getBackAndRotateRotationCutLaunchedBody(QVector<Vorton> &vortons, const double xBeg, const double xEnd, const double layerHeight, const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals)
 {
     QTime start=QTime::currentTime();
-    for (int i=0; i<vortons.size(); i++)
+    for (int i=vortons.size()-1; i>=0; i--)
     {
         if (FrameCalculations::insideRotationCutBody(vortons[i],xBeg,xEnd))
         {
@@ -403,7 +434,11 @@ void FrameCalculations::getBackAndRotateRotationCutLaunchedBody(QVector<Vorton> 
             vortons[i].rotateAroundNormal(normals[closest.second]);
             counters.rotatedNum++;
         }
-        FrameCalculations::insideScreen(vortons[i]);
+        if (FrameCalculations::insideScreen(vortons[i]))
+        {
+            vortons.remove(i);
+            counters.underScreenNum++;
+        }
     }
     timers.getBackAndRotateTimer=start.elapsed()*0.001;
 }
@@ -517,21 +552,11 @@ bool FrameCalculations::insideRotationCutBodyLayer(const Vorton &vort, const dou
     return false;
 }
 
-void FrameCalculations::insideScreen(Vorton &vort)
+bool FrameCalculations::insideScreen(Vorton &vort)
 {
-    if (vort.getMid().x()<0.0)
-    {
-        Vector3D mid=vort.getMid();
-        mid.translate(Vector3D(-2.0*vort.getMid().x(), 0.0, 0.0));
-        vort.setMid(mid);
-    }
-
-    if (vort.getTail().x()<0.0)
-    {
-        Vector3D tail=vort.getTail();
-        tail.translate(Vector3D(-2.0*vort.getTail().x(), 0.0, 0.0));
-        vort.setTail(tail);
-    }
+    if (vort.getMid().x()<0.0 || vort.getTail().x()<0.0)
+        return true;
+    return false;
 }
 
 
@@ -578,7 +603,7 @@ QVector<std::shared_ptr<MultiFrame> > FrameCalculations::copyFrames(QVector<std:
     return copyingFrames;
 }
 
-void FrameCalculations::translateBody(const Vector3D &translation, QVector<std::shared_ptr<MultiFrame> > &frames, QVector<Vector3D> &controlPoints, QVector<Vector3D> &controlPointsRaised, Vector3D &center, double &xbeg, double &xend)
+void FrameCalculations::translateBody(const Vector3D &translation, QVector<std::shared_ptr<MultiFrame> > &frames, QVector<Vector3D> &controlPoints, QVector<Vector3D> &controlPointsRaised, Vector3D &center/*, double &xbeg, double &xend*/)
 {
     for (int i=0; i<frames.size(); i++)
         frames[i]->translate(translation);
@@ -588,8 +613,8 @@ void FrameCalculations::translateBody(const Vector3D &translation, QVector<std::
         controlPointsRaised[i].translate(translation);
     }
    center+=translation;
-   xbeg+=translation.x();
-   xend+=translation.x();
+//   xbeg+=translation.x();
+//   xend+=translation.x();
 }
 
 void FrameCalculations::translateVortons(const Vector3D &translation, QVector<Vorton> &vortons)
