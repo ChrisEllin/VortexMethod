@@ -938,6 +938,8 @@ void MainWindow::on_rotationCutBodyLaunchSolverPushButton_clicked()
     ui->rotationCutBodySolverPushButton->setDisabled(true);
     ui->rotationCutBodyFreeMotionSolverPushButton->setDisabled(true);
     ui->rotationCutBodyLaunchSolverPushButton->setDisabled(true);
+    ui->rotationCutBodyNearScreenPushButton->setDisabled(true);
+    ui->variateRotationCutBodySolverPushButton->setDisabled(true);
 }
 
 void MainWindow::on_sphereFreeMotionSolverPushButton_clicked()

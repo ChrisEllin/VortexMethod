@@ -603,7 +603,7 @@ QVector<std::shared_ptr<MultiFrame> > FrameCalculations::copyFrames(QVector<std:
     return copyingFrames;
 }
 
-void FrameCalculations::translateBody(const Vector3D &translation, QVector<std::shared_ptr<MultiFrame> > &frames, QVector<Vector3D> &controlPoints, QVector<Vector3D> &controlPointsRaised, Vector3D &center/*, double &xbeg, double &xend*/)
+void FrameCalculations::translateBody(const Vector3D &translation, QVector<std::shared_ptr<MultiFrame> > &frames, QVector<Vector3D> &controlPoints, QVector<Vector3D> &controlPointsRaised, Vector3D &center, double &xbeg, double &xend)
 {
     for (int i=0; i<frames.size(); i++)
         frames[i]->translate(translation);
@@ -613,8 +613,20 @@ void FrameCalculations::translateBody(const Vector3D &translation, QVector<std::
         controlPointsRaised[i].translate(translation);
     }
    center+=translation;
-//   xbeg+=translation.x();
-//   xend+=translation.x();
+   xbeg+=translation.x();
+   xend+=translation.x();
+}
+
+void FrameCalculations::translateBody(const Vector3D &translation, QVector<std::shared_ptr<MultiFrame> > &frames, QVector<Vector3D> &controlPoints, QVector<Vector3D> &controlPointsRaised, Vector3D &center)
+{
+    for (int i=0; i<frames.size(); i++)
+        frames[i]->translate(translation);
+    for (int i=0; i<controlPoints.size(); i++)
+    {
+        controlPoints[i].translate(translation);
+        controlPointsRaised[i].translate(translation);
+    }
+   center+=translation;
 }
 
 void FrameCalculations::translateVortons(const Vector3D &translation, QVector<Vorton> &vortons)

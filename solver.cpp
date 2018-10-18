@@ -537,6 +537,8 @@ void Solver::rotationCutBodyLaunchSolver(const FragmentationParameters &fragPar)
     QVector<Vorton> newVortons;
     emit updateRotationCutBodyMaximum(solvPar.stepsNum-1);
 
+    double xBeg=fragPar.rotationBodyXBeg;
+    double xEnd=fragPar.rotationBodyXEnd;
     logger.writePassport(solvPar,fragPar);
     BodyFragmentation fragmentation(BodyType::ROTATIONBOTTOMCUT, fragPar, true);
     for (int i=0; i<solvPar.stepsNum; i++)
@@ -575,6 +577,8 @@ void Solver::rotationCutBodyLaunchSolver(const FragmentationParameters &fragPar)
 
         functions.displacementLaunchCalc(freeVortons,newVortons,symFreeVortons, symNewVortons, solvPar.tau,relVel,solvPar.eDelta,solvPar.fiMax,solvPar.maxMove);
         Vector3D force=functions.forceCalc(relVel, solvPar.streamPres,solvPar.density,frames+symFrames,freeVortons, solvPar.tau, squares, controlPointsRaised, normals);
+        forces[i]=force;
+
         //cAerodynamics[i] = force/(solvPar.density*solvPar.streamVel.lengthSquared()*0.5*M_PI*pow(fragPar.sphereRad,2));
 
         freeVortons.append(newVortons);
@@ -585,17 +589,18 @@ void Solver::rotationCutBodyLaunchSolver(const FragmentationParameters &fragPar)
         functions.clear();
 
         functions.displace(freeVortons);
-        functions.getBackAndRotateRotationCutLaunchedBody(freeVortons, fragPar.rotationBodyXBeg, fragPar.rotationBodyXEnd, solvPar.layerHeight, controlPoints,normals);
+        functions.getBackAndRotateRotationCutLaunchedBody(freeVortons, xBeg, xEnd, solvPar.layerHeight, controlPoints,normals);
         functions.unionVortons(freeVortons, solvPar.eStar,solvPar.eDoubleStar,fragPar.vortonsRad);
         functions.removeSmallVorticity(freeVortons,solvPar.minVorticity);
         functions.removeFarRotationCutBody(freeVortons,solvPar.farDistance,center);
+
 
         Counters countersAfterIntegration=functions.getCounters();
         Timers timersAfterIntegration=functions.getTimers();
 
         functions.clear();
 
-        FrameCalculations::translateBody(translation, frames, controlPoints, controlPointsRaised, center);
+        FrameCalculations::translateBody(translation, frames, controlPoints, controlPointsRaised, center, xBeg, xEnd);
         FrameCalculations::translateVortons(translation,freeVortons);
         logger.writeLogs(i,stepTime.elapsed()*0.001,countersBeforeIntegration,countersAfterIntegration, timersBeforeIntegration, timersAfterIntegration, restrictions);
 
