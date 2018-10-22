@@ -20,3 +20,8 @@ bool VariateSettings::getInfo()
         return true;
     return false;
 }
+
+double VariateSettings::getScreenDistance()
+{
+    return ui->screenDistance->text().toDouble();
+}

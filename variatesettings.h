@@ -15,6 +15,7 @@ public:
     explicit VariateSettings(QWidget *parent = 0);
     ~VariateSettings();
     bool getInfo();
+    double getScreenDistance();
 
 private:
     Ui::VariateSettings *ui;

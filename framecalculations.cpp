@@ -554,7 +554,7 @@ bool FrameCalculations::insideRotationCutBodyLayer(const Vorton &vort, const dou
 
 bool FrameCalculations::insideScreen(Vorton &vort)
 {
-    if (vort.getMid().x()<0.0 || vort.getTail().x()<0.0)
+    if (vort.getMid().x()>0.0 || vort.getTail().x()>0.0)
         return true;
     return false;
 }

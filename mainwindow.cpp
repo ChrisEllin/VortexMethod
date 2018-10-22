@@ -770,6 +770,9 @@ void MainWindow::on_rotationCutBodySolverPushButton_clicked()
     ui->xEndRotationCutBodyLineEdit->setDisabled(true);
     ui->rotationCutBodySolverPushButton->setDisabled(true);
     ui->rotationCutBodyFreeMotionSolverPushButton->setDisabled(true);
+    ui->rotationCutBodyLaunchSolverPushButton->setDisabled(true);
+    ui->rotationCutBodyNearScreenPushButton->setDisabled(true);
+    ui->variateRotationCutBodySolverPushButton->setDisabled(true);
 }
 
 void MainWindow::on_rotationCutBodyFreeMotionSolverPushButton_clicked()
@@ -1267,7 +1270,7 @@ void MainWindow::on_rotationCutBodyNearScreenPushButton_clicked()
     SolverParameters solvPar=settings->getSolverParameters();
 
     *solver=Solver(solvPar);
-    QFuture<void> rotationCutBodyFuture=QtConcurrent::run(solver,&Solver::rotationCutBodySolverNearScreen, fragPar);
+    QFuture<void> rotationCutBodyFuture=QtConcurrent::run(solver,&Solver::rotationCutBodySolverNearScreen, fragPar, variateSettings->getScreenDistance());
 
     ui->pointsRaisingRotationCutBodyLineEdit->setDisabled(true);
     ui->radRotationCutBodyLineEdit->setDisabled(true);

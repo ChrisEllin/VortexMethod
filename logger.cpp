@@ -318,8 +318,11 @@ void Logger::closeFiles()
         forcesFile->close();
     if (passportFile->isOpen())
         passportFile->close();
-    if (cpFile->isOpen())
-        cpFile->close();
+    if (type==SPHERE)
+    {
+        if (cpFile->isOpen())
+            cpFile->close();
+    }
 }
 
 QString Logger::getPath()

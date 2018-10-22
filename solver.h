@@ -21,7 +21,7 @@ public:
     void cylinderSolver(const FragmentationParameters& fragPar);
     void rotationBodySolver(const FragmentationParameters& fragPar);
     void rotationCutBodySolver(const FragmentationParameters& fragPar);
-    void rotationCutBodySolverNearScreen(const FragmentationParameters& fragPar);
+    void rotationCutBodySolverNearScreen(const FragmentationParameters& fragPar, const double screenDistance);
     void rotationCutBodyFreeMotionSolver(const FragmentationParameters &fragPar);
     void rotationCutBodyLaunchSolver(const FragmentationParameters& fragPar);
     void variateSphereParameters(FragmentationParameters fragPar, bool variateEps);

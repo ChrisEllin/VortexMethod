@@ -135,7 +135,7 @@
       <item row="0" column="0">
        <widget class="QTabWidget" name="tabWidget">
         <property name="currentIndex">
-         <number>1</number>
+         <number>3</number>
         </property>
         <widget class="QWidget" name="tab">
          <attribute name="title">
@@ -1302,7 +1302,7 @@
   </action>
   <action name="variationSettingsOpenAction">
    <property name="text">
-    <string>Настройки вариации</string>
+    <string>Настройки вариации/отладки</string>
    </property>
   </action>
  </widget>

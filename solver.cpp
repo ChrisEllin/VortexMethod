@@ -382,7 +382,7 @@ void Solver::rotationCutBodySolver(const FragmentationParameters &fragPar)
     logger.closeFiles();
 }
 
-void Solver::rotationCutBodySolverNearScreen(const FragmentationParameters &fragPar)
+void Solver::rotationCutBodySolverNearScreen(const FragmentationParameters &fragPar, const double screenDistance)
 {
     QTime start=QTime::currentTime();
     Logger logger(BodyType::ROTATIONBOTTOMCUT);
@@ -402,6 +402,7 @@ void Solver::rotationCutBodySolverNearScreen(const FragmentationParameters &frag
     QVector<Vorton> newVortons;
     emit updateRotationCutBodyMaximum(solvPar.stepsNum-1);
 
+    FrameCalculations::translateBody(Vector3D(-(fragPar.rotationBodyXEnd-fragPar.rotationBodyXBeg+screenDistance),0.0,0.0),frames,controlPoints,controlPointsRaised,center);
     logger.writePassport(solvPar,fragPar);
     for (int i=0; i<solvPar.stepsNum; i++)
     {
