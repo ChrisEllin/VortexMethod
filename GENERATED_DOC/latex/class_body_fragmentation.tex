@@ -1,0 +1,303 @@
+\hypertarget{class_body_fragmentation}{}\section{Класс Body\+Fragmentation}
+\label{class_body_fragmentation}\index{Body\+Fragmentation@{Body\+Fragmentation}}
+
+
+Класс, описывающие разбиение тела  
+
+
+
+
+{\ttfamily \#include $<$bodyfragmentation.\+h$>$}
+
+
+
+Граф наследования\+:Body\+Fragmentation\+:
+% FIG 0
+
+
+Граф связей класса Body\+Fragmentation\+:
+% FIG 1
+\subsection*{Открытые члены}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_body_fragmentation_a41cc5db36daede2845bcffbd00d30cf0}{Body\+Fragmentation}} (\mbox{\hyperlink{bodyfragmentation_8h_acf0ce63e34327e5bc336f9fe3d2d47a2}{Body\+Type}} body, const \mbox{\hyperlink{struct_fragmentation_parameters}{Fragmentation\+Parameters}} \&param, bool launch=false)
+\item 
+void \mbox{\hyperlink{class_body_fragmentation_afdf6a5e8d2c2f7c6e2b1434999bf0d60}{sphere\+Fragmentation}} ()
+\item 
+void \mbox{\hyperlink{class_body_fragmentation_aaa0982c352b4a4cc65ba7582cb4b0d9e}{cylinder\+Fragmentation}} ()
+\item 
+void \mbox{\hyperlink{class_body_fragmentation_a27e74d7cbfb91c48f55401b84715d8fc}{rotation\+Body\+Fragmantation}} ()
+\item 
+void \mbox{\hyperlink{class_body_fragmentation_ad3ae05e123182189465a904fa6f8b77b}{rotation\+Cut\+Body\+Fragmantation}} ()
+\item 
+void \mbox{\hyperlink{class_body_fragmentation_adcd678b58bb8d85548c9d84ff6dd8f71}{rotation\+Cut\+Body\+Launch\+Fragmentation}} (const int i, const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&body\+Vel, const double tau)
+\item 
+void \mbox{\hyperlink{class_body_fragmentation_a0ad2e79acc6ca53e70e9f0f9ca8cb69f}{clear\+Vectors}} ()
+\item 
+Q\+Vector$<$ \mbox{\hyperlink{class_vector3_d}{Vector3D}} $>$ \mbox{\hyperlink{class_body_fragmentation_a2e69253801fb3b534568e44e4c642a5f}{get\+Control\+Points}} () const
+\item 
+Q\+Vector$<$ \mbox{\hyperlink{class_vector3_d}{Vector3D}} $>$ \mbox{\hyperlink{class_body_fragmentation_a5cb0e540a915963e6bca93fd4fff7c45}{get\+Normals}} () const
+\item 
+Q\+Vector$<$ double $>$ \mbox{\hyperlink{class_body_fragmentation_a52efb3896bc6200767b606311418b580}{get\+Squares}} () const
+\item 
+Q\+Vector$<$ \mbox{\hyperlink{class_vector3_d}{Vector3D}} $>$ \mbox{\hyperlink{class_body_fragmentation_a204136fe52dcd14b632e8fbc1a8e4124}{get\+Control\+Points\+Raised}} () const
+\item 
+Q\+Vector$<$ std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{class_multi_frame}{Multi\+Frame}} $>$ $>$ \mbox{\hyperlink{class_body_fragmentation_aa6ac4c08d3f49c4e4d52cb7777b04bf9}{get\+Frames}} () const
+\end{DoxyCompactItemize}
+\subsection*{Открытые статические члены}
+\begin{DoxyCompactItemize}
+\item 
+static double \mbox{\hyperlink{class_body_fragmentation_aed0eb252da338a5164957a5aee5486c6}{preset\+FunctionF}} (double x)
+\item 
+static double \mbox{\hyperlink{class_body_fragmentation_aae27593b7d947e49723d6efb29533b0c}{preset\+Derive\+FunctionF}} (double x)
+\item 
+static double \mbox{\hyperlink{class_body_fragmentation_aef27baaa1add101e113de555aaaeabcc}{preset\+FunctionG}} (double x)
+\item 
+static double \mbox{\hyperlink{class_body_fragmentation_a6a9c0eaa064025336ed5338d329955b5}{preset\+Derive\+FunctionG}} (double x)
+\item 
+static Q\+Pair$<$ double, int $>$ \mbox{\hyperlink{class_body_fragmentation_a603a59196a3a1656c2d1b71014d68075}{find\+Closest}} (const \mbox{\hyperlink{class_vector3_d}{Vector3D}} point, const Q\+Vector$<$ \mbox{\hyperlink{class_vector3_d}{Vector3D}} $>$ \&\mbox{\hyperlink{class_body_fragmentation_a68ff3b27f313fa4f8b8bc7209a7c6da9}{control\+Points}}, const Q\+Vector$<$ \mbox{\hyperlink{class_vector3_d}{Vector3D}} $>$ \&\mbox{\hyperlink{class_body_fragmentation_a636adca1ec65305257c4ffae191bcdde}{normals}})
+\item 
+static int \mbox{\hyperlink{class_body_fragmentation_aa68b7a8cf5a0f42d0800b02298377998}{find\+Closet\+Element\+From\+Array}} (const Q\+Vector$<$ double $>$ arr, const double point)
+\end{DoxyCompactItemize}
+\subsection*{Закрытые данные}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_body_fragmentation_acaa44d72313bec6fb22af9e85268fbde}\label{class_body_fragmentation_acaa44d72313bec6fb22af9e85268fbde}} 
+Q\+Vector$<$ std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{class_multi_frame}{Multi\+Frame}} $>$ $>$ \mbox{\hyperlink{class_body_fragmentation_acaa44d72313bec6fb22af9e85268fbde}{frames}}
+\begin{DoxyCompactList}\small\item\em Вектор рамок, составленных из вортон-\/отрезков \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_body_fragmentation_a68ff3b27f313fa4f8b8bc7209a7c6da9}\label{class_body_fragmentation_a68ff3b27f313fa4f8b8bc7209a7c6da9}} 
+Q\+Vector$<$ \mbox{\hyperlink{class_vector3_d}{Vector3D}} $>$ \mbox{\hyperlink{class_body_fragmentation_a68ff3b27f313fa4f8b8bc7209a7c6da9}{control\+Points}}
+\begin{DoxyCompactList}\small\item\em Вектор котнрольных точек \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_body_fragmentation_a636adca1ec65305257c4ffae191bcdde}\label{class_body_fragmentation_a636adca1ec65305257c4ffae191bcdde}} 
+Q\+Vector$<$ \mbox{\hyperlink{class_vector3_d}{Vector3D}} $>$ \mbox{\hyperlink{class_body_fragmentation_a636adca1ec65305257c4ffae191bcdde}{normals}}
+\begin{DoxyCompactList}\small\item\em Вектор нормалей \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_body_fragmentation_a78380b602b04f5da842d49aaaa1e240a}\label{class_body_fragmentation_a78380b602b04f5da842d49aaaa1e240a}} 
+Q\+Vector$<$ double $>$ \mbox{\hyperlink{class_body_fragmentation_a78380b602b04f5da842d49aaaa1e240a}{squares}}
+\begin{DoxyCompactList}\small\item\em Векторй площадей рамок \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_body_fragmentation_a04437ab42965f8060a6d769bd696cd13}\label{class_body_fragmentation_a04437ab42965f8060a6d769bd696cd13}} 
+Q\+Vector$<$ \mbox{\hyperlink{class_vector3_d}{Vector3D}} $>$ \mbox{\hyperlink{class_body_fragmentation_a04437ab42965f8060a6d769bd696cd13}{control\+Points\+Raised}}
+\begin{DoxyCompactList}\small\item\em Вектор контрольных точек для подсчета давления \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_body_fragmentation_a9787c79555a594baa9771d53c5ae4ba8}\label{class_body_fragmentation_a9787c79555a594baa9771d53c5ae4ba8}} 
+\mbox{\hyperlink{struct_sphere_parameters}{Sphere\+Parameters}} \mbox{\hyperlink{class_body_fragmentation_a9787c79555a594baa9771d53c5ae4ba8}{sphere}}
+\begin{DoxyCompactList}\small\item\em Параметры разбиения сферы \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_body_fragmentation_a80d6b33b7f2f6f59de7da2dfa1f9dee8}\label{class_body_fragmentation_a80d6b33b7f2f6f59de7da2dfa1f9dee8}} 
+\mbox{\hyperlink{struct_cylinder_parameters}{Cylinder\+Parameters}} \mbox{\hyperlink{class_body_fragmentation_a80d6b33b7f2f6f59de7da2dfa1f9dee8}{cylinder}}
+\begin{DoxyCompactList}\small\item\em Параметры разбиения цилиндра \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_body_fragmentation_acbf8d8875cbf77bacbfba7d57efbfaf3}\label{class_body_fragmentation_acbf8d8875cbf77bacbfba7d57efbfaf3}} 
+\mbox{\hyperlink{struct_rotation_body_parameters}{Rotation\+Body\+Parameters}} \mbox{\hyperlink{class_body_fragmentation_acbf8d8875cbf77bacbfba7d57efbfaf3}{rotation\+Body}}
+\begin{DoxyCompactList}\small\item\em Параметры разбиения тела вращения \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_body_fragmentation_a873cb95874242a604f1b5bbc30e171be}\label{class_body_fragmentation_a873cb95874242a604f1b5bbc30e171be}} 
+\mbox{\hyperlink{struct_rotation_cut_body_parameters}{Rotation\+Cut\+Body\+Parameters}} \mbox{\hyperlink{class_body_fragmentation_a873cb95874242a604f1b5bbc30e171be}{rotation\+Bottom\+Cut\+Body}}
+\begin{DoxyCompactList}\small\item\em Параметры разбиения тела вращения со срезом дна \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Подробное описание}
+Класс, описывающие разбиение тела 
+
+Класс разбивает тело на рамки, рассчитывает контрольные точки, нормали, контрольные точки для подсчета давления и площади рамок. 
+
+\subsection{Конструктор(ы)}
+\mbox{\Hypertarget{class_body_fragmentation_a41cc5db36daede2845bcffbd00d30cf0}\label{class_body_fragmentation_a41cc5db36daede2845bcffbd00d30cf0}} 
+\index{Body\+Fragmentation@{Body\+Fragmentation}!Body\+Fragmentation@{Body\+Fragmentation}}
+\index{Body\+Fragmentation@{Body\+Fragmentation}!Body\+Fragmentation@{Body\+Fragmentation}}
+\subsubsection{\texorpdfstring{Body\+Fragmentation()}{BodyFragmentation()}}
+{\footnotesize\ttfamily Body\+Fragmentation\+::\+Body\+Fragmentation (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{bodyfragmentation_8h_acf0ce63e34327e5bc336f9fe3d2d47a2}{Body\+Type}}}]{body,  }\item[{const \mbox{\hyperlink{struct_fragmentation_parameters}{Fragmentation\+Parameters}} \&}]{param,  }\item[{bool}]{launch = {\ttfamily false} }\end{DoxyParamCaption})}
+
+Разбивает тело, определяя его тип. 
+\begin{DoxyParams}{Аргументы}
+{\em body} & Тип тела \\
+\hline
+{\em param} & Параметры разбиения \\
+\hline
+{\em launch} & Необходимость решения задачи старта \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{Методы}
+\mbox{\Hypertarget{class_body_fragmentation_a0ad2e79acc6ca53e70e9f0f9ca8cb69f}\label{class_body_fragmentation_a0ad2e79acc6ca53e70e9f0f9ca8cb69f}} 
+\index{Body\+Fragmentation@{Body\+Fragmentation}!clear\+Vectors@{clear\+Vectors}}
+\index{clear\+Vectors@{clear\+Vectors}!Body\+Fragmentation@{Body\+Fragmentation}}
+\subsubsection{\texorpdfstring{clear\+Vectors()}{clearVectors()}}
+{\footnotesize\ttfamily void Body\+Fragmentation\+::clear\+Vectors (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Очищает вектора контрольных точек, нормалей и т.\+д. \mbox{\Hypertarget{class_body_fragmentation_aaa0982c352b4a4cc65ba7582cb4b0d9e}\label{class_body_fragmentation_aaa0982c352b4a4cc65ba7582cb4b0d9e}} 
+\index{Body\+Fragmentation@{Body\+Fragmentation}!cylinder\+Fragmentation@{cylinder\+Fragmentation}}
+\index{cylinder\+Fragmentation@{cylinder\+Fragmentation}!Body\+Fragmentation@{Body\+Fragmentation}}
+\subsubsection{\texorpdfstring{cylinder\+Fragmentation()}{cylinderFragmentation()}}
+{\footnotesize\ttfamily void Body\+Fragmentation\+::cylinder\+Fragmentation (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Реализует разбиение цилиндра. \mbox{\Hypertarget{class_body_fragmentation_a603a59196a3a1656c2d1b71014d68075}\label{class_body_fragmentation_a603a59196a3a1656c2d1b71014d68075}} 
+\index{Body\+Fragmentation@{Body\+Fragmentation}!find\+Closest@{find\+Closest}}
+\index{find\+Closest@{find\+Closest}!Body\+Fragmentation@{Body\+Fragmentation}}
+\subsubsection{\texorpdfstring{find\+Closest()}{findClosest()}}
+{\footnotesize\ttfamily Q\+Pair$<$ double, int $>$ Body\+Fragmentation\+::find\+Closest (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_vector3_d}{Vector3D}}}]{point,  }\item[{const Q\+Vector$<$ \mbox{\hyperlink{class_vector3_d}{Vector3D}} $>$ \&}]{control\+Points,  }\item[{const Q\+Vector$<$ \mbox{\hyperlink{class_vector3_d}{Vector3D}} $>$ \&}]{normals }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Поиск ближайшей рамки 
+\begin{DoxyParams}{Аргументы}
+{\em point} & Точка, для которой ищется ближайшая рамка \\
+\hline
+{\em control\+Points} & Вектор контрольных точек \\
+\hline
+{\em normals} & Вектор нормалей \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Возвращает}
+Пара из наименьшего расстояния до рамки и номера этой рамки 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_body_fragmentation_aa68b7a8cf5a0f42d0800b02298377998}\label{class_body_fragmentation_aa68b7a8cf5a0f42d0800b02298377998}} 
+\index{Body\+Fragmentation@{Body\+Fragmentation}!find\+Closet\+Element\+From\+Array@{find\+Closet\+Element\+From\+Array}}
+\index{find\+Closet\+Element\+From\+Array@{find\+Closet\+Element\+From\+Array}!Body\+Fragmentation@{Body\+Fragmentation}}
+\subsubsection{\texorpdfstring{find\+Closet\+Element\+From\+Array()}{findClosetElementFromArray()}}
+{\footnotesize\ttfamily int Body\+Fragmentation\+::find\+Closet\+Element\+From\+Array (\begin{DoxyParamCaption}\item[{const Q\+Vector$<$ double $>$}]{arr,  }\item[{const double}]{point }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Поиск ближайшего элемента из массива к точке 
+\begin{DoxyParams}{Аргументы}
+{\em arr} & Массив, в котором ищется ближайший элемент \\
+\hline
+{\em point} & Точка, для которой ищется ближайшая рамка \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Возвращает}
+Номер ближайшего элемента 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_body_fragmentation_a2e69253801fb3b534568e44e4c642a5f}\label{class_body_fragmentation_a2e69253801fb3b534568e44e4c642a5f}} 
+\index{Body\+Fragmentation@{Body\+Fragmentation}!get\+Control\+Points@{get\+Control\+Points}}
+\index{get\+Control\+Points@{get\+Control\+Points}!Body\+Fragmentation@{Body\+Fragmentation}}
+\subsubsection{\texorpdfstring{get\+Control\+Points()}{getControlPoints()}}
+{\footnotesize\ttfamily Q\+Vector$<$ \mbox{\hyperlink{class_vector3_d}{Vector3D}} $>$ Body\+Fragmentation\+::get\+Control\+Points (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+Возвращает рассчитанные контрольные точки \begin{DoxyReturn}{Возвращает}
+Вектор контрольных точек 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_body_fragmentation_a204136fe52dcd14b632e8fbc1a8e4124}\label{class_body_fragmentation_a204136fe52dcd14b632e8fbc1a8e4124}} 
+\index{Body\+Fragmentation@{Body\+Fragmentation}!get\+Control\+Points\+Raised@{get\+Control\+Points\+Raised}}
+\index{get\+Control\+Points\+Raised@{get\+Control\+Points\+Raised}!Body\+Fragmentation@{Body\+Fragmentation}}
+\subsubsection{\texorpdfstring{get\+Control\+Points\+Raised()}{getControlPointsRaised()}}
+{\footnotesize\ttfamily Q\+Vector$<$ \mbox{\hyperlink{class_vector3_d}{Vector3D}} $>$ Body\+Fragmentation\+::get\+Control\+Points\+Raised (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+Возвращает рассчитанные контрольные точки для вычисления давления \begin{DoxyReturn}{Возвращает}
+Вектор контрольных точек для вычисления давления 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_body_fragmentation_aa6ac4c08d3f49c4e4d52cb7777b04bf9}\label{class_body_fragmentation_aa6ac4c08d3f49c4e4d52cb7777b04bf9}} 
+\index{Body\+Fragmentation@{Body\+Fragmentation}!get\+Frames@{get\+Frames}}
+\index{get\+Frames@{get\+Frames}!Body\+Fragmentation@{Body\+Fragmentation}}
+\subsubsection{\texorpdfstring{get\+Frames()}{getFrames()}}
+{\footnotesize\ttfamily Q\+Vector$<$ std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{class_multi_frame}{Multi\+Frame}} $>$ $>$ Body\+Fragmentation\+::get\+Frames (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+Возвращает рассчитанные рамки \begin{DoxyReturn}{Возвращает}
+Вектор умных указателей на рамки 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_body_fragmentation_a5cb0e540a915963e6bca93fd4fff7c45}\label{class_body_fragmentation_a5cb0e540a915963e6bca93fd4fff7c45}} 
+\index{Body\+Fragmentation@{Body\+Fragmentation}!get\+Normals@{get\+Normals}}
+\index{get\+Normals@{get\+Normals}!Body\+Fragmentation@{Body\+Fragmentation}}
+\subsubsection{\texorpdfstring{get\+Normals()}{getNormals()}}
+{\footnotesize\ttfamily Q\+Vector$<$ \mbox{\hyperlink{class_vector3_d}{Vector3D}} $>$ Body\+Fragmentation\+::get\+Normals (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+Возвращает рассчитанные нормали \begin{DoxyReturn}{Возвращает}
+Вектор нормалей 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_body_fragmentation_a52efb3896bc6200767b606311418b580}\label{class_body_fragmentation_a52efb3896bc6200767b606311418b580}} 
+\index{Body\+Fragmentation@{Body\+Fragmentation}!get\+Squares@{get\+Squares}}
+\index{get\+Squares@{get\+Squares}!Body\+Fragmentation@{Body\+Fragmentation}}
+\subsubsection{\texorpdfstring{get\+Squares()}{getSquares()}}
+{\footnotesize\ttfamily Q\+Vector$<$ double $>$ Body\+Fragmentation\+::get\+Squares (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+Возвращает рассчитанные площади \begin{DoxyReturn}{Возвращает}
+Вектор площадей 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_body_fragmentation_aae27593b7d947e49723d6efb29533b0c}\label{class_body_fragmentation_aae27593b7d947e49723d6efb29533b0c}} 
+\index{Body\+Fragmentation@{Body\+Fragmentation}!preset\+Derive\+FunctionF@{preset\+Derive\+FunctionF}}
+\index{preset\+Derive\+FunctionF@{preset\+Derive\+FunctionF}!Body\+Fragmentation@{Body\+Fragmentation}}
+\subsubsection{\texorpdfstring{preset\+Derive\+Function\+F()}{presetDeriveFunctionF()}}
+{\footnotesize\ttfamily double Body\+Fragmentation\+::preset\+Derive\+FunctionF (\begin{DoxyParamCaption}\item[{double}]{x }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Высчитывает значение производной функции f(x) 
+\begin{DoxyParams}{Аргументы}
+{\em x} & Значение х \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Возвращает}
+Возвращаемое значение производной функции 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_body_fragmentation_a6a9c0eaa064025336ed5338d329955b5}\label{class_body_fragmentation_a6a9c0eaa064025336ed5338d329955b5}} 
+\index{Body\+Fragmentation@{Body\+Fragmentation}!preset\+Derive\+FunctionG@{preset\+Derive\+FunctionG}}
+\index{preset\+Derive\+FunctionG@{preset\+Derive\+FunctionG}!Body\+Fragmentation@{Body\+Fragmentation}}
+\subsubsection{\texorpdfstring{preset\+Derive\+Function\+G()}{presetDeriveFunctionG()}}
+{\footnotesize\ttfamily double Body\+Fragmentation\+::preset\+Derive\+FunctionG (\begin{DoxyParamCaption}\item[{double}]{x }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Высчитывает значение производной функции g(x) 
+\begin{DoxyParams}{Аргументы}
+{\em x} & Значение х \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Возвращает}
+Возвращаемое значение производной функции 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_body_fragmentation_aed0eb252da338a5164957a5aee5486c6}\label{class_body_fragmentation_aed0eb252da338a5164957a5aee5486c6}} 
+\index{Body\+Fragmentation@{Body\+Fragmentation}!preset\+FunctionF@{preset\+FunctionF}}
+\index{preset\+FunctionF@{preset\+FunctionF}!Body\+Fragmentation@{Body\+Fragmentation}}
+\subsubsection{\texorpdfstring{preset\+Function\+F()}{presetFunctionF()}}
+{\footnotesize\ttfamily double Body\+Fragmentation\+::preset\+FunctionF (\begin{DoxyParamCaption}\item[{double}]{x }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Высчитывает значение функции f(x) 
+\begin{DoxyParams}{Аргументы}
+{\em x} & Значение х \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Возвращает}
+Возвращаемое значение функции 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_body_fragmentation_aef27baaa1add101e113de555aaaeabcc}\label{class_body_fragmentation_aef27baaa1add101e113de555aaaeabcc}} 
+\index{Body\+Fragmentation@{Body\+Fragmentation}!preset\+FunctionG@{preset\+FunctionG}}
+\index{preset\+FunctionG@{preset\+FunctionG}!Body\+Fragmentation@{Body\+Fragmentation}}
+\subsubsection{\texorpdfstring{preset\+Function\+G()}{presetFunctionG()}}
+{\footnotesize\ttfamily double Body\+Fragmentation\+::preset\+FunctionG (\begin{DoxyParamCaption}\item[{double}]{x }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Высчитывает значение функции g(x) 
+\begin{DoxyParams}{Аргументы}
+{\em x} & Значение х \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Возвращает}
+Возвращаемое значение функции 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_body_fragmentation_a27e74d7cbfb91c48f55401b84715d8fc}\label{class_body_fragmentation_a27e74d7cbfb91c48f55401b84715d8fc}} 
+\index{Body\+Fragmentation@{Body\+Fragmentation}!rotation\+Body\+Fragmantation@{rotation\+Body\+Fragmantation}}
+\index{rotation\+Body\+Fragmantation@{rotation\+Body\+Fragmantation}!Body\+Fragmentation@{Body\+Fragmentation}}
+\subsubsection{\texorpdfstring{rotation\+Body\+Fragmantation()}{rotationBodyFragmantation()}}
+{\footnotesize\ttfamily void Body\+Fragmentation\+::rotation\+Body\+Fragmantation (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Реализует разбиение тела вращения. \mbox{\Hypertarget{class_body_fragmentation_ad3ae05e123182189465a904fa6f8b77b}\label{class_body_fragmentation_ad3ae05e123182189465a904fa6f8b77b}} 
+\index{Body\+Fragmentation@{Body\+Fragmentation}!rotation\+Cut\+Body\+Fragmantation@{rotation\+Cut\+Body\+Fragmantation}}
+\index{rotation\+Cut\+Body\+Fragmantation@{rotation\+Cut\+Body\+Fragmantation}!Body\+Fragmentation@{Body\+Fragmentation}}
+\subsubsection{\texorpdfstring{rotation\+Cut\+Body\+Fragmantation()}{rotationCutBodyFragmantation()}}
+{\footnotesize\ttfamily void Body\+Fragmentation\+::rotation\+Cut\+Body\+Fragmantation (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Реализует разбиение тела вращения со срезом дна. \mbox{\Hypertarget{class_body_fragmentation_adcd678b58bb8d85548c9d84ff6dd8f71}\label{class_body_fragmentation_adcd678b58bb8d85548c9d84ff6dd8f71}} 
+\index{Body\+Fragmentation@{Body\+Fragmentation}!rotation\+Cut\+Body\+Launch\+Fragmentation@{rotation\+Cut\+Body\+Launch\+Fragmentation}}
+\index{rotation\+Cut\+Body\+Launch\+Fragmentation@{rotation\+Cut\+Body\+Launch\+Fragmentation}!Body\+Fragmentation@{Body\+Fragmentation}}
+\subsubsection{\texorpdfstring{rotation\+Cut\+Body\+Launch\+Fragmentation()}{rotationCutBodyLaunchFragmentation()}}
+{\footnotesize\ttfamily void Body\+Fragmentation\+::rotation\+Cut\+Body\+Launch\+Fragmentation (\begin{DoxyParamCaption}\item[{const int}]{i,  }\item[{const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&}]{body\+Vel,  }\item[{const double}]{tau }\end{DoxyParamCaption})}
+
+Реализует разбиение тела вращения со срезом дна для решения задачи старта. 
+\begin{DoxyParams}{Аргументы}
+{\em i} & Текущий шаг \\
+\hline
+{\em body\+Vel} & Скорость тела \\
+\hline
+{\em tau} & Размер шага \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_body_fragmentation_afdf6a5e8d2c2f7c6e2b1434999bf0d60}\label{class_body_fragmentation_afdf6a5e8d2c2f7c6e2b1434999bf0d60}} 
+\index{Body\+Fragmentation@{Body\+Fragmentation}!sphere\+Fragmentation@{sphere\+Fragmentation}}
+\index{sphere\+Fragmentation@{sphere\+Fragmentation}!Body\+Fragmentation@{Body\+Fragmentation}}
+\subsubsection{\texorpdfstring{sphere\+Fragmentation()}{sphereFragmentation()}}
+{\footnotesize\ttfamily void Body\+Fragmentation\+::sphere\+Fragmentation (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Реализует разбиение сферы. 
+
+Объявления и описания членов классов находятся в файлах\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Users/\+Vasily/\+Documents/\+Vortex\+Method/\mbox{\hyperlink{bodyfragmentation_8h}{bodyfragmentation.\+h}}\item 
+C\+:/\+Users/\+Vasily/\+Documents/\+Vortex\+Method/bodyfragmentation.\+cpp\end{DoxyCompactItemize}

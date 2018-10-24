@@ -1,0 +1,68 @@
+\hypertarget{class_polygonal_frame}{}\section{Класс Polygonal\+Frame}
+\label{class_polygonal_frame}\index{Polygonal\+Frame@{Polygonal\+Frame}}
+Граф наследования\+:Polygonal\+Frame\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_polygonal_frame}
+\end{center}
+\end{figure}
+\subsection*{Открытые члены}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_polygonal_frame_a515a8220e2fba8d2c6d0c3fc43f509ad}\label{class_polygonal_frame_a515a8220e2fba8d2c6d0c3fc43f509ad}} 
+{\bfseries Polygonal\+Frame} (const int angles\+Quantity, const Q\+Vector3D frame\+Center, const Q\+Vector3D first\+Side\+Beginning, const Q\+Vector3D first\+Side\+Ending)
+\item 
+\mbox{\Hypertarget{class_polygonal_frame_afee1ef0fa80467fcdb3e7c5e989ce2a7}\label{class_polygonal_frame_afee1ef0fa80467fcdb3e7c5e989ce2a7}} 
+Q\+Vector3D {\bfseries velocity\+From\+Frame} (const Q\+Vector3D point) const
+\item 
+\mbox{\Hypertarget{class_polygonal_frame_a500a2a03a041d85883acf503d956568e}\label{class_polygonal_frame_a500a2a03a041d85883acf503d956568e}} 
+double {\bfseries max\+Vorton\+Length} () const
+\item 
+\mbox{\Hypertarget{class_polygonal_frame_a33d0b8e5cf32fd3b4a67f34487360cb8}\label{class_polygonal_frame_a33d0b8e5cf32fd3b4a67f34487360cb8}} 
+double {\bfseries min\+Vorton\+Length} () const
+\item 
+\mbox{\Hypertarget{class_polygonal_frame_a92e3714e167e6eed9d2f5aa067173005}\label{class_polygonal_frame_a92e3714e167e6eed9d2f5aa067173005}} 
+double {\bfseries solid\+Angle\+Frame} (Q\+Vector3D point) const
+\item 
+\mbox{\Hypertarget{class_polygonal_frame_ad9b5e3de14a65d3f89c4bcc36a5f9995}\label{class_polygonal_frame_ad9b5e3de14a65d3f89c4bcc36a5f9995}} 
+void {\bfseries set\+Frame\+Vortons\+Vorticity} (const double vorticity)
+\item 
+\mbox{\Hypertarget{class_polygonal_frame_ab27653110a27a44b1890140217267678}\label{class_polygonal_frame_ab27653110a27a44b1890140217267678}} 
+void {\bfseries set\+Frame\+Vortons\+Radius} (const double radius)
+\item 
+\mbox{\Hypertarget{class_polygonal_frame_a483bcc83b0781f1407a7ebb108618225}\label{class_polygonal_frame_a483bcc83b0781f1407a7ebb108618225}} 
+void {\bfseries set\+Center} (const Q\+Vector3D new\+Center)
+\item 
+\mbox{\Hypertarget{class_polygonal_frame_a99160b916a903bf0175576a238e7b399}\label{class_polygonal_frame_a99160b916a903bf0175576a238e7b399}} 
+Vorton\+Segment \& {\bfseries operator\mbox{[}$\,$\mbox{]}} (unsigned int i)
+\end{DoxyCompactItemize}
+\subsection*{Защищенные члены}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_polygonal_frame_a283672486134ff43feb3462dd984380a}\label{class_polygonal_frame_a283672486134ff43feb3462dd984380a}} 
+double {\bfseries solid\+Angle} (const Q\+Vector3D first\+Vector, const Q\+Vector3D second\+Vector, const Q\+Vector3D third\+Vector, const Q\+Vector3D point) const
+\end{DoxyCompactItemize}
+\subsection*{Защищенные данные}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_polygonal_frame_ae7e08867613d147250d6ca95f536c270}\label{class_polygonal_frame_ae7e08867613d147250d6ca95f536c270}} 
+int {\bfseries sides\+Quantity}
+\item 
+\mbox{\Hypertarget{class_polygonal_frame_ab17008e2d246ac723d2e8a98ff907fc8}\label{class_polygonal_frame_ab17008e2d246ac723d2e8a98ff907fc8}} 
+Q\+Vector3D {\bfseries center}
+\item 
+\mbox{\Hypertarget{class_polygonal_frame_a87ed75785bc64d139e65fb486ab079d0}\label{class_polygonal_frame_a87ed75785bc64d139e65fb486ab079d0}} 
+Q\+Vector$<$ Vorton\+Segment $>$ {\bfseries frame\+Vortons}
+\end{DoxyCompactItemize}
+\subsection*{Закрытые члены}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_polygonal_frame_a8e385286c2d59e1f0e4bb9f9110ab6a3}\label{class_polygonal_frame_a8e385286c2d59e1f0e4bb9f9110ab6a3}} 
+Q\+Vector3D {\bfseries rotation} (const Q\+Vector3D rotate\+Vector, const Q\+Vector3D rotate\+Point, const double rotate\+Angle) const
+\end{DoxyCompactItemize}
+
+
+Объявления и описания членов классов находятся в файлах\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Users/\+Vasily/\+Documents/\+Vortex\+Method/polygonalframe.\+h\item 
+C\+:/\+Users/\+Vasily/\+Documents/\+Vortex\+Method/polygonalframe.\+cpp\end{DoxyCompactItemize}

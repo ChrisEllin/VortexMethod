@@ -1,0 +1,71 @@
+\hypertarget{struct_rotation_cut_body_parameters}{}\section{Структура Rotation\+Cut\+Body\+Parameters}
+\label{struct_rotation_cut_body_parameters}\index{Rotation\+Cut\+Body\+Parameters@{Rotation\+Cut\+Body\+Parameters}}
+
+
+Структура для хранения параметров тела вращения со срезом  
+
+
+
+
+{\ttfamily \#include $<$bodyfragmentation.\+h$>$}
+
+\subsection*{Открытые члены}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{struct_rotation_cut_body_parameters_a8f8166704d1f04e836ad98145ce79581}{set\+Data}} (const int i, const double value)
+\end{DoxyCompactItemize}
+\subsection*{Открытые атрибуты}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{struct_rotation_cut_body_parameters_a03053b52922edd722d29f5358a68ec7e}\label{struct_rotation_cut_body_parameters_a03053b52922edd722d29f5358a68ec7e}} 
+int \mbox{\hyperlink{struct_rotation_cut_body_parameters_a03053b52922edd722d29f5358a68ec7e}{fi\+Frag\+Num}}
+\begin{DoxyCompactList}\small\item\em Количество разбиений по fi. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_rotation_cut_body_parameters_a1f20add576749d172aaf6d42357e2127}\label{struct_rotation_cut_body_parameters_a1f20add576749d172aaf6d42357e2127}} 
+int \mbox{\hyperlink{struct_rotation_cut_body_parameters_a1f20add576749d172aaf6d42357e2127}{part\+Frag\+Num}}
+\begin{DoxyCompactList}\small\item\em Количество разбиений по длине \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_rotation_cut_body_parameters_abe4b2e8d09cd2400d8bbec963a989f51}\label{struct_rotation_cut_body_parameters_abe4b2e8d09cd2400d8bbec963a989f51}} 
+int \mbox{\hyperlink{struct_rotation_cut_body_parameters_abe4b2e8d09cd2400d8bbec963a989f51}{r\+Frag\+Num}}
+\begin{DoxyCompactList}\small\item\em Количество разбиений по радиусу \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_rotation_cut_body_parameters_add91bd485287de18808fe5721ca7179c}\label{struct_rotation_cut_body_parameters_add91bd485287de18808fe5721ca7179c}} 
+double \mbox{\hyperlink{struct_rotation_cut_body_parameters_add91bd485287de18808fe5721ca7179c}{x\+Beg}}
+\begin{DoxyCompactList}\small\item\em Координата начала тела по X. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_rotation_cut_body_parameters_a24b8798599a42d15fe8f5c44a3b6eb47}\label{struct_rotation_cut_body_parameters_a24b8798599a42d15fe8f5c44a3b6eb47}} 
+double \mbox{\hyperlink{struct_rotation_cut_body_parameters_a24b8798599a42d15fe8f5c44a3b6eb47}{x\+End}}
+\begin{DoxyCompactList}\small\item\em Координата конца тела по Y. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_rotation_cut_body_parameters_a648af8abe3d57da949c0e49e05db3aa7}\label{struct_rotation_cut_body_parameters_a648af8abe3d57da949c0e49e05db3aa7}} 
+double \mbox{\hyperlink{struct_rotation_cut_body_parameters_a648af8abe3d57da949c0e49e05db3aa7}{section\+Distance}}
+\begin{DoxyCompactList}\small\item\em Величина среза \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_rotation_cut_body_parameters_a91d0603d57d81fbfceeeae0f31ddd158}\label{struct_rotation_cut_body_parameters_a91d0603d57d81fbfceeeae0f31ddd158}} 
+double \mbox{\hyperlink{struct_rotation_cut_body_parameters_a91d0603d57d81fbfceeeae0f31ddd158}{delta}}
+\begin{DoxyCompactList}\small\item\em Подъем рамок над телом \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_rotation_cut_body_parameters_af34af8aad31cb1beb6c37d2d15a8078e}\label{struct_rotation_cut_body_parameters_af34af8aad31cb1beb6c37d2d15a8078e}} 
+double \mbox{\hyperlink{struct_rotation_cut_body_parameters_af34af8aad31cb1beb6c37d2d15a8078e}{raise}}
+\begin{DoxyCompactList}\small\item\em Подъем контрольных точек для подсчета давления \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_rotation_cut_body_parameters_a0bbab464b845fc025bad073f32553678}\label{struct_rotation_cut_body_parameters_a0bbab464b845fc025bad073f32553678}} 
+double \mbox{\hyperlink{struct_rotation_cut_body_parameters_a0bbab464b845fc025bad073f32553678}{vortons\+Rad}}
+\begin{DoxyCompactList}\small\item\em Радиус вортона \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Подробное описание}
+Структура для хранения параметров тела вращения со срезом 
+
+\subsection{Методы}
+\mbox{\Hypertarget{struct_rotation_cut_body_parameters_a8f8166704d1f04e836ad98145ce79581}\label{struct_rotation_cut_body_parameters_a8f8166704d1f04e836ad98145ce79581}} 
+\index{Rotation\+Cut\+Body\+Parameters@{Rotation\+Cut\+Body\+Parameters}!set\+Data@{set\+Data}}
+\index{set\+Data@{set\+Data}!Rotation\+Cut\+Body\+Parameters@{Rotation\+Cut\+Body\+Parameters}}
+\subsubsection{\texorpdfstring{set\+Data()}{setData()}}
+{\footnotesize\ttfamily void Rotation\+Cut\+Body\+Parameters\+::set\+Data (\begin{DoxyParamCaption}\item[{const int}]{i,  }\item[{const double}]{value }\end{DoxyParamCaption})}
+
+Установка соотвествующего значения в объект структуры параметров разбиения тела вращения со срезом дна 
+\begin{DoxyParams}{Аргументы}
+{\em i} & Номер поля структуры \\
+\hline
+{\em value} & Значение поля структуры \\
+\hline
+\end{DoxyParams}
+
+
+Объявления и описания членов структур находятся в файлах\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Users/\+Vasily/\+Documents/\+Vortex\+Method/\mbox{\hyperlink{bodyfragmentation_8h}{bodyfragmentation.\+h}}\item 
+C\+:/\+Users/\+Vasily/\+Documents/\+Vortex\+Method/bodyfragmentation.\+cpp\end{DoxyCompactItemize}

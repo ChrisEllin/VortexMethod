@@ -1,0 +1,123 @@
+\hypertarget{struct_vel_bsym}{}\section{Структура Vel\+Bsym}
+\label{struct_vel_bsym}\index{Vel\+Bsym@{Vel\+Bsym}}
+
+
+Структура для хранения скорости и тензора денформаций и последующих операций с ними  
+
+
+
+
+{\ttfamily \#include $<$vorton.\+h$>$}
+
+
+
+Граф связей класса Vel\+Bsym\+:
+% FIG 0
+\subsection*{Открытые члены}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{struct_vel_bsym_ab6d789ff036824176fd982ec3650d762}{Vel\+Bsym}} ()
+\item 
+\mbox{\hyperlink{struct_vel_bsym_ade5b269a7530d543b14c273249cff251}{Vel\+Bsym}} (\mbox{\hyperlink{class_vector3_d}{Vector3D}} velocity)
+\item 
+\mbox{\hyperlink{struct_vel_bsym_a9d1a6ce0827c575a9bb137a0ffd8fc20}{Vel\+Bsym}} (\mbox{\hyperlink{class_vector3_d}{Vector3D}} velocity, double B00, double B01, double B02, double B10, double B11, double B12, double B20, double B21, double B22)
+\item 
+\mbox{\hyperlink{struct_vel_bsym}{Vel\+Bsym}} \mbox{\hyperlink{struct_vel_bsym_aad5b2c52f958cbb6457564d654e17566}{operator=}} (\mbox{\hyperlink{struct_vel_bsym}{Vel\+Bsym}} C)
+\item 
+\mbox{\hyperlink{struct_vel_bsym}{Vel\+Bsym}} \mbox{\hyperlink{struct_vel_bsym_a4751cccf35691a5793f7b181a047b1c3}{operator+}} (\mbox{\hyperlink{struct_vel_bsym}{Vel\+Bsym}} C)
+\item 
+\mbox{\hyperlink{struct_vel_bsym}{Vel\+Bsym}} \mbox{\hyperlink{struct_vel_bsym_a78c32398d1f814ad59b0259e7ab8728e}{operator+=}} (\mbox{\hyperlink{struct_vel_bsym}{Vel\+Bsym}} C)
+\end{DoxyCompactItemize}
+\subsection*{Открытые атрибуты}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{struct_vel_bsym_a97f0d61bcea631e8b3a6ebd38b15128c}\label{struct_vel_bsym_a97f0d61bcea631e8b3a6ebd38b15128c}} 
+\mbox{\hyperlink{class_vector3_d}{Vector3D}} \mbox{\hyperlink{struct_vel_bsym_a97f0d61bcea631e8b3a6ebd38b15128c}{Vel}}
+\begin{DoxyCompactList}\small\item\em Значение скорости \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_vel_bsym_af103456cc2074007e7a21214b38b59b9}\label{struct_vel_bsym_af103456cc2074007e7a21214b38b59b9}} 
+double \mbox{\hyperlink{struct_vel_bsym_af103456cc2074007e7a21214b38b59b9}{B}} \mbox{[}3\mbox{]}\mbox{[}3\mbox{]}
+\begin{DoxyCompactList}\small\item\em Массив 3х3 который хранит значения тензора деформации \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Подробное описание}
+Структура для хранения скорости и тензора денформаций и последующих операций с ними 
+
+\subsection{Конструктор(ы)}
+\mbox{\Hypertarget{struct_vel_bsym_ab6d789ff036824176fd982ec3650d762}\label{struct_vel_bsym_ab6d789ff036824176fd982ec3650d762}} 
+\index{Vel\+Bsym@{Vel\+Bsym}!Vel\+Bsym@{Vel\+Bsym}}
+\index{Vel\+Bsym@{Vel\+Bsym}!Vel\+Bsym@{Vel\+Bsym}}
+\subsubsection{\texorpdfstring{Vel\+Bsym()}{VelBsym()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily Vel\+Bsym\+::\+Vel\+Bsym (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Создает элемент класса, где все поля проинициализрованы нулем \mbox{\Hypertarget{struct_vel_bsym_ade5b269a7530d543b14c273249cff251}\label{struct_vel_bsym_ade5b269a7530d543b14c273249cff251}} 
+\index{Vel\+Bsym@{Vel\+Bsym}!Vel\+Bsym@{Vel\+Bsym}}
+\index{Vel\+Bsym@{Vel\+Bsym}!Vel\+Bsym@{Vel\+Bsym}}
+\subsubsection{\texorpdfstring{Vel\+Bsym()}{VelBsym()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily Vel\+Bsym\+::\+Vel\+Bsym (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_vector3_d}{Vector3D}}}]{velocity }\end{DoxyParamCaption})}
+
+Создает элемент класса с заданным значением скорости и нулевым значение тензора деформации 
+\begin{DoxyParams}{Аргументы}
+{\em velocity} & заданное значение скорости \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{struct_vel_bsym_a9d1a6ce0827c575a9bb137a0ffd8fc20}\label{struct_vel_bsym_a9d1a6ce0827c575a9bb137a0ffd8fc20}} 
+\index{Vel\+Bsym@{Vel\+Bsym}!Vel\+Bsym@{Vel\+Bsym}}
+\index{Vel\+Bsym@{Vel\+Bsym}!Vel\+Bsym@{Vel\+Bsym}}
+\subsubsection{\texorpdfstring{Vel\+Bsym()}{VelBsym()}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily Vel\+Bsym\+::\+Vel\+Bsym (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_vector3_d}{Vector3D}}}]{velocity,  }\item[{double}]{B00,  }\item[{double}]{B01,  }\item[{double}]{B02,  }\item[{double}]{B10,  }\item[{double}]{B11,  }\item[{double}]{B12,  }\item[{double}]{B20,  }\item[{double}]{B21,  }\item[{double}]{B22 }\end{DoxyParamCaption})}
+
+Создает полностью заполненный элемент класса 
+\begin{DoxyParams}{Аргументы}
+{\em velocity} & заданное значение скорости \\
+\hline
+{\em B00,B01,B02,B10,B11,B12,B20,B21,B22} & значения элемнтов тензора деформации с соответсвующим номером \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{Методы}
+\mbox{\Hypertarget{struct_vel_bsym_a4751cccf35691a5793f7b181a047b1c3}\label{struct_vel_bsym_a4751cccf35691a5793f7b181a047b1c3}} 
+\index{Vel\+Bsym@{Vel\+Bsym}!operator+@{operator+}}
+\index{operator+@{operator+}!Vel\+Bsym@{Vel\+Bsym}}
+\subsubsection{\texorpdfstring{operator+()}{operator+()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_vel_bsym}{Vel\+Bsym}} Vel\+Bsym\+::operator+ (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_vel_bsym}{Vel\+Bsym}}}]{C }\end{DoxyParamCaption})}
+
+Оператор сложения 
+\begin{DoxyParams}{Аргументы}
+{\em C} & слагаемое \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Возвращает}
+Покомпонентное сложение структуры 
+\end{DoxyReturn}
+\mbox{\Hypertarget{struct_vel_bsym_a78c32398d1f814ad59b0259e7ab8728e}\label{struct_vel_bsym_a78c32398d1f814ad59b0259e7ab8728e}} 
+\index{Vel\+Bsym@{Vel\+Bsym}!operator+=@{operator+=}}
+\index{operator+=@{operator+=}!Vel\+Bsym@{Vel\+Bsym}}
+\subsubsection{\texorpdfstring{operator+=()}{operator+=()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_vel_bsym}{Vel\+Bsym}} Vel\+Bsym\+::operator+= (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_vel_bsym}{Vel\+Bsym}}}]{C }\end{DoxyParamCaption})}
+
+Оператор копирования в изначальный контейнер 
+\begin{DoxyParams}{Аргументы}
+{\em C} & слагаемое \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Возвращает}
+Покомпонентное сложение структуры 
+\end{DoxyReturn}
+\mbox{\Hypertarget{struct_vel_bsym_aad5b2c52f958cbb6457564d654e17566}\label{struct_vel_bsym_aad5b2c52f958cbb6457564d654e17566}} 
+\index{Vel\+Bsym@{Vel\+Bsym}!operator=@{operator=}}
+\index{operator=@{operator=}!Vel\+Bsym@{Vel\+Bsym}}
+\subsubsection{\texorpdfstring{operator=()}{operator=()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_vel_bsym}{Vel\+Bsym}} Vel\+Bsym\+::operator= (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_vel_bsym}{Vel\+Bsym}}}]{C }\end{DoxyParamCaption})}
+
+Оператор копирования 
+\begin{DoxyParams}{Аргументы}
+{\em C} & Новое значение вектора \\
+\hline
+\end{DoxyParams}
+
+
+Объявления и описания членов структур находятся в файлах\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Users/\+Vasily/\+Documents/\+Vortex\+Method/vorton.\+h\item 
+C\+:/\+Users/\+Vasily/\+Documents/\+Vortex\+Method/vorton.\+cpp\end{DoxyCompactItemize}

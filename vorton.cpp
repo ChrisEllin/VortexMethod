@@ -1,5 +1,8 @@
 #include "vorton.h"
 
+/*!
+Создает элемент класса, где все поля проинициализрованы нулем
+*/
 VelBsym:: VelBsym ()
 {
     Vel = Vector3D();
@@ -14,6 +17,10 @@ VelBsym:: VelBsym ()
     B[2][2]=0.0;
 }
 
+/*!
+Создает элемент класса с заданным значением скорости и нулевым значение тензора деформации
+\param velocity заданное значение скорости
+*/
 VelBsym::VelBsym(Vector3D velocity)
 {
     Vel = velocity;
@@ -28,6 +35,11 @@ VelBsym::VelBsym(Vector3D velocity)
     B[2][2]=0.0;
 }
 
+/*!
+Создает полностью заполненный элемент класса
+\param velocity заданное значение скорости
+\param B00, B01, B02, B10, B11, B12, B20, B21, B22 значения элемнтов тензора деформации с соответсвующим номером
+*/
 VelBsym::VelBsym (Vector3D velocity, double B00, double B01, double B02, double B10, double B11, double B12, double B20, double B21, double B22)
 {
     Vel = velocity;
@@ -42,6 +54,10 @@ VelBsym::VelBsym (Vector3D velocity, double B00, double B01, double B02, double 
     B[2][2]=B22;
 }
 
+/*!
+Оператор копирования
+\param C Новое значение вектора
+*/
 VelBsym VelBsym::operator = (VelBsym C)
 {
     Vel = C.Vel;
@@ -57,6 +73,11 @@ VelBsym VelBsym::operator = (VelBsym C)
     return *this;
 }
 
+/*!
+Оператор сложения
+\param C слагаемое
+\result Покомпонентное сложение структуры
+*/
 VelBsym VelBsym:: operator + (VelBsym C)
 {
     VelBsym ans = VelBsym();
@@ -73,6 +94,11 @@ VelBsym VelBsym:: operator + (VelBsym C)
     return ans;
 }
 
+/*!
+Оператор копирования в изначальный контейнер
+\param C слагаемое
+\result Покомпонентное сложение структуры
+*/
 VelBsym VelBsym::operator +=(VelBsym C)
 {
     Vel+=C.Vel;
@@ -88,11 +114,21 @@ VelBsym VelBsym::operator +=(VelBsym C)
     return *this;
 }
 
+/*!
+Создает пустой вортон-отрезок
+*/
 Vorton::Vorton()
 {
 
 }
 
+/*!
+Создает вортон-отрезок с заданными параметрами
+\param _mid Значение центра вортон-отрезка
+\param _tail Значение хвоста вортон-отрезка
+\param _vorticity Значение завихренности вортон-отрезка
+\param _radius Значение радиуса вортон-отрезка
+*/
 Vorton::Vorton(const Vector3D _mid, const Vector3D _tail, const double _vorticity, const double _radius)
 {
     mid=_mid;
@@ -111,6 +147,11 @@ Vorton::Vorton(const Vector3D _mid, const Vector3D _tail, const double _vorticit
 //    elongation=a.elongation;
 //}
 
+/*!
+Рассчитывает значение интенсивности вортон-отрезка в заданной точке
+\param point Координаты точки расчета
+\return Значение интенсивности
+*/
 Vector3D Vorton::q(const Vector3D &point) const
 {
     Vector3D h0 = tail-mid;
@@ -135,6 +176,11 @@ Vector3D Vorton::q(const Vector3D &point) const
     }
 }
 
+/*!
+Рассчитывает значение единичной интенсивности вортон-отрезка в заданной точке
+\param point Координаты точки расчета
+\return Значение единичной интенсивности
+*/
 Vector3D Vorton::qHelp(const Vector3D& point) const
 {
     Vector3D  h0 = tail-mid;
@@ -146,11 +192,21 @@ Vector3D Vorton::qHelp(const Vector3D& point) const
     return ((1/(4*M_PI))*cv*av);
 }
 
+/*!
+Рассчитывает значение скорости вортон-отрезка в заданной точке
+\param point Координаты точки расчета
+\return Значение скорости
+*/
 Vector3D Vorton::velocity(const Vector3D &point) const
 {
     return q(point)*vorticity;
 }
 
+/*!
+Рассчитывает значение скорости и тензора деформации вортон-отрезка в заданной точке
+\param point Координаты точки расчета
+\return Значение скорости и тензора деформаций
+*/
 VelBsym Vorton::velAndBsym(const Vector3D& point) const
 {
     Vector3D h0 = tail-mid;
@@ -213,6 +269,13 @@ VelBsym Vorton::velAndBsym(const Vector3D& point) const
     }
 }
 
+/*!
+Рассчитывает значение тензора Леви-Чивитты
+\param firstComponent Значение первой компоненты тензора Леви-Чивитты
+\param secondComponent Значение второй компоненты тензора Леви-Чивитты
+\param thirdComponent Значение третьей компоненты тензора Леви-Чивитты
+\return Значение тензора
+*/
 double Vorton::levi(int firstComponent, int secondComponent, int thirdComponent)
 {
     if ((firstComponent==secondComponent)||(firstComponent==thirdComponent)||(secondComponent==thirdComponent))
@@ -233,27 +296,32 @@ double Vorton::levi(int firstComponent, int secondComponent, int thirdComponent)
     exit(1);
 }
 
-Vector3D Vorton::rotated(const Vector3D &vec, const Vector3D &axis, const double theta)
-{
-    Vector3D newaxis = axis/axis.length();
-    double a = cos(theta/2.0);
-    Vector3D secondary = -newaxis*sin(theta/2.0);
-    double b = secondary.x();
-    double c = secondary.y();
-    double d = secondary.z();
-    double aa = a*a;
-    double bb = b*b;
-    double cc = c*c;
-    double dd = d*d;
-    double bc = b*c;
-    double ad = a*d;
-    double ac = a*c;
-    double ab = a*b;
-    double bd = b*d;
-    double cd = c*d;
-    return Vector3D((aa+bb-cc-dd)*vec.x()+2*(bc+ad)*vec.y()+2*(bd-ac)*vec.z(),2*(bc-ad)*vec.x()+(aa+cc-bb-dd)*vec.y()+2*(cd+ab)*vec.z(), 2*(bd+ac)*vec.x()+2*(cd-ab)*vec.y()+(aa+dd-bb-cc)*vec.z());
-}
 
+//Vector3D Vorton::rotated(const Vector3D &vec, const Vector3D &axis, const double theta)
+//{
+//    Vector3D newaxis = axis/axis.length();
+//    double a = cos(theta/2.0);
+//    Vector3D secondary = -newaxis*sin(theta/2.0);
+//    double b = secondary.x();
+//    double c = secondary.y();
+//    double d = secondary.z();
+//    double aa = a*a;
+//    double bb = b*b;
+//    double cc = c*c;
+//    double dd = d*d;
+//    double bc = b*c;
+//    double ad = a*d;
+//    double ac = a*c;
+//    double ab = a*b;
+//    double bd = b*d;
+//    double cd = c*d;
+//    return Vector3D((aa+bb-cc-dd)*vec.x()+2*(bc+ad)*vec.y()+2*(bd-ac)*vec.z(),2*(bc-ad)*vec.x()+(aa+cc-bb-dd)*vec.y()+2*(cd+ab)*vec.z(), 2*(bd+ac)*vec.x()+2*(cd-ab)*vec.y()+(aa+dd-bb-cc)*vec.z());
+//}
+
+/*!
+Поворот вортон-отрезка вокруг нормали
+\param normal Координата нормали
+*/
 void Vorton::rotateAroundNormal(const Vector3D &normal)
 {
     double len=(tail-mid).length();
@@ -273,78 +341,137 @@ void Vorton::rotateAroundNormal(const Vector3D &normal)
     }
 }
 
+/*!
+Задает значение центра вортон-отрезка
+\param _mid Координата центра
+*/
 void Vorton::setMid(const Vector3D& _mid)
 {
     mid=_mid;
 }
 
+/*!
+Задает значение хвоста вортон-отрезка
+\param _tail Координата хвоста
+*/
 void Vorton::setTail(const Vector3D& _tail)
 {
     tail=_tail;
 }
 
+/*!
+Задает значение завихренности вортон-отрезка
+\param _vorticity Значение завихренности
+*/
 void Vorton::setVorticity(const double _vorticity)
 {
     vorticity=_vorticity;
 }
 
+/*!
+Задает значение радиуса вортон-отрезка
+\param _radius Значение радиуса
+*/
 void Vorton::setRadius(const double _radius)
 {
     radius=_radius;
 }
 
+/*!
+Задает значение удлинения вортон-отрезка
+\param _elongation Значение удлинения
+*/
 void Vorton::setElongation(const Vector3D& _elongation)
 {
     elongation=_elongation;
 }
 
+/*!
+Задает значение перемещения вортон-отрезка
+\param _move Значение перемещения
+*/
 void Vorton::setMove(const Vector3D& _move)
 {
     move=_move;
 }
 
+/*!
+Возвращает значение центра вортон-отрезка
+\return Значение центра
+*/
 Vector3D Vorton::getMid() const
 {
     return mid;
 }
 
+/*!
+Возвращает значение хвоста вортон-отрезка
+\return Значение хвоста
+*/
 Vector3D Vorton::getTail() const
 {
     return tail;
 }
 
+/*!
+Возвращает значение завихренности вортон-отрезка
+\return Значение завихренности
+*/
 double Vorton::getVorticity() const
 {
     return vorticity;
 }
 
+/*!
+Возвращает значение радиуса вортон-отрезка
+\return Значение радиуса
+*/
 double Vorton::getRadius() const
 {
     return radius;
 }
 
+/*!
+Возвращает значение удлинения вортон-отрезка
+\return Значение удлинения
+*/
 Vector3D Vorton::getElongation() const
 {
     return elongation;
 }
 
+/*!
+Возвращает значение перемещения вортон-отрезка
+\return Значение перемещения
+*/
 Vector3D Vorton::getMove() const
 {
     return move;
 }
 
+/*!
+Разворачивает вортон-отрезок отнносительно центра
+*/
 void Vorton::turn ()
 {
     tail = 2*mid-tail;
     vorticity = -vorticity;
 }
 
+/*!
+Переносит вортон-отрезок на заданный трехмерный вектор
+\param translation Вектор направления
+*/
 void Vorton::translate(const Vector3D& translation)
 {
     mid+=translation;
     tail+=translation;
 }
 
+/*!
+Оператор копирования
+\param vort2 Новое значение вектора
+*/
 Vorton Vorton::operator =(const Vorton &vort2)
 {
         mid = vort2.mid;

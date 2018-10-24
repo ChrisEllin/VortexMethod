@@ -1,0 +1,83 @@
+\hypertarget{class_vorton_segment}{}\section{Класс Vorton\+Segment}
+\label{class_vorton_segment}\index{Vorton\+Segment@{Vorton\+Segment}}
+\subsection*{Открытые члены}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_vorton_segment_a56634fb06ecc913c8f0f3597d6b29085}\label{class_vorton_segment_a56634fb06ecc913c8f0f3597d6b29085}} 
+{\bfseries Vorton\+Segment} (const \mbox{\hyperlink{class_vector3_d}{Vector3D}} center, const \mbox{\hyperlink{class_vector3_d}{Vector3D}} tail, const double vorticity, const double radius)
+\item 
+\mbox{\Hypertarget{class_vorton_segment_a4a95116647bffdce3b5521a7763dffc8}\label{class_vorton_segment_a4a95116647bffdce3b5521a7763dffc8}} 
+\mbox{\hyperlink{class_vector3_d}{Vector3D}} {\bfseries velocity\+At\+Point} (const \mbox{\hyperlink{class_vector3_d}{Vector3D}} point) const
+\item 
+\mbox{\Hypertarget{class_vorton_segment_a1ac709fb04aa01fa05bb4e28399ad7bb}\label{class_vorton_segment_a1ac709fb04aa01fa05bb4e28399ad7bb}} 
+\mbox{\hyperlink{class_vector3_d}{Vector3D}} {\bfseries single\+Intensity\+Velocity} (const \mbox{\hyperlink{class_vector3_d}{Vector3D}} point) const
+\item 
+\mbox{\Hypertarget{class_vorton_segment_a676966cdda0400ddd88e26f4fb2ab546}\label{class_vorton_segment_a676966cdda0400ddd88e26f4fb2ab546}} 
+\mbox{\hyperlink{class_vector3_d}{Vector3D}} {\bfseries intermediate\+Single\+Intensity\+Velocity} (const \mbox{\hyperlink{class_vector3_d}{Vector3D}} point)
+\item 
+\mbox{\Hypertarget{class_vorton_segment_a1be3bf4f23f0f5b907822be72bcd2cc8}\label{class_vorton_segment_a1be3bf4f23f0f5b907822be72bcd2cc8}} 
+double {\bfseries deformation\+Tensor} (const int first\+Component, const int third\+Component, const \mbox{\hyperlink{class_vector3_d}{Vector3D}} point) const
+\item 
+\mbox{\Hypertarget{class_vorton_segment_a427bbf74a0f6c963b13ffff5a9ce0770}\label{class_vorton_segment_a427bbf74a0f6c963b13ffff5a9ce0770}} 
+double {\bfseries symmetric\+Deformation\+Tensor} (const int first\+Component, const int third\+Component, const \mbox{\hyperlink{class_vector3_d}{Vector3D}} point) const
+\item 
+\mbox{\Hypertarget{class_vorton_segment_aecb70237b927e2a9c4875998ac3150b3}\label{class_vorton_segment_aecb70237b927e2a9c4875998ac3150b3}} 
+bool {\bfseries operator==} (const \mbox{\hyperlink{class_vorton_segment}{Vorton\+Segment}} \&vorton) const
+\item 
+\mbox{\Hypertarget{class_vorton_segment_a66358b75fd40cb71c790bfc19a907c8a}\label{class_vorton_segment_a66358b75fd40cb71c790bfc19a907c8a}} 
+bool {\bfseries operator!=} (const \mbox{\hyperlink{class_vorton_segment}{Vorton\+Segment}} \&vorton) const
+\item 
+\mbox{\Hypertarget{class_vorton_segment_abe8fd30f6dac21aca3126a76f8a59f08}\label{class_vorton_segment_abe8fd30f6dac21aca3126a76f8a59f08}} 
+bool {\bfseries operator$<$} (const \mbox{\hyperlink{class_vorton_segment}{Vorton\+Segment}} \&vorton) const
+\item 
+\mbox{\Hypertarget{class_vorton_segment_a733e8f0df7bbb4e36834702b62f14cb0}\label{class_vorton_segment_a733e8f0df7bbb4e36834702b62f14cb0}} 
+bool {\bfseries operator$>$} (const \mbox{\hyperlink{class_vorton_segment}{Vorton\+Segment}} \&vorton) const
+\item 
+\mbox{\Hypertarget{class_vorton_segment_ab1af326ce20d27242a1dbfd797357b99}\label{class_vorton_segment_ab1af326ce20d27242a1dbfd797357b99}} 
+\mbox{\hyperlink{class_vorton_segment}{Vorton\+Segment}} \& {\bfseries operator=} (const \mbox{\hyperlink{class_vorton_segment}{Vorton\+Segment}} \&vorton)
+\item 
+\mbox{\Hypertarget{class_vorton_segment_ac2aa8c583ea93d0ad85b0337ecd2b86c}\label{class_vorton_segment_ac2aa8c583ea93d0ad85b0337ecd2b86c}} 
+void {\bfseries set\+Center} (const \mbox{\hyperlink{class_vector3_d}{Vector3D}} center)
+\item 
+\mbox{\Hypertarget{class_vorton_segment_a563202c84dd6d4f3b07970272aeac993}\label{class_vorton_segment_a563202c84dd6d4f3b07970272aeac993}} 
+void {\bfseries set\+Tail} (const \mbox{\hyperlink{class_vector3_d}{Vector3D}} tail)
+\item 
+\mbox{\Hypertarget{class_vorton_segment_a5bd107065f1ac6106f77deea5d4679bc}\label{class_vorton_segment_a5bd107065f1ac6106f77deea5d4679bc}} 
+void {\bfseries set\+Vorticity} (const double vorticity)
+\item 
+\mbox{\Hypertarget{class_vorton_segment_a3c2c77464cc2422acf251d1a488c88a5}\label{class_vorton_segment_a3c2c77464cc2422acf251d1a488c88a5}} 
+void {\bfseries set\+Radius} (const double radius)
+\item 
+\mbox{\Hypertarget{class_vorton_segment_a29e2b74b0000d36d0037dd9f78583349}\label{class_vorton_segment_a29e2b74b0000d36d0037dd9f78583349}} 
+\mbox{\hyperlink{class_vector3_d}{Vector3D}} {\bfseries get\+Center} () const
+\item 
+\mbox{\Hypertarget{class_vorton_segment_a271a9e7352df20c59dae3588c6c5ca8a}\label{class_vorton_segment_a271a9e7352df20c59dae3588c6c5ca8a}} 
+\mbox{\hyperlink{class_vector3_d}{Vector3D}} {\bfseries get\+Tail} () const
+\item 
+\mbox{\Hypertarget{class_vorton_segment_ac0365bbe46da4a246983e4a0a2372693}\label{class_vorton_segment_ac0365bbe46da4a246983e4a0a2372693}} 
+double {\bfseries get\+Vorticity} () const
+\item 
+\mbox{\Hypertarget{class_vorton_segment_a1eaefb0b9c99dbea96a8aca0a55a2253}\label{class_vorton_segment_a1eaefb0b9c99dbea96a8aca0a55a2253}} 
+double {\bfseries get\+Radius} () const
+\end{DoxyCompactItemize}
+\subsection*{Закрытые данные}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_vorton_segment_af5211ad6a800dce706259692e4dcfd3c}\label{class_vorton_segment_af5211ad6a800dce706259692e4dcfd3c}} 
+\mbox{\hyperlink{class_vector3_d}{Vector3D}} {\bfseries center}
+\item 
+\mbox{\Hypertarget{class_vorton_segment_a154c6abfd4e84b3dc61e8e858875f172}\label{class_vorton_segment_a154c6abfd4e84b3dc61e8e858875f172}} 
+\mbox{\hyperlink{class_vector3_d}{Vector3D}} {\bfseries tail}
+\item 
+\mbox{\Hypertarget{class_vorton_segment_ad188ebfca1a915471c81e10354233c7b}\label{class_vorton_segment_ad188ebfca1a915471c81e10354233c7b}} 
+double {\bfseries vorticity}
+\item 
+\mbox{\Hypertarget{class_vorton_segment_a2e738e78518d9066b22e74d486389ff4}\label{class_vorton_segment_a2e738e78518d9066b22e74d486389ff4}} 
+double {\bfseries radius}
+\end{DoxyCompactItemize}
+
+
+Объявления и описания членов классов находятся в файлах\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Users/\+Vasily/\+Documents/\+Vortex\+Method/vortonsegment.\+h\item 
+C\+:/\+Users/\+Vasily/\+Documents/\+Vortex\+Method/vortonsegment.\+cpp\end{DoxyCompactItemize}

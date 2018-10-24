@@ -1,0 +1,103 @@
+\hypertarget{struct_solver_parameters}{}\section{Структура Solver\+Parameters}
+\label{struct_solver_parameters}\index{Solver\+Parameters@{Solver\+Parameters}}
+
+
+Структура, хранящая параметры расчета  
+
+
+
+
+{\ttfamily \#include $<$solversettings.\+h$>$}
+
+
+
+Граф связей класса Solver\+Parameters\+:
+% FIG 0
+\subsection*{Открытые члены}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{struct_solver_parameters_a431f8f2054ae8676047e49a008aeb97d}{set\+Data}} (const int i, const double value)
+\item 
+void \mbox{\hyperlink{struct_solver_parameters_a22cff4b592233c4e09d5d9e9de8e3265}{set\+Data}} (const \mbox{\hyperlink{class_vector3_d}{Vector3D}} value)
+\end{DoxyCompactItemize}
+\subsection*{Открытые атрибуты}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{struct_solver_parameters_ab57d80bfe9a510474ff4f029ddef9e56}\label{struct_solver_parameters_ab57d80bfe9a510474ff4f029ddef9e56}} 
+double \mbox{\hyperlink{struct_solver_parameters_ab57d80bfe9a510474ff4f029ddef9e56}{stream\+Pres}}
+\begin{DoxyCompactList}\small\item\em Давление потока \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_solver_parameters_aa59756e005a1f3ef62c46f60d54f9477}\label{struct_solver_parameters_aa59756e005a1f3ef62c46f60d54f9477}} 
+double \mbox{\hyperlink{struct_solver_parameters_aa59756e005a1f3ef62c46f60d54f9477}{density}}
+\begin{DoxyCompactList}\small\item\em Плотность \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_solver_parameters_aef2e46ef52faa41a24c1b53ce5968557}\label{struct_solver_parameters_aef2e46ef52faa41a24c1b53ce5968557}} 
+\mbox{\hyperlink{class_vector3_d}{Vector3D}} \mbox{\hyperlink{struct_solver_parameters_aef2e46ef52faa41a24c1b53ce5968557}{stream\+Vel}}
+\begin{DoxyCompactList}\small\item\em Скорость потока \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_solver_parameters_a4138711eb8ba46d0e9ba4b1005f360f8}\label{struct_solver_parameters_a4138711eb8ba46d0e9ba4b1005f360f8}} 
+double \mbox{\hyperlink{struct_solver_parameters_a4138711eb8ba46d0e9ba4b1005f360f8}{e\+Star}}
+\begin{DoxyCompactList}\small\item\em Максимальное расстояние между центрами вортон-\/отрезков для их объединения \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_solver_parameters_a8e427262302ae494d910c799b4660d6c}\label{struct_solver_parameters_a8e427262302ae494d910c799b4660d6c}} 
+double \mbox{\hyperlink{struct_solver_parameters_a8e427262302ae494d910c799b4660d6c}{e\+Double\+Star}}
+\begin{DoxyCompactList}\small\item\em Минимальный косинус угла между вортон-\/отрезками для их объединения \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_solver_parameters_a52393837c4d3fb1bf1900140421d2c3c}\label{struct_solver_parameters_a52393837c4d3fb1bf1900140421d2c3c}} 
+double \mbox{\hyperlink{struct_solver_parameters_a52393837c4d3fb1bf1900140421d2c3c}{fi\+Max}}
+\begin{DoxyCompactList}\small\item\em Максимальный угол поворота вортон-\/отрезка за шаг расчета \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_solver_parameters_a77535a5d16a3d67d1b6f629dcab51168}\label{struct_solver_parameters_a77535a5d16a3d67d1b6f629dcab51168}} 
+double \mbox{\hyperlink{struct_solver_parameters_a77535a5d16a3d67d1b6f629dcab51168}{e\+Delta}}
+\begin{DoxyCompactList}\small\item\em Максимальное удлинение вортон-\/отрезка за шаг расчета \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_solver_parameters_af3786bbca8c4174bcdaa600c0c16c512}\label{struct_solver_parameters_af3786bbca8c4174bcdaa600c0c16c512}} 
+double \mbox{\hyperlink{struct_solver_parameters_af3786bbca8c4174bcdaa600c0c16c512}{min\+Vorticity}}
+\begin{DoxyCompactList}\small\item\em Минимальное значение завихренности для учета вортон-\/отрезка \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_solver_parameters_a2312895133b536438ee403b45eac1f39}\label{struct_solver_parameters_a2312895133b536438ee403b45eac1f39}} 
+double \mbox{\hyperlink{struct_solver_parameters_a2312895133b536438ee403b45eac1f39}{layer\+Height}}
+\begin{DoxyCompactList}\small\item\em Высота слоя над телом \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_solver_parameters_abdb86396d6353ec392ca2240e9db469e}\label{struct_solver_parameters_abdb86396d6353ec392ca2240e9db469e}} 
+double \mbox{\hyperlink{struct_solver_parameters_abdb86396d6353ec392ca2240e9db469e}{tau}}
+\begin{DoxyCompactList}\small\item\em Шаг расчета \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_solver_parameters_ae7ed64ac6fb80155e47866f497196283}\label{struct_solver_parameters_ae7ed64ac6fb80155e47866f497196283}} 
+int \mbox{\hyperlink{struct_solver_parameters_ae7ed64ac6fb80155e47866f497196283}{steps\+Num}}
+\begin{DoxyCompactList}\small\item\em Количество шагов расчета \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_solver_parameters_a44c2fdee141ce563fc5fee41c33dcf29}\label{struct_solver_parameters_a44c2fdee141ce563fc5fee41c33dcf29}} 
+double \mbox{\hyperlink{struct_solver_parameters_a44c2fdee141ce563fc5fee41c33dcf29}{delta\+Up}}
+\begin{DoxyCompactList}\small\item\em Высота подъема вортоно-\/отрезков с тела \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_solver_parameters_a17ef12650ff6026b9425fba440d9504f}\label{struct_solver_parameters_a17ef12650ff6026b9425fba440d9504f}} 
+double \mbox{\hyperlink{struct_solver_parameters_a17ef12650ff6026b9425fba440d9504f}{far\+Distance}}
+\begin{DoxyCompactList}\small\item\em Максимальная удаленность от тела для учитывания влияния вортон-\/отрезков \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_solver_parameters_a02663c0c55301bda6db7d622d4d7a9c6}\label{struct_solver_parameters_a02663c0c55301bda6db7d622d4d7a9c6}} 
+double \mbox{\hyperlink{struct_solver_parameters_a02663c0c55301bda6db7d622d4d7a9c6}{max\+Move}}
+\begin{DoxyCompactList}\small\item\em Максимальное значение перемещения вортон-\/отрезка за один шаг расчета \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Подробное описание}
+Структура, хранящая параметры расчета 
+
+\subsection{Методы}
+\mbox{\Hypertarget{struct_solver_parameters_a431f8f2054ae8676047e49a008aeb97d}\label{struct_solver_parameters_a431f8f2054ae8676047e49a008aeb97d}} 
+\index{Solver\+Parameters@{Solver\+Parameters}!set\+Data@{set\+Data}}
+\index{set\+Data@{set\+Data}!Solver\+Parameters@{Solver\+Parameters}}
+\subsubsection{\texorpdfstring{set\+Data()}{setData()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily void Solver\+Parameters\+::set\+Data (\begin{DoxyParamCaption}\item[{const int}]{i,  }\item[{const double}]{value }\end{DoxyParamCaption})}
+
+Установка соотвествующего значения в объект структуры 
+\begin{DoxyParams}{Аргументы}
+{\em i} & Номер поля структуры \\
+\hline
+{\em value} & Значение поля структуры \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{struct_solver_parameters_a22cff4b592233c4e09d5d9e9de8e3265}\label{struct_solver_parameters_a22cff4b592233c4e09d5d9e9de8e3265}} 
+\index{Solver\+Parameters@{Solver\+Parameters}!set\+Data@{set\+Data}}
+\index{set\+Data@{set\+Data}!Solver\+Parameters@{Solver\+Parameters}}
+\subsubsection{\texorpdfstring{set\+Data()}{setData()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily void Solver\+Parameters\+::set\+Data (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_vector3_d}{Vector3D}}}]{value }\end{DoxyParamCaption})}
+
+Установка значения скорости потока в объект структуры 
+\begin{DoxyParams}{Аргументы}
+{\em value} & Значение скорости потока \\
+\hline
+\end{DoxyParams}
+
+
+Объявления и описания членов структур находятся в файлах\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Users/\+Vasily/\+Documents/\+Vortex\+Method/solversettings.\+h\item 
+C\+:/\+Users/\+Vasily/\+Documents/\+Vortex\+Method/solversettings.\+cpp\end{DoxyCompactItemize}

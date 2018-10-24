@@ -3,12 +3,16 @@
 #include <cmath>
 #include <QMessageBox>
 #include <QVector3D>
+
+/*!
+    \brief Класс, реализующий трехмерный вектор с double-компонентами
+*/
 class Vector3D
 {
 private:
-    double X;
-    double Y;
-    double Z;
+    double X; ///<X компонента вектора
+    double Y; ///<Y компонента вектора
+    double Z; ///<Z компонента вектора
 public:
     Vector3D();
     Vector3D(const double _x,const double _y,const double _z);
@@ -20,6 +24,7 @@ public:
     Vector3D normalized();
     void normalize(Vector3D& vec);
 
+    void rotated (const Vector3D& axis, const double theta);
     void x(const double _x);
     void y(const double _y);
     void z(const double _z);
@@ -37,10 +42,8 @@ public:
     Vector3D operator -();
     double& operator[](const double i);
 
-    template <typename  T> static int sign(T val)
-    {
-       return (val > T(0)) ? 1 : ((val < T(0)) ? -1 : 0);
-    }
+    static int sign(int val);
+    static int sign(double val);
 };
 
 

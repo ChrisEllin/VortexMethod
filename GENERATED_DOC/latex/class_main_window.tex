@@ -1,0 +1,453 @@
+\hypertarget{class_main_window}{}\section{Класс Main\+Window}
+\label{class_main_window}\index{Main\+Window@{Main\+Window}}
+
+
+Класс, отвечающий за интерфейс основного окна  
+
+
+
+
+{\ttfamily \#include $<$mainwindow.\+h$>$}
+
+
+
+Граф наследования\+:Main\+Window\+:
+% FIG 0
+
+
+Граф связей класса Main\+Window\+:
+% FIG 1
+\subsection*{Открытые слоты}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{class_main_window_a75499d93be4aa10581e42eddd7ecd1f7}{show\+Info}} ()
+\item 
+void \mbox{\hyperlink{class_main_window_a2066789c6e6e98dfd13709a565867f16}{recieve\+Progress\+Sphere}} (const int percentage)
+\item 
+void \mbox{\hyperlink{class_main_window_ae1943ce8bec1cf91611cf6f827f4cc17}{recieve\+Progress\+Cylinder}} (const int percentage)
+\item 
+void \mbox{\hyperlink{class_main_window_ad5d102e64cec9e823e16c76097a82e67}{recieve\+Progress\+Rotation\+Body}} (const int percentage)
+\item 
+void \mbox{\hyperlink{class_main_window_a5d9756062e5b00dbfc83605498716479}{recieve\+Progress\+Rotation\+Cut\+Body}} (const int percentage)
+\item 
+void \mbox{\hyperlink{class_main_window_a0d01ad34f4f5610bc2e131244ec873cc}{draw\+G\+UI}} (const Q\+Vector$<$ \mbox{\hyperlink{class_vorton}{Vorton}} $>$ \&vortons, const Q\+Vector$<$ std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{class_multi_frame}{Multi\+Frame}} $>$$>$ \&frames)
+\end{DoxyCompactItemize}
+\subsection*{Сигналы}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_main_window_a08797b59dd94e93412855093725de550}\label{class_main_window_a08797b59dd94e93412855093725de550}} 
+void \mbox{\hyperlink{class_main_window_a08797b59dd94e93412855093725de550}{set\+Plane\+XY}} ()
+\begin{DoxyCompactList}\small\item\em Сигнал о переходе к YX отображению \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_main_window_a676452802e26c28c355359025ffa0157}\label{class_main_window_a676452802e26c28c355359025ffa0157}} 
+void \mbox{\hyperlink{class_main_window_a676452802e26c28c355359025ffa0157}{set\+Plane\+YX}} ()
+\begin{DoxyCompactList}\small\item\em Сигнал о переходе к XY отображению \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_main_window_aeef3b9d215f2381eaeda0f049c13afec}\label{class_main_window_aeef3b9d215f2381eaeda0f049c13afec}} 
+void \mbox{\hyperlink{class_main_window_aeef3b9d215f2381eaeda0f049c13afec}{set\+Plane\+XZ}} ()
+\begin{DoxyCompactList}\small\item\em Сигнал о переходе к XZ отображению \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_main_window_a75db7efaba8c7e5389539d83e97e4c25}\label{class_main_window_a75db7efaba8c7e5389539d83e97e4c25}} 
+void \mbox{\hyperlink{class_main_window_a75db7efaba8c7e5389539d83e97e4c25}{set\+Plane\+ZX}} ()
+\begin{DoxyCompactList}\small\item\em Сигнал о переходе к ZX отображению \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_main_window_ae93bdd8f0cbada4bdf50d7d0a2f2b6aa}\label{class_main_window_ae93bdd8f0cbada4bdf50d7d0a2f2b6aa}} 
+void \mbox{\hyperlink{class_main_window_ae93bdd8f0cbada4bdf50d7d0a2f2b6aa}{set\+Plane\+YZ}} ()
+\begin{DoxyCompactList}\small\item\em Сигнал о переходе к YZ отображению \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_main_window_ae7bfcce75d58e0b90b88dab45c74f7e0}\label{class_main_window_ae7bfcce75d58e0b90b88dab45c74f7e0}} 
+void \mbox{\hyperlink{class_main_window_ae7bfcce75d58e0b90b88dab45c74f7e0}{set\+Plane\+ZY}} ()
+\begin{DoxyCompactList}\small\item\em Сигнал о переходе к ZY отображению \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_main_window_ad8519a784a41df59bda173b990f88abe}\label{class_main_window_ad8519a784a41df59bda173b990f88abe}} 
+void \mbox{\hyperlink{class_main_window_ad8519a784a41df59bda173b990f88abe}{reset\+Plane}} ()
+\begin{DoxyCompactList}\small\item\em Сигнал о переходе к начальному отображению \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_main_window_a7bbcf8846ab81fd14bff1d224d54480a}\label{class_main_window_a7bbcf8846ab81fd14bff1d224d54480a}} 
+void \mbox{\hyperlink{class_main_window_a7bbcf8846ab81fd14bff1d224d54480a}{send\+Solver\+Parameters}} (\mbox{\hyperlink{struct_solver_parameters}{Solver\+Parameters}} \&solv\+Par)
+\begin{DoxyCompactList}\small\item\em Сигнал, отправляющий параметры расчета \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_main_window_a7568ddf4139dda654bf945de107fcffe}\label{class_main_window_a7568ddf4139dda654bf945de107fcffe}} 
+void \mbox{\hyperlink{class_main_window_a7568ddf4139dda654bf945de107fcffe}{draw\+Segment}} (Q\+Vector3D center, Q\+Vector3D top, S\+Arrow\+::vort\+\_\+type)
+\begin{DoxyCompactList}\small\item\em Сигнал об отрисовке с выбором типа отрисовки \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_main_window_a177cdb1b7d2ca13356de0829a66a98c3}{draw\+Segment}} (Q\+Vector3D center, Q\+Vector3D top)
+\item 
+\mbox{\Hypertarget{class_main_window_ae0ae91bd57312da7f9df05039fd5997e}\label{class_main_window_ae0ae91bd57312da7f9df05039fd5997e}} 
+void \mbox{\hyperlink{class_main_window_ae0ae91bd57312da7f9df05039fd5997e}{clear\+Segments}} (int n=-\/1)
+\begin{DoxyCompactList}\small\item\em Сигнал об очистке экрана \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_main_window_a1614152404552fa9d38f4c8ada7222f2}\label{class_main_window_a1614152404552fa9d38f4c8ada7222f2}} 
+void \mbox{\hyperlink{class_main_window_a1614152404552fa9d38f4c8ada7222f2}{set\+Radius}} (double radius)
+\begin{DoxyCompactList}\small\item\em Сигнал об установке радиуса трехмерной фигуры \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_main_window_abc10c7f04238887be42e494420450a70}\label{class_main_window_abc10c7f04238887be42e494420450a70}} 
+void \mbox{\hyperlink{class_main_window_abc10c7f04238887be42e494420450a70}{set\+Height}} (double height)
+\begin{DoxyCompactList}\small\item\em Сигнал об установке высоты цилиндра \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_main_window_a388c424a7fdd4ec3c80a7c8fcb5a834e}\label{class_main_window_a388c424a7fdd4ec3c80a7c8fcb5a834e}} 
+void \mbox{\hyperlink{class_main_window_a388c424a7fdd4ec3c80a7c8fcb5a834e}{change\+Shape}} (Main\+Field\+::shape new\+Shape)
+\begin{DoxyCompactList}\small\item\em Сигнал об смене типа отображаемой фигуры \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Открытые члены}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_main_window_a8b244be8b7b7db1b08de2a2acb9409db}{Main\+Window}} (Q\+Widget $\ast$parent=0)
+\item 
+\mbox{\hyperlink{class_main_window_ae98d00a93bc118200eeef9f9bba1dba7}{$\sim$\+Main\+Window}} ()
+\end{DoxyCompactItemize}
+\subsection*{Закрытые слоты}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{class_main_window_ad2a20182d1ed20479debef57417cdb05}{wheel\+Event}} (Q\+Wheel\+Event $\ast$e)
+\item 
+void \mbox{\hyperlink{class_main_window_a8f31a3e693f087eb17c8ea48e4e2ee74}{on\+\_\+tool\+Button\+View\+X\+Y\+\_\+clicked}} ()
+\item 
+void \mbox{\hyperlink{class_main_window_ab5efeaaaa1154e1fdbcb0bfa5f6ff5fe}{on\+\_\+tool\+Button\+View\+Y\+X\+\_\+clicked}} ()
+\item 
+void \mbox{\hyperlink{class_main_window_a3f9c5595b9d72fcd58d5b1057d74a171}{on\+\_\+tool\+Button\+View\+X\+Z\+\_\+clicked}} ()
+\item 
+void \mbox{\hyperlink{class_main_window_a3538288359ae2ef76fc50bf8b11f2514}{on\+\_\+tool\+Button\+View\+Z\+X\+\_\+clicked}} ()
+\item 
+void \mbox{\hyperlink{class_main_window_ab3b376113fdc5caa38811cfdbb93481e}{on\+\_\+tool\+Button\+View\+Y\+Z\+\_\+clicked}} ()
+\item 
+void \mbox{\hyperlink{class_main_window_af156b1f58ddafe013d2a8249a22138b6}{on\+\_\+tool\+Button\+View\+Z\+Y\+\_\+clicked}} ()
+\item 
+void \mbox{\hyperlink{class_main_window_a43dfd48c91d2615d08460baad8d5699d}{on\+\_\+tool\+Button\+View\+Reset\+\_\+clicked}} ()
+\item 
+void \mbox{\hyperlink{class_main_window_a73c60b914a2a815b17925c105f4e518c}{key\+Ctrl\+R\+Actiavated}} ()
+\item 
+void \mbox{\hyperlink{class_main_window_a5bfa72b752825f4f46f59cc3f74558f0}{on\+\_\+sphere\+Solver\+Push\+Button\+\_\+clicked}} ()
+\item 
+void \mbox{\hyperlink{class_main_window_aabfa36b35a25cafc7832c489f5bd30f2}{show\+Settings}} ()
+\item 
+void \mbox{\hyperlink{class_main_window_a6414efba29acd1d6075897fea544fb86}{show\+Sphere}} ()
+\item 
+void \mbox{\hyperlink{class_main_window_a02a28badd46c03cba3e765da92296be0}{show\+Variate\+Settings}} ()
+\item 
+void \mbox{\hyperlink{class_main_window_aa4e061d83c32ac0cd51d12091bd5ce39}{open\+Passport}} ()
+\item 
+void \mbox{\hyperlink{class_main_window_ae7c0fbd49598e38f87c58b1e8e8eeb03}{on\+\_\+cylinder\+Solver\+Push\+Button\+\_\+clicked}} ()
+\item 
+void \mbox{\hyperlink{class_main_window_a34d41c030a12cb9a8ddee74f19888501}{on\+\_\+variate\+Sphere\+Solver\+Push\+Button\+\_\+clicked}} ()
+\item 
+void \mbox{\hyperlink{class_main_window_a780cba7468f901dc962301046767cabf}{on\+\_\+rotation\+Body\+Solver\+Push\+Button\+\_\+clicked}} ()
+\item 
+void \mbox{\hyperlink{class_main_window_a9f384827fc7fce8088470694b45059cd}{on\+\_\+rotation\+Cut\+Body\+Solver\+Push\+Button\+\_\+clicked}} ()
+\item 
+void \mbox{\hyperlink{class_main_window_a5fc924ef6a091de5360f9d6ce9a13319}{on\+\_\+rotation\+Cut\+Body\+Free\+Motion\+Solver\+Push\+Button\+\_\+clicked}} ()
+\item 
+void \mbox{\hyperlink{class_main_window_a39f02faba9e7dcb6cf63f9cc147f1def}{on\+\_\+rotation\+Cut\+Body\+Launch\+Solver\+Push\+Button\+\_\+clicked}} ()
+\item 
+void \mbox{\hyperlink{class_main_window_afd445c8afcf17d5b5010a046d3e69bfd}{on\+\_\+sphere\+Free\+Motion\+Solver\+Push\+Button\+\_\+clicked}} ()
+\item 
+void \mbox{\hyperlink{class_main_window_a13218126a3188b4b77db3f14e24e00f5}{on\+\_\+variate\+Cylinder\+Solver\+Push\+Button\+\_\+clicked}} ()
+\item 
+void \mbox{\hyperlink{class_main_window_ab7173dd837ed3995f96b18621af9735b}{on\+\_\+variate\+Rotation\+Body\+Solver\+Push\+Button\+\_\+clicked}} ()
+\item 
+void \mbox{\hyperlink{class_main_window_afda202c413199135427ca6a1b19587c5}{on\+\_\+variate\+Rotation\+Cut\+Body\+Solver\+Push\+Button\+\_\+clicked}} ()
+\item 
+void \mbox{\hyperlink{class_main_window_a2529d60ec2858b6150222fdf70579bac}{on\+\_\+rotation\+Cut\+Body\+Near\+Screen\+Push\+Button\+\_\+clicked}} ()
+\end{DoxyCompactItemize}
+\subsection*{Закрытые члены}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{class_main_window_a1ef9379070e1d8ab765b13468c8922e1}{set\+Parameters}} (\mbox{\hyperlink{struct_sphere_parameters}{Sphere\+Parameters}} \&sph\+Par)
+\item 
+void \mbox{\hyperlink{class_main_window_a9923fe4ddabc8c7ccdd1917ff85b7a8e}{set\+Parameters}} (\mbox{\hyperlink{struct_cylinder_parameters}{Cylinder\+Parameters}} \&cyl\+Par)
+\item 
+void \mbox{\hyperlink{class_main_window_aab98868ae81e753a51d161038105b493}{set\+Parameters}} (\mbox{\hyperlink{struct_rotation_body_parameters}{Rotation\+Body\+Parameters}} \&rot\+Body\+Par)
+\end{DoxyCompactItemize}
+\subsection*{Закрытые данные}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_main_window_a35466a70ed47252a0191168126a352a5}\label{class_main_window_a35466a70ed47252a0191168126a352a5}} 
+Ui\+::\+Main\+Window $\ast$ \mbox{\hyperlink{class_main_window_a35466a70ed47252a0191168126a352a5}{ui}}
+\begin{DoxyCompactList}\small\item\em Указатель на интерфейс основного окна \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_main_window_adc4574d1fefa5c732153ca8df70b6f7e}\label{class_main_window_adc4574d1fefa5c732153ca8df70b6f7e}} 
+\mbox{\hyperlink{class_solver_settings}{Solver\+Settings}} $\ast$ \mbox{\hyperlink{class_main_window_adc4574d1fefa5c732153ca8df70b6f7e}{settings}}
+\begin{DoxyCompactList}\small\item\em Указатель на класс окна настроек расчета \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_main_window_a91a43144196d0dfcf2047b1831c0f31a}\label{class_main_window_a91a43144196d0dfcf2047b1831c0f31a}} 
+\mbox{\hyperlink{class_solver}{Solver}} $\ast$ \mbox{\hyperlink{class_main_window_a91a43144196d0dfcf2047b1831c0f31a}{solver}}
+\begin{DoxyCompactList}\small\item\em Указатель на класс-\/расчетчик \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_main_window_a39d36fc90da7a8bb3d1b7fd288393d15}\label{class_main_window_a39d36fc90da7a8bb3d1b7fd288393d15}} 
+\mbox{\hyperlink{class_variate_settings}{Variate\+Settings}} $\ast$ \mbox{\hyperlink{class_main_window_a39d36fc90da7a8bb3d1b7fd288393d15}{variate\+Settings}}
+\begin{DoxyCompactList}\small\item\em Указатель на класс окна настроек вариации \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_main_window_a686db6780a84b7e68b095b4c05cd991a}\label{class_main_window_a686db6780a84b7e68b095b4c05cd991a}} 
+bool \mbox{\hyperlink{class_main_window_a686db6780a84b7e68b095b4c05cd991a}{display\+Sphere}}
+\begin{DoxyCompactList}\small\item\em Необходимость отображения трехмерной сферы \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_main_window_ab28306eeee19c150f6f31c73ad514e8f}\label{class_main_window_ab28306eeee19c150f6f31c73ad514e8f}} 
+Q\+Shortcut $\ast$ \mbox{\hyperlink{class_main_window_ab28306eeee19c150f6f31c73ad514e8f}{key\+CtrlO}}
+\begin{DoxyCompactList}\small\item\em Указатель на хоткей (Ctrl+O) \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_main_window_a52ba0febb7c2ba3fa20fe9fe70af0bd4}\label{class_main_window_a52ba0febb7c2ba3fa20fe9fe70af0bd4}} 
+Q\+Shortcut $\ast$ \mbox{\hyperlink{class_main_window_a52ba0febb7c2ba3fa20fe9fe70af0bd4}{key\+CtrlR}}
+\begin{DoxyCompactList}\small\item\em Указатель на хоткей (Ctrl+R) \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_main_window_a5ed40b9ddd96298e6688a360c227863a}\label{class_main_window_a5ed40b9ddd96298e6688a360c227863a}} 
+Q\+Shortcut $\ast$ \mbox{\hyperlink{class_main_window_a5ed40b9ddd96298e6688a360c227863a}{key\+CtrlH}}
+\begin{DoxyCompactList}\small\item\em Указатель на хоткей (Ctrl+H) \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Подробное описание}
+Класс, отвечающий за интерфейс основного окна 
+
+\subsection{Конструктор(ы)}
+\mbox{\Hypertarget{class_main_window_a8b244be8b7b7db1b08de2a2acb9409db}\label{class_main_window_a8b244be8b7b7db1b08de2a2acb9409db}} 
+\index{Main\+Window@{Main\+Window}!Main\+Window@{Main\+Window}}
+\index{Main\+Window@{Main\+Window}!Main\+Window@{Main\+Window}}
+\subsubsection{\texorpdfstring{Main\+Window()}{MainWindow()}}
+{\footnotesize\ttfamily Main\+Window\+::\+Main\+Window (\begin{DoxyParamCaption}\item[{Q\+Widget $\ast$}]{parent = {\ttfamily 0} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [explicit]}}
+
+Создает экземмпляр главного окна; настраивает сигнально-\/слотовую связь. \mbox{\Hypertarget{class_main_window_ae98d00a93bc118200eeef9f9bba1dba7}\label{class_main_window_ae98d00a93bc118200eeef9f9bba1dba7}} 
+\index{Main\+Window@{Main\+Window}!````~Main\+Window@{$\sim$\+Main\+Window}}
+\index{````~Main\+Window@{$\sim$\+Main\+Window}!Main\+Window@{Main\+Window}}
+\subsubsection{\texorpdfstring{$\sim$\+Main\+Window()}{~MainWindow()}}
+{\footnotesize\ttfamily Main\+Window\+::$\sim$\+Main\+Window (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Удаляет главное и дополнительные окна. 
+
+\subsection{Методы}
+\mbox{\Hypertarget{class_main_window_a0d01ad34f4f5610bc2e131244ec873cc}\label{class_main_window_a0d01ad34f4f5610bc2e131244ec873cc}} 
+\index{Main\+Window@{Main\+Window}!draw\+G\+UI@{draw\+G\+UI}}
+\index{draw\+G\+UI@{draw\+G\+UI}!Main\+Window@{Main\+Window}}
+\subsubsection{\texorpdfstring{draw\+G\+UI}{drawGUI}}
+{\footnotesize\ttfamily void Main\+Window\+::draw\+G\+UI (\begin{DoxyParamCaption}\item[{const Q\+Vector$<$ \mbox{\hyperlink{class_vorton}{Vorton}} $>$ \&}]{vortons,  }\item[{const Q\+Vector$<$ std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{class_multi_frame}{Multi\+Frame}} $>$$>$ \&}]{frames }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [slot]}}
+
+Перерисовывает визуализацию расчета 
+\begin{DoxyParams}{Аргументы}
+{\em vortons} & Вектор вортонов(отображается точками) \\
+\hline
+{\em frames} & Вектор рамок(отображается стрелками) \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_main_window_a177cdb1b7d2ca13356de0829a66a98c3}\label{class_main_window_a177cdb1b7d2ca13356de0829a66a98c3}} 
+\index{Main\+Window@{Main\+Window}!draw\+Segment@{draw\+Segment}}
+\index{draw\+Segment@{draw\+Segment}!Main\+Window@{Main\+Window}}
+\subsubsection{\texorpdfstring{draw\+Segment}{drawSegment}}
+{\footnotesize\ttfamily void Main\+Window\+::draw\+Segment (\begin{DoxyParamCaption}\item[{Q\+Vector3D}]{center,  }\item[{Q\+Vector3D}]{top }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [signal]}}
+
+Эта функция перегружена и предоставляется исключительно для удобства использования. Она отличается от вышеупомянутой только фактическими аргументами. \mbox{\Hypertarget{class_main_window_a73c60b914a2a815b17925c105f4e518c}\label{class_main_window_a73c60b914a2a815b17925c105f4e518c}} 
+\index{Main\+Window@{Main\+Window}!key\+Ctrl\+R\+Actiavated@{key\+Ctrl\+R\+Actiavated}}
+\index{key\+Ctrl\+R\+Actiavated@{key\+Ctrl\+R\+Actiavated}!Main\+Window@{Main\+Window}}
+\subsubsection{\texorpdfstring{key\+Ctrl\+R\+Actiavated}{keyCtrlRActiavated}}
+{\footnotesize\ttfamily void Main\+Window\+::key\+Ctrl\+R\+Actiavated (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}, {\ttfamily [slot]}}
+
+Запускает соответствующий расчет по нажатию (Ctrl+R). \mbox{\Hypertarget{class_main_window_ae7c0fbd49598e38f87c58b1e8e8eeb03}\label{class_main_window_ae7c0fbd49598e38f87c58b1e8e8eeb03}} 
+\index{Main\+Window@{Main\+Window}!on\+\_\+cylinder\+Solver\+Push\+Button\+\_\+clicked@{on\+\_\+cylinder\+Solver\+Push\+Button\+\_\+clicked}}
+\index{on\+\_\+cylinder\+Solver\+Push\+Button\+\_\+clicked@{on\+\_\+cylinder\+Solver\+Push\+Button\+\_\+clicked}!Main\+Window@{Main\+Window}}
+\subsubsection{\texorpdfstring{on\+\_\+cylinder\+Solver\+Push\+Button\+\_\+clicked}{on\_cylinderSolverPushButton\_clicked}}
+{\footnotesize\ttfamily void Main\+Window\+::on\+\_\+cylinder\+Solver\+Push\+Button\+\_\+clicked (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}, {\ttfamily [slot]}}
+
+Запускает расчет цилиндра с заданными параметрами. Проверяет полноту данных для этого. \mbox{\Hypertarget{class_main_window_a780cba7468f901dc962301046767cabf}\label{class_main_window_a780cba7468f901dc962301046767cabf}} 
+\index{Main\+Window@{Main\+Window}!on\+\_\+rotation\+Body\+Solver\+Push\+Button\+\_\+clicked@{on\+\_\+rotation\+Body\+Solver\+Push\+Button\+\_\+clicked}}
+\index{on\+\_\+rotation\+Body\+Solver\+Push\+Button\+\_\+clicked@{on\+\_\+rotation\+Body\+Solver\+Push\+Button\+\_\+clicked}!Main\+Window@{Main\+Window}}
+\subsubsection{\texorpdfstring{on\+\_\+rotation\+Body\+Solver\+Push\+Button\+\_\+clicked}{on\_rotationBodySolverPushButton\_clicked}}
+{\footnotesize\ttfamily void Main\+Window\+::on\+\_\+rotation\+Body\+Solver\+Push\+Button\+\_\+clicked (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}, {\ttfamily [slot]}}
+
+Запускает расчет тела вращения с заданными параметрами. Проверяет полноту данных для этого. \mbox{\Hypertarget{class_main_window_a5fc924ef6a091de5360f9d6ce9a13319}\label{class_main_window_a5fc924ef6a091de5360f9d6ce9a13319}} 
+\index{Main\+Window@{Main\+Window}!on\+\_\+rotation\+Cut\+Body\+Free\+Motion\+Solver\+Push\+Button\+\_\+clicked@{on\+\_\+rotation\+Cut\+Body\+Free\+Motion\+Solver\+Push\+Button\+\_\+clicked}}
+\index{on\+\_\+rotation\+Cut\+Body\+Free\+Motion\+Solver\+Push\+Button\+\_\+clicked@{on\+\_\+rotation\+Cut\+Body\+Free\+Motion\+Solver\+Push\+Button\+\_\+clicked}!Main\+Window@{Main\+Window}}
+\subsubsection{\texorpdfstring{on\+\_\+rotation\+Cut\+Body\+Free\+Motion\+Solver\+Push\+Button\+\_\+clicked}{on\_rotationCutBodyFreeMotionSolverPushButton\_clicked}}
+{\footnotesize\ttfamily void Main\+Window\+::on\+\_\+rotation\+Cut\+Body\+Free\+Motion\+Solver\+Push\+Button\+\_\+clicked (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}, {\ttfamily [slot]}}
+
+Запускает расчет движущегося тела вращения с заданными параметрами. Проверяет полноту данных для этого. \mbox{\Hypertarget{class_main_window_a39f02faba9e7dcb6cf63f9cc147f1def}\label{class_main_window_a39f02faba9e7dcb6cf63f9cc147f1def}} 
+\index{Main\+Window@{Main\+Window}!on\+\_\+rotation\+Cut\+Body\+Launch\+Solver\+Push\+Button\+\_\+clicked@{on\+\_\+rotation\+Cut\+Body\+Launch\+Solver\+Push\+Button\+\_\+clicked}}
+\index{on\+\_\+rotation\+Cut\+Body\+Launch\+Solver\+Push\+Button\+\_\+clicked@{on\+\_\+rotation\+Cut\+Body\+Launch\+Solver\+Push\+Button\+\_\+clicked}!Main\+Window@{Main\+Window}}
+\subsubsection{\texorpdfstring{on\+\_\+rotation\+Cut\+Body\+Launch\+Solver\+Push\+Button\+\_\+clicked}{on\_rotationCutBodyLaunchSolverPushButton\_clicked}}
+{\footnotesize\ttfamily void Main\+Window\+::on\+\_\+rotation\+Cut\+Body\+Launch\+Solver\+Push\+Button\+\_\+clicked (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}, {\ttfamily [slot]}}
+
+Запускает расчет задачи старта для тела вращения с заданными параметрами. Проверяет полноту данных для этого. \mbox{\Hypertarget{class_main_window_a2529d60ec2858b6150222fdf70579bac}\label{class_main_window_a2529d60ec2858b6150222fdf70579bac}} 
+\index{Main\+Window@{Main\+Window}!on\+\_\+rotation\+Cut\+Body\+Near\+Screen\+Push\+Button\+\_\+clicked@{on\+\_\+rotation\+Cut\+Body\+Near\+Screen\+Push\+Button\+\_\+clicked}}
+\index{on\+\_\+rotation\+Cut\+Body\+Near\+Screen\+Push\+Button\+\_\+clicked@{on\+\_\+rotation\+Cut\+Body\+Near\+Screen\+Push\+Button\+\_\+clicked}!Main\+Window@{Main\+Window}}
+\subsubsection{\texorpdfstring{on\+\_\+rotation\+Cut\+Body\+Near\+Screen\+Push\+Button\+\_\+clicked}{on\_rotationCutBodyNearScreenPushButton\_clicked}}
+{\footnotesize\ttfamily void Main\+Window\+::on\+\_\+rotation\+Cut\+Body\+Near\+Screen\+Push\+Button\+\_\+clicked (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}, {\ttfamily [slot]}}
+
+Запускает расчет тела вращения со срезом вблизи экрана с заданными параметрами. Проверяет полноту данных для этого. \mbox{\Hypertarget{class_main_window_a9f384827fc7fce8088470694b45059cd}\label{class_main_window_a9f384827fc7fce8088470694b45059cd}} 
+\index{Main\+Window@{Main\+Window}!on\+\_\+rotation\+Cut\+Body\+Solver\+Push\+Button\+\_\+clicked@{on\+\_\+rotation\+Cut\+Body\+Solver\+Push\+Button\+\_\+clicked}}
+\index{on\+\_\+rotation\+Cut\+Body\+Solver\+Push\+Button\+\_\+clicked@{on\+\_\+rotation\+Cut\+Body\+Solver\+Push\+Button\+\_\+clicked}!Main\+Window@{Main\+Window}}
+\subsubsection{\texorpdfstring{on\+\_\+rotation\+Cut\+Body\+Solver\+Push\+Button\+\_\+clicked}{on\_rotationCutBodySolverPushButton\_clicked}}
+{\footnotesize\ttfamily void Main\+Window\+::on\+\_\+rotation\+Cut\+Body\+Solver\+Push\+Button\+\_\+clicked (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}, {\ttfamily [slot]}}
+
+Запускает расчет тела вращения со срезом с заданными параметрами. Проверяет полноту данных для этого. \mbox{\Hypertarget{class_main_window_afd445c8afcf17d5b5010a046d3e69bfd}\label{class_main_window_afd445c8afcf17d5b5010a046d3e69bfd}} 
+\index{Main\+Window@{Main\+Window}!on\+\_\+sphere\+Free\+Motion\+Solver\+Push\+Button\+\_\+clicked@{on\+\_\+sphere\+Free\+Motion\+Solver\+Push\+Button\+\_\+clicked}}
+\index{on\+\_\+sphere\+Free\+Motion\+Solver\+Push\+Button\+\_\+clicked@{on\+\_\+sphere\+Free\+Motion\+Solver\+Push\+Button\+\_\+clicked}!Main\+Window@{Main\+Window}}
+\subsubsection{\texorpdfstring{on\+\_\+sphere\+Free\+Motion\+Solver\+Push\+Button\+\_\+clicked}{on\_sphereFreeMotionSolverPushButton\_clicked}}
+{\footnotesize\ttfamily void Main\+Window\+::on\+\_\+sphere\+Free\+Motion\+Solver\+Push\+Button\+\_\+clicked (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}, {\ttfamily [slot]}}
+
+Запускает расчет задачи старта для сферы с заданными параметрами. Проверяет полноту данных для этого. \mbox{\Hypertarget{class_main_window_a5bfa72b752825f4f46f59cc3f74558f0}\label{class_main_window_a5bfa72b752825f4f46f59cc3f74558f0}} 
+\index{Main\+Window@{Main\+Window}!on\+\_\+sphere\+Solver\+Push\+Button\+\_\+clicked@{on\+\_\+sphere\+Solver\+Push\+Button\+\_\+clicked}}
+\index{on\+\_\+sphere\+Solver\+Push\+Button\+\_\+clicked@{on\+\_\+sphere\+Solver\+Push\+Button\+\_\+clicked}!Main\+Window@{Main\+Window}}
+\subsubsection{\texorpdfstring{on\+\_\+sphere\+Solver\+Push\+Button\+\_\+clicked}{on\_sphereSolverPushButton\_clicked}}
+{\footnotesize\ttfamily void Main\+Window\+::on\+\_\+sphere\+Solver\+Push\+Button\+\_\+clicked (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}, {\ttfamily [slot]}}
+
+Запускает расчет сферы с заданными параметрами. Проверяет полноту данных для этого. \mbox{\Hypertarget{class_main_window_a43dfd48c91d2615d08460baad8d5699d}\label{class_main_window_a43dfd48c91d2615d08460baad8d5699d}} 
+\index{Main\+Window@{Main\+Window}!on\+\_\+tool\+Button\+View\+Reset\+\_\+clicked@{on\+\_\+tool\+Button\+View\+Reset\+\_\+clicked}}
+\index{on\+\_\+tool\+Button\+View\+Reset\+\_\+clicked@{on\+\_\+tool\+Button\+View\+Reset\+\_\+clicked}!Main\+Window@{Main\+Window}}
+\subsubsection{\texorpdfstring{on\+\_\+tool\+Button\+View\+Reset\+\_\+clicked}{on\_toolButtonViewReset\_clicked}}
+{\footnotesize\ttfamily void Main\+Window\+::on\+\_\+tool\+Button\+View\+Reset\+\_\+clicked (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}, {\ttfamily [slot]}}
+
+Переводит изображение в изначальный вид \mbox{\Hypertarget{class_main_window_a8f31a3e693f087eb17c8ea48e4e2ee74}\label{class_main_window_a8f31a3e693f087eb17c8ea48e4e2ee74}} 
+\index{Main\+Window@{Main\+Window}!on\+\_\+tool\+Button\+View\+X\+Y\+\_\+clicked@{on\+\_\+tool\+Button\+View\+X\+Y\+\_\+clicked}}
+\index{on\+\_\+tool\+Button\+View\+X\+Y\+\_\+clicked@{on\+\_\+tool\+Button\+View\+X\+Y\+\_\+clicked}!Main\+Window@{Main\+Window}}
+\subsubsection{\texorpdfstring{on\+\_\+tool\+Button\+View\+X\+Y\+\_\+clicked}{on\_toolButtonViewXY\_clicked}}
+{\footnotesize\ttfamily void Main\+Window\+::on\+\_\+tool\+Button\+View\+X\+Y\+\_\+clicked (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}, {\ttfamily [slot]}}
+
+Переводит изображение в XY вид \mbox{\Hypertarget{class_main_window_a3f9c5595b9d72fcd58d5b1057d74a171}\label{class_main_window_a3f9c5595b9d72fcd58d5b1057d74a171}} 
+\index{Main\+Window@{Main\+Window}!on\+\_\+tool\+Button\+View\+X\+Z\+\_\+clicked@{on\+\_\+tool\+Button\+View\+X\+Z\+\_\+clicked}}
+\index{on\+\_\+tool\+Button\+View\+X\+Z\+\_\+clicked@{on\+\_\+tool\+Button\+View\+X\+Z\+\_\+clicked}!Main\+Window@{Main\+Window}}
+\subsubsection{\texorpdfstring{on\+\_\+tool\+Button\+View\+X\+Z\+\_\+clicked}{on\_toolButtonViewXZ\_clicked}}
+{\footnotesize\ttfamily void Main\+Window\+::on\+\_\+tool\+Button\+View\+X\+Z\+\_\+clicked (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}, {\ttfamily [slot]}}
+
+Переводит изображение в XZ вид \mbox{\Hypertarget{class_main_window_ab5efeaaaa1154e1fdbcb0bfa5f6ff5fe}\label{class_main_window_ab5efeaaaa1154e1fdbcb0bfa5f6ff5fe}} 
+\index{Main\+Window@{Main\+Window}!on\+\_\+tool\+Button\+View\+Y\+X\+\_\+clicked@{on\+\_\+tool\+Button\+View\+Y\+X\+\_\+clicked}}
+\index{on\+\_\+tool\+Button\+View\+Y\+X\+\_\+clicked@{on\+\_\+tool\+Button\+View\+Y\+X\+\_\+clicked}!Main\+Window@{Main\+Window}}
+\subsubsection{\texorpdfstring{on\+\_\+tool\+Button\+View\+Y\+X\+\_\+clicked}{on\_toolButtonViewYX\_clicked}}
+{\footnotesize\ttfamily void Main\+Window\+::on\+\_\+tool\+Button\+View\+Y\+X\+\_\+clicked (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}, {\ttfamily [slot]}}
+
+Переводит изображение в YX вид \mbox{\Hypertarget{class_main_window_ab3b376113fdc5caa38811cfdbb93481e}\label{class_main_window_ab3b376113fdc5caa38811cfdbb93481e}} 
+\index{Main\+Window@{Main\+Window}!on\+\_\+tool\+Button\+View\+Y\+Z\+\_\+clicked@{on\+\_\+tool\+Button\+View\+Y\+Z\+\_\+clicked}}
+\index{on\+\_\+tool\+Button\+View\+Y\+Z\+\_\+clicked@{on\+\_\+tool\+Button\+View\+Y\+Z\+\_\+clicked}!Main\+Window@{Main\+Window}}
+\subsubsection{\texorpdfstring{on\+\_\+tool\+Button\+View\+Y\+Z\+\_\+clicked}{on\_toolButtonViewYZ\_clicked}}
+{\footnotesize\ttfamily void Main\+Window\+::on\+\_\+tool\+Button\+View\+Y\+Z\+\_\+clicked (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}, {\ttfamily [slot]}}
+
+Переводит изображение в YZ вид \mbox{\Hypertarget{class_main_window_a3538288359ae2ef76fc50bf8b11f2514}\label{class_main_window_a3538288359ae2ef76fc50bf8b11f2514}} 
+\index{Main\+Window@{Main\+Window}!on\+\_\+tool\+Button\+View\+Z\+X\+\_\+clicked@{on\+\_\+tool\+Button\+View\+Z\+X\+\_\+clicked}}
+\index{on\+\_\+tool\+Button\+View\+Z\+X\+\_\+clicked@{on\+\_\+tool\+Button\+View\+Z\+X\+\_\+clicked}!Main\+Window@{Main\+Window}}
+\subsubsection{\texorpdfstring{on\+\_\+tool\+Button\+View\+Z\+X\+\_\+clicked}{on\_toolButtonViewZX\_clicked}}
+{\footnotesize\ttfamily void Main\+Window\+::on\+\_\+tool\+Button\+View\+Z\+X\+\_\+clicked (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}, {\ttfamily [slot]}}
+
+Переводит изображение в ZX вид \mbox{\Hypertarget{class_main_window_af156b1f58ddafe013d2a8249a22138b6}\label{class_main_window_af156b1f58ddafe013d2a8249a22138b6}} 
+\index{Main\+Window@{Main\+Window}!on\+\_\+tool\+Button\+View\+Z\+Y\+\_\+clicked@{on\+\_\+tool\+Button\+View\+Z\+Y\+\_\+clicked}}
+\index{on\+\_\+tool\+Button\+View\+Z\+Y\+\_\+clicked@{on\+\_\+tool\+Button\+View\+Z\+Y\+\_\+clicked}!Main\+Window@{Main\+Window}}
+\subsubsection{\texorpdfstring{on\+\_\+tool\+Button\+View\+Z\+Y\+\_\+clicked}{on\_toolButtonViewZY\_clicked}}
+{\footnotesize\ttfamily void Main\+Window\+::on\+\_\+tool\+Button\+View\+Z\+Y\+\_\+clicked (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}, {\ttfamily [slot]}}
+
+Переводит изображение в ZY вид \mbox{\Hypertarget{class_main_window_a13218126a3188b4b77db3f14e24e00f5}\label{class_main_window_a13218126a3188b4b77db3f14e24e00f5}} 
+\index{Main\+Window@{Main\+Window}!on\+\_\+variate\+Cylinder\+Solver\+Push\+Button\+\_\+clicked@{on\+\_\+variate\+Cylinder\+Solver\+Push\+Button\+\_\+clicked}}
+\index{on\+\_\+variate\+Cylinder\+Solver\+Push\+Button\+\_\+clicked@{on\+\_\+variate\+Cylinder\+Solver\+Push\+Button\+\_\+clicked}!Main\+Window@{Main\+Window}}
+\subsubsection{\texorpdfstring{on\+\_\+variate\+Cylinder\+Solver\+Push\+Button\+\_\+clicked}{on\_variateCylinderSolverPushButton\_clicked}}
+{\footnotesize\ttfamily void Main\+Window\+::on\+\_\+variate\+Cylinder\+Solver\+Push\+Button\+\_\+clicked (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}, {\ttfamily [slot]}}
+
+Запускает вариацию параметров цилиндра с начальными параметрами. Проверяет полноту данных для этого. \mbox{\Hypertarget{class_main_window_ab7173dd837ed3995f96b18621af9735b}\label{class_main_window_ab7173dd837ed3995f96b18621af9735b}} 
+\index{Main\+Window@{Main\+Window}!on\+\_\+variate\+Rotation\+Body\+Solver\+Push\+Button\+\_\+clicked@{on\+\_\+variate\+Rotation\+Body\+Solver\+Push\+Button\+\_\+clicked}}
+\index{on\+\_\+variate\+Rotation\+Body\+Solver\+Push\+Button\+\_\+clicked@{on\+\_\+variate\+Rotation\+Body\+Solver\+Push\+Button\+\_\+clicked}!Main\+Window@{Main\+Window}}
+\subsubsection{\texorpdfstring{on\+\_\+variate\+Rotation\+Body\+Solver\+Push\+Button\+\_\+clicked}{on\_variateRotationBodySolverPushButton\_clicked}}
+{\footnotesize\ttfamily void Main\+Window\+::on\+\_\+variate\+Rotation\+Body\+Solver\+Push\+Button\+\_\+clicked (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}, {\ttfamily [slot]}}
+
+Запускает вариацию параметров тела вращения с начальными параметрами. Проверяет полноту данных для этого. \mbox{\Hypertarget{class_main_window_afda202c413199135427ca6a1b19587c5}\label{class_main_window_afda202c413199135427ca6a1b19587c5}} 
+\index{Main\+Window@{Main\+Window}!on\+\_\+variate\+Rotation\+Cut\+Body\+Solver\+Push\+Button\+\_\+clicked@{on\+\_\+variate\+Rotation\+Cut\+Body\+Solver\+Push\+Button\+\_\+clicked}}
+\index{on\+\_\+variate\+Rotation\+Cut\+Body\+Solver\+Push\+Button\+\_\+clicked@{on\+\_\+variate\+Rotation\+Cut\+Body\+Solver\+Push\+Button\+\_\+clicked}!Main\+Window@{Main\+Window}}
+\subsubsection{\texorpdfstring{on\+\_\+variate\+Rotation\+Cut\+Body\+Solver\+Push\+Button\+\_\+clicked}{on\_variateRotationCutBodySolverPushButton\_clicked}}
+{\footnotesize\ttfamily void Main\+Window\+::on\+\_\+variate\+Rotation\+Cut\+Body\+Solver\+Push\+Button\+\_\+clicked (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}, {\ttfamily [slot]}}
+
+Запускает вариацию параметров тела вращения со срезом с начальными параметрами. Проверяет полноту данных для этого. \mbox{\Hypertarget{class_main_window_a34d41c030a12cb9a8ddee74f19888501}\label{class_main_window_a34d41c030a12cb9a8ddee74f19888501}} 
+\index{Main\+Window@{Main\+Window}!on\+\_\+variate\+Sphere\+Solver\+Push\+Button\+\_\+clicked@{on\+\_\+variate\+Sphere\+Solver\+Push\+Button\+\_\+clicked}}
+\index{on\+\_\+variate\+Sphere\+Solver\+Push\+Button\+\_\+clicked@{on\+\_\+variate\+Sphere\+Solver\+Push\+Button\+\_\+clicked}!Main\+Window@{Main\+Window}}
+\subsubsection{\texorpdfstring{on\+\_\+variate\+Sphere\+Solver\+Push\+Button\+\_\+clicked}{on\_variateSphereSolverPushButton\_clicked}}
+{\footnotesize\ttfamily void Main\+Window\+::on\+\_\+variate\+Sphere\+Solver\+Push\+Button\+\_\+clicked (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}, {\ttfamily [slot]}}
+
+Запускает вариацию параметров сферы с начальными параметрами. Проверяет полноту данных для этого. \mbox{\Hypertarget{class_main_window_aa4e061d83c32ac0cd51d12091bd5ce39}\label{class_main_window_aa4e061d83c32ac0cd51d12091bd5ce39}} 
+\index{Main\+Window@{Main\+Window}!open\+Passport@{open\+Passport}}
+\index{open\+Passport@{open\+Passport}!Main\+Window@{Main\+Window}}
+\subsubsection{\texorpdfstring{open\+Passport}{openPassport}}
+{\footnotesize\ttfamily void Main\+Window\+::open\+Passport (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}, {\ttfamily [slot]}}
+
+Открывает файл с начальными данными расчета для последующего произведения расчета с ними \mbox{\Hypertarget{class_main_window_ae1943ce8bec1cf91611cf6f827f4cc17}\label{class_main_window_ae1943ce8bec1cf91611cf6f827f4cc17}} 
+\index{Main\+Window@{Main\+Window}!recieve\+Progress\+Cylinder@{recieve\+Progress\+Cylinder}}
+\index{recieve\+Progress\+Cylinder@{recieve\+Progress\+Cylinder}!Main\+Window@{Main\+Window}}
+\subsubsection{\texorpdfstring{recieve\+Progress\+Cylinder}{recieveProgressCylinder}}
+{\footnotesize\ttfamily void Main\+Window\+::recieve\+Progress\+Cylinder (\begin{DoxyParamCaption}\item[{const int}]{percentage }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [slot]}}
+
+Выводит текущий прогресс расчета цилиндра 
+\begin{DoxyParams}{Аргументы}
+{\em percentage} & Текущий шаг \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_main_window_ad5d102e64cec9e823e16c76097a82e67}\label{class_main_window_ad5d102e64cec9e823e16c76097a82e67}} 
+\index{Main\+Window@{Main\+Window}!recieve\+Progress\+Rotation\+Body@{recieve\+Progress\+Rotation\+Body}}
+\index{recieve\+Progress\+Rotation\+Body@{recieve\+Progress\+Rotation\+Body}!Main\+Window@{Main\+Window}}
+\subsubsection{\texorpdfstring{recieve\+Progress\+Rotation\+Body}{recieveProgressRotationBody}}
+{\footnotesize\ttfamily void Main\+Window\+::recieve\+Progress\+Rotation\+Body (\begin{DoxyParamCaption}\item[{const int}]{percentage }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [slot]}}
+
+Выводит текущий прогресс расчета тела вращения 
+\begin{DoxyParams}{Аргументы}
+{\em percentage} & Текущий шаг \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_main_window_a5d9756062e5b00dbfc83605498716479}\label{class_main_window_a5d9756062e5b00dbfc83605498716479}} 
+\index{Main\+Window@{Main\+Window}!recieve\+Progress\+Rotation\+Cut\+Body@{recieve\+Progress\+Rotation\+Cut\+Body}}
+\index{recieve\+Progress\+Rotation\+Cut\+Body@{recieve\+Progress\+Rotation\+Cut\+Body}!Main\+Window@{Main\+Window}}
+\subsubsection{\texorpdfstring{recieve\+Progress\+Rotation\+Cut\+Body}{recieveProgressRotationCutBody}}
+{\footnotesize\ttfamily void Main\+Window\+::recieve\+Progress\+Rotation\+Cut\+Body (\begin{DoxyParamCaption}\item[{const int}]{percentage }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [slot]}}
+
+Выводит текущий прогресс расчета тела вращения со срезом 
+\begin{DoxyParams}{Аргументы}
+{\em percentage} & Текущий шаг \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_main_window_a2066789c6e6e98dfd13709a565867f16}\label{class_main_window_a2066789c6e6e98dfd13709a565867f16}} 
+\index{Main\+Window@{Main\+Window}!recieve\+Progress\+Sphere@{recieve\+Progress\+Sphere}}
+\index{recieve\+Progress\+Sphere@{recieve\+Progress\+Sphere}!Main\+Window@{Main\+Window}}
+\subsubsection{\texorpdfstring{recieve\+Progress\+Sphere}{recieveProgressSphere}}
+{\footnotesize\ttfamily void Main\+Window\+::recieve\+Progress\+Sphere (\begin{DoxyParamCaption}\item[{const int}]{percentage }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [slot]}}
+
+Выводит текущий прогресс расчета сферы 
+\begin{DoxyParams}{Аргументы}
+{\em percentage} & Текущий шаг \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_main_window_a1ef9379070e1d8ab765b13468c8922e1}\label{class_main_window_a1ef9379070e1d8ab765b13468c8922e1}} 
+\index{Main\+Window@{Main\+Window}!set\+Parameters@{set\+Parameters}}
+\index{set\+Parameters@{set\+Parameters}!Main\+Window@{Main\+Window}}
+\subsubsection{\texorpdfstring{set\+Parameters()}{setParameters()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily void Main\+Window\+::set\+Parameters (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_sphere_parameters}{Sphere\+Parameters}} \&}]{sph\+Par }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+Устанавливает параметры разбиения сферы в интерфейс основного окна 
+\begin{DoxyParams}{Аргументы}
+{\em sph\+Par} & Параметры разбиения сферы \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_main_window_a9923fe4ddabc8c7ccdd1917ff85b7a8e}\label{class_main_window_a9923fe4ddabc8c7ccdd1917ff85b7a8e}} 
+\index{Main\+Window@{Main\+Window}!set\+Parameters@{set\+Parameters}}
+\index{set\+Parameters@{set\+Parameters}!Main\+Window@{Main\+Window}}
+\subsubsection{\texorpdfstring{set\+Parameters()}{setParameters()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily void Main\+Window\+::set\+Parameters (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_cylinder_parameters}{Cylinder\+Parameters}} \&}]{cyl\+Par }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+Устанавливает параметры разбиения цилиндра в интерфейс основного окна 
+\begin{DoxyParams}{Аргументы}
+{\em sph\+Par} & Параметры разбиения цилиндра \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_main_window_aab98868ae81e753a51d161038105b493}\label{class_main_window_aab98868ae81e753a51d161038105b493}} 
+\index{Main\+Window@{Main\+Window}!set\+Parameters@{set\+Parameters}}
+\index{set\+Parameters@{set\+Parameters}!Main\+Window@{Main\+Window}}
+\subsubsection{\texorpdfstring{set\+Parameters()}{setParameters()}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily void Main\+Window\+::set\+Parameters (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_rotation_body_parameters}{Rotation\+Body\+Parameters}} \&}]{rot\+Body\+Par }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+Устанавливает параметры разбиения тела вращения в интерфейс основного окна 
+\begin{DoxyParams}{Аргументы}
+{\em sph\+Par} & Параметры разбиения тела вращения \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_main_window_a75499d93be4aa10581e42eddd7ecd1f7}\label{class_main_window_a75499d93be4aa10581e42eddd7ecd1f7}} 
+\index{Main\+Window@{Main\+Window}!show\+Info@{show\+Info}}
+\index{show\+Info@{show\+Info}!Main\+Window@{Main\+Window}}
+\subsubsection{\texorpdfstring{show\+Info}{showInfo}}
+{\footnotesize\ttfamily void Main\+Window\+::show\+Info (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [slot]}}
+
+Выводит дополнительное окно о завершении вариации \mbox{\Hypertarget{class_main_window_aabfa36b35a25cafc7832c489f5bd30f2}\label{class_main_window_aabfa36b35a25cafc7832c489f5bd30f2}} 
+\index{Main\+Window@{Main\+Window}!show\+Settings@{show\+Settings}}
+\index{show\+Settings@{show\+Settings}!Main\+Window@{Main\+Window}}
+\subsubsection{\texorpdfstring{show\+Settings}{showSettings}}
+{\footnotesize\ttfamily void Main\+Window\+::show\+Settings (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}, {\ttfamily [slot]}}
+
+Выводит дополнительное окно с настройками расчета \mbox{\Hypertarget{class_main_window_a6414efba29acd1d6075897fea544fb86}\label{class_main_window_a6414efba29acd1d6075897fea544fb86}} 
+\index{Main\+Window@{Main\+Window}!show\+Sphere@{show\+Sphere}}
+\index{show\+Sphere@{show\+Sphere}!Main\+Window@{Main\+Window}}
+\subsubsection{\texorpdfstring{show\+Sphere}{showSphere}}
+{\footnotesize\ttfamily void Main\+Window\+::show\+Sphere (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}, {\ttfamily [slot]}}
+
+Отображает трехмерную сферу \mbox{\Hypertarget{class_main_window_a02a28badd46c03cba3e765da92296be0}\label{class_main_window_a02a28badd46c03cba3e765da92296be0}} 
+\index{Main\+Window@{Main\+Window}!show\+Variate\+Settings@{show\+Variate\+Settings}}
+\index{show\+Variate\+Settings@{show\+Variate\+Settings}!Main\+Window@{Main\+Window}}
+\subsubsection{\texorpdfstring{show\+Variate\+Settings}{showVariateSettings}}
+{\footnotesize\ttfamily void Main\+Window\+::show\+Variate\+Settings (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}, {\ttfamily [slot]}}
+
+Выводит дополнительное окно с настройками вариации \mbox{\Hypertarget{class_main_window_ad2a20182d1ed20479debef57417cdb05}\label{class_main_window_ad2a20182d1ed20479debef57417cdb05}} 
+\index{Main\+Window@{Main\+Window}!wheel\+Event@{wheel\+Event}}
+\index{wheel\+Event@{wheel\+Event}!Main\+Window@{Main\+Window}}
+\subsubsection{\texorpdfstring{wheel\+Event}{wheelEvent}}
+{\footnotesize\ttfamily void Main\+Window\+::wheel\+Event (\begin{DoxyParamCaption}\item[{Q\+Wheel\+Event $\ast$}]{e }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}, {\ttfamily [slot]}}
+
+Изменяет масштаб картинки при повороте колеса мыши. 
+
+Объявления и описания членов классов находятся в файлах\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Users/\+Vasily/\+Documents/\+Vortex\+Method/mainwindow.\+h\item 
+C\+:/\+Users/\+Vasily/\+Documents/\+Vortex\+Method/mainwindow.\+cpp\end{DoxyCompactItemize}

@@ -1,0 +1,201 @@
+\hypertarget{class_four_frame}{}\section{Класс Four\+Frame}
+\label{class_four_frame}\index{Four\+Frame@{Four\+Frame}}
+
+
+Класс, представляющий собой четырехугольную рамку  
+
+
+
+
+{\ttfamily \#include $<$fourframe.\+h$>$}
+
+
+
+Граф наследования\+:Four\+Frame\+:
+% FIG 0
+
+
+Граф связей класса Four\+Frame\+:
+% FIG 1
+\subsection*{Открытые члены}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_four_frame_a252bb2895455ee197e754daf9a9e5a8e}{Four\+Frame}} ()
+\item 
+\mbox{\hyperlink{class_four_frame_a9ec3cece7b4b9fc37dc5205c98cd652a}{Four\+Frame}} (\mbox{\hyperlink{class_vector3_d}{Vector3D}} r01, \mbox{\hyperlink{class_vector3_d}{Vector3D}} r11, \mbox{\hyperlink{class_vector3_d}{Vector3D}} r21, \mbox{\hyperlink{class_vector3_d}{Vector3D}} r31, double eps)
+\item 
+\mbox{\hyperlink{class_vector3_d}{Vector3D}} \mbox{\hyperlink{class_four_frame_af3eabfc6f9c3315f5475d66af3cf2630}{q}} (const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&point) const
+\item 
+\mbox{\hyperlink{class_vector3_d}{Vector3D}} \mbox{\hyperlink{class_four_frame_aa6339751887314ff05ca479255b21432}{q\+Help}} (const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&point) const
+\item 
+\mbox{\hyperlink{class_vector3_d}{Vector3D}} \mbox{\hyperlink{class_four_frame_a0127ebf5b1fd643a590006afdf395e30}{velocity}} (const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&point) const
+\item 
+void \mbox{\hyperlink{class_four_frame_a14e84439f6615d56e5fbc32d438ea2d5}{set\+Vorticity}} (const double \+\_\+vorticity)
+\item 
+\mbox{\hyperlink{struct_vel_bsym}{Vel\+Bsym}} \mbox{\hyperlink{class_four_frame_a950100331ec16cb70fc8d89fce01e84f}{Vel\+And\+Bsym}} (const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&point) const
+\item 
+double \mbox{\hyperlink{class_four_frame_ad48011ddf75d8af53e02cb51145701bf}{solid\+Angle\+Frame}} (const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&point) const
+\item 
+Q\+Vector$<$ \mbox{\hyperlink{class_vorton}{Vorton}} $>$ \mbox{\hyperlink{class_four_frame_a52bff30c98e07de59f17234fc5af03e0}{get\+Vortons}} () const
+\end{DoxyCompactItemize}
+\subsection*{Дополнительные унаследованные члены}
+
+
+\subsection{Подробное описание}
+Класс, представляющий собой четырехугольную рамку 
+
+Создает четырехугольную рамку из вортон-\/отрезков для последующего построения сетки вокруг тела. Четырехугольная рамка отнаследована от многоугольной рамки. 
+
+\subsection{Конструктор(ы)}
+\mbox{\Hypertarget{class_four_frame_a252bb2895455ee197e754daf9a9e5a8e}\label{class_four_frame_a252bb2895455ee197e754daf9a9e5a8e}} 
+\index{Four\+Frame@{Four\+Frame}!Four\+Frame@{Four\+Frame}}
+\index{Four\+Frame@{Four\+Frame}!Four\+Frame@{Four\+Frame}}
+\subsubsection{\texorpdfstring{Four\+Frame()}{FourFrame()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Four\+Frame\+::\+Four\+Frame (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Создает пустую четырехугольную рамку \mbox{\Hypertarget{class_four_frame_a9ec3cece7b4b9fc37dc5205c98cd652a}\label{class_four_frame_a9ec3cece7b4b9fc37dc5205c98cd652a}} 
+\index{Four\+Frame@{Four\+Frame}!Four\+Frame@{Four\+Frame}}
+\index{Four\+Frame@{Four\+Frame}!Four\+Frame@{Four\+Frame}}
+\subsubsection{\texorpdfstring{Four\+Frame()}{FourFrame()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Four\+Frame\+::\+Four\+Frame (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_vector3_d}{Vector3D}}}]{r01,  }\item[{\mbox{\hyperlink{class_vector3_d}{Vector3D}}}]{r11,  }\item[{\mbox{\hyperlink{class_vector3_d}{Vector3D}}}]{r21,  }\item[{\mbox{\hyperlink{class_vector3_d}{Vector3D}}}]{r31,  }\item[{double}]{eps }\end{DoxyParamCaption})}
+
+Записывает рамку из заданных значений 
+\begin{DoxyParams}{Аргументы}
+{\em r01} & координата первой грани рамки \\
+\hline
+{\em r11} & координата второй грани рамки \\
+\hline
+{\em r21} & координата третьей грани рамки \\
+\hline
+{\em r31} & координата четвертой грани рамки \\
+\hline
+{\em eps} & значение радиуса вортон-\/отрезка \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{Методы}
+\mbox{\Hypertarget{class_four_frame_a52bff30c98e07de59f17234fc5af03e0}\label{class_four_frame_a52bff30c98e07de59f17234fc5af03e0}} 
+\index{Four\+Frame@{Four\+Frame}!get\+Vortons@{get\+Vortons}}
+\index{get\+Vortons@{get\+Vortons}!Four\+Frame@{Four\+Frame}}
+\subsubsection{\texorpdfstring{get\+Vortons()}{getVortons()}}
+{\footnotesize\ttfamily Q\+Vector$<$ \mbox{\hyperlink{class_vorton}{Vorton}} $>$ Four\+Frame\+::get\+Vortons (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [virtual]}}
+
+Возвращает вортон-\/отрезки полученные от рамки \begin{DoxyReturn}{Возвращает}
+вектор вортон-\/отрезков 
+\end{DoxyReturn}
+
+
+Переопределяет метод предка \mbox{\hyperlink{class_multi_frame_a33c0682a1b9c8966c52f8c1274febde2}{Multi\+Frame}}.
+
+\mbox{\Hypertarget{class_four_frame_af3eabfc6f9c3315f5475d66af3cf2630}\label{class_four_frame_af3eabfc6f9c3315f5475d66af3cf2630}} 
+\index{Four\+Frame@{Four\+Frame}!q@{q}}
+\index{q@{q}!Four\+Frame@{Four\+Frame}}
+\subsubsection{\texorpdfstring{q()}{q()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_vector3_d}{Vector3D}} Four\+Frame\+::q (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&}]{point }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [virtual]}}
+
+Возращает значение интенсивности от рамки в заданной точке 
+\begin{DoxyParams}{Аргументы}
+{\em point} & координата точки для расчета \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Возвращает}
+значение интенсивности 
+\end{DoxyReturn}
+
+
+Переопределяет метод предка \mbox{\hyperlink{class_multi_frame_a7bc27f76622612b9ccef915c848e492d}{Multi\+Frame}}.
+
+\mbox{\Hypertarget{class_four_frame_aa6339751887314ff05ca479255b21432}\label{class_four_frame_aa6339751887314ff05ca479255b21432}} 
+\index{Four\+Frame@{Four\+Frame}!q\+Help@{q\+Help}}
+\index{q\+Help@{q\+Help}!Four\+Frame@{Four\+Frame}}
+\subsubsection{\texorpdfstring{q\+Help()}{qHelp()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_vector3_d}{Vector3D}} Four\+Frame\+::q\+Help (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&}]{point }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [virtual]}}
+
+Возращает значение единичной интенсивности от рамки в заданной точке 
+\begin{DoxyParams}{Аргументы}
+{\em point} & координата точки для расчета \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Возвращает}
+значение единичной интенсивности 
+\end{DoxyReturn}
+
+
+Переопределяет метод предка \mbox{\hyperlink{class_multi_frame_a8da38b4d64ae762dfcb995911031ebf8}{Multi\+Frame}}.
+
+\mbox{\Hypertarget{class_four_frame_a14e84439f6615d56e5fbc32d438ea2d5}\label{class_four_frame_a14e84439f6615d56e5fbc32d438ea2d5}} 
+\index{Four\+Frame@{Four\+Frame}!set\+Vorticity@{set\+Vorticity}}
+\index{set\+Vorticity@{set\+Vorticity}!Four\+Frame@{Four\+Frame}}
+\subsubsection{\texorpdfstring{set\+Vorticity()}{setVorticity()}}
+{\footnotesize\ttfamily void Four\+Frame\+::set\+Vorticity (\begin{DoxyParamCaption}\item[{const double}]{\+\_\+vorticity }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+Задает значение завихренности для рамки 
+\begin{DoxyParams}{Аргументы}
+{\em \+\_\+vorticity} & новое значение завихренности \\
+\hline
+\end{DoxyParams}
+
+
+Переопределяет метод предка \mbox{\hyperlink{class_multi_frame_ae06b45f3403f1c6b03d3c6d58aa9f519}{Multi\+Frame}}.
+
+\mbox{\Hypertarget{class_four_frame_ad48011ddf75d8af53e02cb51145701bf}\label{class_four_frame_ad48011ddf75d8af53e02cb51145701bf}} 
+\index{Four\+Frame@{Four\+Frame}!solid\+Angle\+Frame@{solid\+Angle\+Frame}}
+\index{solid\+Angle\+Frame@{solid\+Angle\+Frame}!Four\+Frame@{Four\+Frame}}
+\subsubsection{\texorpdfstring{solid\+Angle\+Frame()}{solidAngleFrame()}}
+{\footnotesize\ttfamily double Four\+Frame\+::solid\+Angle\+Frame (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&}]{point }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [virtual]}}
+
+Возращает значение телесного угла рамки в заданной точке 
+\begin{DoxyParams}{Аргументы}
+{\em point} & заданная точка \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Возвращает}
+значение телесного угла 
+\end{DoxyReturn}
+
+
+Переопределяет метод предка \mbox{\hyperlink{class_multi_frame_af0c54493c44094ca492e2ec653a3a956}{Multi\+Frame}}.
+
+\mbox{\Hypertarget{class_four_frame_a950100331ec16cb70fc8d89fce01e84f}\label{class_four_frame_a950100331ec16cb70fc8d89fce01e84f}} 
+\index{Four\+Frame@{Four\+Frame}!Vel\+And\+Bsym@{Vel\+And\+Bsym}}
+\index{Vel\+And\+Bsym@{Vel\+And\+Bsym}!Four\+Frame@{Four\+Frame}}
+\subsubsection{\texorpdfstring{Vel\+And\+Bsym()}{VelAndBsym()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_vel_bsym}{Vel\+Bsym}} Four\+Frame\+::\+Vel\+And\+Bsym (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&}]{point }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [virtual]}}
+
+Возращает значение скорости и тензора деформации от рамки в заданной точке 
+\begin{DoxyParams}{Аргументы}
+{\em point} & заданная точка \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Возвращает}
+значение скорости и тензора деформации 
+\end{DoxyReturn}
+
+
+Переопределяет метод предка \mbox{\hyperlink{class_multi_frame_a60269c2c56aace32bb0fe0a70731a309}{Multi\+Frame}}.
+
+\mbox{\Hypertarget{class_four_frame_a0127ebf5b1fd643a590006afdf395e30}\label{class_four_frame_a0127ebf5b1fd643a590006afdf395e30}} 
+\index{Four\+Frame@{Four\+Frame}!velocity@{velocity}}
+\index{velocity@{velocity}!Four\+Frame@{Four\+Frame}}
+\subsubsection{\texorpdfstring{velocity()}{velocity()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_vector3_d}{Vector3D}} Four\+Frame\+::velocity (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&}]{point }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [virtual]}}
+
+Возращает значение скорости от рамки в заданной точке 
+\begin{DoxyParams}{Аргументы}
+{\em point} & координата точки для расчета \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Возвращает}
+значение скорости 
+\end{DoxyReturn}
+
+
+Переопределяет метод предка \mbox{\hyperlink{class_multi_frame_a18a1755403fa12c2f59e81078e1dd34e}{Multi\+Frame}}.
+
+
+
+Объявления и описания членов классов находятся в файлах\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Users/\+Vasily/\+Documents/\+Vortex\+Method/fourframe.\+h\item 
+C\+:/\+Users/\+Vasily/\+Documents/\+Vortex\+Method/fourframe.\+cpp\end{DoxyCompactItemize}

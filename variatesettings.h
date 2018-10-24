@@ -7,6 +7,10 @@ namespace Ui {
 class VariateSettings;
 }
 
+
+/*!
+    \brief Класс, реализующий форму с настройками вариации и экрана
+*/
 class VariateSettings : public QWidget
 {
     Q_OBJECT
@@ -18,7 +22,7 @@ public:
     double getScreenDistance();
 
 private:
-    Ui::VariateSettings *ui;
+    Ui::VariateSettings *ui; ///<Указатель на форму с настройками вариации и экрана
 };
 
 #endif // VARIATESETTINGS_H

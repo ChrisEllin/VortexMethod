@@ -1,0 +1,361 @@
+\hypertarget{class_vorton}{}\section{Класс Vorton}
+\label{class_vorton}\index{Vorton@{Vorton}}
+
+
+Класс, реализующий вортон-\/отрезок  
+
+
+
+
+{\ttfamily \#include $<$vorton.\+h$>$}
+
+
+
+Граф связей класса Vorton\+:
+% FIG 0
+\subsection*{Открытые члены}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_vorton_a0290e8bc879545e9bc7f796b53cfad64}{Vorton}} ()
+\item 
+\mbox{\hyperlink{class_vorton_a6e0ac562d3b52e9ecc0823308ea791e2}{Vorton}} (const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \+\_\+mid, const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \+\_\+tail, const double \+\_\+vorticity, const double \+\_\+radius)
+\item 
+\mbox{\hyperlink{class_vector3_d}{Vector3D}} \mbox{\hyperlink{class_vorton_a8b514a5ead7e36def408477d3cd43a52}{q}} (const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&point) const
+\item 
+\mbox{\hyperlink{class_vector3_d}{Vector3D}} \mbox{\hyperlink{class_vorton_a384fd259981645366a748be89e3b51e6}{q\+Help}} (const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&point) const
+\item 
+\mbox{\hyperlink{class_vector3_d}{Vector3D}} \mbox{\hyperlink{class_vorton_a8c693ef015b7acc843ec32c80e042a4f}{velocity}} (const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&point) const
+\item 
+\mbox{\hyperlink{struct_vel_bsym}{Vel\+Bsym}} \mbox{\hyperlink{class_vorton_a3e4d19e72822aa20be8482046c3e5598}{vel\+And\+Bsym}} (const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&point) const
+\item 
+void \mbox{\hyperlink{class_vorton_a2a9a3608f4296cadc7962661e854a765}{turn}} ()
+\item 
+void \mbox{\hyperlink{class_vorton_a0b826326d0c9c93298b95babb17b43a1}{translate}} (const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&translation)
+\item 
+\mbox{\hyperlink{class_vorton}{Vorton}} \mbox{\hyperlink{class_vorton_af7881379dabb2ab1585c557f1d0da136}{operator=}} (const \mbox{\hyperlink{class_vorton}{Vorton}} \&vort2)
+\item 
+void \mbox{\hyperlink{class_vorton_ac6f98f9a9c59603874e21ca04c3fb2ff}{rotate\+Around\+Normal}} (const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&normal)
+\item 
+void \mbox{\hyperlink{class_vorton_a116136f55d5f22738a734a109b7bb80b}{set\+Mid}} (const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&\+\_\+mid)
+\item 
+void \mbox{\hyperlink{class_vorton_a3f2b658270131805f1bf8c74ab4947ab}{set\+Tail}} (const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&\+\_\+tail)
+\item 
+void \mbox{\hyperlink{class_vorton_a2684a3a144977b936e7a046bbee1bf78}{set\+Vorticity}} (const double \+\_\+vorticity)
+\item 
+void \mbox{\hyperlink{class_vorton_a964e73e592fc49e1a410f9f825cddfdf}{set\+Radius}} (const double \+\_\+radius)
+\item 
+void \mbox{\hyperlink{class_vorton_a70d51b5d11a7029583e480bfb45748af}{set\+Elongation}} (const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&\+\_\+elongation)
+\item 
+void \mbox{\hyperlink{class_vorton_ad02474d8833546ada1b6e7b0faaab95c}{set\+Move}} (const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&\+\_\+move)
+\item 
+\mbox{\hyperlink{class_vector3_d}{Vector3D}} \mbox{\hyperlink{class_vorton_a3dfd18d1d932adfb498c10b1ce9c669c}{get\+Mid}} () const
+\item 
+\mbox{\hyperlink{class_vector3_d}{Vector3D}} \mbox{\hyperlink{class_vorton_a3f0a542df7fcc9436e62b0062a70df10}{get\+Tail}} () const
+\item 
+double \mbox{\hyperlink{class_vorton_a2e71d444521b5d0639d145a497ce52a2}{get\+Vorticity}} () const
+\item 
+double \mbox{\hyperlink{class_vorton_a623eaa7a5716b9499f0872960fdb0052}{get\+Radius}} () const
+\item 
+\mbox{\hyperlink{class_vector3_d}{Vector3D}} \mbox{\hyperlink{class_vorton_a4bb2c538b74dd47deb784e3ef3f86eed}{get\+Elongation}} () const
+\item 
+\mbox{\hyperlink{class_vector3_d}{Vector3D}} \mbox{\hyperlink{class_vorton_a607fd1efecaf9c2f1623f8b2b93eebce}{get\+Move}} () const
+\end{DoxyCompactItemize}
+\subsection*{Открытые статические члены}
+\begin{DoxyCompactItemize}
+\item 
+static double \mbox{\hyperlink{class_vorton_a72ddb05ff2a5004dae0aaa707e685da7}{levi}} (int first\+Component, int second\+Component, int third\+Component)
+\end{DoxyCompactItemize}
+\subsection*{Закрытые данные}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_vorton_a5eeb07b517edbfc7345acf7a350c9ba8}\label{class_vorton_a5eeb07b517edbfc7345acf7a350c9ba8}} 
+\mbox{\hyperlink{class_vector3_d}{Vector3D}} \mbox{\hyperlink{class_vorton_a5eeb07b517edbfc7345acf7a350c9ba8}{mid}}
+\begin{DoxyCompactList}\small\item\em Центр вортон-\/отрезка \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_vorton_a54fb015c1d89cafd12fdd63c05a075ed}\label{class_vorton_a54fb015c1d89cafd12fdd63c05a075ed}} 
+\mbox{\hyperlink{class_vector3_d}{Vector3D}} \mbox{\hyperlink{class_vorton_a54fb015c1d89cafd12fdd63c05a075ed}{tail}}
+\begin{DoxyCompactList}\small\item\em Хвост вортон-\/отрезка \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_vorton_aada2eb7dddb6d75f74115c5a124d335d}\label{class_vorton_aada2eb7dddb6d75f74115c5a124d335d}} 
+double \mbox{\hyperlink{class_vorton_aada2eb7dddb6d75f74115c5a124d335d}{vorticity}}
+\begin{DoxyCompactList}\small\item\em Завихренность вортон-\/отрезка \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_vorton_a5317e36fcd205f223c1356ed45450781}\label{class_vorton_a5317e36fcd205f223c1356ed45450781}} 
+double \mbox{\hyperlink{class_vorton_a5317e36fcd205f223c1356ed45450781}{radius}}
+\begin{DoxyCompactList}\small\item\em Радиус вортон-\/отрезка \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_vorton_ad26886ad0d3e71c73795f2999db8becc}\label{class_vorton_ad26886ad0d3e71c73795f2999db8becc}} 
+\mbox{\hyperlink{class_vector3_d}{Vector3D}} \mbox{\hyperlink{class_vorton_ad26886ad0d3e71c73795f2999db8becc}{move}}
+\begin{DoxyCompactList}\small\item\em Значение для последующего перемещений \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_vorton_a39f42d1ca73735c21c67bb4e03a2a29f}\label{class_vorton_a39f42d1ca73735c21c67bb4e03a2a29f}} 
+\mbox{\hyperlink{class_vector3_d}{Vector3D}} \mbox{\hyperlink{class_vorton_a39f42d1ca73735c21c67bb4e03a2a29f}{elongation}}
+\begin{DoxyCompactList}\small\item\em Значение для последующего удлинения \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Подробное описание}
+Класс, реализующий вортон-\/отрезок 
+
+Базовая модель вортон-\/отрезка формирует рамки, а в дальнейшем и сетку. Вортон-\/отрезок является минимальным вихревым элементом для этой теории. 
+
+\subsection{Конструктор(ы)}
+\mbox{\Hypertarget{class_vorton_a0290e8bc879545e9bc7f796b53cfad64}\label{class_vorton_a0290e8bc879545e9bc7f796b53cfad64}} 
+\index{Vorton@{Vorton}!Vorton@{Vorton}}
+\index{Vorton@{Vorton}!Vorton@{Vorton}}
+\subsubsection{\texorpdfstring{Vorton()}{Vorton()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Vorton\+::\+Vorton (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Создает пустой вортон-\/отрезок \mbox{\Hypertarget{class_vorton_a6e0ac562d3b52e9ecc0823308ea791e2}\label{class_vorton_a6e0ac562d3b52e9ecc0823308ea791e2}} 
+\index{Vorton@{Vorton}!Vorton@{Vorton}}
+\index{Vorton@{Vorton}!Vorton@{Vorton}}
+\subsubsection{\texorpdfstring{Vorton()}{Vorton()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Vorton\+::\+Vorton (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_vector3_d}{Vector3D}}}]{\+\_\+mid,  }\item[{const \mbox{\hyperlink{class_vector3_d}{Vector3D}}}]{\+\_\+tail,  }\item[{const double}]{\+\_\+vorticity,  }\item[{const double}]{\+\_\+radius }\end{DoxyParamCaption})}
+
+Создает вортон-\/отрезок с заданными параметрами 
+\begin{DoxyParams}{Аргументы}
+{\em \+\_\+mid} & Значение центра вортон-\/отрезка \\
+\hline
+{\em \+\_\+tail} & Значение хвоста вортон-\/отрезка \\
+\hline
+{\em \+\_\+vorticity} & Значение завихренности вортон-\/отрезка \\
+\hline
+{\em \+\_\+radius} & Значение радиуса вортон-\/отрезка \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{Методы}
+\mbox{\Hypertarget{class_vorton_a4bb2c538b74dd47deb784e3ef3f86eed}\label{class_vorton_a4bb2c538b74dd47deb784e3ef3f86eed}} 
+\index{Vorton@{Vorton}!get\+Elongation@{get\+Elongation}}
+\index{get\+Elongation@{get\+Elongation}!Vorton@{Vorton}}
+\subsubsection{\texorpdfstring{get\+Elongation()}{getElongation()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_vector3_d}{Vector3D}} Vorton\+::get\+Elongation (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+Возвращает значение удлинения вортон-\/отрезка \begin{DoxyReturn}{Возвращает}
+Значение удлинения 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_vorton_a3dfd18d1d932adfb498c10b1ce9c669c}\label{class_vorton_a3dfd18d1d932adfb498c10b1ce9c669c}} 
+\index{Vorton@{Vorton}!get\+Mid@{get\+Mid}}
+\index{get\+Mid@{get\+Mid}!Vorton@{Vorton}}
+\subsubsection{\texorpdfstring{get\+Mid()}{getMid()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_vector3_d}{Vector3D}} Vorton\+::get\+Mid (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+Возвращает значение центра вортон-\/отрезка \begin{DoxyReturn}{Возвращает}
+Значение центра 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_vorton_a607fd1efecaf9c2f1623f8b2b93eebce}\label{class_vorton_a607fd1efecaf9c2f1623f8b2b93eebce}} 
+\index{Vorton@{Vorton}!get\+Move@{get\+Move}}
+\index{get\+Move@{get\+Move}!Vorton@{Vorton}}
+\subsubsection{\texorpdfstring{get\+Move()}{getMove()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_vector3_d}{Vector3D}} Vorton\+::get\+Move (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+Возвращает значение перемещения вортон-\/отрезка \begin{DoxyReturn}{Возвращает}
+Значение перемещения 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_vorton_a623eaa7a5716b9499f0872960fdb0052}\label{class_vorton_a623eaa7a5716b9499f0872960fdb0052}} 
+\index{Vorton@{Vorton}!get\+Radius@{get\+Radius}}
+\index{get\+Radius@{get\+Radius}!Vorton@{Vorton}}
+\subsubsection{\texorpdfstring{get\+Radius()}{getRadius()}}
+{\footnotesize\ttfamily double Vorton\+::get\+Radius (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+Возвращает значение радиуса вортон-\/отрезка \begin{DoxyReturn}{Возвращает}
+Значение радиуса 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_vorton_a3f0a542df7fcc9436e62b0062a70df10}\label{class_vorton_a3f0a542df7fcc9436e62b0062a70df10}} 
+\index{Vorton@{Vorton}!get\+Tail@{get\+Tail}}
+\index{get\+Tail@{get\+Tail}!Vorton@{Vorton}}
+\subsubsection{\texorpdfstring{get\+Tail()}{getTail()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_vector3_d}{Vector3D}} Vorton\+::get\+Tail (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+Возвращает значение хвоста вортон-\/отрезка \begin{DoxyReturn}{Возвращает}
+Значение хвоста 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_vorton_a2e71d444521b5d0639d145a497ce52a2}\label{class_vorton_a2e71d444521b5d0639d145a497ce52a2}} 
+\index{Vorton@{Vorton}!get\+Vorticity@{get\+Vorticity}}
+\index{get\+Vorticity@{get\+Vorticity}!Vorton@{Vorton}}
+\subsubsection{\texorpdfstring{get\+Vorticity()}{getVorticity()}}
+{\footnotesize\ttfamily double Vorton\+::get\+Vorticity (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+Возвращает значение завихренности вортон-\/отрезка \begin{DoxyReturn}{Возвращает}
+Значение завихренности 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_vorton_a72ddb05ff2a5004dae0aaa707e685da7}\label{class_vorton_a72ddb05ff2a5004dae0aaa707e685da7}} 
+\index{Vorton@{Vorton}!levi@{levi}}
+\index{levi@{levi}!Vorton@{Vorton}}
+\subsubsection{\texorpdfstring{levi()}{levi()}}
+{\footnotesize\ttfamily double Vorton\+::levi (\begin{DoxyParamCaption}\item[{int}]{first\+Component,  }\item[{int}]{second\+Component,  }\item[{int}]{third\+Component }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Рассчитывает значение тензора Леви-\/Чивитты 
+\begin{DoxyParams}{Аргументы}
+{\em first\+Component} & Значение первой компоненты тензора Леви-\/Чивитты \\
+\hline
+{\em second\+Component} & Значение второй компоненты тензора Леви-\/Чивитты \\
+\hline
+{\em third\+Component} & Значение третьей компоненты тензора Леви-\/Чивитты \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Возвращает}
+Значение тензора 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_vorton_af7881379dabb2ab1585c557f1d0da136}\label{class_vorton_af7881379dabb2ab1585c557f1d0da136}} 
+\index{Vorton@{Vorton}!operator=@{operator=}}
+\index{operator=@{operator=}!Vorton@{Vorton}}
+\subsubsection{\texorpdfstring{operator=()}{operator=()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_vorton}{Vorton}} Vorton\+::operator= (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_vorton}{Vorton}} \&}]{vort2 }\end{DoxyParamCaption})}
+
+Оператор копирования 
+\begin{DoxyParams}{Аргументы}
+{\em vort2} & Новое значение вектора \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_vorton_a8b514a5ead7e36def408477d3cd43a52}\label{class_vorton_a8b514a5ead7e36def408477d3cd43a52}} 
+\index{Vorton@{Vorton}!q@{q}}
+\index{q@{q}!Vorton@{Vorton}}
+\subsubsection{\texorpdfstring{q()}{q()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_vector3_d}{Vector3D}} Vorton\+::q (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&}]{point }\end{DoxyParamCaption}) const}
+
+Рассчитывает значение интенсивности вортон-\/отрезка в заданной точке 
+\begin{DoxyParams}{Аргументы}
+{\em point} & Координаты точки расчета \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Возвращает}
+Значение интенсивности 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_vorton_a384fd259981645366a748be89e3b51e6}\label{class_vorton_a384fd259981645366a748be89e3b51e6}} 
+\index{Vorton@{Vorton}!q\+Help@{q\+Help}}
+\index{q\+Help@{q\+Help}!Vorton@{Vorton}}
+\subsubsection{\texorpdfstring{q\+Help()}{qHelp()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_vector3_d}{Vector3D}} Vorton\+::q\+Help (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&}]{point }\end{DoxyParamCaption}) const}
+
+Рассчитывает значение единичной интенсивности вортон-\/отрезка в заданной точке 
+\begin{DoxyParams}{Аргументы}
+{\em point} & Координаты точки расчета \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Возвращает}
+Значение единичной интенсивности 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_vorton_ac6f98f9a9c59603874e21ca04c3fb2ff}\label{class_vorton_ac6f98f9a9c59603874e21ca04c3fb2ff}} 
+\index{Vorton@{Vorton}!rotate\+Around\+Normal@{rotate\+Around\+Normal}}
+\index{rotate\+Around\+Normal@{rotate\+Around\+Normal}!Vorton@{Vorton}}
+\subsubsection{\texorpdfstring{rotate\+Around\+Normal()}{rotateAroundNormal()}}
+{\footnotesize\ttfamily void Vorton\+::rotate\+Around\+Normal (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&}]{normal }\end{DoxyParamCaption})}
+
+Поворот вортон-\/отрезка вокруг нормали 
+\begin{DoxyParams}{Аргументы}
+{\em normal} & Координата нормали \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_vorton_a70d51b5d11a7029583e480bfb45748af}\label{class_vorton_a70d51b5d11a7029583e480bfb45748af}} 
+\index{Vorton@{Vorton}!set\+Elongation@{set\+Elongation}}
+\index{set\+Elongation@{set\+Elongation}!Vorton@{Vorton}}
+\subsubsection{\texorpdfstring{set\+Elongation()}{setElongation()}}
+{\footnotesize\ttfamily void Vorton\+::set\+Elongation (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&}]{\+\_\+elongation }\end{DoxyParamCaption})}
+
+Задает значение удлинения вортон-\/отрезка 
+\begin{DoxyParams}{Аргументы}
+{\em \+\_\+elongation} & Значение удлинения \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_vorton_a116136f55d5f22738a734a109b7bb80b}\label{class_vorton_a116136f55d5f22738a734a109b7bb80b}} 
+\index{Vorton@{Vorton}!set\+Mid@{set\+Mid}}
+\index{set\+Mid@{set\+Mid}!Vorton@{Vorton}}
+\subsubsection{\texorpdfstring{set\+Mid()}{setMid()}}
+{\footnotesize\ttfamily void Vorton\+::set\+Mid (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&}]{\+\_\+mid }\end{DoxyParamCaption})}
+
+Задает значение центра вортон-\/отрезка 
+\begin{DoxyParams}{Аргументы}
+{\em \+\_\+mid} & Координата центра \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_vorton_ad02474d8833546ada1b6e7b0faaab95c}\label{class_vorton_ad02474d8833546ada1b6e7b0faaab95c}} 
+\index{Vorton@{Vorton}!set\+Move@{set\+Move}}
+\index{set\+Move@{set\+Move}!Vorton@{Vorton}}
+\subsubsection{\texorpdfstring{set\+Move()}{setMove()}}
+{\footnotesize\ttfamily void Vorton\+::set\+Move (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&}]{\+\_\+move }\end{DoxyParamCaption})}
+
+Задает значение перемещения вортон-\/отрезка 
+\begin{DoxyParams}{Аргументы}
+{\em \+\_\+move} & Значение перемещения \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_vorton_a964e73e592fc49e1a410f9f825cddfdf}\label{class_vorton_a964e73e592fc49e1a410f9f825cddfdf}} 
+\index{Vorton@{Vorton}!set\+Radius@{set\+Radius}}
+\index{set\+Radius@{set\+Radius}!Vorton@{Vorton}}
+\subsubsection{\texorpdfstring{set\+Radius()}{setRadius()}}
+{\footnotesize\ttfamily void Vorton\+::set\+Radius (\begin{DoxyParamCaption}\item[{const double}]{\+\_\+radius }\end{DoxyParamCaption})}
+
+Задает значение радиуса вортон-\/отрезка 
+\begin{DoxyParams}{Аргументы}
+{\em \+\_\+radius} & Значение радиуса \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_vorton_a3f2b658270131805f1bf8c74ab4947ab}\label{class_vorton_a3f2b658270131805f1bf8c74ab4947ab}} 
+\index{Vorton@{Vorton}!set\+Tail@{set\+Tail}}
+\index{set\+Tail@{set\+Tail}!Vorton@{Vorton}}
+\subsubsection{\texorpdfstring{set\+Tail()}{setTail()}}
+{\footnotesize\ttfamily void Vorton\+::set\+Tail (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&}]{\+\_\+tail }\end{DoxyParamCaption})}
+
+Задает значение хвоста вортон-\/отрезка 
+\begin{DoxyParams}{Аргументы}
+{\em \+\_\+tail} & Координата хвоста \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_vorton_a2684a3a144977b936e7a046bbee1bf78}\label{class_vorton_a2684a3a144977b936e7a046bbee1bf78}} 
+\index{Vorton@{Vorton}!set\+Vorticity@{set\+Vorticity}}
+\index{set\+Vorticity@{set\+Vorticity}!Vorton@{Vorton}}
+\subsubsection{\texorpdfstring{set\+Vorticity()}{setVorticity()}}
+{\footnotesize\ttfamily void Vorton\+::set\+Vorticity (\begin{DoxyParamCaption}\item[{const double}]{\+\_\+vorticity }\end{DoxyParamCaption})}
+
+Задает значение завихренности вортон-\/отрезка 
+\begin{DoxyParams}{Аргументы}
+{\em \+\_\+vorticity} & Значение завихренности \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_vorton_a0b826326d0c9c93298b95babb17b43a1}\label{class_vorton_a0b826326d0c9c93298b95babb17b43a1}} 
+\index{Vorton@{Vorton}!translate@{translate}}
+\index{translate@{translate}!Vorton@{Vorton}}
+\subsubsection{\texorpdfstring{translate()}{translate()}}
+{\footnotesize\ttfamily void Vorton\+::translate (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&}]{translation }\end{DoxyParamCaption})}
+
+Переносит вортон-\/отрезок на заданный трехмерный вектор 
+\begin{DoxyParams}{Аргументы}
+{\em translation} & Вектор направления \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_vorton_a2a9a3608f4296cadc7962661e854a765}\label{class_vorton_a2a9a3608f4296cadc7962661e854a765}} 
+\index{Vorton@{Vorton}!turn@{turn}}
+\index{turn@{turn}!Vorton@{Vorton}}
+\subsubsection{\texorpdfstring{turn()}{turn()}}
+{\footnotesize\ttfamily void Vorton\+::turn (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Разворачивает вортон-\/отрезок отнносительно центра \mbox{\Hypertarget{class_vorton_a3e4d19e72822aa20be8482046c3e5598}\label{class_vorton_a3e4d19e72822aa20be8482046c3e5598}} 
+\index{Vorton@{Vorton}!vel\+And\+Bsym@{vel\+And\+Bsym}}
+\index{vel\+And\+Bsym@{vel\+And\+Bsym}!Vorton@{Vorton}}
+\subsubsection{\texorpdfstring{vel\+And\+Bsym()}{velAndBsym()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_vel_bsym}{Vel\+Bsym}} Vorton\+::vel\+And\+Bsym (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&}]{point }\end{DoxyParamCaption}) const}
+
+Рассчитывает значение скорости и тензора деформации вортон-\/отрезка в заданной точке 
+\begin{DoxyParams}{Аргументы}
+{\em point} & Координаты точки расчета \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Возвращает}
+Значение скорости и тензора деформаций 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_vorton_a8c693ef015b7acc843ec32c80e042a4f}\label{class_vorton_a8c693ef015b7acc843ec32c80e042a4f}} 
+\index{Vorton@{Vorton}!velocity@{velocity}}
+\index{velocity@{velocity}!Vorton@{Vorton}}
+\subsubsection{\texorpdfstring{velocity()}{velocity()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_vector3_d}{Vector3D}} Vorton\+::velocity (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&}]{point }\end{DoxyParamCaption}) const}
+
+Рассчитывает значение скорости вортон-\/отрезка в заданной точке 
+\begin{DoxyParams}{Аргументы}
+{\em point} & Координаты точки расчета \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Возвращает}
+Значение скорости 
+\end{DoxyReturn}
+
+
+Объявления и описания членов классов находятся в файлах\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Users/\+Vasily/\+Documents/\+Vortex\+Method/vorton.\+h\item 
+C\+:/\+Users/\+Vasily/\+Documents/\+Vortex\+Method/vorton.\+cpp\end{DoxyCompactItemize}

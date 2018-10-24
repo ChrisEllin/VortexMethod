@@ -1,0 +1,353 @@
+\hypertarget{class_solver}{}\section{Класс Solver}
+\label{class_solver}\index{Solver@{Solver}}
+
+
+Класс, реализующий расчеты для различных типов тел  
+
+
+
+
+{\ttfamily \#include $<$solver.\+h$>$}
+
+
+
+Граф наследования\+:Solver\+:
+% FIG 0
+
+
+Граф связей класса Solver\+:
+% FIG 1
+\subsection*{Сигналы}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_solver_a2db7492d3c48a426fa2aa16a42086451}\label{class_solver_a2db7492d3c48a426fa2aa16a42086451}} 
+void \mbox{\hyperlink{class_solver_a2db7492d3c48a426fa2aa16a42086451}{repaint\+G\+UI}} (const Q\+Vector$<$ \mbox{\hyperlink{class_vorton}{Vorton}} $>$ \&vortons, const Q\+Vector$<$ std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{class_multi_frame}{Multi\+Frame}} $>$$>$ \&frames)
+\begin{DoxyCompactList}\small\item\em Сигнал о перерисовке интерфейса \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_solver_a52797f377ea96437322287a0eabb55f7}\label{class_solver_a52797f377ea96437322287a0eabb55f7}} 
+void \mbox{\hyperlink{class_solver_a52797f377ea96437322287a0eabb55f7}{variating\+Finished}} ()
+\begin{DoxyCompactList}\small\item\em Сигнал об окончании варьирования \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_solver_a2e2ba42280ede8c2d2e6648d4febb6cb}\label{class_solver_a2e2ba42280ede8c2d2e6648d4febb6cb}} 
+void \mbox{\hyperlink{class_solver_a2e2ba42280ede8c2d2e6648d4febb6cb}{send\+Progress\+Sphere}} (const int percent)
+\begin{DoxyCompactList}\small\item\em Сигнал об текущем прогрессе расчета сферы \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_solver_aed07cd44f901f37039be1f0d799cfd94}\label{class_solver_aed07cd44f901f37039be1f0d799cfd94}} 
+void \mbox{\hyperlink{class_solver_aed07cd44f901f37039be1f0d799cfd94}{update\+Sphere\+Maximum}} (const int max)
+\begin{DoxyCompactList}\small\item\em Сигнал о количестве шагов расчета сферы \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_solver_a01ea12662ac1a65793f2ca8de6a6c29c}\label{class_solver_a01ea12662ac1a65793f2ca8de6a6c29c}} 
+void \mbox{\hyperlink{class_solver_a01ea12662ac1a65793f2ca8de6a6c29c}{send\+Progress\+Cylinder}} (const int percent)
+\begin{DoxyCompactList}\small\item\em Сигнал об текущем прогрессе расчета цилиндра \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_solver_a8f847ba6e08038a9063bc4aef35f3f5c}\label{class_solver_a8f847ba6e08038a9063bc4aef35f3f5c}} 
+void \mbox{\hyperlink{class_solver_a8f847ba6e08038a9063bc4aef35f3f5c}{update\+Cylinder\+Maximum}} (const int max)
+\begin{DoxyCompactList}\small\item\em Сигнал о количестве шагов расчета цилиндра \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_solver_a1aa3bbe52e9e325034882d458885086a}\label{class_solver_a1aa3bbe52e9e325034882d458885086a}} 
+void \mbox{\hyperlink{class_solver_a1aa3bbe52e9e325034882d458885086a}{send\+Progress\+Rotation\+Body}} (const int percent)
+\begin{DoxyCompactList}\small\item\em Сигнал об текущем прогрессе расчета тела вращения \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_solver_a67d4754aac48886023fae54effe2ef8c}\label{class_solver_a67d4754aac48886023fae54effe2ef8c}} 
+void \mbox{\hyperlink{class_solver_a67d4754aac48886023fae54effe2ef8c}{update\+Rotation\+Body\+Maximum}} (const int max)
+\begin{DoxyCompactList}\small\item\em Сигнал о количестве шагов расчета тела вращения \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_solver_a3483160c5bbf4723167a508b73f8f65a}\label{class_solver_a3483160c5bbf4723167a508b73f8f65a}} 
+void \mbox{\hyperlink{class_solver_a3483160c5bbf4723167a508b73f8f65a}{send\+Progress\+Rotation\+Cut\+Body}} (const int percent)
+\begin{DoxyCompactList}\small\item\em Сигнал об текущем прогрессе расчета тела вращения со срезом \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_solver_a89c79ac1ef46ac2fc758032525c40176}\label{class_solver_a89c79ac1ef46ac2fc758032525c40176}} 
+void \mbox{\hyperlink{class_solver_a89c79ac1ef46ac2fc758032525c40176}{update\+Rotation\+Cut\+Body\+Maximum}} (const int max)
+\begin{DoxyCompactList}\small\item\em Сигнал о количестве шагов расчета тела вращения со срезом \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Открытые члены}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_solver_a9dfe7ae9ce617e8a6398be34284c907a}{Solver}} ()
+\item 
+\mbox{\hyperlink{class_solver_a27080c3f6ed244ee49f33f7582191363}{Solver}} (const \mbox{\hyperlink{struct_solver_parameters}{Solver\+Parameters}} \&parameters)
+\item 
+\mbox{\hyperlink{class_solver_a6af37d6f19720654c973f5e5ddef3dfe}{Solver}} (const \mbox{\hyperlink{struct_solver_parameters}{Solver\+Parameters}} \&parameters, const \mbox{\hyperlink{struct_free_motion_parameters}{Free\+Motion\+Parameters}} \&motion\+Parameters)
+\item 
+void \mbox{\hyperlink{class_solver_a84fbf208353fc2c7426daae963f43a38}{sphere\+Solver}} (const \mbox{\hyperlink{struct_fragmentation_parameters}{Fragmentation\+Parameters}} \&frag\+Par)
+\item 
+void \mbox{\hyperlink{class_solver_adeb1acdbfb1be98fc7fb74708e7da782}{sphere\+Free\+Motion\+Solver}} (const \mbox{\hyperlink{struct_fragmentation_parameters}{Fragmentation\+Parameters}} \&frag\+Par)
+\item 
+void \mbox{\hyperlink{class_solver_a698fb6dbd8238df0120eee6027538878}{cylinder\+Solver}} (const \mbox{\hyperlink{struct_fragmentation_parameters}{Fragmentation\+Parameters}} \&frag\+Par)
+\item 
+void \mbox{\hyperlink{class_solver_ab33207a4b60cd437bcc2f58b04c147ca}{rotation\+Body\+Solver}} (const \mbox{\hyperlink{struct_fragmentation_parameters}{Fragmentation\+Parameters}} \&frag\+Par)
+\item 
+void \mbox{\hyperlink{class_solver_a76f649c12fed87fcd5a04be0f6c090df}{rotation\+Cut\+Body\+Solver}} (const \mbox{\hyperlink{struct_fragmentation_parameters}{Fragmentation\+Parameters}} \&frag\+Par)
+\item 
+void \mbox{\hyperlink{class_solver_a6f0cf72490a4ccba78dd13c49c3c1b85}{rotation\+Cut\+Body\+Solver\+Near\+Screen}} (const \mbox{\hyperlink{struct_fragmentation_parameters}{Fragmentation\+Parameters}} \&frag\+Par, const double screen\+Distance)
+\item 
+void \mbox{\hyperlink{class_solver_a3b238272aed6898fd756e15a41ea0109}{rotation\+Cut\+Body\+Free\+Motion\+Solver}} (const \mbox{\hyperlink{struct_fragmentation_parameters}{Fragmentation\+Parameters}} \&frag\+Par)
+\item 
+void \mbox{\hyperlink{class_solver_a9c473ff1a6df13539a931cace5dfff45}{rotation\+Cut\+Body\+Launch\+Solver}} (const \mbox{\hyperlink{struct_fragmentation_parameters}{Fragmentation\+Parameters}} \&frag\+Par)
+\item 
+void \mbox{\hyperlink{class_solver_aa62532c15197fb20b689f8f20e51a187}{variate\+Sphere\+Parameters}} (\mbox{\hyperlink{struct_fragmentation_parameters}{Fragmentation\+Parameters}} frag\+Par, bool variate\+Eps)
+\item 
+void \mbox{\hyperlink{class_solver_acab3ecdd76d6a1b50ec0b714042e8539}{variate\+Cylinder\+Parameters}} (\mbox{\hyperlink{struct_fragmentation_parameters}{Fragmentation\+Parameters}} frag\+Par, bool variate\+Eps)
+\item 
+void \mbox{\hyperlink{class_solver_ade1d614110546924f185d41d2d9534ff}{variate\+Rotation\+Body\+Parameters}} (\mbox{\hyperlink{struct_fragmentation_parameters}{Fragmentation\+Parameters}} frag\+Par, bool variate\+Eps)
+\item 
+void \mbox{\hyperlink{class_solver_a6b420cf828bc7c3f8d45af84af7c0123}{variate\+Rotation\+Cut\+Body\+Parameters}} (\mbox{\hyperlink{struct_fragmentation_parameters}{Fragmentation\+Parameters}} frag\+Par, bool variate\+Eps)
+\item 
+void \mbox{\hyperlink{class_solver_afe651e3156a48c7c69a027b2604cf469}{operator=}} (const \mbox{\hyperlink{class_solver}{Solver}} \&solver)
+\item 
+bool \mbox{\hyperlink{class_solver_aa6bcb806c9c27e2749783072e79a1bee}{checking\+Variate}} (double \&dispersion, double \&old\+Dispersion, \mbox{\hyperlink{struct_fragmentation_parameters}{Fragmentation\+Parameters}} \&frag\+Par, \mbox{\hyperlink{struct_fragmentation_parameters}{Fragmentation\+Parameters}} \&result\+Frag, \mbox{\hyperlink{struct_solver_parameters}{Solver\+Parameters}} \&result\+Solv)
+\item 
+bool \mbox{\hyperlink{class_solver_ac248de801df706a545e4d72a7bf1b9e0}{checking\+Force\+Variate}} (double \&dispersion, double \&old\+Dispersion, \mbox{\hyperlink{struct_fragmentation_parameters}{Fragmentation\+Parameters}} \&frag\+Par, \mbox{\hyperlink{struct_fragmentation_parameters}{Fragmentation\+Parameters}} \&result\+Frag, \mbox{\hyperlink{struct_solver_parameters}{Solver\+Parameters}} \&result\+Solv)
+\end{DoxyCompactItemize}
+\subsection*{Статические открытые данные}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_solver_adcc2d65b392682f9d7b0a0aad09990b8}\label{class_solver_adcc2d65b392682f9d7b0a0aad09990b8}} 
+static bool \mbox{\hyperlink{class_solver_adcc2d65b392682f9d7b0a0aad09990b8}{explosion}} =false
+\begin{DoxyCompactList}\small\item\em Существование \char`\"{}взрыва\char`\"{}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Закрытые данные}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_solver_a025ba583b5a9d409c2709c3353fe6528}\label{class_solver_a025ba583b5a9d409c2709c3353fe6528}} 
+\mbox{\hyperlink{struct_solver_parameters}{Solver\+Parameters}} \mbox{\hyperlink{class_solver_a025ba583b5a9d409c2709c3353fe6528}{solv\+Par}}
+\begin{DoxyCompactList}\small\item\em Параметры расчета \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_solver_a2c9be370367477b6c90d32102efa157f}\label{class_solver_a2c9be370367477b6c90d32102efa157f}} 
+\mbox{\hyperlink{struct_free_motion_parameters}{Free\+Motion\+Parameters}} \mbox{\hyperlink{class_solver_a2c9be370367477b6c90d32102efa157f}{free\+Motion\+Par}}
+\begin{DoxyCompactList}\small\item\em Параметры свободного движения \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_solver_a1689a3de99009e073fe71adaf217f198}\label{class_solver_a1689a3de99009e073fe71adaf217f198}} 
+Q\+Vector$<$ \mbox{\hyperlink{class_vector3_d}{Vector3D}} $>$ \mbox{\hyperlink{class_solver_a1689a3de99009e073fe71adaf217f198}{c\+Aerodynamics}}
+\begin{DoxyCompactList}\small\item\em Вектор значений С \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_solver_a7a6b63bc3a9f3eb6fe78e277a284dc9b}\label{class_solver_a7a6b63bc3a9f3eb6fe78e277a284dc9b}} 
+Q\+Vector$<$ \mbox{\hyperlink{class_vector3_d}{Vector3D}} $>$ \mbox{\hyperlink{class_solver_a7a6b63bc3a9f3eb6fe78e277a284dc9b}{forces}}
+\begin{DoxyCompactList}\small\item\em Вектор значений силы \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_solver_a5aa8351fa034173fb987c9ec93666abe}\label{class_solver_a5aa8351fa034173fb987c9ec93666abe}} 
+Q\+String \mbox{\hyperlink{class_solver_a5aa8351fa034173fb987c9ec93666abe}{log\+Path}}
+\begin{DoxyCompactList}\small\item\em Путь к каталогу для записи результатов расчета \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Подробное описание}
+Класс, реализующий расчеты для различных типов тел 
+
+Главный класс, содержащий все расчетчики. 
+
+\subsection{Конструктор(ы)}
+\mbox{\Hypertarget{class_solver_a9dfe7ae9ce617e8a6398be34284c907a}\label{class_solver_a9dfe7ae9ce617e8a6398be34284c907a}} 
+\index{Solver@{Solver}!Solver@{Solver}}
+\index{Solver@{Solver}!Solver@{Solver}}
+\subsubsection{\texorpdfstring{Solver()}{Solver()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily Solver\+::\+Solver (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Создает экземпляр класса с нулевыми параметрами \mbox{\Hypertarget{class_solver_a27080c3f6ed244ee49f33f7582191363}\label{class_solver_a27080c3f6ed244ee49f33f7582191363}} 
+\index{Solver@{Solver}!Solver@{Solver}}
+\index{Solver@{Solver}!Solver@{Solver}}
+\subsubsection{\texorpdfstring{Solver()}{Solver()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily Solver\+::\+Solver (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{struct_solver_parameters}{Solver\+Parameters}} \&}]{parameters }\end{DoxyParamCaption})}
+
+Создает экземпляр класса для расчета неподвижного тела с заданными параметрами 
+\begin{DoxyParams}{Аргументы}
+{\em parameters} & Параметры расчета \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_solver_a6af37d6f19720654c973f5e5ddef3dfe}\label{class_solver_a6af37d6f19720654c973f5e5ddef3dfe}} 
+\index{Solver@{Solver}!Solver@{Solver}}
+\index{Solver@{Solver}!Solver@{Solver}}
+\subsubsection{\texorpdfstring{Solver()}{Solver()}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily Solver\+::\+Solver (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{struct_solver_parameters}{Solver\+Parameters}} \&}]{parameters,  }\item[{const \mbox{\hyperlink{struct_free_motion_parameters}{Free\+Motion\+Parameters}} \&}]{motion\+Parameters }\end{DoxyParamCaption})}
+
+Создает экземпляр класса для расчета движущегося тела с заданными параметрами 
+\begin{DoxyParams}{Аргументы}
+{\em parameters} & Параметры расчета \\
+\hline
+{\em motion\+Parameters} & Параметры свободного движения \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{Методы}
+\mbox{\Hypertarget{class_solver_ac248de801df706a545e4d72a7bf1b9e0}\label{class_solver_ac248de801df706a545e4d72a7bf1b9e0}} 
+\index{Solver@{Solver}!checking\+Force\+Variate@{checking\+Force\+Variate}}
+\index{checking\+Force\+Variate@{checking\+Force\+Variate}!Solver@{Solver}}
+\subsubsection{\texorpdfstring{checking\+Force\+Variate()}{checkingForceVariate()}}
+{\footnotesize\ttfamily bool Solver\+::checking\+Force\+Variate (\begin{DoxyParamCaption}\item[{double \&}]{dispersion,  }\item[{double \&}]{old\+Dispersion,  }\item[{\mbox{\hyperlink{struct_fragmentation_parameters}{Fragmentation\+Parameters}} \&}]{frag\+Par,  }\item[{\mbox{\hyperlink{struct_fragmentation_parameters}{Fragmentation\+Parameters}} \&}]{result\+Frag,  }\item[{\mbox{\hyperlink{struct_solver_parameters}{Solver\+Parameters}} \&}]{result\+Solv }\end{DoxyParamCaption})}
+
+Функция проверки улучшения параметров для вариации (нахождение наименьшей дисперсии силы) 
+\begin{DoxyParams}{Аргументы}
+{\em dispersion} & Новая дисперсия силы \\
+\hline
+{\em old\+Dispersion} & Старая дисперсия силы \\
+\hline
+{\em frag\+Par} & Текущие значения параметров разбиения \\
+\hline
+{\em result\+Frag} & Лучшие значения параметров разбиения \\
+\hline
+{\em result\+Solv} & Лучшие значения параметров расчета \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_solver_aa6bcb806c9c27e2749783072e79a1bee}\label{class_solver_aa6bcb806c9c27e2749783072e79a1bee}} 
+\index{Solver@{Solver}!checking\+Variate@{checking\+Variate}}
+\index{checking\+Variate@{checking\+Variate}!Solver@{Solver}}
+\subsubsection{\texorpdfstring{checking\+Variate()}{checkingVariate()}}
+{\footnotesize\ttfamily bool Solver\+::checking\+Variate (\begin{DoxyParamCaption}\item[{double \&}]{dispersion,  }\item[{double \&}]{old\+Dispersion,  }\item[{\mbox{\hyperlink{struct_fragmentation_parameters}{Fragmentation\+Parameters}} \&}]{frag\+Par,  }\item[{\mbox{\hyperlink{struct_fragmentation_parameters}{Fragmentation\+Parameters}} \&}]{result\+Frag,  }\item[{\mbox{\hyperlink{struct_solver_parameters}{Solver\+Parameters}} \&}]{result\+Solv }\end{DoxyParamCaption})}
+
+Функция проверки улучшения параметров для вариации (нахождение наименьшей дисперсии С) 
+\begin{DoxyParams}{Аргументы}
+{\em dispersion} & Новая дисперсия С \\
+\hline
+{\em old\+Dispersion} & Старая дисперсия С \\
+\hline
+{\em frag\+Par} & Текущие значения параметров разбиения \\
+\hline
+{\em result\+Frag} & Лучшие значения параметров разбиения \\
+\hline
+{\em result\+Solv} & Лучшие значения параметров расчета \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_solver_a698fb6dbd8238df0120eee6027538878}\label{class_solver_a698fb6dbd8238df0120eee6027538878}} 
+\index{Solver@{Solver}!cylinder\+Solver@{cylinder\+Solver}}
+\index{cylinder\+Solver@{cylinder\+Solver}!Solver@{Solver}}
+\subsubsection{\texorpdfstring{cylinder\+Solver()}{cylinderSolver()}}
+{\footnotesize\ttfamily void Solver\+::cylinder\+Solver (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{struct_fragmentation_parameters}{Fragmentation\+Parameters}} \&}]{frag\+Par }\end{DoxyParamCaption})}
+
+Осуществляет расчет неподвижного цилиндра с заданными параметрами 
+\begin{DoxyParams}{Аргументы}
+{\em frag\+Par} & Параметры разбиения цилиндра \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_solver_afe651e3156a48c7c69a027b2604cf469}\label{class_solver_afe651e3156a48c7c69a027b2604cf469}} 
+\index{Solver@{Solver}!operator=@{operator=}}
+\index{operator=@{operator=}!Solver@{Solver}}
+\subsubsection{\texorpdfstring{operator=()}{operator=()}}
+{\footnotesize\ttfamily void Solver\+::operator= (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_solver}{Solver}} \&}]{solver }\end{DoxyParamCaption})}
+
+Оператор копирования для класса 
+\begin{DoxyParams}{Аргументы}
+{\em solver} & Новое значение \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_solver_ab33207a4b60cd437bcc2f58b04c147ca}\label{class_solver_ab33207a4b60cd437bcc2f58b04c147ca}} 
+\index{Solver@{Solver}!rotation\+Body\+Solver@{rotation\+Body\+Solver}}
+\index{rotation\+Body\+Solver@{rotation\+Body\+Solver}!Solver@{Solver}}
+\subsubsection{\texorpdfstring{rotation\+Body\+Solver()}{rotationBodySolver()}}
+{\footnotesize\ttfamily void Solver\+::rotation\+Body\+Solver (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{struct_fragmentation_parameters}{Fragmentation\+Parameters}} \&}]{frag\+Par }\end{DoxyParamCaption})}
+
+Осуществляет расчет неподвижного тела вращения с заданными параметрами 
+\begin{DoxyParams}{Аргументы}
+{\em frag\+Par} & Параметры разбиения тела вращения \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_solver_a3b238272aed6898fd756e15a41ea0109}\label{class_solver_a3b238272aed6898fd756e15a41ea0109}} 
+\index{Solver@{Solver}!rotation\+Cut\+Body\+Free\+Motion\+Solver@{rotation\+Cut\+Body\+Free\+Motion\+Solver}}
+\index{rotation\+Cut\+Body\+Free\+Motion\+Solver@{rotation\+Cut\+Body\+Free\+Motion\+Solver}!Solver@{Solver}}
+\subsubsection{\texorpdfstring{rotation\+Cut\+Body\+Free\+Motion\+Solver()}{rotationCutBodyFreeMotionSolver()}}
+{\footnotesize\ttfamily void Solver\+::rotation\+Cut\+Body\+Free\+Motion\+Solver (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{struct_fragmentation_parameters}{Fragmentation\+Parameters}} \&}]{frag\+Par }\end{DoxyParamCaption})}
+
+Осуществляет расчет движущегося тела вращения со срезом с заданными параметрами 
+\begin{DoxyParams}{Аргументы}
+{\em frag\+Par} & Параметры разбиения тела вращения со срезом \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_solver_a9c473ff1a6df13539a931cace5dfff45}\label{class_solver_a9c473ff1a6df13539a931cace5dfff45}} 
+\index{Solver@{Solver}!rotation\+Cut\+Body\+Launch\+Solver@{rotation\+Cut\+Body\+Launch\+Solver}}
+\index{rotation\+Cut\+Body\+Launch\+Solver@{rotation\+Cut\+Body\+Launch\+Solver}!Solver@{Solver}}
+\subsubsection{\texorpdfstring{rotation\+Cut\+Body\+Launch\+Solver()}{rotationCutBodyLaunchSolver()}}
+{\footnotesize\ttfamily void Solver\+::rotation\+Cut\+Body\+Launch\+Solver (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{struct_fragmentation_parameters}{Fragmentation\+Parameters}} \&}]{frag\+Par }\end{DoxyParamCaption})}
+
+Осуществляет расчет задачи старта для тела вращения со срезом с заданными параметрами 
+\begin{DoxyParams}{Аргументы}
+{\em frag\+Par} & Параметры разбиения тела вращения со срезом \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_solver_a76f649c12fed87fcd5a04be0f6c090df}\label{class_solver_a76f649c12fed87fcd5a04be0f6c090df}} 
+\index{Solver@{Solver}!rotation\+Cut\+Body\+Solver@{rotation\+Cut\+Body\+Solver}}
+\index{rotation\+Cut\+Body\+Solver@{rotation\+Cut\+Body\+Solver}!Solver@{Solver}}
+\subsubsection{\texorpdfstring{rotation\+Cut\+Body\+Solver()}{rotationCutBodySolver()}}
+{\footnotesize\ttfamily void Solver\+::rotation\+Cut\+Body\+Solver (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{struct_fragmentation_parameters}{Fragmentation\+Parameters}} \&}]{frag\+Par }\end{DoxyParamCaption})}
+
+Осуществляет расчет неподвижного тела вращения со срезом с заданными параметрами 
+\begin{DoxyParams}{Аргументы}
+{\em frag\+Par} & Параметры разбиения тела вращения со срезом \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_solver_a6f0cf72490a4ccba78dd13c49c3c1b85}\label{class_solver_a6f0cf72490a4ccba78dd13c49c3c1b85}} 
+\index{Solver@{Solver}!rotation\+Cut\+Body\+Solver\+Near\+Screen@{rotation\+Cut\+Body\+Solver\+Near\+Screen}}
+\index{rotation\+Cut\+Body\+Solver\+Near\+Screen@{rotation\+Cut\+Body\+Solver\+Near\+Screen}!Solver@{Solver}}
+\subsubsection{\texorpdfstring{rotation\+Cut\+Body\+Solver\+Near\+Screen()}{rotationCutBodySolverNearScreen()}}
+{\footnotesize\ttfamily void Solver\+::rotation\+Cut\+Body\+Solver\+Near\+Screen (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{struct_fragmentation_parameters}{Fragmentation\+Parameters}} \&}]{frag\+Par,  }\item[{const double}]{screen\+Distance }\end{DoxyParamCaption})}
+
+Осуществляет расчет неподвижного тела вращения со срезом с заданными параметрами вблизи экрана 
+\begin{DoxyParams}{Аргументы}
+{\em frag\+Par} & Параметры разбиения тела вращения со срезом \\
+\hline
+{\em screen\+Distance} & Расстояние между дном тела и экраном \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_solver_adeb1acdbfb1be98fc7fb74708e7da782}\label{class_solver_adeb1acdbfb1be98fc7fb74708e7da782}} 
+\index{Solver@{Solver}!sphere\+Free\+Motion\+Solver@{sphere\+Free\+Motion\+Solver}}
+\index{sphere\+Free\+Motion\+Solver@{sphere\+Free\+Motion\+Solver}!Solver@{Solver}}
+\subsubsection{\texorpdfstring{sphere\+Free\+Motion\+Solver()}{sphereFreeMotionSolver()}}
+{\footnotesize\ttfamily void Solver\+::sphere\+Free\+Motion\+Solver (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{struct_fragmentation_parameters}{Fragmentation\+Parameters}} \&}]{frag\+Par }\end{DoxyParamCaption})}
+
+Осуществляет расчет движущейся сферы с заданными параметрами 
+\begin{DoxyParams}{Аргументы}
+{\em frag\+Par} & Параметры разбиения сферы \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_solver_a84fbf208353fc2c7426daae963f43a38}\label{class_solver_a84fbf208353fc2c7426daae963f43a38}} 
+\index{Solver@{Solver}!sphere\+Solver@{sphere\+Solver}}
+\index{sphere\+Solver@{sphere\+Solver}!Solver@{Solver}}
+\subsubsection{\texorpdfstring{sphere\+Solver()}{sphereSolver()}}
+{\footnotesize\ttfamily void Solver\+::sphere\+Solver (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{struct_fragmentation_parameters}{Fragmentation\+Parameters}} \&}]{frag\+Par }\end{DoxyParamCaption})}
+
+Осуществляет расчет неподвижной сферы с заданными параметрами 
+\begin{DoxyParams}{Аргументы}
+{\em frag\+Par} & Параметры разбиения сферы \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_solver_acab3ecdd76d6a1b50ec0b714042e8539}\label{class_solver_acab3ecdd76d6a1b50ec0b714042e8539}} 
+\index{Solver@{Solver}!variate\+Cylinder\+Parameters@{variate\+Cylinder\+Parameters}}
+\index{variate\+Cylinder\+Parameters@{variate\+Cylinder\+Parameters}!Solver@{Solver}}
+\subsubsection{\texorpdfstring{variate\+Cylinder\+Parameters()}{variateCylinderParameters()}}
+{\footnotesize\ttfamily void Solver\+::variate\+Cylinder\+Parameters (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_fragmentation_parameters}{Fragmentation\+Parameters}}}]{frag\+Par,  }\item[{bool}]{variate\+Eps }\end{DoxyParamCaption})}
+
+Осуществляет вариацию для определения наилучших параметров цилиндра 
+\begin{DoxyParams}{Аргументы}
+{\em frag\+Par} & Параметры разбиения цилиндра \\
+\hline
+{\em variate\+Eps} & Необходимость варьирования радиуса вортона \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_solver_ade1d614110546924f185d41d2d9534ff}\label{class_solver_ade1d614110546924f185d41d2d9534ff}} 
+\index{Solver@{Solver}!variate\+Rotation\+Body\+Parameters@{variate\+Rotation\+Body\+Parameters}}
+\index{variate\+Rotation\+Body\+Parameters@{variate\+Rotation\+Body\+Parameters}!Solver@{Solver}}
+\subsubsection{\texorpdfstring{variate\+Rotation\+Body\+Parameters()}{variateRotationBodyParameters()}}
+{\footnotesize\ttfamily void Solver\+::variate\+Rotation\+Body\+Parameters (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_fragmentation_parameters}{Fragmentation\+Parameters}}}]{frag\+Par,  }\item[{bool}]{variate\+Eps }\end{DoxyParamCaption})}
+
+Осуществляет вариацию для определения наилучших параметров тела вращения 
+\begin{DoxyParams}{Аргументы}
+{\em frag\+Par} & Параметры разбиения тела вращения \\
+\hline
+{\em variate\+Eps} & Необходимость варьирования радиуса вортона \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_solver_a6b420cf828bc7c3f8d45af84af7c0123}\label{class_solver_a6b420cf828bc7c3f8d45af84af7c0123}} 
+\index{Solver@{Solver}!variate\+Rotation\+Cut\+Body\+Parameters@{variate\+Rotation\+Cut\+Body\+Parameters}}
+\index{variate\+Rotation\+Cut\+Body\+Parameters@{variate\+Rotation\+Cut\+Body\+Parameters}!Solver@{Solver}}
+\subsubsection{\texorpdfstring{variate\+Rotation\+Cut\+Body\+Parameters()}{variateRotationCutBodyParameters()}}
+{\footnotesize\ttfamily void Solver\+::variate\+Rotation\+Cut\+Body\+Parameters (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_fragmentation_parameters}{Fragmentation\+Parameters}}}]{frag\+Par,  }\item[{bool}]{variate\+Eps }\end{DoxyParamCaption})}
+
+Осуществляет вариацию для определения наилучших параметров тела вращения со срезом 
+\begin{DoxyParams}{Аргументы}
+{\em frag\+Par} & Параметры разбиения тела вращения со срезом \\
+\hline
+{\em variate\+Eps} & Необходимость варьирования радиуса вортона \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_solver_aa62532c15197fb20b689f8f20e51a187}\label{class_solver_aa62532c15197fb20b689f8f20e51a187}} 
+\index{Solver@{Solver}!variate\+Sphere\+Parameters@{variate\+Sphere\+Parameters}}
+\index{variate\+Sphere\+Parameters@{variate\+Sphere\+Parameters}!Solver@{Solver}}
+\subsubsection{\texorpdfstring{variate\+Sphere\+Parameters()}{variateSphereParameters()}}
+{\footnotesize\ttfamily void Solver\+::variate\+Sphere\+Parameters (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_fragmentation_parameters}{Fragmentation\+Parameters}}}]{frag\+Par,  }\item[{bool}]{variate\+Eps }\end{DoxyParamCaption})}
+
+Осуществляет вариацию для определения наилучших параметров сферы 
+\begin{DoxyParams}{Аргументы}
+{\em frag\+Par} & Параметры разбиения сферы \\
+\hline
+{\em variate\+Eps} & Необходимость варьирования радиуса вортона \\
+\hline
+\end{DoxyParams}
+
+
+Объявления и описания членов классов находятся в файлах\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Users/\+Vasily/\+Documents/\+Vortex\+Method/solver.\+h\item 
+C\+:/\+Users/\+Vasily/\+Documents/\+Vortex\+Method/solver.\+cpp\end{DoxyCompactItemize}

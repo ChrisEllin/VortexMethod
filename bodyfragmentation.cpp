@@ -1,5 +1,10 @@
 #include "bodyfragmentation.h"
 
+/*!
+Установка соотвествующего значения в объект структуры параметров разбиения сферы
+\param i Номер поля структуры
+\param value Значение поля структуры
+*/
 void SphereParameters::setData(const int i, const double value)
 {
     switch (i)
@@ -25,6 +30,11 @@ void SphereParameters::setData(const int i, const double value)
     }
 }
 
+/*!
+Установка соотвествующего значения в объект структуры параметров разбиения цилиндра
+\param i Номер поля структуры
+\param value Значение поля структуры
+*/
 void CylinderParameters::setData(const int i, const double value)
 {
     switch (i)
@@ -56,6 +66,11 @@ void CylinderParameters::setData(const int i, const double value)
     }
 }
 
+/*!
+Установка соотвествующего значения в объект структуры параметров разбиения тела вращения
+\param i Номер поля структуры
+\param value Значение поля структуры
+*/
 void RotationBodyParameters::setData(const int i, const double value)
 {
     switch (i)
@@ -87,6 +102,11 @@ void RotationBodyParameters::setData(const int i, const double value)
     }
 }
 
+/*!
+Установка соотвествующего значения в объект структуры параметров разбиения тела вращения со срезом дна
+\param i Номер поля структуры
+\param value Значение поля структуры
+*/
 void RotationCutBodyParameters::setData(const int i, const double value)
 {
     switch (i)
@@ -119,6 +139,14 @@ void RotationCutBodyParameters::setData(const int i, const double value)
         break;
     }
 }
+
+/*!
+Разбивает тело, определяя его тип.
+\param body Тип тела
+\param param Параметры разбиения
+\param launch Необходимость решения задачи старта
+*/
+
 BodyFragmentation::BodyFragmentation(BodyType body, const FragmentationParameters &param, bool launch)
 {
     switch(body)
@@ -169,6 +197,10 @@ BodyFragmentation::BodyFragmentation(BodyType body, const FragmentationParameter
 
 //}
 
+/*!
+Реализует разбиение сферы.
+*/
+
 void BodyFragmentation::sphereFragmentation()
 {
     clearVectors();
@@ -214,6 +246,9 @@ void BodyFragmentation::sphereFragmentation()
     controlPointsRaised.push_back(Vector3D(0.0,0.0,(sphere.radius+sphere.raise)*cos(teta0)));
 }
 
+/*!
+Реализует разбиение цилиндра.
+*/
 void BodyFragmentation::cylinderFragmentation()
 {
     clearVectors();
@@ -296,6 +331,9 @@ void BodyFragmentation::cylinderFragmentation()
     }
 }
 
+/*!
+Реализует разбиение тела вращения.
+*/
 void BodyFragmentation::rotationBodyFragmantation()
 {
     clearVectors();
@@ -383,6 +421,9 @@ void BodyFragmentation::rotationBodyFragmantation()
     controlPointsRaised.push_back(controlPoint+rotationBody.raise*normal);
 }
 
+/*!
+Реализует разбиение тела вращения со срезом дна.
+*/
 void BodyFragmentation::rotationCutBodyFragmantation()
 {
     clearVectors();
@@ -492,6 +533,12 @@ void BodyFragmentation::rotationCutBodyFragmantation()
     }
 }
 
+/*!
+Реализует разбиение тела вращения со срезом дна для решения задачи старта.
+\param i Текущий шаг
+\param bodyVel Скорость тела
+\param tau Размер шага
+*/
 void BodyFragmentation::rotationCutBodyLaunchFragmentation(const int i, const Vector3D& bodyVel, const double tau)
 {
 
@@ -630,6 +677,9 @@ void BodyFragmentation::rotationCutBodyLaunchFragmentation(const int i, const Ve
     }
 }
 
+/*!
+Очищает вектора контрольных точек, нормалей и т.д.
+*/
 void BodyFragmentation::clearVectors()
 {
     controlPoints.clear();
@@ -639,6 +689,11 @@ void BodyFragmentation::clearVectors()
     frames.clear();
 }
 
+/*!
+Высчитывает значение функции f(x)
+\param x Значение х
+\return Возвращаемое значение функции
+*/
 double BodyFragmentation::presetFunctionF(double x)
 {
     if ((x>=0)&&(x<=0.5)) return sqrt(0.5*0.5-(x-0.5)*(x-0.5));
@@ -647,6 +702,11 @@ double BodyFragmentation::presetFunctionF(double x)
     return 0.0;
 }
 
+/*!
+Высчитывает значение производной функции f(x)
+\param x Значение х
+\return Возвращаемое значение производной функции
+*/
 double BodyFragmentation::presetDeriveFunctionF(double x)
 {
     if ((x>=0) && (x<=0.5)) return -(x-0.5)/sqrt(0.5*0.5-(x-0.5)*(x-0.5));
@@ -655,6 +715,11 @@ double BodyFragmentation::presetDeriveFunctionF(double x)
     return 0.0;
 }
 
+/*!
+Высчитывает значение функции g(x)
+\param x Значение х
+\return Возвращаемое значение функции
+*/
 double BodyFragmentation::presetFunctionG(double x)
 {
     if ((x>=0)&&(x<=1.4)) return 2*sqrt(1-(x-1.4)*(x-1.4)/(1.4*1.4));
@@ -662,6 +727,11 @@ double BodyFragmentation::presetFunctionG(double x)
     return 0.0;
 }
 
+/*!
+Высчитывает значение производной функции g(x)
+\param x Значение х
+\return Возвращаемое значение производной функции
+*/
 double BodyFragmentation::presetDeriveFunctionG(double x)
 {
     if ((x>=0)&&(x<=1.4)) return -2*(x-1.4)/sqrt(1.4*1.4-(x-1.4)*(x-1.4));
@@ -669,31 +739,58 @@ double BodyFragmentation::presetDeriveFunctionG(double x)
     return 0.0;
 }
 
+/*!
+Возвращает рассчитанные контрольные точки
+\return Вектор контрольных точек
+*/
 QVector<Vector3D> BodyFragmentation::getControlPoints() const
 {
     return controlPoints;
 }
 
+/*!
+Возвращает рассчитанные нормали
+\return Вектор нормалей
+*/
 QVector<Vector3D> BodyFragmentation::getNormals() const
 {
     return normals;
 }
 
+/*!
+Возвращает рассчитанные площади
+\return Вектор площадей
+*/
 QVector<double> BodyFragmentation::getSquares() const
 {
     return squares;
 }
 
+/*!
+Возвращает рассчитанные контрольные точки для вычисления давления
+\return Вектор контрольных точек для вычисления давления
+*/
 QVector<Vector3D> BodyFragmentation::getControlPointsRaised() const
 {
     return controlPointsRaised;
 }
 
+/*!
+Возвращает рассчитанные рамки
+\return Вектор умных указателей на рамки
+*/
 QVector<std::shared_ptr<MultiFrame> > BodyFragmentation::getFrames() const
 {
     return frames;
 }
 
+/*!
+Поиск ближайшей рамки
+\param point Точка, для которой ищется ближайшая рамка
+\param controlPoints Вектор контрольных точек
+\param normals Вектор нормалей
+\return Пара из наименьшего расстояния до рамки и номера этой рамки
+*/
 QPair<double, int> BodyFragmentation::findClosest(const Vector3D point, const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals)
 {
     QPair<double, int> closest = qMakePair(fabs(Vector3D::dotProduct(point-controlPoints[0],normals[0])),0);
@@ -708,6 +805,12 @@ QPair<double, int> BodyFragmentation::findClosest(const Vector3D point, const QV
     return closest;
 }
 
+/*!
+Поиск ближайшего элемента из массива к точке
+\param arr Массив, в котором ищется ближайший элемент
+\param point Точка, для которой ищется ближайшая рамка
+\return Номер ближайшего элемента
+*/
 int BodyFragmentation::findClosetElementFromArray(const QVector<double> arr, const double point)
 {
     double closest=arr[0]-point;

@@ -3,104 +3,174 @@
 #include "fourframe.h"
 #include "vector2d.h"
 #include <QVariant>
-enum BodyType {SPHERE, CYLINDER, ROTATIONBODY, ROTATIONBOTTOMCUT};
 
+/** \file bodyfragmentation.h
+    \brief Заголовочный файл для описания классов, структур и перечислений для разбиения исходного тела на рамки
+*/
+
+/**
+ * Типы расчитываемых тел.
+*/
+enum BodyType {
+    SPHERE, ///<Сфера
+    CYLINDER, ///<Цилиндр
+    ROTATIONBODY, ///<Тело вращения
+    ROTATIONBOTTOMCUT ///<Тело вращения со срезом дна
+};
+
+/*!
+    \defgroup fragmentationParameters Параметры разбиения
+    \brief Структура, хранящая данные, необходимые для разбиения
+*/
+///@{
+/*!
+    \brief Структура, хранящая параметры разбиения
+*/
 struct FragmentationParameters
 {
-    //для сферы
-    int sphereFiFragNum;
-    int sphereTetaFragNum;
-    double sphereRad;
 
+    /*!
+        \defgroup sphereParameters Параметры сферы
+        \ingroup fragmentationParameters
+        \brief В данном модуле хранятся параметры, необходимые для разбиения сферы.
+    */
+    ///@{
+    int sphereFiFragNum; ///<Количество разбиений по fi
+    int sphereTetaFragNum; ///<Количество разбиений по teta
+    double sphereRad; ///<Радиус сферы
+    ///@}
 
-    //для цилиндра
-    double cylinderDiameter;
-    double cylinderHeight;
-    int cylinderFiFragNum;
-    int cylinderRadFragNum;
-    int cylinderHeightFragNum;
+    /*!
+        \defgroup cylinderParameters Параметры цилиндра
+        \ingroup fragmentationParameters
+        \brief В данном модуле хранятся параметры, необходимые для разбиения цилиндра.
+    */
+    ///@{
+    double cylinderDiameter; ///<Диаметр цилиндра
+    double cylinderHeight; ///<Высота цилиндра
+    int cylinderFiFragNum; ///<Количество разбиений по fi
+    int cylinderRadFragNum; ///<Количество разбиений по радиусу
+    int cylinderHeightFragNum; ///<Количество разбиений по высоте
+    ///@}
 
-    //для тела вращения
-    int rotationBodyFiFragNum;
-    int rotationBodyPartFragNum;
-    double rotationBodyXBeg;
-    double rotationBodyXEnd;
-    double rotationBodySectionDistance;
+    /*!
+        \defgroup rotationBodyParameters Параметры тела вращения
+        \ingroup fragmentationParameters
+        \brief В данном модуле хранятся параметры, необходимые для разбиения тела вращения.
+    */
+    ///@{
+    int rotationBodyFiFragNum; ///<Количество разбиений по fi
+    int rotationBodyPartFragNum; ///<Количество разбиений по длине
+    double rotationBodyXBeg; ///<Координата начала тела по X
+    double rotationBodyXEnd; ///<Координата конца тела по Y
+    double rotationBodySectionDistance; ///< Величина среза
+    ///@}
 
-    //для тела вращения со срезом
-    int rotationBodyRFragNum;
-    //общие
-    double vortonsRad;
-    double delta;
-    double pointsRaising;
+    /*!
+        \defgroup rotationBottomCutParameters Дополнительные параметры тела вращения со срезом
+        \ingroup fragmentationParameters
+        \brief В данном модуле хранятся дополнительные параметры, необходимые для разбиения тела вращения.
+    */
+    ///@{
+    int rotationBodyRFragNum; ///<Количество разбиений по радиусу
+    ///@}
+
+    /*!
+        \defgroup commonParameters Общие параметры
+        \ingroup fragmentationParameters
+        \brief В данном модуле хранятся Общие параметры, необходимые для разбиения тела.
+    */
+    ///@{
+    double vortonsRad; ///<Радиус вортона
+    double delta; ///<Подъем рамок над телом
+    double pointsRaising; ///<Подъем контрольных точек для подсчета давления
+    ///@}
 };
+///@}
 
+/*!
+    \brief Структура для хранения параметров сферы
+*/
 struct SphereParameters
 {
-    int fiFragNum;
-    int tetaFragNum;
-    double radius;
-    double delta;
-    double raise;
-    double vortonsRad;
+    int fiFragNum; ///<Количество разбиений по fi
+    int tetaFragNum; ///<Количество разбиений по teta
+    double radius; ///<Радиус сферы
+    double delta; ///<Подъем рамок над телом
+    double raise; ///<Подъем контрольных точек для подсчета давления
+    double vortonsRad; ///<Радиус вортона
     void setData(const int i, const double value);
 };
 
+/*!
+    \brief Структура для хранения параметров цилиндра
+*/
 struct CylinderParameters
 {
-    int fiFragNum;
-    int radFragNum;
-    int heightFragNum;
-    double diameter;
-    double height;
-    double delta;
-    double raise;
-    double vortonsRad;
+    int fiFragNum; ///<Количество разбиений по fi
+    int radFragNum; ///<Количество разбиений по радиусу
+    int heightFragNum; ///<Количество разбиений по высоте
+    double diameter; ///<Диаметр цилиндра
+    double height; ///<Высота цилиндра
+    double delta; ///<Подъем рамок над телом
+    double raise; ///<Подъем контрольных точек для подсчета давления
+    double vortonsRad;  ///<Радиус вортона
     void setData(const int i, const double value);
 };
 
+/*!
+    \brief Структура для хранения параметров тела вращения
+*/
 struct RotationBodyParameters
 {
-    int fiFragNum;
-    int partFragNum;
-    double xBeg;
-    double xEnd;
-    double sectionDistance;
-    double delta;
-    double raise;
-    double vortonsRad;
+    int fiFragNum;  ///<Количество разбиений по fi
+    int partFragNum;  ///<Количество разбиений по длине
+    double xBeg;  ///<Координата начала тела по X
+    double xEnd;  ///<Координата конца тела по Y
+    double sectionDistance;  ///< Величина среза
+    double delta;  ///<Подъем рамок над телом
+    double raise;  ///<Подъем контрольных точек для подсчета давления
+    double vortonsRad;  ///<Радиус вортона
     void setData(const int i, const double value);
 };
 
+/*!
+    \brief Структура для хранения параметров тела вращения со срезом
+*/
 struct RotationCutBodyParameters
 {
-    int fiFragNum;
-    int partFragNum;
-    int rFragNum;
-    double xBeg;
-    double xEnd;
-    double sectionDistance;
-    double delta;
-    double raise;
-    double vortonsRad;
+    int fiFragNum;  ///<Количество разбиений по fi
+    int partFragNum;  ///<Количество разбиений по длине
+    int rFragNum; ///<Количество разбиений по радиусу
+    double xBeg;  ///<Координата начала тела по X
+    double xEnd;  ///<Координата конца тела по Y
+    double sectionDistance;  ///< Величина среза
+    double delta;  ///<Подъем рамок над телом
+    double raise;  ///<Подъем контрольных точек для подсчета давления
+    double vortonsRad; ///<Радиус вортона
     void setData(const int i, const double value);
 };
 
+/*!
+    \brief Класс, описывающие разбиение тела
+
+    Класс разбивает тело на рамки, рассчитывает контрольные точки, нормали, контрольные точки для подсчета давления и площади рамок.
+*/
 class BodyFragmentation: public QObject
 {
     Q_OBJECT
 private:
-    QVector<std::shared_ptr<MultiFrame>> frames;
-    QVector<Vector3D> controlPoints;
-    QVector<Vector3D> normals;
-    QVector<double> squares;
-    QVector<Vector3D> controlPointsRaised;
+    QVector<std::shared_ptr<MultiFrame>> frames; ///<Вектор рамок, составленных из вортон-отрезков
+    QVector<Vector3D> controlPoints; ///<Вектор котнрольных точек
+    QVector<Vector3D> normals; ///<Вектор нормалей
+    QVector<double> squares; ///<Векторй площадей рамок
+    QVector<Vector3D> controlPointsRaised; ///<Вектор контрольных точек для подсчета давления
 
-    SphereParameters sphere;
-    CylinderParameters cylinder;
-    RotationBodyParameters rotationBody;
-    RotationCutBodyParameters rotationBottomCutBody;
-    bool launch;
+    SphereParameters sphere; ///<Параметры разбиения сферы
+    CylinderParameters cylinder; ///<Параметры разбиения цилиндра
+    RotationBodyParameters rotationBody; ///<Параметры разбиения тела вращения
+    RotationCutBodyParameters rotationBottomCutBody; ///<Параметры разбиения тела вращения со срезом дна
+    //bool launch;
 public:
     BodyFragmentation(BodyType body, const FragmentationParameters& param, bool launch=false);
 //    BodyFragmentation(const FragmentationParameters& param, const int i, const Vector3D &bodyVel, const double tau);

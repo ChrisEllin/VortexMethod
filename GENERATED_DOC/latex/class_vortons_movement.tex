@@ -1,0 +1,44 @@
+\hypertarget{class_vortons_movement}{}\section{Класс Vortons\+Movement}
+\label{class_vortons_movement}\index{Vortons\+Movement@{Vortons\+Movement}}
+\subsection*{Открытые члены}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_vortons_movement_aacf8e006bb982de21f65a61f46ac7d66}\label{class_vortons_movement_aacf8e006bb982de21f65a61f46ac7d66}} 
+{\bfseries Vortons\+Movement} (const double max\+Radius, const double max\+Angle, const double step, const Q\+Vector3D stream\+Speed)
+\item 
+\mbox{\Hypertarget{class_vortons_movement_a92aac84a212c10eb0baef4d0a5daaefa}\label{class_vortons_movement_a92aac84a212c10eb0baef4d0a5daaefa}} 
+Q\+Vector$<$ Q\+Vector3D $>$ {\bfseries movement\+Vector} (const Q\+Vector$<$ \mbox{\hyperlink{class_vorton_segment}{Vorton\+Segment}} $>$ \&vortons) const
+\item 
+\mbox{\Hypertarget{class_vortons_movement_a227634feb2be395471b15d132505f24e}\label{class_vortons_movement_a227634feb2be395471b15d132505f24e}} 
+void {\bfseries eyler\+Integration} (Q\+Vector$<$ \mbox{\hyperlink{class_vorton_segment}{Vorton\+Segment}} $>$ \&vortons) const
+\end{DoxyCompactItemize}
+\subsection*{Открытые статические члены}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_vortons_movement_a823223e3b3e0d7e2707b583d944ee745}\label{class_vortons_movement_a823223e3b3e0d7e2707b583d944ee745}} 
+static \mbox{\hyperlink{class_vorton_segment}{Vorton\+Segment}} {\bfseries parallel\+Integration\+Eyler} (const \mbox{\hyperlink{struct_integration_struct}{Integration\+Struct}} \&integration\+Struct)
+\item 
+\mbox{\Hypertarget{class_vortons_movement_a417520eca0af28f19c8fe7bc01152f93}\label{class_vortons_movement_a417520eca0af28f19c8fe7bc01152f93}} 
+static void {\bfseries add\+Vortons\+To\+Vector} (Q\+Vector$<$ \mbox{\hyperlink{class_vorton_segment}{Vorton\+Segment}} $>$ \&vortons, const \mbox{\hyperlink{class_vorton_segment}{Vorton\+Segment}} \&returned\+Vorton)
+\end{DoxyCompactItemize}
+\subsection*{Закрытые данные}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_vortons_movement_a78b37b00fc61e6e3f00d11632acacc29}\label{class_vortons_movement_a78b37b00fc61e6e3f00d11632acacc29}} 
+double {\bfseries max\+Deflection\+Angle}
+\item 
+\mbox{\Hypertarget{class_vortons_movement_a75a4fd9da8be2717ff74e825f36904f4}\label{class_vortons_movement_a75a4fd9da8be2717ff74e825f36904f4}} 
+double {\bfseries max\+Vorton\+Radius}
+\item 
+\mbox{\Hypertarget{class_vortons_movement_accb85a93695605009668764e3d1fe64a}\label{class_vortons_movement_accb85a93695605009668764e3d1fe64a}} 
+double {\bfseries integration\+Step}
+\item 
+\mbox{\Hypertarget{class_vortons_movement_a74859ca55dc1d673e50d98bde4a2a73f}\label{class_vortons_movement_a74859ca55dc1d673e50d98bde4a2a73f}} 
+Q\+Vector3D {\bfseries stream\+Velocity}
+\end{DoxyCompactItemize}
+
+
+Объявления и описания членов классов находятся в файлах\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Users/\+Vasily/\+Documents/\+Vortex\+Method/vortonsmovement.\+h\item 
+C\+:/\+Users/\+Vasily/\+Documents/\+Vortex\+Method/vortonsmovement.\+cpp\end{DoxyCompactItemize}

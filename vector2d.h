@@ -3,11 +3,14 @@
 #include <QMessageBox>
 #include <cmath>
 
+/*!
+    \brief Класс, реализующий двумерный вектор с double-компонентами
+*/
 class Vector2D
 {
 private:
-    double X;
-    double Y;
+    double X; ///<X компонента вектора
+    double Y; ///<Y компонента вектора
 public:
     Vector2D();
     Vector2D(const double _x, const double _y);

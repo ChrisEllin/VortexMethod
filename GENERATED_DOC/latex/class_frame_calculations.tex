@@ -1,0 +1,1065 @@
+\hypertarget{class_frame_calculations}{}\section{Класс Frame\+Calculations}
+\label{class_frame_calculations}\index{Frame\+Calculations@{Frame\+Calculations}}
+
+
+Класс, содержащий функции для работы с рамками  
+
+
+
+
+{\ttfamily \#include $<$framecalculations.\+h$>$}
+
+
+
+Граф связей класса Frame\+Calculations\+:
+% FIG 0
+\subsection*{Открытые члены}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_frame_calculations_a4175dc61a498d4b905abb48e0e202052}{Frame\+Calculations}} ()
+\item 
+Q\+Vector$<$ double $>$ \mbox{\hyperlink{class_frame_calculations_aa0d92606bc8a66387657521b8cac1a0f}{calc\+Tetas}} (const int teta\+Frag\+Num)
+\item 
+void \mbox{\hyperlink{class_frame_calculations_affd2bc2a5ee409d78ddab871a75e2d7c}{matrix\+Calc}} (Q\+Vector$<$ std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{class_multi_frame}{Multi\+Frame}} $>$$>$ frames, const Q\+Vector$<$ \mbox{\hyperlink{class_vector3_d}{Vector3D}} $>$ \&control\+Points, const Q\+Vector$<$ \mbox{\hyperlink{class_vector3_d}{Vector3D}} $>$ \&normals)
+\item 
+Eigen\+::\+Vector\+Xd \mbox{\hyperlink{class_frame_calculations_aac24f14642695a675439a535f6215c37}{column\+Calc}} (const \mbox{\hyperlink{class_vector3_d}{Vector3D}} stream\+Vel, const Q\+Vector$<$ \mbox{\hyperlink{class_vorton}{Vorton}} $>$ \&vortons, const Q\+Vector$<$ \mbox{\hyperlink{class_vector3_d}{Vector3D}} $>$ \&normals, const Q\+Vector$<$ \mbox{\hyperlink{class_vector3_d}{Vector3D}} $>$ control\+Points)
+\item 
+Eigen\+::\+Vector\+Xd \mbox{\hyperlink{class_frame_calculations_a8d7e2813ad4725d6866ecfe3b5a1b76c}{vorticities\+Calc}} (const Eigen\+::\+Vector\+Xd \&column)
+\item 
+void \mbox{\hyperlink{class_frame_calculations_aaa9598a64ef87159b79348f4d0d28262}{union\+Vortons}} (Q\+Vector$<$ \mbox{\hyperlink{class_vorton}{Vorton}} $>$ \&vortons, const double e\+Star, const double e\+Double\+Star, const double vorton\+Rad)
+\item 
+void \mbox{\hyperlink{class_frame_calculations_a27231d13fa8cd2a6bc59b37089927db7}{remove\+Small\+Vorticity}} (Q\+Vector$<$ \mbox{\hyperlink{class_vorton}{Vorton}} $>$ \&vortons, const double min\+Vorticity)
+\item 
+void \mbox{\hyperlink{class_frame_calculations_ad410b0c3981f536fd531d87044ecf9f1}{remove\+Far\+Sphere}} (Q\+Vector$<$ \mbox{\hyperlink{class_vorton}{Vorton}} $>$ \&vortons, const double far\+Distance, const \mbox{\hyperlink{class_vector3_d}{Vector3D}} body\+Center)
+\item 
+void \mbox{\hyperlink{class_frame_calculations_a5e1d67a2cc2b5389c07152cd753c052e}{remove\+Far\+Cylinder}} (Q\+Vector$<$ \mbox{\hyperlink{class_vorton}{Vorton}} $>$ \&vortons, const double far\+Distance, const double height)
+\item 
+void \mbox{\hyperlink{class_frame_calculations_a1281503aec01e524716b8bbaafb9eb17}{remove\+Far\+Rotation\+Body}} (Q\+Vector$<$ \mbox{\hyperlink{class_vorton}{Vorton}} $>$ \&vortons, const double far\+Distance, const \mbox{\hyperlink{class_vector3_d}{Vector3D}} body\+Center)
+\item 
+void \mbox{\hyperlink{class_frame_calculations_a4f23f04e070d94b6840f707cf5752bd8}{remove\+Far\+Rotation\+Cut\+Body}} (Q\+Vector$<$ \mbox{\hyperlink{class_vorton}{Vorton}} $>$ \&vortons, const double far\+Distance, const \mbox{\hyperlink{class_vector3_d}{Vector3D}} body\+Center)
+\item 
+void \mbox{\hyperlink{class_frame_calculations_a2f559b61c1377f8379c7bc4b814e5574}{displacement\+Calc}} (Q\+Vector$<$ \mbox{\hyperlink{class_vorton}{Vorton}} $>$ \&free\+Vortons, Q\+Vector$<$ \mbox{\hyperlink{class_vorton}{Vorton}} $>$ \&new\+Vortons, double step, \mbox{\hyperlink{class_vector3_d}{Vector3D}} stream\+Vel, double e\+Delta, double fi\+Max, double max\+Move)
+\item 
+void \mbox{\hyperlink{class_frame_calculations_ad739531b97f13c6136b250e720a30730}{displacement\+Launch\+Calc}} (Q\+Vector$<$ \mbox{\hyperlink{class_vorton}{Vorton}} $>$ \&free\+Vortons, Q\+Vector$<$ \mbox{\hyperlink{class_vorton}{Vorton}} $>$ \&new\+Vortons, Q\+Vector$<$ \mbox{\hyperlink{class_vorton}{Vorton}} $>$ \&sym\+Free\+Vortons, Q\+Vector$<$ \mbox{\hyperlink{class_vorton}{Vorton}} $>$ \&sym\+New\+Vortons, double step, \mbox{\hyperlink{class_vector3_d}{Vector3D}} stream\+Vel, double e\+Delta, double fi\+Max, double max\+Move)
+\item 
+void \mbox{\hyperlink{class_frame_calculations_a8bf93b3abdacbef2e5297b8daceefdcc}{set\+Matrix\+Size}} (int size)
+\item 
+\mbox{\hyperlink{class_vector3_d}{Vector3D}} \mbox{\hyperlink{class_frame_calculations_a136c7a54ad8afbf2fdcbb3fc797f3ba1}{force\+Calc}} (const \mbox{\hyperlink{class_vector3_d}{Vector3D}} stream\+Vel, double stream\+Pres, double density, Q\+Vector$<$ std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{class_multi_frame}{Multi\+Frame}} $>$$>$ frames, const Q\+Vector$<$ \mbox{\hyperlink{class_vorton}{Vorton}} $>$ \&free\+Vortons, const double tau, const Q\+Vector$<$ double $>$ \&squares, const Q\+Vector$<$ \mbox{\hyperlink{class_vector3_d}{Vector3D}} $>$ \&control\+Points\+Raised, const Q\+Vector$<$ \mbox{\hyperlink{class_vector3_d}{Vector3D}} $>$ \&normals)
+\item 
+void \mbox{\hyperlink{class_frame_calculations_a99c3a5907c5e1c2876e6e12101401971}{cp\+Sum}} (const int step\+Num, Q\+Vector$<$ double $>$ \&cp, const int fi\+Frag\+Num, const double radius, const double points\+Raising, const Q\+Vector$<$ double $>$ \&tetas, const \mbox{\hyperlink{class_vector3_d}{Vector3D}} stream\+Vel, const double stream\+Pres, const double density, const Q\+Vector$<$ std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{class_multi_frame}{Multi\+Frame}} $>$$>$ frames, Q\+Vector$<$ \mbox{\hyperlink{class_vorton}{Vorton}} $>$ free\+Vortons, double tau, const \mbox{\hyperlink{class_vector3_d}{Vector3D}} center)
+\item 
+void \mbox{\hyperlink{class_frame_calculations_a77e3c83528fea04364fa98db998aace8}{cp\+Average}} (Q\+Vector$<$ double $>$ \&cp, const int steps\+Num)
+\item 
+void \mbox{\hyperlink{class_frame_calculations_aedf68cd06f1f6fbd3c9115c5fb69c4db}{get\+Back\+And\+Rotate\+Sphere}} (Q\+Vector$<$ \mbox{\hyperlink{class_vorton}{Vorton}} $>$ \&vortons, const \mbox{\hyperlink{class_vector3_d}{Vector3D}} center, const double radius, const double layer\+Height, const Q\+Vector$<$ \mbox{\hyperlink{class_vector3_d}{Vector3D}} $>$ \&control\+Points, const Q\+Vector$<$ \mbox{\hyperlink{class_vector3_d}{Vector3D}} $>$ \&normals)
+\item 
+void \mbox{\hyperlink{class_frame_calculations_afd20c0630e581591b2d5e678434b9370}{get\+Back\+And\+Rotate\+Cylinder}} (Q\+Vector$<$ \mbox{\hyperlink{class_vorton}{Vorton}} $>$ \&vortons, const double height, const double diameter, const double layer\+Height, const Q\+Vector$<$ \mbox{\hyperlink{class_vector3_d}{Vector3D}} $>$ \&control\+Points, const Q\+Vector$<$ \mbox{\hyperlink{class_vector3_d}{Vector3D}} $>$ \&normals)
+\item 
+void \mbox{\hyperlink{class_frame_calculations_a0e15153409aef5fb5d96d8ca8d0f7db4}{get\+Back\+And\+Rotate\+Rotation\+Body}} (Q\+Vector$<$ \mbox{\hyperlink{class_vorton}{Vorton}} $>$ \&vortons, const double x\+Beg, const double x\+End, const double layer\+Height, const Q\+Vector$<$ \mbox{\hyperlink{class_vector3_d}{Vector3D}} $>$ \&control\+Points, const Q\+Vector$<$ \mbox{\hyperlink{class_vector3_d}{Vector3D}} $>$ \&normals)
+\item 
+void \mbox{\hyperlink{class_frame_calculations_a268e00aa70b0a22c814aa7a99ef71f6e}{get\+Back\+And\+Rotate\+Rotation\+Cut\+Body}} (Q\+Vector$<$ \mbox{\hyperlink{class_vorton}{Vorton}} $>$ \&vortons, const double x\+Beg, const double x\+End, const double layer\+Height, const Q\+Vector$<$ \mbox{\hyperlink{class_vector3_d}{Vector3D}} $>$ \&control\+Points, const Q\+Vector$<$ \mbox{\hyperlink{class_vector3_d}{Vector3D}} $>$ \&normals)
+\item 
+void \mbox{\hyperlink{class_frame_calculations_ad196b47eb903ad247d5cab647817b308}{get\+Back\+And\+Rotate\+Rotation\+Cut\+Launched\+Body}} (Q\+Vector$<$ \mbox{\hyperlink{class_vorton}{Vorton}} $>$ \&vortons, const double x\+Beg, const double x\+End, const double layer\+Height, const Q\+Vector$<$ \mbox{\hyperlink{class_vector3_d}{Vector3D}} $>$ \&control\+Points, const Q\+Vector$<$ \mbox{\hyperlink{class_vector3_d}{Vector3D}} $>$ \&normals)
+\item 
+\mbox{\hyperlink{struct_counters}{Counters}} \mbox{\hyperlink{class_frame_calculations_a4df4278fb394bbd9d3ac74ce9f4d3af8}{get\+Counters}} () const
+\item 
+\mbox{\hyperlink{struct_restrictions}{Restrictions}} \mbox{\hyperlink{class_frame_calculations_a5564dbc6d6f6cce07cc09bdb446ebd2d}{get\+Restrictions}} () const
+\item 
+\mbox{\hyperlink{struct_timers}{Timers}} \mbox{\hyperlink{class_frame_calculations_ae02bfaca62d087af7c2a84981d3218f9}{get\+Timers}} () const
+\item 
+void \mbox{\hyperlink{class_frame_calculations_a687365cd35332f572afbc8eeb9f51a86}{clear\+Counters}} ()
+\item 
+void \mbox{\hyperlink{class_frame_calculations_a6b220c05309876a8e74f756e4b650eba}{clear\+Restrictions}} ()
+\item 
+void \mbox{\hyperlink{class_frame_calculations_ae223d1579ad207a8325ef6825982ba97}{clear\+Timers}} ()
+\item 
+void \mbox{\hyperlink{class_frame_calculations_a5839ed07938c0985151452a1e0de98ed}{clear}} ()
+\end{DoxyCompactItemize}
+\subsection*{Открытые статические члены}
+\begin{DoxyCompactItemize}
+\item 
+static void \mbox{\hyperlink{class_frame_calculations_a564f527920433ef1fc56b8476abc381d}{set\+Vorticity}} (Q\+Vector$<$ std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{class_multi_frame}{Multi\+Frame}} $>$$>$ frames, const Eigen\+::\+Vector\+Xd vorticities)
+\item 
+static Q\+Vector$<$ \mbox{\hyperlink{class_vorton}{Vorton}} $>$ \mbox{\hyperlink{class_frame_calculations_a36e9c485fa20dc63addfa5f859466a4f}{get\+Frame\+Vortons}} (Q\+Vector$<$ std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{class_multi_frame}{Multi\+Frame}} $>$$>$ frames)
+\item 
+static Q\+Vector$<$ \mbox{\hyperlink{class_vorton}{Vorton}} $>$ \mbox{\hyperlink{class_frame_calculations_a5d8360d713e0b70ef16836c393875898}{get\+Lifted\+Frame\+Vortons}} (Q\+Vector$<$ std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{class_multi_frame}{Multi\+Frame}} $>$$>$ frames, const Q\+Vector$<$ \mbox{\hyperlink{class_vector3_d}{Vector3D}} $>$ \&normals, const double delta\+Up)
+\item 
+static double \mbox{\hyperlink{class_frame_calculations_a649d97062701534e3c658717aa7fc328}{pressure\+Calc}} (const \mbox{\hyperlink{class_vector3_d}{Vector3D}} point, const \mbox{\hyperlink{class_vector3_d}{Vector3D}} stream\+Vel, const double stream\+Pres, const double density, Q\+Vector$<$ std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{class_multi_frame}{Multi\+Frame}} $>$$>$ frames, Q\+Vector$<$ \mbox{\hyperlink{class_vorton}{Vorton}} $>$ free\+Vortons, double tau)
+\item 
+static void \mbox{\hyperlink{class_frame_calculations_aefef30822ffab57ba2a36750470a9589}{add\+To\+Vortons\+Vec}} (Q\+Vector$<$ \mbox{\hyperlink{class_vorton}{Vorton}} $>$ \&vortons, const \mbox{\hyperlink{class_vorton}{Vorton}} vort)
+\item 
+static \mbox{\hyperlink{struct_vel_bsym}{Vel\+Bsym}} \mbox{\hyperlink{class_frame_calculations_a970373138ceb791f8fe4983be4fe3453}{velocity\+And\+Bsymm}} (const \mbox{\hyperlink{class_vector3_d}{Vector3D}} point, const \mbox{\hyperlink{class_vector3_d}{Vector3D}} stream\+Vel, const Q\+Vector$<$ \mbox{\hyperlink{class_vorton}{Vorton}} $>$ \&vortons)
+\item 
+static \mbox{\hyperlink{class_vector3_d}{Vector3D}} \mbox{\hyperlink{class_frame_calculations_aaabc376bcaef6089f68adb42720d5685}{velocity}} (const \mbox{\hyperlink{class_vector3_d}{Vector3D}} point, const \mbox{\hyperlink{class_vector3_d}{Vector3D}} stream\+Vel, const Q\+Vector$<$ \mbox{\hyperlink{class_vorton}{Vorton}} $>$ \&vortons, const Q\+Vector$<$ std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{class_multi_frame}{Multi\+Frame}} $>$$>$ frames)
+\item 
+static \mbox{\hyperlink{class_vector3_d}{Vector3D}} \mbox{\hyperlink{class_frame_calculations_aff26c6410791c4d75edb5c138df673bf}{velocity}} (const \mbox{\hyperlink{class_vector3_d}{Vector3D}} point, const \mbox{\hyperlink{class_vector3_d}{Vector3D}} stream\+Vel, const Q\+Vector$<$ \mbox{\hyperlink{class_vorton}{Vorton}} $>$ \&vortons)
+\item 
+static \mbox{\hyperlink{class_vorton}{Vorton}} \mbox{\hyperlink{class_frame_calculations_af93869af49ce3792da3f5de49e38b7fe}{parallel\+Displacement}} (const \mbox{\hyperlink{struct_parallel}{Parallel}} el)
+\item 
+static void \mbox{\hyperlink{class_frame_calculations_a157c3ea3b901afbd9b1b7dbd982b1366}{displace}} (Q\+Vector$<$ \mbox{\hyperlink{class_vorton}{Vorton}} $>$ \&vortons)
+\item 
+static void \mbox{\hyperlink{class_frame_calculations_ac0e6d436b6b6f167fb0a80853ee8e69a}{reflect}} (Q\+Vector$<$ \mbox{\hyperlink{class_vorton}{Vorton}} $>$ \&sym\+Free\+Vortons, Q\+Vector$<$ \mbox{\hyperlink{class_vorton}{Vorton}} $>$ \&sym\+New\+Vortons, Q\+Vector$<$ std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{class_multi_frame}{Multi\+Frame}} $>$$>$ sym\+Frames)
+\item 
+static bool \mbox{\hyperlink{class_frame_calculations_ac52a1cd2bc6838daac5b900df04de699}{inside\+Sphere}} (const \mbox{\hyperlink{class_vorton}{Vorton}} \&vort, const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&center, const double radius)
+\item 
+static bool \mbox{\hyperlink{class_frame_calculations_a6a6518700d039f2efee19ea430496123}{inside\+Sphere\+Layer}} (const \mbox{\hyperlink{class_vorton}{Vorton}} \&vort, const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&center, const double radius, const double layer\+Height)
+\item 
+static bool \mbox{\hyperlink{class_frame_calculations_a51a235539c794106ae632f2a221c3318}{inside\+Cylinder}} (const \mbox{\hyperlink{class_vorton}{Vorton}} \&vort, const double height, const double diameter)
+\item 
+static bool \mbox{\hyperlink{class_frame_calculations_abef7349db128b308764a2045983108db}{inside\+Cylinder\+Layer}} (const \mbox{\hyperlink{class_vorton}{Vorton}} \&vort, const double height, const double diameter, const double layer\+Height)
+\item 
+static bool \mbox{\hyperlink{class_frame_calculations_a99f895bb639a2d8bf98648a5ec55b5b0}{inside\+Rotation\+Body}} (const \mbox{\hyperlink{class_vorton}{Vorton}} \&vort, const double x\+Beg, const double x\+End)
+\item 
+static bool \mbox{\hyperlink{class_frame_calculations_a4de864fbf60a109e3d4b7b0954b08258}{inside\+Rotation\+Body\+Layer}} (const \mbox{\hyperlink{class_vorton}{Vorton}} \&vort, const double x\+Beg, const double x\+End, const double layer\+Height)
+\item 
+static bool \mbox{\hyperlink{class_frame_calculations_a32559ea09afd92c7b207b9d7db6e809d}{inside\+Rotation\+Cut\+Body}} (const \mbox{\hyperlink{class_vorton}{Vorton}} \&vort, const double x\+Beg, const double x\+End)
+\item 
+static bool \mbox{\hyperlink{class_frame_calculations_a39873d69a67397e20b19ac0de71e00c5}{inside\+Rotation\+Cut\+Body\+Layer}} (const \mbox{\hyperlink{class_vorton}{Vorton}} \&vort, const double x\+Beg, const double x\+End, const double layer\+Height)
+\item 
+static bool \mbox{\hyperlink{class_frame_calculations_acf3ff54e7c4b940de0b53c5c82a85a03}{inside\+Screen}} (\mbox{\hyperlink{class_vorton}{Vorton}} \&vort)
+\item 
+static bool \mbox{\hyperlink{class_frame_calculations_a6d5278ddbe021167c1ba71e68620e3df}{explose\+Sphere}} (const Q\+Vector$<$ \mbox{\hyperlink{class_vorton}{Vorton}} $>$ \&vortons)
+\item 
+static double \mbox{\hyperlink{class_frame_calculations_a0d4e2c1b30822b5e25fe39593febb978}{calc\+Dispersion}} (const Q\+Vector$<$ \mbox{\hyperlink{class_vector3_d}{Vector3D}} $>$ \&c\+Aerodynamics)
+\item 
+static Q\+Vector$<$ std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{class_multi_frame}{Multi\+Frame}} $>$ $>$ \mbox{\hyperlink{class_frame_calculations_ada975cd3e9d7edf466f9d31867044506}{copy\+Frames}} (Q\+Vector$<$ std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{class_multi_frame}{Multi\+Frame}} $>$$>$ frames)
+\item 
+static void \mbox{\hyperlink{class_frame_calculations_a854853c14187eec031c860438a886514}{translate\+Body}} (const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&translation, Q\+Vector$<$ std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{class_multi_frame}{Multi\+Frame}} $>$$>$ \&frames, Q\+Vector$<$ \mbox{\hyperlink{class_vector3_d}{Vector3D}} $>$ \&control\+Points, Q\+Vector$<$ \mbox{\hyperlink{class_vector3_d}{Vector3D}} $>$ \&control\+Points\+Raised, \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&center, double \&xbeg, double \&xend, const \mbox{\hyperlink{struct_fragmentation_parameters}{Fragmentation\+Parameters}} \&frag\+Par)
+\item 
+static void \mbox{\hyperlink{class_frame_calculations_a9180d3ce990339ef141c53064eefca20}{translate\+Body}} (const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&translation, Q\+Vector$<$ std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{class_multi_frame}{Multi\+Frame}} $>$$>$ \&frames, Q\+Vector$<$ \mbox{\hyperlink{class_vector3_d}{Vector3D}} $>$ \&control\+Points, Q\+Vector$<$ \mbox{\hyperlink{class_vector3_d}{Vector3D}} $>$ \&control\+Points\+Raised, \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&center)
+\item 
+static void \mbox{\hyperlink{class_frame_calculations_a8b261b5f1f933306a66a4461aae64e64}{translate\+Vortons}} (const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&translation, Q\+Vector$<$ \mbox{\hyperlink{class_vorton}{Vorton}} $>$ \&vortons)
+\end{DoxyCompactItemize}
+\subsection*{Закрытые данные}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_frame_calculations_ab3ba753d8837dd08a5bc79167bd0c058}\label{class_frame_calculations_ab3ba753d8837dd08a5bc79167bd0c058}} 
+Eigen\+::\+Matrix\+Xd \mbox{\hyperlink{class_frame_calculations_ab3ba753d8837dd08a5bc79167bd0c058}{matrix}}
+\begin{DoxyCompactList}\small\item\em Матрица, составленная из произведения единичных интенсивностей от каждой из рамок на соответствующую нормаль. Используется для дальнейшего решения СЛАУ и вычисления завихренностей рамок. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_frame_calculations_ad5b30f8065f1cc4f76dfd8972c668524}\label{class_frame_calculations_ad5b30f8065f1cc4f76dfd8972c668524}} 
+int \mbox{\hyperlink{class_frame_calculations_ad5b30f8065f1cc4f76dfd8972c668524}{matrix\+Size}}
+\begin{DoxyCompactList}\small\item\em Размер матрицы \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_frame_calculations_afc998f9041eec85da5b0646d441b1bff}\label{class_frame_calculations_afc998f9041eec85da5b0646d441b1bff}} 
+\mbox{\hyperlink{struct_counters}{Counters}} \mbox{\hyperlink{class_frame_calculations_afc998f9041eec85da5b0646d441b1bff}{counters}}
+\begin{DoxyCompactList}\small\item\em Количество удаленных вортонов в результате действия различных функций \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_frame_calculations_a0413851b46b65f387b57148406d68caa}\label{class_frame_calculations_a0413851b46b65f387b57148406d68caa}} 
+\mbox{\hyperlink{struct_restrictions}{Restrictions}} \mbox{\hyperlink{class_frame_calculations_a0413851b46b65f387b57148406d68caa}{restrictions}}
+\begin{DoxyCompactList}\small\item\em Количество сработанных ограничений \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_frame_calculations_a0d2282b3ff7496733a6004241e0740c3}\label{class_frame_calculations_a0d2282b3ff7496733a6004241e0740c3}} 
+\mbox{\hyperlink{struct_timers}{Timers}} \mbox{\hyperlink{class_frame_calculations_a0d2282b3ff7496733a6004241e0740c3}{timers}}
+\begin{DoxyCompactList}\small\item\em Таймеры на функции \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Подробное описание}
+Класс, содержащий функции для работы с рамками 
+
+Класс, в котором определены все функции, описывающие работу с рамками при проведении расчета 
+
+\subsection{Конструктор(ы)}
+\mbox{\Hypertarget{class_frame_calculations_a4175dc61a498d4b905abb48e0e202052}\label{class_frame_calculations_a4175dc61a498d4b905abb48e0e202052}} 
+\index{Frame\+Calculations@{Frame\+Calculations}!Frame\+Calculations@{Frame\+Calculations}}
+\index{Frame\+Calculations@{Frame\+Calculations}!Frame\+Calculations@{Frame\+Calculations}}
+\subsubsection{\texorpdfstring{Frame\+Calculations()}{FrameCalculations()}}
+{\footnotesize\ttfamily Frame\+Calculations\+::\+Frame\+Calculations (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Создает объект класса для работы с рамками с обнуленными счетчиками, ограничениями и таймерами 
+
+\subsection{Методы}
+\mbox{\Hypertarget{class_frame_calculations_aefef30822ffab57ba2a36750470a9589}\label{class_frame_calculations_aefef30822ffab57ba2a36750470a9589}} 
+\index{Frame\+Calculations@{Frame\+Calculations}!add\+To\+Vortons\+Vec@{add\+To\+Vortons\+Vec}}
+\index{add\+To\+Vortons\+Vec@{add\+To\+Vortons\+Vec}!Frame\+Calculations@{Frame\+Calculations}}
+\subsubsection{\texorpdfstring{add\+To\+Vortons\+Vec()}{addToVortonsVec()}}
+{\footnotesize\ttfamily void Frame\+Calculations\+::add\+To\+Vortons\+Vec (\begin{DoxyParamCaption}\item[{Q\+Vector$<$ \mbox{\hyperlink{class_vorton}{Vorton}} $>$ \&}]{vortons,  }\item[{const \mbox{\hyperlink{class_vorton}{Vorton}}}]{vort }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Функция, добавляющая вортон в вектор. Создана для совместимости с Qt\+Concurrent 
+\begin{DoxyParams}[1]{Аргументы}
+\mbox{\tt in,out}  & {\em vortons} & Вектор, содержащий вортоны для функции \\
+\hline
+\mbox{\tt in}  & {\em vort} & Вортон для добавления \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_frame_calculations_a0d4e2c1b30822b5e25fe39593febb978}\label{class_frame_calculations_a0d4e2c1b30822b5e25fe39593febb978}} 
+\index{Frame\+Calculations@{Frame\+Calculations}!calc\+Dispersion@{calc\+Dispersion}}
+\index{calc\+Dispersion@{calc\+Dispersion}!Frame\+Calculations@{Frame\+Calculations}}
+\subsubsection{\texorpdfstring{calc\+Dispersion()}{calcDispersion()}}
+{\footnotesize\ttfamily double Frame\+Calculations\+::calc\+Dispersion (\begin{DoxyParamCaption}\item[{const Q\+Vector$<$ \mbox{\hyperlink{class_vector3_d}{Vector3D}} $>$ \&}]{c\+Aerodynamics }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Функция для расчета дисперсии вектора С 
+\begin{DoxyParams}{Аргументы}
+{\em c\+Aerodynamics} & Вектор С \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Возвращает}
+Значение дисперсии 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_frame_calculations_aa0d92606bc8a66387657521b8cac1a0f}\label{class_frame_calculations_aa0d92606bc8a66387657521b8cac1a0f}} 
+\index{Frame\+Calculations@{Frame\+Calculations}!calc\+Tetas@{calc\+Tetas}}
+\index{calc\+Tetas@{calc\+Tetas}!Frame\+Calculations@{Frame\+Calculations}}
+\subsubsection{\texorpdfstring{calc\+Tetas()}{calcTetas()}}
+{\footnotesize\ttfamily Q\+Vector$<$ double $>$ Frame\+Calculations\+::calc\+Tetas (\begin{DoxyParamCaption}\item[{const int}]{teta\+Frag\+Num }\end{DoxyParamCaption})}
+
+Рассчитывает значения углов тета для сферы 
+\begin{DoxyParams}{Аргументы}
+{\em teta\+Frag\+Num} & Количество разбиений тела по тета \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Возвращает}
+Вектор с рассчитанными значениями углов тета 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_frame_calculations_a5839ed07938c0985151452a1e0de98ed}\label{class_frame_calculations_a5839ed07938c0985151452a1e0de98ed}} 
+\index{Frame\+Calculations@{Frame\+Calculations}!clear@{clear}}
+\index{clear@{clear}!Frame\+Calculations@{Frame\+Calculations}}
+\subsubsection{\texorpdfstring{clear()}{clear()}}
+{\footnotesize\ttfamily void Frame\+Calculations\+::clear (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Функция обнуляющая значения сработавших счетчиков, сработавших ограничений, таймеров \mbox{\Hypertarget{class_frame_calculations_a687365cd35332f572afbc8eeb9f51a86}\label{class_frame_calculations_a687365cd35332f572afbc8eeb9f51a86}} 
+\index{Frame\+Calculations@{Frame\+Calculations}!clear\+Counters@{clear\+Counters}}
+\index{clear\+Counters@{clear\+Counters}!Frame\+Calculations@{Frame\+Calculations}}
+\subsubsection{\texorpdfstring{clear\+Counters()}{clearCounters()}}
+{\footnotesize\ttfamily void Frame\+Calculations\+::clear\+Counters (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Функция обнуляющая значения счетчиков \mbox{\Hypertarget{class_frame_calculations_a6b220c05309876a8e74f756e4b650eba}\label{class_frame_calculations_a6b220c05309876a8e74f756e4b650eba}} 
+\index{Frame\+Calculations@{Frame\+Calculations}!clear\+Restrictions@{clear\+Restrictions}}
+\index{clear\+Restrictions@{clear\+Restrictions}!Frame\+Calculations@{Frame\+Calculations}}
+\subsubsection{\texorpdfstring{clear\+Restrictions()}{clearRestrictions()}}
+{\footnotesize\ttfamily void Frame\+Calculations\+::clear\+Restrictions (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Функция обнуляющая значения сработавших ограничений \mbox{\Hypertarget{class_frame_calculations_ae223d1579ad207a8325ef6825982ba97}\label{class_frame_calculations_ae223d1579ad207a8325ef6825982ba97}} 
+\index{Frame\+Calculations@{Frame\+Calculations}!clear\+Timers@{clear\+Timers}}
+\index{clear\+Timers@{clear\+Timers}!Frame\+Calculations@{Frame\+Calculations}}
+\subsubsection{\texorpdfstring{clear\+Timers()}{clearTimers()}}
+{\footnotesize\ttfamily void Frame\+Calculations\+::clear\+Timers (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Функция обнуляющая значения сработавших таймеров \mbox{\Hypertarget{class_frame_calculations_aac24f14642695a675439a535f6215c37}\label{class_frame_calculations_aac24f14642695a675439a535f6215c37}} 
+\index{Frame\+Calculations@{Frame\+Calculations}!column\+Calc@{column\+Calc}}
+\index{column\+Calc@{column\+Calc}!Frame\+Calculations@{Frame\+Calculations}}
+\subsubsection{\texorpdfstring{column\+Calc()}{columnCalc()}}
+{\footnotesize\ttfamily Eigen\+::\+Vector\+Xd Frame\+Calculations\+::column\+Calc (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_vector3_d}{Vector3D}}}]{stream\+Vel,  }\item[{const Q\+Vector$<$ \mbox{\hyperlink{class_vorton}{Vorton}} $>$ \&}]{vortons,  }\item[{const Q\+Vector$<$ \mbox{\hyperlink{class_vector3_d}{Vector3D}} $>$ \&}]{normals,  }\item[{const Q\+Vector$<$ \mbox{\hyperlink{class_vector3_d}{Vector3D}} $>$}]{control\+Points }\end{DoxyParamCaption})}
+
+Рассчитывает значения столбца b для решения СЛАУ вида A$\ast$x=b, где А-\/матрица, х-\/искомый столбец. 
+\begin{DoxyParams}{Аргументы}
+{\em stream\+Vel} & Скорость потока \\
+\hline
+{\em vortons} & Вектор содержащий текущие вортоны в потоке \\
+\hline
+{\em normals} & Вектор нормалей \\
+\hline
+{\em control\+Points} & Вектор контрольных точек \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Возвращает}
+Столбец b 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_frame_calculations_ada975cd3e9d7edf466f9d31867044506}\label{class_frame_calculations_ada975cd3e9d7edf466f9d31867044506}} 
+\index{Frame\+Calculations@{Frame\+Calculations}!copy\+Frames@{copy\+Frames}}
+\index{copy\+Frames@{copy\+Frames}!Frame\+Calculations@{Frame\+Calculations}}
+\subsubsection{\texorpdfstring{copy\+Frames()}{copyFrames()}}
+{\footnotesize\ttfamily Q\+Vector$<$ std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{class_multi_frame}{Multi\+Frame}} $>$ $>$ Frame\+Calculations\+::copy\+Frames (\begin{DoxyParamCaption}\item[{Q\+Vector$<$ std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{class_multi_frame}{Multi\+Frame}} $>$$>$}]{frames }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Функция для копирования вектора рамок 
+\begin{DoxyParams}{Аргументы}
+{\em frames} & Вектор рамок \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Возвращает}
+Скопированный вектор рамок 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_frame_calculations_a77e3c83528fea04364fa98db998aace8}\label{class_frame_calculations_a77e3c83528fea04364fa98db998aace8}} 
+\index{Frame\+Calculations@{Frame\+Calculations}!cp\+Average@{cp\+Average}}
+\index{cp\+Average@{cp\+Average}!Frame\+Calculations@{Frame\+Calculations}}
+\subsubsection{\texorpdfstring{cp\+Average()}{cpAverage()}}
+{\footnotesize\ttfamily void Frame\+Calculations\+::cp\+Average (\begin{DoxyParamCaption}\item[{Q\+Vector$<$ double $>$ \&}]{cp,  }\item[{const int}]{steps\+Num }\end{DoxyParamCaption})}
+
+Функция расчета средних значений ср 
+\begin{DoxyParams}[1]{Аргументы}
+\mbox{\tt in,out}  & {\em cp} & Вектор значений ср \\
+\hline
+\mbox{\tt in}  & {\em steps\+Num} & Количество шагов расчета \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_frame_calculations_a99c3a5907c5e1c2876e6e12101401971}\label{class_frame_calculations_a99c3a5907c5e1c2876e6e12101401971}} 
+\index{Frame\+Calculations@{Frame\+Calculations}!cp\+Sum@{cp\+Sum}}
+\index{cp\+Sum@{cp\+Sum}!Frame\+Calculations@{Frame\+Calculations}}
+\subsubsection{\texorpdfstring{cp\+Sum()}{cpSum()}}
+{\footnotesize\ttfamily void Frame\+Calculations\+::cp\+Sum (\begin{DoxyParamCaption}\item[{const int}]{step\+Num,  }\item[{Q\+Vector$<$ double $>$ \&}]{cp,  }\item[{const int}]{fi\+Frag\+Num,  }\item[{const double}]{radius,  }\item[{const double}]{points\+Raising,  }\item[{const Q\+Vector$<$ double $>$ \&}]{tetas,  }\item[{const \mbox{\hyperlink{class_vector3_d}{Vector3D}}}]{stream\+Vel,  }\item[{const double}]{stream\+Pres,  }\item[{const double}]{density,  }\item[{const Q\+Vector$<$ std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{class_multi_frame}{Multi\+Frame}} $>$$>$}]{frames,  }\item[{Q\+Vector$<$ \mbox{\hyperlink{class_vorton}{Vorton}} $>$}]{free\+Vortons,  }\item[{double}]{tau,  }\item[{const \mbox{\hyperlink{class_vector3_d}{Vector3D}}}]{center }\end{DoxyParamCaption})}
+
+Функция суммирования соответствующих значений ср 
+\begin{DoxyParams}[1]{Аргументы}
+\mbox{\tt in}  & {\em step\+Num} & Номер текущего шага \\
+\hline
+\mbox{\tt in,out}  & {\em cp} & Вектор для записи значений ср \\
+\hline
+\mbox{\tt in}  & {\em fi\+Frag\+Num} & Количество разбиений по фи \\
+\hline
+\mbox{\tt in}  & {\em radius} & Радиус сферы \\
+\hline
+\mbox{\tt in}  & {\em points\+Raising} & Величина подъема точек для вычисления давления \\
+\hline
+\mbox{\tt in}  & {\em tetas} & Вектор значений углов тета \\
+\hline
+\mbox{\tt in}  & {\em stream\+Vel} & Скорость потока \\
+\hline
+\mbox{\tt in}  & {\em stream\+Pres} & Давление потока \\
+\hline
+\mbox{\tt in}  & {\em density} & Плотность среды \\
+\hline
+\mbox{\tt in}  & {\em frames} & Вектор, содержащий рамки \\
+\hline
+\mbox{\tt in}  & {\em free\+Vortons} & Вектор, содержащий вортоны в потоке \\
+\hline
+\mbox{\tt in}  & {\em tau} & Величина шага \\
+\hline
+\mbox{\tt in}  & {\em center} & Координата центра сферы \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_frame_calculations_a157c3ea3b901afbd9b1b7dbd982b1366}\label{class_frame_calculations_a157c3ea3b901afbd9b1b7dbd982b1366}} 
+\index{Frame\+Calculations@{Frame\+Calculations}!displace@{displace}}
+\index{displace@{displace}!Frame\+Calculations@{Frame\+Calculations}}
+\subsubsection{\texorpdfstring{displace()}{displace()}}
+{\footnotesize\ttfamily void Frame\+Calculations\+::displace (\begin{DoxyParamCaption}\item[{Q\+Vector$<$ \mbox{\hyperlink{class_vorton}{Vorton}} $>$ \&}]{vortons }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Функция для изменения положения вортона согласно рассчитанному перемещению и изменению. 
+\begin{DoxyParams}[1]{Аргументы}
+\mbox{\tt in,out}  & {\em vortons} & Вектор вортонов \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_frame_calculations_a2f559b61c1377f8379c7bc4b814e5574}\label{class_frame_calculations_a2f559b61c1377f8379c7bc4b814e5574}} 
+\index{Frame\+Calculations@{Frame\+Calculations}!displacement\+Calc@{displacement\+Calc}}
+\index{displacement\+Calc@{displacement\+Calc}!Frame\+Calculations@{Frame\+Calculations}}
+\subsubsection{\texorpdfstring{displacement\+Calc()}{displacementCalc()}}
+{\footnotesize\ttfamily void Frame\+Calculations\+::displacement\+Calc (\begin{DoxyParamCaption}\item[{Q\+Vector$<$ \mbox{\hyperlink{class_vorton}{Vorton}} $>$ \&}]{free\+Vortons,  }\item[{Q\+Vector$<$ \mbox{\hyperlink{class_vorton}{Vorton}} $>$ \&}]{new\+Vortons,  }\item[{double}]{step,  }\item[{\mbox{\hyperlink{class_vector3_d}{Vector3D}}}]{stream\+Vel,  }\item[{double}]{e\+Delta,  }\item[{double}]{fi\+Max,  }\item[{double}]{max\+Move }\end{DoxyParamCaption})}
+
+Функция расчета перемещений и удалений для вортонов с рамок и вортонов в потоке 
+\begin{DoxyParams}[1]{Аргументы}
+\mbox{\tt in,out}  & {\em free\+Vortons} & Вектор, содержащий вортоны в потоке \\
+\hline
+\mbox{\tt in,out}  & {\em new\+Vortons} & Вектор, содержащий вортоны с рамок \\
+\hline
+\mbox{\tt in}  & {\em step} & Размер шага \\
+\hline
+\mbox{\tt in}  & {\em stream\+Vel} & Скорость потока \\
+\hline
+\mbox{\tt in}  & {\em e\+Delta} & Максимальное значение удлинения \\
+\hline
+\mbox{\tt in}  & {\em fi\+Max} & Максимальное значение угла поворота \\
+\hline
+\mbox{\tt in}  & {\em max\+Move} & Максимальное перемещения \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_frame_calculations_ad739531b97f13c6136b250e720a30730}\label{class_frame_calculations_ad739531b97f13c6136b250e720a30730}} 
+\index{Frame\+Calculations@{Frame\+Calculations}!displacement\+Launch\+Calc@{displacement\+Launch\+Calc}}
+\index{displacement\+Launch\+Calc@{displacement\+Launch\+Calc}!Frame\+Calculations@{Frame\+Calculations}}
+\subsubsection{\texorpdfstring{displacement\+Launch\+Calc()}{displacementLaunchCalc()}}
+{\footnotesize\ttfamily void Frame\+Calculations\+::displacement\+Launch\+Calc (\begin{DoxyParamCaption}\item[{Q\+Vector$<$ \mbox{\hyperlink{class_vorton}{Vorton}} $>$ \&}]{free\+Vortons,  }\item[{Q\+Vector$<$ \mbox{\hyperlink{class_vorton}{Vorton}} $>$ \&}]{new\+Vortons,  }\item[{Q\+Vector$<$ \mbox{\hyperlink{class_vorton}{Vorton}} $>$ \&}]{sym\+Free\+Vortons,  }\item[{Q\+Vector$<$ \mbox{\hyperlink{class_vorton}{Vorton}} $>$ \&}]{sym\+New\+Vortons,  }\item[{double}]{step,  }\item[{\mbox{\hyperlink{class_vector3_d}{Vector3D}}}]{stream\+Vel,  }\item[{double}]{e\+Delta,  }\item[{double}]{fi\+Max,  }\item[{double}]{max\+Move }\end{DoxyParamCaption})}
+
+Функция расчета перемещений и удалений для вортонов с рамок и вортонов в потоке при решении задачи старта 
+\begin{DoxyParams}[1]{Аргументы}
+\mbox{\tt in,out}  & {\em free\+Vortons} & Вектор, содержащий вортоны в потоке \\
+\hline
+\mbox{\tt in,out}  & {\em new\+Vortons} & Вектор, содержащий вортоны с рамок \\
+\hline
+\mbox{\tt in,out}  & {\em sym\+Free\+Vortons} & Симметричный вектор вектору, содержащему вортоны в потоке \\
+\hline
+\mbox{\tt in,out}  & {\em sym\+New\+Vortons} & Симметричный вектор вектору, содержащему вортоны с рамок \\
+\hline
+\mbox{\tt in}  & {\em step} & Размер шага \\
+\hline
+\mbox{\tt in}  & {\em stream\+Vel} & Скорость потока \\
+\hline
+\mbox{\tt in}  & {\em e\+Delta} & Максимальное значение удлинения \\
+\hline
+\mbox{\tt in}  & {\em fi\+Max} & Максимальное значение угла поворота \\
+\hline
+\mbox{\tt in}  & {\em max\+Move} & Максимальное перемещения \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_frame_calculations_a6d5278ddbe021167c1ba71e68620e3df}\label{class_frame_calculations_a6d5278ddbe021167c1ba71e68620e3df}} 
+\index{Frame\+Calculations@{Frame\+Calculations}!explose\+Sphere@{explose\+Sphere}}
+\index{explose\+Sphere@{explose\+Sphere}!Frame\+Calculations@{Frame\+Calculations}}
+\subsubsection{\texorpdfstring{explose\+Sphere()}{exploseSphere()}}
+{\footnotesize\ttfamily bool Frame\+Calculations\+::explose\+Sphere (\begin{DoxyParamCaption}\item[{const Q\+Vector$<$ \mbox{\hyperlink{class_vorton}{Vorton}} $>$ \&}]{vortons }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Функция для проверки возможного \char`\"{}взрыва\char`\"{} вортонов 
+\begin{DoxyParams}{Аргументы}
+{\em vortons} & Вектор вортонов \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Возвращает}
+Определение вортона под экран 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_frame_calculations_a136c7a54ad8afbf2fdcbb3fc797f3ba1}\label{class_frame_calculations_a136c7a54ad8afbf2fdcbb3fc797f3ba1}} 
+\index{Frame\+Calculations@{Frame\+Calculations}!force\+Calc@{force\+Calc}}
+\index{force\+Calc@{force\+Calc}!Frame\+Calculations@{Frame\+Calculations}}
+\subsubsection{\texorpdfstring{force\+Calc()}{forceCalc()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_vector3_d}{Vector3D}} Frame\+Calculations\+::force\+Calc (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_vector3_d}{Vector3D}}}]{stream\+Vel,  }\item[{double}]{stream\+Pres,  }\item[{double}]{density,  }\item[{Q\+Vector$<$ std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{class_multi_frame}{Multi\+Frame}} $>$$>$}]{frames,  }\item[{const Q\+Vector$<$ \mbox{\hyperlink{class_vorton}{Vorton}} $>$ \&}]{free\+Vortons,  }\item[{const double}]{tau,  }\item[{const Q\+Vector$<$ double $>$ \&}]{squares,  }\item[{const Q\+Vector$<$ \mbox{\hyperlink{class_vector3_d}{Vector3D}} $>$ \&}]{control\+Points\+Raised,  }\item[{const Q\+Vector$<$ \mbox{\hyperlink{class_vector3_d}{Vector3D}} $>$ \&}]{normals }\end{DoxyParamCaption})}
+
+Функция расчета силы, действующей на тело 
+\begin{DoxyParams}{Аргументы}
+{\em stream\+Vel} & Скорость потока \\
+\hline
+{\em stream\+Pres} & Давление потока \\
+\hline
+{\em density} & Плотность среды \\
+\hline
+{\em frames} & Вектор, содержащий рамки \\
+\hline
+{\em free\+Vortons} & Вектор, содержащий вортоны в потоке \\
+\hline
+{\em tau} & Величина шага \\
+\hline
+{\em squares} & Вектор, содержащий площади рамок \\
+\hline
+{\em control\+Points\+Raised} & Вектор, содержащий контрольные точки для вычисления давлений \\
+\hline
+{\em normals} & Вектор, содержащий нормали \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Возвращает}
+Значение силы 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_frame_calculations_afd20c0630e581591b2d5e678434b9370}\label{class_frame_calculations_afd20c0630e581591b2d5e678434b9370}} 
+\index{Frame\+Calculations@{Frame\+Calculations}!get\+Back\+And\+Rotate\+Cylinder@{get\+Back\+And\+Rotate\+Cylinder}}
+\index{get\+Back\+And\+Rotate\+Cylinder@{get\+Back\+And\+Rotate\+Cylinder}!Frame\+Calculations@{Frame\+Calculations}}
+\subsubsection{\texorpdfstring{get\+Back\+And\+Rotate\+Cylinder()}{getBackAndRotateCylinder()}}
+{\footnotesize\ttfamily void Frame\+Calculations\+::get\+Back\+And\+Rotate\+Cylinder (\begin{DoxyParamCaption}\item[{Q\+Vector$<$ \mbox{\hyperlink{class_vorton}{Vorton}} $>$ \&}]{vortons,  }\item[{const double}]{height,  }\item[{const double}]{diameter,  }\item[{const double}]{layer\+Height,  }\item[{const Q\+Vector$<$ \mbox{\hyperlink{class_vector3_d}{Vector3D}} $>$ \&}]{control\+Points,  }\item[{const Q\+Vector$<$ \mbox{\hyperlink{class_vector3_d}{Vector3D}} $>$ \&}]{normals }\end{DoxyParamCaption})}
+
+Функция, возвращающая вортоны из тела в поток и разворачивающая вортонов относительно поверхности цилиндра в слое 
+\begin{DoxyParams}[1]{Аргументы}
+\mbox{\tt in,out}  & {\em vortons} & Вектор, содержащий вортоны для функции \\
+\hline
+\mbox{\tt in}  & {\em height} & Высота цилиндра \\
+\hline
+\mbox{\tt in}  & {\em diameter} & Диаметр цилиндра \\
+\hline
+\mbox{\tt in}  & {\em layer\+Height} & Величина слоя \\
+\hline
+\mbox{\tt in}  & {\em control\+Points} & Вектор, содержащий контрольные точки \\
+\hline
+\mbox{\tt in}  & {\em normals} & Вектор, содержащий нормали \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_frame_calculations_a0e15153409aef5fb5d96d8ca8d0f7db4}\label{class_frame_calculations_a0e15153409aef5fb5d96d8ca8d0f7db4}} 
+\index{Frame\+Calculations@{Frame\+Calculations}!get\+Back\+And\+Rotate\+Rotation\+Body@{get\+Back\+And\+Rotate\+Rotation\+Body}}
+\index{get\+Back\+And\+Rotate\+Rotation\+Body@{get\+Back\+And\+Rotate\+Rotation\+Body}!Frame\+Calculations@{Frame\+Calculations}}
+\subsubsection{\texorpdfstring{get\+Back\+And\+Rotate\+Rotation\+Body()}{getBackAndRotateRotationBody()}}
+{\footnotesize\ttfamily void Frame\+Calculations\+::get\+Back\+And\+Rotate\+Rotation\+Body (\begin{DoxyParamCaption}\item[{Q\+Vector$<$ \mbox{\hyperlink{class_vorton}{Vorton}} $>$ \&}]{vortons,  }\item[{const double}]{x\+Beg,  }\item[{const double}]{x\+End,  }\item[{const double}]{layer\+Height,  }\item[{const Q\+Vector$<$ \mbox{\hyperlink{class_vector3_d}{Vector3D}} $>$ \&}]{control\+Points,  }\item[{const Q\+Vector$<$ \mbox{\hyperlink{class_vector3_d}{Vector3D}} $>$ \&}]{normals }\end{DoxyParamCaption})}
+
+Функция, возвращающая вортоны из тела в поток и разворачивающая вортонов относительно поверхности тела вращения в слое 
+\begin{DoxyParams}[1]{Аргументы}
+\mbox{\tt in,out}  & {\em vortons} & Вектор, содержащий вортоны для функции \\
+\hline
+\mbox{\tt in}  & {\em x\+Beg} & Минимальное значение координаты х тела \\
+\hline
+\mbox{\tt in}  & {\em x\+End} & Максимальное значение координаты х тела \\
+\hline
+\mbox{\tt in}  & {\em layer\+Height} & Величина слоя \\
+\hline
+\mbox{\tt in}  & {\em control\+Points} & Вектор, содержащий контрольные точки \\
+\hline
+\mbox{\tt in}  & {\em normals} & Вектор, содержащий нормали \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_frame_calculations_a268e00aa70b0a22c814aa7a99ef71f6e}\label{class_frame_calculations_a268e00aa70b0a22c814aa7a99ef71f6e}} 
+\index{Frame\+Calculations@{Frame\+Calculations}!get\+Back\+And\+Rotate\+Rotation\+Cut\+Body@{get\+Back\+And\+Rotate\+Rotation\+Cut\+Body}}
+\index{get\+Back\+And\+Rotate\+Rotation\+Cut\+Body@{get\+Back\+And\+Rotate\+Rotation\+Cut\+Body}!Frame\+Calculations@{Frame\+Calculations}}
+\subsubsection{\texorpdfstring{get\+Back\+And\+Rotate\+Rotation\+Cut\+Body()}{getBackAndRotateRotationCutBody()}}
+{\footnotesize\ttfamily void Frame\+Calculations\+::get\+Back\+And\+Rotate\+Rotation\+Cut\+Body (\begin{DoxyParamCaption}\item[{Q\+Vector$<$ \mbox{\hyperlink{class_vorton}{Vorton}} $>$ \&}]{vortons,  }\item[{const double}]{x\+Beg,  }\item[{const double}]{x\+End,  }\item[{const double}]{layer\+Height,  }\item[{const Q\+Vector$<$ \mbox{\hyperlink{class_vector3_d}{Vector3D}} $>$ \&}]{control\+Points,  }\item[{const Q\+Vector$<$ \mbox{\hyperlink{class_vector3_d}{Vector3D}} $>$ \&}]{normals }\end{DoxyParamCaption})}
+
+Функция, возвращающая вортоны из тела в поток и разворачивающая вортонов относительно поверхности тела вращения со срезом в слое 
+\begin{DoxyParams}[1]{Аргументы}
+\mbox{\tt in,out}  & {\em vortons} & Вектор, содержащий вортоны для функции \\
+\hline
+\mbox{\tt in}  & {\em x\+Beg} & Минимальное значение координаты х тела \\
+\hline
+\mbox{\tt in}  & {\em x\+End} & Максимальное значение координаты х тела \\
+\hline
+\mbox{\tt in}  & {\em layer\+Height} & Величина слоя \\
+\hline
+\mbox{\tt in}  & {\em control\+Points} & Вектор, содержащий контрольные точки \\
+\hline
+\mbox{\tt in}  & {\em normals} & Вектор, содержащий нормали \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_frame_calculations_ad196b47eb903ad247d5cab647817b308}\label{class_frame_calculations_ad196b47eb903ad247d5cab647817b308}} 
+\index{Frame\+Calculations@{Frame\+Calculations}!get\+Back\+And\+Rotate\+Rotation\+Cut\+Launched\+Body@{get\+Back\+And\+Rotate\+Rotation\+Cut\+Launched\+Body}}
+\index{get\+Back\+And\+Rotate\+Rotation\+Cut\+Launched\+Body@{get\+Back\+And\+Rotate\+Rotation\+Cut\+Launched\+Body}!Frame\+Calculations@{Frame\+Calculations}}
+\subsubsection{\texorpdfstring{get\+Back\+And\+Rotate\+Rotation\+Cut\+Launched\+Body()}{getBackAndRotateRotationCutLaunchedBody()}}
+{\footnotesize\ttfamily void Frame\+Calculations\+::get\+Back\+And\+Rotate\+Rotation\+Cut\+Launched\+Body (\begin{DoxyParamCaption}\item[{Q\+Vector$<$ \mbox{\hyperlink{class_vorton}{Vorton}} $>$ \&}]{vortons,  }\item[{const double}]{x\+Beg,  }\item[{const double}]{x\+End,  }\item[{const double}]{layer\+Height,  }\item[{const Q\+Vector$<$ \mbox{\hyperlink{class_vector3_d}{Vector3D}} $>$ \&}]{control\+Points,  }\item[{const Q\+Vector$<$ \mbox{\hyperlink{class_vector3_d}{Vector3D}} $>$ \&}]{normals }\end{DoxyParamCaption})}
+
+Функция, возвращающая вортоны из тела в поток и разворачивающая вортонов относительно поверхности тела вращения со срезом в слое при решении задачи старта 
+\begin{DoxyParams}[1]{Аргументы}
+\mbox{\tt in,out}  & {\em vortons} & Вектор, содержащий вортоны для функции \\
+\hline
+\mbox{\tt in}  & {\em x\+Beg} & Минимальное значение координаты х тела \\
+\hline
+\mbox{\tt in}  & {\em x\+End} & Максимальное значение координаты х тела \\
+\hline
+\mbox{\tt in}  & {\em layer\+Height} & Величина слоя \\
+\hline
+\mbox{\tt in}  & {\em control\+Points} & Вектор, содержащий контрольные точки \\
+\hline
+\mbox{\tt in}  & {\em normals} & Вектор, содержащий нормали \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_frame_calculations_aedf68cd06f1f6fbd3c9115c5fb69c4db}\label{class_frame_calculations_aedf68cd06f1f6fbd3c9115c5fb69c4db}} 
+\index{Frame\+Calculations@{Frame\+Calculations}!get\+Back\+And\+Rotate\+Sphere@{get\+Back\+And\+Rotate\+Sphere}}
+\index{get\+Back\+And\+Rotate\+Sphere@{get\+Back\+And\+Rotate\+Sphere}!Frame\+Calculations@{Frame\+Calculations}}
+\subsubsection{\texorpdfstring{get\+Back\+And\+Rotate\+Sphere()}{getBackAndRotateSphere()}}
+{\footnotesize\ttfamily void Frame\+Calculations\+::get\+Back\+And\+Rotate\+Sphere (\begin{DoxyParamCaption}\item[{Q\+Vector$<$ \mbox{\hyperlink{class_vorton}{Vorton}} $>$ \&}]{vortons,  }\item[{const \mbox{\hyperlink{class_vector3_d}{Vector3D}}}]{center,  }\item[{const double}]{radius,  }\item[{const double}]{layer\+Height,  }\item[{const Q\+Vector$<$ \mbox{\hyperlink{class_vector3_d}{Vector3D}} $>$ \&}]{control\+Points,  }\item[{const Q\+Vector$<$ \mbox{\hyperlink{class_vector3_d}{Vector3D}} $>$ \&}]{normals }\end{DoxyParamCaption})}
+
+Функция, возвращающая вортоны из тела в поток и разворачивающая вортонов относительно поверхности сферы в слое 
+\begin{DoxyParams}[1]{Аргументы}
+\mbox{\tt in,out}  & {\em vortons} & Вектор, содержащий вортоны для функции \\
+\hline
+\mbox{\tt in}  & {\em center} & Координата центра сферы \\
+\hline
+\mbox{\tt in}  & {\em radius} & Величина радиуса сферы \\
+\hline
+\mbox{\tt in}  & {\em layer\+Height} & Величина слоя \\
+\hline
+\mbox{\tt in}  & {\em control\+Points} & Вектор, содержащий контрольные точки \\
+\hline
+\mbox{\tt in}  & {\em normals} & Вектор, содержащий нормали \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_frame_calculations_a4df4278fb394bbd9d3ac74ce9f4d3af8}\label{class_frame_calculations_a4df4278fb394bbd9d3ac74ce9f4d3af8}} 
+\index{Frame\+Calculations@{Frame\+Calculations}!get\+Counters@{get\+Counters}}
+\index{get\+Counters@{get\+Counters}!Frame\+Calculations@{Frame\+Calculations}}
+\subsubsection{\texorpdfstring{get\+Counters()}{getCounters()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_counters}{Counters}} Frame\+Calculations\+::get\+Counters (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+Функция возвращающая значения счетчиков \begin{DoxyReturn}{Возвращает}
+Структура с текущими значениями счетчиков 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_frame_calculations_a36e9c485fa20dc63addfa5f859466a4f}\label{class_frame_calculations_a36e9c485fa20dc63addfa5f859466a4f}} 
+\index{Frame\+Calculations@{Frame\+Calculations}!get\+Frame\+Vortons@{get\+Frame\+Vortons}}
+\index{get\+Frame\+Vortons@{get\+Frame\+Vortons}!Frame\+Calculations@{Frame\+Calculations}}
+\subsubsection{\texorpdfstring{get\+Frame\+Vortons()}{getFrameVortons()}}
+{\footnotesize\ttfamily Q\+Vector$<$ \mbox{\hyperlink{class_vorton}{Vorton}} $>$ Frame\+Calculations\+::get\+Frame\+Vortons (\begin{DoxyParamCaption}\item[{Q\+Vector$<$ std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{class_multi_frame}{Multi\+Frame}} $>$$>$}]{frames }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Функция, возвращающая вектор вортонов с рамок 
+\begin{DoxyParams}{Аргументы}
+{\em frames} & Вектор, содержащий рамки \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Возвращает}
+Вектор, содержащий вортоны с рамок 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_frame_calculations_a5d8360d713e0b70ef16836c393875898}\label{class_frame_calculations_a5d8360d713e0b70ef16836c393875898}} 
+\index{Frame\+Calculations@{Frame\+Calculations}!get\+Lifted\+Frame\+Vortons@{get\+Lifted\+Frame\+Vortons}}
+\index{get\+Lifted\+Frame\+Vortons@{get\+Lifted\+Frame\+Vortons}!Frame\+Calculations@{Frame\+Calculations}}
+\subsubsection{\texorpdfstring{get\+Lifted\+Frame\+Vortons()}{getLiftedFrameVortons()}}
+{\footnotesize\ttfamily Q\+Vector$<$ \mbox{\hyperlink{class_vorton}{Vorton}} $>$ Frame\+Calculations\+::get\+Lifted\+Frame\+Vortons (\begin{DoxyParamCaption}\item[{Q\+Vector$<$ std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{class_multi_frame}{Multi\+Frame}} $>$$>$}]{frames,  }\item[{const Q\+Vector$<$ \mbox{\hyperlink{class_vector3_d}{Vector3D}} $>$ \&}]{normals,  }\item[{const double}]{delta\+Up }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Функция, возвращающая вектор поднятых вортонов с рамок по нормали 
+\begin{DoxyParams}{Аргументы}
+{\em frames} & Вектор, содержащий рамки \\
+\hline
+{\em normals} & Вектор, содержащий нормали \\
+\hline
+{\em delta\+Up} & Величина подъема вортонов по нормали \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Возвращает}
+Вектор, содержащий вортоны с рамок 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_frame_calculations_a5564dbc6d6f6cce07cc09bdb446ebd2d}\label{class_frame_calculations_a5564dbc6d6f6cce07cc09bdb446ebd2d}} 
+\index{Frame\+Calculations@{Frame\+Calculations}!get\+Restrictions@{get\+Restrictions}}
+\index{get\+Restrictions@{get\+Restrictions}!Frame\+Calculations@{Frame\+Calculations}}
+\subsubsection{\texorpdfstring{get\+Restrictions()}{getRestrictions()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_restrictions}{Restrictions}} Frame\+Calculations\+::get\+Restrictions (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+Функция возвращающая значения сработавших ограничений \begin{DoxyReturn}{Возвращает}
+Структура с текущими значениями сработавших ограничений 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_frame_calculations_ae02bfaca62d087af7c2a84981d3218f9}\label{class_frame_calculations_ae02bfaca62d087af7c2a84981d3218f9}} 
+\index{Frame\+Calculations@{Frame\+Calculations}!get\+Timers@{get\+Timers}}
+\index{get\+Timers@{get\+Timers}!Frame\+Calculations@{Frame\+Calculations}}
+\subsubsection{\texorpdfstring{get\+Timers()}{getTimers()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_timers}{Timers}} Frame\+Calculations\+::get\+Timers (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+Функция возвращающая значения таймеров \begin{DoxyReturn}{Возвращает}
+Структура с текущими значениями таймеров 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_frame_calculations_a51a235539c794106ae632f2a221c3318}\label{class_frame_calculations_a51a235539c794106ae632f2a221c3318}} 
+\index{Frame\+Calculations@{Frame\+Calculations}!inside\+Cylinder@{inside\+Cylinder}}
+\index{inside\+Cylinder@{inside\+Cylinder}!Frame\+Calculations@{Frame\+Calculations}}
+\subsubsection{\texorpdfstring{inside\+Cylinder()}{insideCylinder()}}
+{\footnotesize\ttfamily bool Frame\+Calculations\+::inside\+Cylinder (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_vorton}{Vorton}} \&}]{vort,  }\item[{const double}]{height,  }\item[{const double}]{diameter }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Функция для проверки попадания вортона внутрь цилиндра 
+\begin{DoxyParams}{Аргументы}
+{\em vorton} & Вортон \\
+\hline
+{\em height} & Высота цилиндра \\
+\hline
+{\em diameter} & Диаметр цилиндра \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Возвращает}
+Определение попадания внутрь цилиндра 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_frame_calculations_abef7349db128b308764a2045983108db}\label{class_frame_calculations_abef7349db128b308764a2045983108db}} 
+\index{Frame\+Calculations@{Frame\+Calculations}!inside\+Cylinder\+Layer@{inside\+Cylinder\+Layer}}
+\index{inside\+Cylinder\+Layer@{inside\+Cylinder\+Layer}!Frame\+Calculations@{Frame\+Calculations}}
+\subsubsection{\texorpdfstring{inside\+Cylinder\+Layer()}{insideCylinderLayer()}}
+{\footnotesize\ttfamily bool Frame\+Calculations\+::inside\+Cylinder\+Layer (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_vorton}{Vorton}} \&}]{vort,  }\item[{const double}]{height,  }\item[{const double}]{diameter,  }\item[{const double}]{layer\+Height }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Функция для проверки попадания вортона внутрь слоя вокруг цилиндра 
+\begin{DoxyParams}{Аргументы}
+{\em vorton} & Вортон \\
+\hline
+{\em height} & Высота цилиндра \\
+\hline
+{\em diameter} & Диаметр цилиндра \\
+\hline
+{\em layer\+Height} & Высота слоя \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Возвращает}
+Определение попадания внутрь слоя вокруг цилиндра 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_frame_calculations_a99f895bb639a2d8bf98648a5ec55b5b0}\label{class_frame_calculations_a99f895bb639a2d8bf98648a5ec55b5b0}} 
+\index{Frame\+Calculations@{Frame\+Calculations}!inside\+Rotation\+Body@{inside\+Rotation\+Body}}
+\index{inside\+Rotation\+Body@{inside\+Rotation\+Body}!Frame\+Calculations@{Frame\+Calculations}}
+\subsubsection{\texorpdfstring{inside\+Rotation\+Body()}{insideRotationBody()}}
+{\footnotesize\ttfamily bool Frame\+Calculations\+::inside\+Rotation\+Body (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_vorton}{Vorton}} \&}]{vort,  }\item[{const double}]{x\+Beg,  }\item[{const double}]{x\+End }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Функция для проверки попадания вортона внутрь тела вращения 
+\begin{DoxyParams}{Аргументы}
+{\em vorton} & Вортон \\
+\hline
+{\em x\+Beg} & Минимальная координата х тела \\
+\hline
+{\em x\+End} & Максимальная координата х тела \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Возвращает}
+Определение попадания внутрь тела вращения 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_frame_calculations_a4de864fbf60a109e3d4b7b0954b08258}\label{class_frame_calculations_a4de864fbf60a109e3d4b7b0954b08258}} 
+\index{Frame\+Calculations@{Frame\+Calculations}!inside\+Rotation\+Body\+Layer@{inside\+Rotation\+Body\+Layer}}
+\index{inside\+Rotation\+Body\+Layer@{inside\+Rotation\+Body\+Layer}!Frame\+Calculations@{Frame\+Calculations}}
+\subsubsection{\texorpdfstring{inside\+Rotation\+Body\+Layer()}{insideRotationBodyLayer()}}
+{\footnotesize\ttfamily bool Frame\+Calculations\+::inside\+Rotation\+Body\+Layer (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_vorton}{Vorton}} \&}]{vort,  }\item[{const double}]{x\+Beg,  }\item[{const double}]{x\+End,  }\item[{const double}]{layer\+Height }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Функция для проверки попадания вортона внутрь слоя вокруг тела вращения 
+\begin{DoxyParams}{Аргументы}
+{\em vorton} & Вортон \\
+\hline
+{\em x\+Beg} & Минимальная координата х тела \\
+\hline
+{\em x\+End} & Максимальная координата х тела \\
+\hline
+{\em layer\+Height} & Высота слоя \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Возвращает}
+Определение попадания внутрь слоя вокруг тела вращения 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_frame_calculations_a32559ea09afd92c7b207b9d7db6e809d}\label{class_frame_calculations_a32559ea09afd92c7b207b9d7db6e809d}} 
+\index{Frame\+Calculations@{Frame\+Calculations}!inside\+Rotation\+Cut\+Body@{inside\+Rotation\+Cut\+Body}}
+\index{inside\+Rotation\+Cut\+Body@{inside\+Rotation\+Cut\+Body}!Frame\+Calculations@{Frame\+Calculations}}
+\subsubsection{\texorpdfstring{inside\+Rotation\+Cut\+Body()}{insideRotationCutBody()}}
+{\footnotesize\ttfamily bool Frame\+Calculations\+::inside\+Rotation\+Cut\+Body (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_vorton}{Vorton}} \&}]{vort,  }\item[{const double}]{x\+Beg,  }\item[{const double}]{x\+End }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Функция для проверки попадания вортона внутрь тела вращения со срезом дна 
+\begin{DoxyParams}{Аргументы}
+{\em vorton} & Вортон \\
+\hline
+{\em x\+Beg} & Минимальная координата х тела \\
+\hline
+{\em x\+End} & Максимальная координата х тела \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Возвращает}
+Определение попадания внутрь тела вращения со срезом дна 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_frame_calculations_a39873d69a67397e20b19ac0de71e00c5}\label{class_frame_calculations_a39873d69a67397e20b19ac0de71e00c5}} 
+\index{Frame\+Calculations@{Frame\+Calculations}!inside\+Rotation\+Cut\+Body\+Layer@{inside\+Rotation\+Cut\+Body\+Layer}}
+\index{inside\+Rotation\+Cut\+Body\+Layer@{inside\+Rotation\+Cut\+Body\+Layer}!Frame\+Calculations@{Frame\+Calculations}}
+\subsubsection{\texorpdfstring{inside\+Rotation\+Cut\+Body\+Layer()}{insideRotationCutBodyLayer()}}
+{\footnotesize\ttfamily bool Frame\+Calculations\+::inside\+Rotation\+Cut\+Body\+Layer (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_vorton}{Vorton}} \&}]{vort,  }\item[{const double}]{x\+Beg,  }\item[{const double}]{x\+End,  }\item[{const double}]{layer\+Height }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Функция для проверки попадания вортона внутрь слоя вокруг тела вращения со срезом дна 
+\begin{DoxyParams}{Аргументы}
+{\em vorton} & Вортон \\
+\hline
+{\em x\+Beg} & Минимальная координата х тела \\
+\hline
+{\em x\+End} & Максимальная координата х тела \\
+\hline
+{\em layer\+Height} & Высота слоя \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Возвращает}
+Определение попадания внутрь слоя вокруг тела вращения со срезом дна 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_frame_calculations_acf3ff54e7c4b940de0b53c5c82a85a03}\label{class_frame_calculations_acf3ff54e7c4b940de0b53c5c82a85a03}} 
+\index{Frame\+Calculations@{Frame\+Calculations}!inside\+Screen@{inside\+Screen}}
+\index{inside\+Screen@{inside\+Screen}!Frame\+Calculations@{Frame\+Calculations}}
+\subsubsection{\texorpdfstring{inside\+Screen()}{insideScreen()}}
+{\footnotesize\ttfamily bool Frame\+Calculations\+::inside\+Screen (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_vorton}{Vorton}} \&}]{vort }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Функция для проверки попадания вортона под экран 
+\begin{DoxyParams}{Аргументы}
+{\em vorton} & Вортон \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Возвращает}
+Определение вортона под экран 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_frame_calculations_ac52a1cd2bc6838daac5b900df04de699}\label{class_frame_calculations_ac52a1cd2bc6838daac5b900df04de699}} 
+\index{Frame\+Calculations@{Frame\+Calculations}!inside\+Sphere@{inside\+Sphere}}
+\index{inside\+Sphere@{inside\+Sphere}!Frame\+Calculations@{Frame\+Calculations}}
+\subsubsection{\texorpdfstring{inside\+Sphere()}{insideSphere()}}
+{\footnotesize\ttfamily bool Frame\+Calculations\+::inside\+Sphere (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_vorton}{Vorton}} \&}]{vort,  }\item[{const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&}]{center,  }\item[{const double}]{radius }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Функция для проверки попадания вортона внутрь сферы 
+\begin{DoxyParams}{Аргументы}
+{\em vorton} & Вортон \\
+\hline
+{\em center} & Центра сферы \\
+\hline
+{\em radius} & Радиус сферы \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Возвращает}
+Определение попадания внутрь сферы 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_frame_calculations_a6a6518700d039f2efee19ea430496123}\label{class_frame_calculations_a6a6518700d039f2efee19ea430496123}} 
+\index{Frame\+Calculations@{Frame\+Calculations}!inside\+Sphere\+Layer@{inside\+Sphere\+Layer}}
+\index{inside\+Sphere\+Layer@{inside\+Sphere\+Layer}!Frame\+Calculations@{Frame\+Calculations}}
+\subsubsection{\texorpdfstring{inside\+Sphere\+Layer()}{insideSphereLayer()}}
+{\footnotesize\ttfamily bool Frame\+Calculations\+::inside\+Sphere\+Layer (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_vorton}{Vorton}} \&}]{vort,  }\item[{const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&}]{center,  }\item[{const double}]{radius,  }\item[{const double}]{layer\+Height }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Функция для проверки попадания вортона внутрь слоя вокруг сферы 
+\begin{DoxyParams}{Аргументы}
+{\em vorton} & Вортон \\
+\hline
+{\em center} & Центр сферы \\
+\hline
+{\em radius} & Радиус сферы \\
+\hline
+{\em layer\+Height} & Высота слоя \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Возвращает}
+Определение попадания внутрь слоя вокруг сферы 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_frame_calculations_affd2bc2a5ee409d78ddab871a75e2d7c}\label{class_frame_calculations_affd2bc2a5ee409d78ddab871a75e2d7c}} 
+\index{Frame\+Calculations@{Frame\+Calculations}!matrix\+Calc@{matrix\+Calc}}
+\index{matrix\+Calc@{matrix\+Calc}!Frame\+Calculations@{Frame\+Calculations}}
+\subsubsection{\texorpdfstring{matrix\+Calc()}{matrixCalc()}}
+{\footnotesize\ttfamily void Frame\+Calculations\+::matrix\+Calc (\begin{DoxyParamCaption}\item[{Q\+Vector$<$ std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{class_multi_frame}{Multi\+Frame}} $>$$>$}]{frames,  }\item[{const Q\+Vector$<$ \mbox{\hyperlink{class_vector3_d}{Vector3D}} $>$ \&}]{control\+Points,  }\item[{const Q\+Vector$<$ \mbox{\hyperlink{class_vector3_d}{Vector3D}} $>$ \&}]{normals }\end{DoxyParamCaption})}
+
+Рассчитывает значения элементов матрицы, составленной из произведения единичных интенсивностей от каждой из рамок на соответствующую нормаль и вычисляет обратную к ней 
+\begin{DoxyParams}{Аргументы}
+{\em frames} & Вектор рамок \\
+\hline
+{\em control\+Points} & Вектор контрольных точек \\
+\hline
+{\em normals} & Вектор нормалей \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_frame_calculations_af93869af49ce3792da3f5de49e38b7fe}\label{class_frame_calculations_af93869af49ce3792da3f5de49e38b7fe}} 
+\index{Frame\+Calculations@{Frame\+Calculations}!parallel\+Displacement@{parallel\+Displacement}}
+\index{parallel\+Displacement@{parallel\+Displacement}!Frame\+Calculations@{Frame\+Calculations}}
+\subsubsection{\texorpdfstring{parallel\+Displacement()}{parallelDisplacement()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_vorton}{Vorton}} Frame\+Calculations\+::parallel\+Displacement (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{struct_parallel}{Parallel}}}]{el }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Функция расчета перемещения и удлинения вортона. Создана для совместимости с Qt\+Concurrent 
+\begin{DoxyParams}{Аргументы}
+{\em el} & Элемент структуры для расчета \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Возвращает}
+Вортон с рассчитанным значением перемещения и удлинения 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_frame_calculations_a649d97062701534e3c658717aa7fc328}\label{class_frame_calculations_a649d97062701534e3c658717aa7fc328}} 
+\index{Frame\+Calculations@{Frame\+Calculations}!pressure\+Calc@{pressure\+Calc}}
+\index{pressure\+Calc@{pressure\+Calc}!Frame\+Calculations@{Frame\+Calculations}}
+\subsubsection{\texorpdfstring{pressure\+Calc()}{pressureCalc()}}
+{\footnotesize\ttfamily double Frame\+Calculations\+::pressure\+Calc (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_vector3_d}{Vector3D}}}]{point,  }\item[{const \mbox{\hyperlink{class_vector3_d}{Vector3D}}}]{stream\+Vel,  }\item[{const double}]{stream\+Pres,  }\item[{const double}]{density,  }\item[{Q\+Vector$<$ std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{class_multi_frame}{Multi\+Frame}} $>$$>$}]{frames,  }\item[{Q\+Vector$<$ \mbox{\hyperlink{class_vorton}{Vorton}} $>$}]{free\+Vortons,  }\item[{double}]{tau }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Функция расчета давления в точке 
+\begin{DoxyParams}{Аргументы}
+{\em point} & Точка для расчета давления в точке \\
+\hline
+{\em stream\+Vel} & Скорость потока \\
+\hline
+{\em stream\+Pres} & Давление потока \\
+\hline
+{\em density} & Плотность среды \\
+\hline
+{\em frames} & Вектор, содержащий рамки \\
+\hline
+{\em free\+Vortons} & Вектор, содержащий вортоны в потоке \\
+\hline
+{\em tau} & Величина шага \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Возвращает}
+Значение давления 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_frame_calculations_ac0e6d436b6b6f167fb0a80853ee8e69a}\label{class_frame_calculations_ac0e6d436b6b6f167fb0a80853ee8e69a}} 
+\index{Frame\+Calculations@{Frame\+Calculations}!reflect@{reflect}}
+\index{reflect@{reflect}!Frame\+Calculations@{Frame\+Calculations}}
+\subsubsection{\texorpdfstring{reflect()}{reflect()}}
+{\footnotesize\ttfamily void Frame\+Calculations\+::reflect (\begin{DoxyParamCaption}\item[{Q\+Vector$<$ \mbox{\hyperlink{class_vorton}{Vorton}} $>$ \&}]{sym\+Free\+Vortons,  }\item[{Q\+Vector$<$ \mbox{\hyperlink{class_vorton}{Vorton}} $>$ \&}]{sym\+New\+Vortons,  }\item[{Q\+Vector$<$ std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{class_multi_frame}{Multi\+Frame}} $>$$>$}]{sym\+Frames }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Функция для отражения положения вортонов и рамок относительно оси х 
+\begin{DoxyParams}[1]{Аргументы}
+\mbox{\tt in,out}  & {\em sym\+Free\+Vortons} & Вектор вортонов в слое \\
+\hline
+\mbox{\tt in,out}  & {\em sym\+New\+Vortons} & Вектор вортонов с рамок \\
+\hline
+\mbox{\tt in,out}  & {\em sym\+Frames} & Вектор рамок \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_frame_calculations_a5e1d67a2cc2b5389c07152cd753c052e}\label{class_frame_calculations_a5e1d67a2cc2b5389c07152cd753c052e}} 
+\index{Frame\+Calculations@{Frame\+Calculations}!remove\+Far\+Cylinder@{remove\+Far\+Cylinder}}
+\index{remove\+Far\+Cylinder@{remove\+Far\+Cylinder}!Frame\+Calculations@{Frame\+Calculations}}
+\subsubsection{\texorpdfstring{remove\+Far\+Cylinder()}{removeFarCylinder()}}
+{\footnotesize\ttfamily void Frame\+Calculations\+::remove\+Far\+Cylinder (\begin{DoxyParamCaption}\item[{Q\+Vector$<$ \mbox{\hyperlink{class_vorton}{Vorton}} $>$ \&}]{vortons,  }\item[{const double}]{far\+Distance,  }\item[{const double}]{height }\end{DoxyParamCaption})}
+
+Функция удаления вортонов удаленных на большое расстояние от центра цилиндра 
+\begin{DoxyParams}[1]{Аргументы}
+\mbox{\tt in,out}  & {\em vortons} & Вектор, содержащий вортоны для удаления \\
+\hline
+\mbox{\tt in}  & {\em far\+Distance} & Максимальное значение расстояния от центра для учета влияния \\
+\hline
+\mbox{\tt in}  & {\em body\+Center} & Координата высота цилиндра \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_frame_calculations_a1281503aec01e524716b8bbaafb9eb17}\label{class_frame_calculations_a1281503aec01e524716b8bbaafb9eb17}} 
+\index{Frame\+Calculations@{Frame\+Calculations}!remove\+Far\+Rotation\+Body@{remove\+Far\+Rotation\+Body}}
+\index{remove\+Far\+Rotation\+Body@{remove\+Far\+Rotation\+Body}!Frame\+Calculations@{Frame\+Calculations}}
+\subsubsection{\texorpdfstring{remove\+Far\+Rotation\+Body()}{removeFarRotationBody()}}
+{\footnotesize\ttfamily void Frame\+Calculations\+::remove\+Far\+Rotation\+Body (\begin{DoxyParamCaption}\item[{Q\+Vector$<$ \mbox{\hyperlink{class_vorton}{Vorton}} $>$ \&}]{vortons,  }\item[{const double}]{far\+Distance,  }\item[{const \mbox{\hyperlink{class_vector3_d}{Vector3D}}}]{body\+Center }\end{DoxyParamCaption})}
+
+Функция удаления вортонов удаленных на большое расстояние от центра тела вращения 
+\begin{DoxyParams}[1]{Аргументы}
+\mbox{\tt in,out}  & {\em vortons} & Вектор, содержащий вортоны для удаления \\
+\hline
+\mbox{\tt in}  & {\em far\+Distance} & Максимальное значение расстояния от центра для учета влияния \\
+\hline
+\mbox{\tt in}  & {\em body\+Center} & Координата центра тела вращения \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_frame_calculations_a4f23f04e070d94b6840f707cf5752bd8}\label{class_frame_calculations_a4f23f04e070d94b6840f707cf5752bd8}} 
+\index{Frame\+Calculations@{Frame\+Calculations}!remove\+Far\+Rotation\+Cut\+Body@{remove\+Far\+Rotation\+Cut\+Body}}
+\index{remove\+Far\+Rotation\+Cut\+Body@{remove\+Far\+Rotation\+Cut\+Body}!Frame\+Calculations@{Frame\+Calculations}}
+\subsubsection{\texorpdfstring{remove\+Far\+Rotation\+Cut\+Body()}{removeFarRotationCutBody()}}
+{\footnotesize\ttfamily void Frame\+Calculations\+::remove\+Far\+Rotation\+Cut\+Body (\begin{DoxyParamCaption}\item[{Q\+Vector$<$ \mbox{\hyperlink{class_vorton}{Vorton}} $>$ \&}]{vortons,  }\item[{const double}]{far\+Distance,  }\item[{const \mbox{\hyperlink{class_vector3_d}{Vector3D}}}]{body\+Center }\end{DoxyParamCaption})}
+
+Функция удаления вортонов удаленных на большое расстояние от центра тела вращения со срезом дна 
+\begin{DoxyParams}[1]{Аргументы}
+\mbox{\tt in,out}  & {\em vortons} & Вектор, содержащий вортоны для удаления \\
+\hline
+\mbox{\tt in}  & {\em far\+Distance} & Максимальное значение расстояния от центра для учета влияния \\
+\hline
+\mbox{\tt in}  & {\em body\+Center} & Координата центра тела вращения со срезом дна \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_frame_calculations_ad410b0c3981f536fd531d87044ecf9f1}\label{class_frame_calculations_ad410b0c3981f536fd531d87044ecf9f1}} 
+\index{Frame\+Calculations@{Frame\+Calculations}!remove\+Far\+Sphere@{remove\+Far\+Sphere}}
+\index{remove\+Far\+Sphere@{remove\+Far\+Sphere}!Frame\+Calculations@{Frame\+Calculations}}
+\subsubsection{\texorpdfstring{remove\+Far\+Sphere()}{removeFarSphere()}}
+{\footnotesize\ttfamily void Frame\+Calculations\+::remove\+Far\+Sphere (\begin{DoxyParamCaption}\item[{Q\+Vector$<$ \mbox{\hyperlink{class_vorton}{Vorton}} $>$ \&}]{vortons,  }\item[{const double}]{far\+Distance,  }\item[{const \mbox{\hyperlink{class_vector3_d}{Vector3D}}}]{body\+Center }\end{DoxyParamCaption})}
+
+Функция удаления вортонов удаленных на большое расстояние от центра сферы 
+\begin{DoxyParams}[1]{Аргументы}
+\mbox{\tt in,out}  & {\em vortons} & Вектор, содержащий вортоны для удаления \\
+\hline
+\mbox{\tt in}  & {\em far\+Distance} & Максимальное значение расстояния от центра для учета влияния \\
+\hline
+\mbox{\tt in}  & {\em body\+Center} & Координата центра сферы \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_frame_calculations_a27231d13fa8cd2a6bc59b37089927db7}\label{class_frame_calculations_a27231d13fa8cd2a6bc59b37089927db7}} 
+\index{Frame\+Calculations@{Frame\+Calculations}!remove\+Small\+Vorticity@{remove\+Small\+Vorticity}}
+\index{remove\+Small\+Vorticity@{remove\+Small\+Vorticity}!Frame\+Calculations@{Frame\+Calculations}}
+\subsubsection{\texorpdfstring{remove\+Small\+Vorticity()}{removeSmallVorticity()}}
+{\footnotesize\ttfamily void Frame\+Calculations\+::remove\+Small\+Vorticity (\begin{DoxyParamCaption}\item[{Q\+Vector$<$ \mbox{\hyperlink{class_vorton}{Vorton}} $>$ \&}]{vortons,  }\item[{const double}]{min\+Vorticity }\end{DoxyParamCaption})}
+
+Функция удаления вортонов с малой завихренностью 
+\begin{DoxyParams}[1]{Аргументы}
+\mbox{\tt in,out}  & {\em vortons} & Вектор, содержащий вортоны для удаления \\
+\hline
+\mbox{\tt in}  & {\em min\+Vorticity} & Минимальное значение завихренности для объединения \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_frame_calculations_a8bf93b3abdacbef2e5297b8daceefdcc}\label{class_frame_calculations_a8bf93b3abdacbef2e5297b8daceefdcc}} 
+\index{Frame\+Calculations@{Frame\+Calculations}!set\+Matrix\+Size@{set\+Matrix\+Size}}
+\index{set\+Matrix\+Size@{set\+Matrix\+Size}!Frame\+Calculations@{Frame\+Calculations}}
+\subsubsection{\texorpdfstring{set\+Matrix\+Size()}{setMatrixSize()}}
+{\footnotesize\ttfamily void Frame\+Calculations\+::set\+Matrix\+Size (\begin{DoxyParamCaption}\item[{int}]{size }\end{DoxyParamCaption})}
+
+Функция установки размера матрицы 
+\begin{DoxyParams}{Аргументы}
+{\em size} & Размер матрциы \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_frame_calculations_a564f527920433ef1fc56b8476abc381d}\label{class_frame_calculations_a564f527920433ef1fc56b8476abc381d}} 
+\index{Frame\+Calculations@{Frame\+Calculations}!set\+Vorticity@{set\+Vorticity}}
+\index{set\+Vorticity@{set\+Vorticity}!Frame\+Calculations@{Frame\+Calculations}}
+\subsubsection{\texorpdfstring{set\+Vorticity()}{setVorticity()}}
+{\footnotesize\ttfamily void Frame\+Calculations\+::set\+Vorticity (\begin{DoxyParamCaption}\item[{Q\+Vector$<$ std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{class_multi_frame}{Multi\+Frame}} $>$$>$}]{frames,  }\item[{const Eigen\+::\+Vector\+Xd}]{vorticities }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Функция установки завихренностей рамкам 
+\begin{DoxyParams}[1]{Аргументы}
+\mbox{\tt in,out}  & {\em frames} & Вектор, содержащий рамки \\
+\hline
+\mbox{\tt in}  & {\em vorticities} & Вектор, содержащий завихренности для рамок \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_frame_calculations_a854853c14187eec031c860438a886514}\label{class_frame_calculations_a854853c14187eec031c860438a886514}} 
+\index{Frame\+Calculations@{Frame\+Calculations}!translate\+Body@{translate\+Body}}
+\index{translate\+Body@{translate\+Body}!Frame\+Calculations@{Frame\+Calculations}}
+\subsubsection{\texorpdfstring{translate\+Body()}{translateBody()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily void Frame\+Calculations\+::translate\+Body (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&}]{translation,  }\item[{Q\+Vector$<$ std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{class_multi_frame}{Multi\+Frame}} $>$$>$ \&}]{frames,  }\item[{Q\+Vector$<$ \mbox{\hyperlink{class_vector3_d}{Vector3D}} $>$ \&}]{control\+Points,  }\item[{Q\+Vector$<$ \mbox{\hyperlink{class_vector3_d}{Vector3D}} $>$ \&}]{control\+Points\+Raised,  }\item[{\mbox{\hyperlink{class_vector3_d}{Vector3D}} \&}]{center,  }\item[{double \&}]{xbeg,  }\item[{double \&}]{xend,  }\item[{const \mbox{\hyperlink{struct_fragmentation_parameters}{Fragmentation\+Parameters}} \&}]{frag\+Par }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Функция для перемещения тела при решении задачи старта 
+\begin{DoxyParams}[1]{Аргументы}
+\mbox{\tt in}  & {\em translation} & Вектор переноса \\
+\hline
+\mbox{\tt in,out}  & {\em frames} & Вектор рамок \\
+\hline
+\mbox{\tt in,out}  & {\em control\+Points} & Вектор контрольных точек \\
+\hline
+\mbox{\tt in,out}  & {\em control\+Points\+Raised} & Вектор контрольных точек для расчета давлений \\
+\hline
+\mbox{\tt in,out}  & {\em center} & Центр тела \\
+\hline
+\mbox{\tt in}  & {\em x\+Beg} & Минимальная координата х тела \\
+\hline
+\mbox{\tt in}  & {\em x\+End} & Максимальная координата х тела \\
+\hline
+\mbox{\tt in}  & {\em frag\+Par} & Параметры разбиения \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_frame_calculations_a9180d3ce990339ef141c53064eefca20}\label{class_frame_calculations_a9180d3ce990339ef141c53064eefca20}} 
+\index{Frame\+Calculations@{Frame\+Calculations}!translate\+Body@{translate\+Body}}
+\index{translate\+Body@{translate\+Body}!Frame\+Calculations@{Frame\+Calculations}}
+\subsubsection{\texorpdfstring{translate\+Body()}{translateBody()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily void Frame\+Calculations\+::translate\+Body (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&}]{translation,  }\item[{Q\+Vector$<$ std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{class_multi_frame}{Multi\+Frame}} $>$$>$ \&}]{frames,  }\item[{Q\+Vector$<$ \mbox{\hyperlink{class_vector3_d}{Vector3D}} $>$ \&}]{control\+Points,  }\item[{Q\+Vector$<$ \mbox{\hyperlink{class_vector3_d}{Vector3D}} $>$ \&}]{control\+Points\+Raised,  }\item[{\mbox{\hyperlink{class_vector3_d}{Vector3D}} \&}]{center }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Функция для перемещения тела. Эта функция перегружена и предоставляется исключительно для удобства использования. Она отличается от вышеупомянутой только фактическими аргументами. 
+\begin{DoxyParams}[1]{Аргументы}
+\mbox{\tt in}  & {\em translation} & Вектор переноса \\
+\hline
+\mbox{\tt in,out}  & {\em frames} & Вектор рамок \\
+\hline
+\mbox{\tt in,out}  & {\em control\+Points} & Вектор контрольных точек \\
+\hline
+\mbox{\tt in,out}  & {\em control\+Points\+Raised} & Вектор контрольных точек для расчета давлений \\
+\hline
+\mbox{\tt in,out}  & {\em center} & Центр тела \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_frame_calculations_a8b261b5f1f933306a66a4461aae64e64}\label{class_frame_calculations_a8b261b5f1f933306a66a4461aae64e64}} 
+\index{Frame\+Calculations@{Frame\+Calculations}!translate\+Vortons@{translate\+Vortons}}
+\index{translate\+Vortons@{translate\+Vortons}!Frame\+Calculations@{Frame\+Calculations}}
+\subsubsection{\texorpdfstring{translate\+Vortons()}{translateVortons()}}
+{\footnotesize\ttfamily void Frame\+Calculations\+::translate\+Vortons (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&}]{translation,  }\item[{Q\+Vector$<$ \mbox{\hyperlink{class_vorton}{Vorton}} $>$ \&}]{vortons }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Функция для перемещения вектора вортонов 
+\begin{DoxyParams}[1]{Аргументы}
+\mbox{\tt in}  & {\em translation} & Вектор переноса \\
+\hline
+\mbox{\tt in,out}  & {\em vortons} & Вектор вортонов \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_frame_calculations_aaa9598a64ef87159b79348f4d0d28262}\label{class_frame_calculations_aaa9598a64ef87159b79348f4d0d28262}} 
+\index{Frame\+Calculations@{Frame\+Calculations}!union\+Vortons@{union\+Vortons}}
+\index{union\+Vortons@{union\+Vortons}!Frame\+Calculations@{Frame\+Calculations}}
+\subsubsection{\texorpdfstring{union\+Vortons()}{unionVortons()}}
+{\footnotesize\ttfamily void Frame\+Calculations\+::union\+Vortons (\begin{DoxyParamCaption}\item[{Q\+Vector$<$ \mbox{\hyperlink{class_vorton}{Vorton}} $>$ \&}]{vortons,  }\item[{const double}]{e\+Star,  }\item[{const double}]{e\+Double\+Star,  }\item[{const double}]{vorton\+Rad }\end{DoxyParamCaption})}
+
+Функция объединения близлежащих вортонов 
+\begin{DoxyParams}[1]{Аргументы}
+\mbox{\tt in,out}  & {\em vortons} & Вектор, содержащий вортоны для объединения \\
+\hline
+\mbox{\tt in}  & {\em e\+Star} & Максимальное расстояние для объединения \\
+\hline
+\mbox{\tt in}  & {\em e\+Double\+Star} & Минимальный косинус угла для объединения \\
+\hline
+\mbox{\tt in}  & {\em vorton\+Rad} & Радиус вортон-\/отрезков \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_frame_calculations_aaabc376bcaef6089f68adb42720d5685}\label{class_frame_calculations_aaabc376bcaef6089f68adb42720d5685}} 
+\index{Frame\+Calculations@{Frame\+Calculations}!velocity@{velocity}}
+\index{velocity@{velocity}!Frame\+Calculations@{Frame\+Calculations}}
+\subsubsection{\texorpdfstring{velocity()}{velocity()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_vector3_d}{Vector3D}} Frame\+Calculations\+::velocity (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_vector3_d}{Vector3D}}}]{point,  }\item[{const \mbox{\hyperlink{class_vector3_d}{Vector3D}}}]{stream\+Vel,  }\item[{const Q\+Vector$<$ \mbox{\hyperlink{class_vorton}{Vorton}} $>$ \&}]{vortons,  }\item[{const Q\+Vector$<$ std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{class_multi_frame}{Multi\+Frame}} $>$$>$}]{frames }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Функция расчета скорости от вектора вортонов и вектора рамок в точке. 
+\begin{DoxyParams}{Аргументы}
+{\em point} & Точка расчета \\
+\hline
+{\em stream\+Vel} & Скорость потока \\
+\hline
+{\em vortons} & Вектор, содержащий вортоны \\
+\hline
+{\em frames} & Вектор, содержащий рамки \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Возвращает}
+Значение скорости 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_frame_calculations_aff26c6410791c4d75edb5c138df673bf}\label{class_frame_calculations_aff26c6410791c4d75edb5c138df673bf}} 
+\index{Frame\+Calculations@{Frame\+Calculations}!velocity@{velocity}}
+\index{velocity@{velocity}!Frame\+Calculations@{Frame\+Calculations}}
+\subsubsection{\texorpdfstring{velocity()}{velocity()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_vector3_d}{Vector3D}} Frame\+Calculations\+::velocity (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_vector3_d}{Vector3D}}}]{point,  }\item[{const \mbox{\hyperlink{class_vector3_d}{Vector3D}}}]{stream\+Vel,  }\item[{const Q\+Vector$<$ \mbox{\hyperlink{class_vorton}{Vorton}} $>$ \&}]{vortons }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Функция расчета скорости от вектора вортонов в точке. Эта функция перегружена и предоставляется исключительно для удобства использования. Она отличается от вышеупомянутой только фактическими аргументами. 
+\begin{DoxyParams}{Аргументы}
+{\em point} & Точка расчета \\
+\hline
+{\em stream\+Vel} & Скорость потока \\
+\hline
+{\em vortons} & Вектор, содержащий вортоны \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Возвращает}
+Значение скорости 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_frame_calculations_a970373138ceb791f8fe4983be4fe3453}\label{class_frame_calculations_a970373138ceb791f8fe4983be4fe3453}} 
+\index{Frame\+Calculations@{Frame\+Calculations}!velocity\+And\+Bsymm@{velocity\+And\+Bsymm}}
+\index{velocity\+And\+Bsymm@{velocity\+And\+Bsymm}!Frame\+Calculations@{Frame\+Calculations}}
+\subsubsection{\texorpdfstring{velocity\+And\+Bsymm()}{velocityAndBsymm()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_vel_bsym}{Vel\+Bsym}} Frame\+Calculations\+::velocity\+And\+Bsymm (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_vector3_d}{Vector3D}}}]{point,  }\item[{const \mbox{\hyperlink{class_vector3_d}{Vector3D}}}]{stream\+Vel,  }\item[{const Q\+Vector$<$ \mbox{\hyperlink{class_vorton}{Vorton}} $>$ \&}]{vortons }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Функция расчета скорости и тензора деформации от вектора вортонов в точке. 
+\begin{DoxyParams}{Аргументы}
+{\em point} & Точка расчета \\
+\hline
+{\em stream\+Vel} & Скорость потока \\
+\hline
+{\em vortons} & Вектор, содержащий вортоны \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Возвращает}
+Значение скорости и тензора деформации 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_frame_calculations_a8d7e2813ad4725d6866ecfe3b5a1b76c}\label{class_frame_calculations_a8d7e2813ad4725d6866ecfe3b5a1b76c}} 
+\index{Frame\+Calculations@{Frame\+Calculations}!vorticities\+Calc@{vorticities\+Calc}}
+\index{vorticities\+Calc@{vorticities\+Calc}!Frame\+Calculations@{Frame\+Calculations}}
+\subsubsection{\texorpdfstring{vorticities\+Calc()}{vorticitiesCalc()}}
+{\footnotesize\ttfamily Eigen\+::\+Vector\+Xd Frame\+Calculations\+::vorticities\+Calc (\begin{DoxyParamCaption}\item[{const Eigen\+::\+Vector\+Xd \&}]{column }\end{DoxyParamCaption})}
+
+Рассчитывает значения столбца x путем решения СЛАУ вида A$\ast$x=b, где А-\/матрица, b-\/известный столбец. 
+\begin{DoxyParams}{Аргументы}
+{\em column} & Столбец b \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Возвращает}
+Столбец x, содержащий значения завихренностей рамок 
+\end{DoxyReturn}
+
+
+Объявления и описания членов классов находятся в файлах\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Users/\+Vasily/\+Documents/\+Vortex\+Method/\mbox{\hyperlink{framecalculations_8h}{framecalculations.\+h}}\item 
+C\+:/\+Users/\+Vasily/\+Documents/\+Vortex\+Method/framecalculations.\+cpp\end{DoxyCompactItemize}

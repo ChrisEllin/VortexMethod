@@ -1,0 +1,334 @@
+\hypertarget{class_vector3_d}{}\section{Класс Vector3D}
+\label{class_vector3_d}\index{Vector3D@{Vector3D}}
+
+
+Класс, реализующий трехмерный вектор с double-\/компонентами  
+
+
+
+
+{\ttfamily \#include $<$vector3d.\+h$>$}
+
+\subsection*{Открытые члены}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_vector3_d_a0b11a8d75da427b27443d8a94d0d296c}{Vector3D}} ()
+\item 
+\mbox{\hyperlink{class_vector3_d_ae515779735e4910e8861bbaa746b6e30}{Vector3D}} (const double \+\_\+x, const double \+\_\+y, const double \+\_\+z)
+\item 
+double \mbox{\hyperlink{class_vector3_d_a4ddb90e85e10f0f32475725cb966a5ce}{length}} () const
+\item 
+double \mbox{\hyperlink{class_vector3_d_a07018ea108ca8aa4d64388fcb30b02bc}{length\+Squared}} () const
+\item 
+\mbox{\hyperlink{class_vector3_d}{Vector3D}} \mbox{\hyperlink{class_vector3_d_af0693e0fd4ccc98bab05cc2e09916d0a}{normalized}} ()
+\item 
+void \mbox{\hyperlink{class_vector3_d_acee0e4ffb2a89c454b1d68e0c01e511b}{normalize}} (\mbox{\hyperlink{class_vector3_d}{Vector3D}} \&vec)
+\item 
+void \mbox{\hyperlink{class_vector3_d_a16dc9dadadf511465fea472f8c436cde}{rotated}} (const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&axis, const double theta)
+\item 
+void \mbox{\hyperlink{class_vector3_d_ae381f80124491707b36640a488515b61}{x}} (const double \+\_\+x)
+\item 
+void \mbox{\hyperlink{class_vector3_d_a70ea2945f8197058fb2426c2a2c08bf2}{y}} (const double \+\_\+y)
+\item 
+void \mbox{\hyperlink{class_vector3_d_a08e854517896eedfaf20fc059e6ba468}{z}} (const double \+\_\+z)
+\item 
+double \mbox{\hyperlink{class_vector3_d_ac86d9a556616f4c51fecbaf7d8658ce8}{x}} () const
+\item 
+double \mbox{\hyperlink{class_vector3_d_a7146d35db2c1bf7606c8290282a423ec}{y}} () const
+\item 
+double \mbox{\hyperlink{class_vector3_d_af4ae427e82a23af845f804106daed509}{z}} () const
+\item 
+void \mbox{\hyperlink{class_vector3_d_acc864b8a5dbf26d7a5be215618c1108f}{translate}} (const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&translation)
+\item 
+void \mbox{\hyperlink{class_vector3_d_a16ee6c0c6055de6015e06aa6987bde71}{operator=}} (const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&vec1)
+\item 
+\mbox{\hyperlink{class_vector3_d}{Vector3D}} \mbox{\hyperlink{class_vector3_d_a4b3dc84bd0535b0dabda0571928d47f0}{operator-\/}} ()
+\item 
+double \& \mbox{\hyperlink{class_vector3_d_a9f879580bde4ca8b893df5f427c0729d}{operator\mbox{[}$\,$\mbox{]}}} (const double i)
+\end{DoxyCompactItemize}
+\subsection*{Открытые статические члены}
+\begin{DoxyCompactItemize}
+\item 
+static double \mbox{\hyperlink{class_vector3_d_ac886e5b1f67b986be8c9557e83e19c52}{dot\+Product}} (const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&vec1, const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&vec2)
+\item 
+static \mbox{\hyperlink{class_vector3_d}{Vector3D}} \mbox{\hyperlink{class_vector3_d_af285c3999c9bd477c0dff411f05c7902}{cross\+Product}} (const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&vec1, const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&vec2)
+\item 
+static double \mbox{\hyperlink{class_vector3_d_ac9fc2d629f5edaf274bbcc767804c5ff}{mixed\+Product}} (const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&vec1, const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&vec2, const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&vec3)
+\item 
+static Q\+Vector3D \mbox{\hyperlink{class_vector3_d_a049b8308f9e44f6d1ef0cd053dd68e58}{to\+Q\+Vector3D}} (const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&vec)
+\item 
+static int \mbox{\hyperlink{class_vector3_d_a33ed676fd6cbba492295d9cadf5df496}{sign}} (int val)
+\item 
+static int \mbox{\hyperlink{class_vector3_d_a7572a5234eaf68003be04b2677d8f7a3}{sign}} (double val)
+\end{DoxyCompactItemize}
+\subsection*{Закрытые данные}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_vector3_d_af75e92fa1c54d30c576ec5730ae8912d}\label{class_vector3_d_af75e92fa1c54d30c576ec5730ae8912d}} 
+double \mbox{\hyperlink{class_vector3_d_af75e92fa1c54d30c576ec5730ae8912d}{X}}
+\begin{DoxyCompactList}\small\item\em X компонента вектора \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_vector3_d_a6900dbbb9cfeaa8c96acde6adc01fea4}\label{class_vector3_d_a6900dbbb9cfeaa8c96acde6adc01fea4}} 
+double \mbox{\hyperlink{class_vector3_d_a6900dbbb9cfeaa8c96acde6adc01fea4}{Y}}
+\begin{DoxyCompactList}\small\item\em Y компонента вектора \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_vector3_d_a44bb438bbffea59864149151096db764}\label{class_vector3_d_a44bb438bbffea59864149151096db764}} 
+double \mbox{\hyperlink{class_vector3_d_a44bb438bbffea59864149151096db764}{Z}}
+\begin{DoxyCompactList}\small\item\em Z компонента вектора \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Подробное описание}
+Класс, реализующий трехмерный вектор с double-\/компонентами 
+
+\subsection{Конструктор(ы)}
+\mbox{\Hypertarget{class_vector3_d_a0b11a8d75da427b27443d8a94d0d296c}\label{class_vector3_d_a0b11a8d75da427b27443d8a94d0d296c}} 
+\index{Vector3D@{Vector3D}!Vector3D@{Vector3D}}
+\index{Vector3D@{Vector3D}!Vector3D@{Vector3D}}
+\subsubsection{\texorpdfstring{Vector3\+D()}{Vector3D()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Vector3\+D\+::\+Vector3D (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Создает нулевой вектор \mbox{\Hypertarget{class_vector3_d_ae515779735e4910e8861bbaa746b6e30}\label{class_vector3_d_ae515779735e4910e8861bbaa746b6e30}} 
+\index{Vector3D@{Vector3D}!Vector3D@{Vector3D}}
+\index{Vector3D@{Vector3D}!Vector3D@{Vector3D}}
+\subsubsection{\texorpdfstring{Vector3\+D()}{Vector3D()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Vector3\+D\+::\+Vector3D (\begin{DoxyParamCaption}\item[{const double}]{\+\_\+x,  }\item[{const double}]{\+\_\+y,  }\item[{const double}]{\+\_\+z }\end{DoxyParamCaption})}
+
+Создает вектор с заданными значениями 
+\begin{DoxyParams}{Аргументы}
+{\em \+\_\+x} & заданная компонента X \\
+\hline
+{\em \+\_\+y} & заданная компонента Y \\
+\hline
+{\em \+\_\+z} & заданная компонента Z \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{Методы}
+\mbox{\Hypertarget{class_vector3_d_af285c3999c9bd477c0dff411f05c7902}\label{class_vector3_d_af285c3999c9bd477c0dff411f05c7902}} 
+\index{Vector3D@{Vector3D}!cross\+Product@{cross\+Product}}
+\index{cross\+Product@{cross\+Product}!Vector3D@{Vector3D}}
+\subsubsection{\texorpdfstring{cross\+Product()}{crossProduct()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_vector3_d}{Vector3D}} Vector3\+D\+::cross\+Product (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&}]{vec1,  }\item[{const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&}]{vec2 }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Возвращает векторное произведение двух векторов 
+\begin{DoxyParams}{Аргументы}
+{\em vec1,vec2} & Векторы, участвующие в произведении \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Возвращает}
+Значение векторное произведения 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_vector3_d_ac886e5b1f67b986be8c9557e83e19c52}\label{class_vector3_d_ac886e5b1f67b986be8c9557e83e19c52}} 
+\index{Vector3D@{Vector3D}!dot\+Product@{dot\+Product}}
+\index{dot\+Product@{dot\+Product}!Vector3D@{Vector3D}}
+\subsubsection{\texorpdfstring{dot\+Product()}{dotProduct()}}
+{\footnotesize\ttfamily double Vector3\+D\+::dot\+Product (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&}]{vec1,  }\item[{const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&}]{vec2 }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Возвращает скалярное произведение двух векторов 
+\begin{DoxyParams}{Аргументы}
+{\em vec1,vec2} & Векторы, участвующие в произведении \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Возвращает}
+Значение скалярного произведения 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_vector3_d_a4ddb90e85e10f0f32475725cb966a5ce}\label{class_vector3_d_a4ddb90e85e10f0f32475725cb966a5ce}} 
+\index{Vector3D@{Vector3D}!length@{length}}
+\index{length@{length}!Vector3D@{Vector3D}}
+\subsubsection{\texorpdfstring{length()}{length()}}
+{\footnotesize\ttfamily double Vector3\+D\+::length (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+Возвращает значение длины вектора \begin{DoxyReturn}{Возвращает}
+Длина вектора 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_vector3_d_a07018ea108ca8aa4d64388fcb30b02bc}\label{class_vector3_d_a07018ea108ca8aa4d64388fcb30b02bc}} 
+\index{Vector3D@{Vector3D}!length\+Squared@{length\+Squared}}
+\index{length\+Squared@{length\+Squared}!Vector3D@{Vector3D}}
+\subsubsection{\texorpdfstring{length\+Squared()}{lengthSquared()}}
+{\footnotesize\ttfamily double Vector3\+D\+::length\+Squared (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+Возвращает квадрат значения длины вектора \begin{DoxyReturn}{Возвращает}
+Квадрат длины вектора 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_vector3_d_ac9fc2d629f5edaf274bbcc767804c5ff}\label{class_vector3_d_ac9fc2d629f5edaf274bbcc767804c5ff}} 
+\index{Vector3D@{Vector3D}!mixed\+Product@{mixed\+Product}}
+\index{mixed\+Product@{mixed\+Product}!Vector3D@{Vector3D}}
+\subsubsection{\texorpdfstring{mixed\+Product()}{mixedProduct()}}
+{\footnotesize\ttfamily double Vector3\+D\+::mixed\+Product (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&}]{vec1,  }\item[{const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&}]{vec2,  }\item[{const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&}]{vec3 }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Возвращает смешанное произведение двух векторов 
+\begin{DoxyParams}{Аргументы}
+{\em vec1,vec2,vec3} & Векторы, участвующие в произведении \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Возвращает}
+Значение смешанного произведения 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_vector3_d_acee0e4ffb2a89c454b1d68e0c01e511b}\label{class_vector3_d_acee0e4ffb2a89c454b1d68e0c01e511b}} 
+\index{Vector3D@{Vector3D}!normalize@{normalize}}
+\index{normalize@{normalize}!Vector3D@{Vector3D}}
+\subsubsection{\texorpdfstring{normalize()}{normalize()}}
+{\footnotesize\ttfamily void Vector3\+D\+::normalize (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_vector3_d}{Vector3D}} \&}]{vec }\end{DoxyParamCaption})}
+
+Нормирует вектор \mbox{\Hypertarget{class_vector3_d_af0693e0fd4ccc98bab05cc2e09916d0a}\label{class_vector3_d_af0693e0fd4ccc98bab05cc2e09916d0a}} 
+\index{Vector3D@{Vector3D}!normalized@{normalized}}
+\index{normalized@{normalized}!Vector3D@{Vector3D}}
+\subsubsection{\texorpdfstring{normalized()}{normalized()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_vector3_d}{Vector3D}} Vector3\+D\+::normalized (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Возвращает нормированный вектор \begin{DoxyReturn}{Возвращает}
+Нормированный вектор 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_vector3_d_a4b3dc84bd0535b0dabda0571928d47f0}\label{class_vector3_d_a4b3dc84bd0535b0dabda0571928d47f0}} 
+\index{Vector3D@{Vector3D}!operator-\/@{operator-\/}}
+\index{operator-\/@{operator-\/}!Vector3D@{Vector3D}}
+\subsubsection{\texorpdfstring{operator-\/()}{operator-()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_vector3_d}{Vector3D}} Vector3\+D\+::operator-\/ (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Оператор смены знака трехмерного вектора \mbox{\Hypertarget{class_vector3_d_a16ee6c0c6055de6015e06aa6987bde71}\label{class_vector3_d_a16ee6c0c6055de6015e06aa6987bde71}} 
+\index{Vector3D@{Vector3D}!operator=@{operator=}}
+\index{operator=@{operator=}!Vector3D@{Vector3D}}
+\subsubsection{\texorpdfstring{operator=()}{operator=()}}
+{\footnotesize\ttfamily void Vector3\+D\+::operator= (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&}]{vec1 }\end{DoxyParamCaption})}
+
+Оператор копирования 
+\begin{DoxyParams}{Аргументы}
+{\em vec1} & Новое значение вектора \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_vector3_d_a9f879580bde4ca8b893df5f427c0729d}\label{class_vector3_d_a9f879580bde4ca8b893df5f427c0729d}} 
+\index{Vector3D@{Vector3D}!operator\mbox{[}\mbox{]}@{operator[]}}
+\index{operator\mbox{[}\mbox{]}@{operator[]}!Vector3D@{Vector3D}}
+\subsubsection{\texorpdfstring{operator[]()}{operator[]()}}
+{\footnotesize\ttfamily double \& Vector3\+D\+::operator\mbox{[}$\,$\mbox{]} (\begin{DoxyParamCaption}\item[{const double}]{i }\end{DoxyParamCaption})}
+
+Возвращает указанную компоненту вектора 
+\begin{DoxyParams}{Аргументы}
+{\em i} & Номер компоненты вектора \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Возвращает}
+Значение компоненты вектора 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_vector3_d_a16dc9dadadf511465fea472f8c436cde}\label{class_vector3_d_a16dc9dadadf511465fea472f8c436cde}} 
+\index{Vector3D@{Vector3D}!rotated@{rotated}}
+\index{rotated@{rotated}!Vector3D@{Vector3D}}
+\subsubsection{\texorpdfstring{rotated()}{rotated()}}
+{\footnotesize\ttfamily void Vector3\+D\+::rotated (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&}]{axis,  }\item[{const double}]{theta }\end{DoxyParamCaption})}
+
+Поворачивает вектор 
+\begin{DoxyParams}{Аргументы}
+{\em axis} & Ось поворота \\
+\hline
+{\em theta} & Угол поворота \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_vector3_d_a33ed676fd6cbba492295d9cadf5df496}\label{class_vector3_d_a33ed676fd6cbba492295d9cadf5df496}} 
+\index{Vector3D@{Vector3D}!sign@{sign}}
+\index{sign@{sign}!Vector3D@{Vector3D}}
+\subsubsection{\texorpdfstring{sign()}{sign()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily int Vector3\+D\+::sign (\begin{DoxyParamCaption}\item[{int}]{val }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Рассчитывает сигнум-\/функцию от переменной 
+\begin{DoxyParams}{Аргументы}
+{\em val} & Значение переменной \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Возвращает}
+Значение сигнум-\/функции 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_vector3_d_a7572a5234eaf68003be04b2677d8f7a3}\label{class_vector3_d_a7572a5234eaf68003be04b2677d8f7a3}} 
+\index{Vector3D@{Vector3D}!sign@{sign}}
+\index{sign@{sign}!Vector3D@{Vector3D}}
+\subsubsection{\texorpdfstring{sign()}{sign()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily int Vector3\+D\+::sign (\begin{DoxyParamCaption}\item[{double}]{val }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Рассчитывает сигнум-\/функцию от переменной 
+\begin{DoxyParams}{Аргументы}
+{\em val} & Значение переменной \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Возвращает}
+Значение сигнум-\/функции 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_vector3_d_a049b8308f9e44f6d1ef0cd053dd68e58}\label{class_vector3_d_a049b8308f9e44f6d1ef0cd053dd68e58}} 
+\index{Vector3D@{Vector3D}!to\+Q\+Vector3D@{to\+Q\+Vector3D}}
+\index{to\+Q\+Vector3D@{to\+Q\+Vector3D}!Vector3D@{Vector3D}}
+\subsubsection{\texorpdfstring{to\+Q\+Vector3\+D()}{toQVector3D()}}
+{\footnotesize\ttfamily Q\+Vector3D Vector3\+D\+::to\+Q\+Vector3D (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&}]{vec }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Переводит вектор в Q\+Vector3D 
+\begin{DoxyParams}{Аргументы}
+{\em vec} & Вектор для перевода \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Возвращает}
+Полученный вектор 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_vector3_d_acc864b8a5dbf26d7a5be215618c1108f}\label{class_vector3_d_acc864b8a5dbf26d7a5be215618c1108f}} 
+\index{Vector3D@{Vector3D}!translate@{translate}}
+\index{translate@{translate}!Vector3D@{Vector3D}}
+\subsubsection{\texorpdfstring{translate()}{translate()}}
+{\footnotesize\ttfamily void Vector3\+D\+::translate (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&}]{translation }\end{DoxyParamCaption})}
+
+Переносит вектор на величину вектора 
+\begin{DoxyParams}{Аргументы}
+{\em translation} & Вектор переноса \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_vector3_d_ae381f80124491707b36640a488515b61}\label{class_vector3_d_ae381f80124491707b36640a488515b61}} 
+\index{Vector3D@{Vector3D}!x@{x}}
+\index{x@{x}!Vector3D@{Vector3D}}
+\subsubsection{\texorpdfstring{x()}{x()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily void Vector3\+D\+::x (\begin{DoxyParamCaption}\item[{const double}]{\+\_\+x }\end{DoxyParamCaption})}
+
+Устанавливает значение координаты X 
+\begin{DoxyParams}{Аргументы}
+{\em \+\_\+x} & Задаваемое значение X \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_vector3_d_ac86d9a556616f4c51fecbaf7d8658ce8}\label{class_vector3_d_ac86d9a556616f4c51fecbaf7d8658ce8}} 
+\index{Vector3D@{Vector3D}!x@{x}}
+\index{x@{x}!Vector3D@{Vector3D}}
+\subsubsection{\texorpdfstring{x()}{x()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily double Vector3\+D\+::x (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+Возвращает значение координаты X \mbox{\Hypertarget{class_vector3_d_a70ea2945f8197058fb2426c2a2c08bf2}\label{class_vector3_d_a70ea2945f8197058fb2426c2a2c08bf2}} 
+\index{Vector3D@{Vector3D}!y@{y}}
+\index{y@{y}!Vector3D@{Vector3D}}
+\subsubsection{\texorpdfstring{y()}{y()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily void Vector3\+D\+::y (\begin{DoxyParamCaption}\item[{const double}]{\+\_\+y }\end{DoxyParamCaption})}
+
+Устанавливает значение координаты Y 
+\begin{DoxyParams}{Аргументы}
+{\em \+\_\+y} & Задаваемое значение Y \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_vector3_d_a7146d35db2c1bf7606c8290282a423ec}\label{class_vector3_d_a7146d35db2c1bf7606c8290282a423ec}} 
+\index{Vector3D@{Vector3D}!y@{y}}
+\index{y@{y}!Vector3D@{Vector3D}}
+\subsubsection{\texorpdfstring{y()}{y()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily double Vector3\+D\+::y (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+Возвращает значение координаты Y \mbox{\Hypertarget{class_vector3_d_a08e854517896eedfaf20fc059e6ba468}\label{class_vector3_d_a08e854517896eedfaf20fc059e6ba468}} 
+\index{Vector3D@{Vector3D}!z@{z}}
+\index{z@{z}!Vector3D@{Vector3D}}
+\subsubsection{\texorpdfstring{z()}{z()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily void Vector3\+D\+::z (\begin{DoxyParamCaption}\item[{const double}]{\+\_\+z }\end{DoxyParamCaption})}
+
+Устанавливает значение координаты Z 
+\begin{DoxyParams}{Аргументы}
+{\em \+\_\+z} & Задаваемое значение Z \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_vector3_d_af4ae427e82a23af845f804106daed509}\label{class_vector3_d_af4ae427e82a23af845f804106daed509}} 
+\index{Vector3D@{Vector3D}!z@{z}}
+\index{z@{z}!Vector3D@{Vector3D}}
+\subsubsection{\texorpdfstring{z()}{z()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily double Vector3\+D\+::z (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+Возвращает значение координаты Z 
+
+Объявления и описания членов классов находятся в файлах\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Users/\+Vasily/\+Documents/\+Vortex\+Method/vector3d.\+h\item 
+C\+:/\+Users/\+Vasily/\+Documents/\+Vortex\+Method/vector3d.\+cpp\end{DoxyCompactItemize}

@@ -1,0 +1,46 @@
+\hypertarget{struct_parallel}{}\section{Структура Parallel}
+\label{struct_parallel}\index{Parallel@{Parallel}}
+
+
+Контейнер, представляющий собой структуру для параллельных вычислений  
+
+
+
+
+{\ttfamily \#include $<$framecalculations.\+h$>$}
+
+
+
+Граф связей класса Parallel\+:
+% FIG 0
+\subsection*{Открытые атрибуты}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{struct_parallel_a2da6b701237c06bc0b3710843a9c6506}\label{struct_parallel_a2da6b701237c06bc0b3710843a9c6506}} 
+Q\+Vector$<$ \mbox{\hyperlink{class_vorton}{Vorton}} $>$ $\ast$ \mbox{\hyperlink{struct_parallel_a2da6b701237c06bc0b3710843a9c6506}{Vortons}}
+\begin{DoxyCompactList}\small\item\em Указатель на вектор вортонов \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_parallel_a6d8a25edea2e7f6f38f665152007306b}\label{struct_parallel_a6d8a25edea2e7f6f38f665152007306b}} 
+Q\+Vector$<$ \mbox{\hyperlink{class_vorton}{Vorton}} $>$ $\ast$ \mbox{\hyperlink{struct_parallel_a6d8a25edea2e7f6f38f665152007306b}{free\+Vortons}}
+\begin{DoxyCompactList}\small\item\em Указатель на вектор вортонов в потоке \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_parallel_aa0b4aef398478a70836363944df7253d}\label{struct_parallel_aa0b4aef398478a70836363944df7253d}} 
+Q\+Vector$<$ std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{class_multi_frame}{Multi\+Frame}} $>$ $>$ $\ast$ \mbox{\hyperlink{struct_parallel_aa0b4aef398478a70836363944df7253d}{frames}}
+\begin{DoxyCompactList}\small\item\em Указатель на вектор рамок \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_parallel_a03856e8f10a990c5170ba56936c05f29}\label{struct_parallel_a03856e8f10a990c5170ba56936c05f29}} 
+int \mbox{\hyperlink{struct_parallel_a03856e8f10a990c5170ba56936c05f29}{num}}
+\begin{DoxyCompactList}\small\item\em Номер текущей рамки \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_parallel_aaf9e67ee27a7e48e5089af613bd06b99}\label{struct_parallel_aaf9e67ee27a7e48e5089af613bd06b99}} 
+\mbox{\hyperlink{class_vector3_d}{Vector3D}} \mbox{\hyperlink{struct_parallel_aaf9e67ee27a7e48e5089af613bd06b99}{stream\+Vel}}
+\begin{DoxyCompactList}\small\item\em Скорость потока \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_parallel_a1ec7b4c02517f9d28774593160dd3a31}\label{struct_parallel_a1ec7b4c02517f9d28774593160dd3a31}} 
+double \mbox{\hyperlink{struct_parallel_a1ec7b4c02517f9d28774593160dd3a31}{tau}}
+\begin{DoxyCompactList}\small\item\em Размер шага \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Подробное описание}
+Контейнер, представляющий собой структуру для параллельных вычислений 
+
+Для дальнейшего распараллеливания с использованием Qt\+Concurrent создается структура, хранящая в себе указатель на вектор вортонов, указатель на вектор свободных вортонов, указатель на вектор рамок, номер текущей рамки для вычислений, скорость потока и размер шага 
+
+Объявления и описания членов структуры находятся в файле\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Users/\+Vasily/\+Documents/\+Vortex\+Method/\mbox{\hyperlink{framecalculations_8h}{framecalculations.\+h}}\end{DoxyCompactItemize}

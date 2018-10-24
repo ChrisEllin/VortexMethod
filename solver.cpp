@@ -1,11 +1,19 @@
 #include "solver.h"
 bool Solver::explosion=false;
 
+/*!
+Создает экземпляр класса с нулевыми параметрами
+*/
+
 Solver::Solver()
 {
 
 }
 
+/*!
+Создает экземпляр класса для расчета неподвижного тела с заданными параметрами
+\param parameters Параметры расчета
+*/
 Solver::Solver(const SolverParameters& parameters)
 {
     solvPar=parameters;
@@ -13,6 +21,11 @@ Solver::Solver(const SolverParameters& parameters)
     forces.resize(solvPar.stepsNum);
 }
 
+/*!
+Создает экземпляр класса для расчета движущегося тела с заданными параметрами
+\param parameters Параметры расчета
+\param motionParameters Параметры свободного движения
+*/
 Solver::Solver(const SolverParameters &parameters, const FreeMotionParameters &motionParameters)
 {
     solvPar=parameters;
@@ -21,6 +34,10 @@ Solver::Solver(const SolverParameters &parameters, const FreeMotionParameters &m
     forces.resize(solvPar.stepsNum);
 }
 
+/*!
+Осуществляет расчет неподвижной сферы с заданными параметрами
+\param fragPar Параметры разбиения сферы
+*/
 void Solver::sphereSolver(const FragmentationParameters &fragPar)
 {
     QTime start=QTime::currentTime();
@@ -105,6 +122,10 @@ void Solver::sphereSolver(const FragmentationParameters &fragPar)
     delete logger;
 }
 
+/*!
+Осуществляет расчет движущейся сферы с заданными параметрами
+\param fragPar Параметры разбиения сферы
+*/
 void Solver::sphereFreeMotionSolver(const FragmentationParameters &fragPar)
 {
     QTime start=QTime::currentTime();
@@ -181,6 +202,10 @@ void Solver::sphereFreeMotionSolver(const FragmentationParameters &fragPar)
     logger.closeFiles();
 }
 
+/*!
+Осуществляет расчет неподвижного цилиндра с заданными параметрами
+\param fragPar Параметры разбиения цилиндра
+*/
 void Solver::cylinderSolver(const FragmentationParameters& fragPar)
 {
     QTime start=QTime::currentTime();
@@ -247,6 +272,10 @@ void Solver::cylinderSolver(const FragmentationParameters& fragPar)
     logger.closeFiles();
 }
 
+/*!
+Осуществляет расчет неподвижного тела вращения с заданными параметрами
+\param fragPar Параметры разбиения тела вращения
+*/
 void Solver::rotationBodySolver(const FragmentationParameters &fragPar)
 {
     QTime start=QTime::currentTime();
@@ -314,6 +343,10 @@ void Solver::rotationBodySolver(const FragmentationParameters &fragPar)
     logger.closeFiles();
 }
 
+/*!
+Осуществляет расчет неподвижного тела вращения со срезом с заданными параметрами
+\param fragPar Параметры разбиения тела вращения со срезом
+*/
 void Solver::rotationCutBodySolver(const FragmentationParameters &fragPar)
 {
     QTime start=QTime::currentTime();
@@ -382,6 +415,11 @@ void Solver::rotationCutBodySolver(const FragmentationParameters &fragPar)
     logger.closeFiles();
 }
 
+/*!
+Осуществляет расчет неподвижного тела вращения со срезом с заданными параметрами вблизи экрана
+\param fragPar Параметры разбиения тела вращения со срезом
+\param screenDistance Расстояние между дном тела и экраном
+*/
 void Solver::rotationCutBodySolverNearScreen(const FragmentationParameters &fragPar, const double screenDistance)
 {
     QTime start=QTime::currentTime();
@@ -420,7 +458,7 @@ void Solver::rotationCutBodySolverNearScreen(const FragmentationParameters &frag
         QVector<Vorton> symNewVortons=newVortons;
         QVector<Vorton> symFreeVortons=freeVortons;
         QVector<std::shared_ptr<MultiFrame>> symFrames=FrameCalculations::copyFrames(frames);
-        reflect(symFreeVortons,symNewVortons,symFrames);
+        FrameCalculations::reflect(symFreeVortons,symNewVortons,symFrames);
 
         functions.displacementLaunchCalc(freeVortons,newVortons,symFreeVortons,symNewVortons, solvPar.tau,solvPar.streamVel,solvPar.eDelta,solvPar.fiMax,solvPar.maxMove);
         Vector3D force=functions.forceCalc(solvPar.streamVel, solvPar.streamPres,solvPar.density,frames+symFrames,freeVortons, solvPar.tau, squares, controlPointsRaised, normals);
@@ -458,6 +496,10 @@ void Solver::rotationCutBodySolverNearScreen(const FragmentationParameters &frag
     logger.closeFiles();
 }
 
+/*!
+Осуществляет расчет движущегося тела вращения со срезом с заданными параметрами
+\param fragPar Параметры разбиения тела вращения со срезом
+*/
 void Solver::rotationCutBodyFreeMotionSolver(const FragmentationParameters &fragPar)
 {
         QTime start=QTime::currentTime();
@@ -527,6 +569,10 @@ void Solver::rotationCutBodyFreeMotionSolver(const FragmentationParameters &frag
         logger.closeFiles();
 }
 
+/*!
+Осуществляет расчет задачи старта для тела вращения со срезом с заданными параметрами
+\param fragPar Параметры разбиения тела вращения со срезом
+*/
 void Solver::rotationCutBodyLaunchSolver(const FragmentationParameters &fragPar)
 {
     QTime start=QTime::currentTime();
@@ -538,8 +584,10 @@ void Solver::rotationCutBodyLaunchSolver(const FragmentationParameters &fragPar)
     QVector<Vorton> newVortons;
     emit updateRotationCutBodyMaximum(solvPar.stepsNum-1);
 
-    double xBeg=fragPar.rotationBodyXBeg;
-    double xEnd=fragPar.rotationBodyXEnd;
+//    double xBeg=fragPar.rotationBodyXBeg;
+//    double xEnd=fragPar.rotationBodyXEnd;
+    double xBeg=0.0;
+    double xEnd=0.0;
     logger.writePassport(solvPar,fragPar);
     BodyFragmentation fragmentation(BodyType::ROTATIONBOTTOMCUT, fragPar, true);
     for (int i=0; i<solvPar.stepsNum; i++)
@@ -550,10 +598,21 @@ void Solver::rotationCutBodyLaunchSolver(const FragmentationParameters &fragPar)
         QVector<double> squares=fragmentation.getSquares();
         QVector<Vector3D> controlPointsRaised=fragmentation.getControlPointsRaised();
         QVector<std::shared_ptr<MultiFrame>> frames=fragmentation.getFrames();
+        FrameCalculations::translateBody(translation, frames, controlPoints, controlPointsRaised, center);
+        double ledge=freeMotionPar.bodyVel.length()*solvPar.tau*(i+1);
+        if (ledge<fragPar.rotationBodyXEnd-fragPar.rotationBodyXBeg)
+        {
+            xBeg=ledge;
+            xEnd=0.0;
+        }
+        else
+        {
+            xBeg=ledge;
+            xEnd+=freeMotionPar.bodyVel.length()*solvPar.tau;
+        }
 
         Vector3D translation=freeMotionPar.bodyVel*solvPar.tau*(i+1);
         Vector3D relVel=solvPar.streamVel-freeMotionPar.bodyVel;
-
 
         FrameCalculations functions;
         functions.matrixCalc(frames,controlPoints,normals);
@@ -568,13 +627,17 @@ void Solver::rotationCutBodyLaunchSolver(const FragmentationParameters &fragPar)
         FrameCalculations::setVorticity(frames,vorticities);
 
         newVortons=FrameCalculations::getLiftedFrameVortons(frames,normals,solvPar.deltaUp);
+        //FzrameCalculations::translateVortons(translation,newVortons);
         functions.unionVortons(newVortons,solvPar.eStar,solvPar.eDoubleStar,fragPar.vortonsRad);
         functions.removeSmallVorticity(newVortons,solvPar.minVorticity);
+
+
+
 
         QVector<Vorton> symNewVortons=newVortons;
         QVector<Vorton> symFreeVortons=freeVortons;
         QVector<std::shared_ptr<MultiFrame>> symFrames=FrameCalculations::copyFrames(frames);
-        reflect(symFreeVortons,symNewVortons,symFrames);
+        FrameCalculations::reflect(symFreeVortons,symNewVortons,symFrames);
 
         functions.displacementLaunchCalc(freeVortons,newVortons,symFreeVortons, symNewVortons, solvPar.tau,relVel,solvPar.eDelta,solvPar.fiMax,solvPar.maxMove);
         Vector3D force=functions.forceCalc(relVel, solvPar.streamPres,solvPar.density,frames+symFrames,freeVortons, solvPar.tau, squares, controlPointsRaised, normals);
@@ -601,12 +664,12 @@ void Solver::rotationCutBodyLaunchSolver(const FragmentationParameters &fragPar)
 
         functions.clear();
 
-        FrameCalculations::translateBody(translation, frames, controlPoints, controlPointsRaised, center, xBeg, xEnd);
-        FrameCalculations::translateVortons(translation,freeVortons);
+//        FrameCalculations::translateBody(translation, frames, controlPoints, controlPointsRaised, center, xBeg, xEnd, fragPar);
+//        FrameCalculations::translateVortons(translation,freeVortons);
         logger.writeLogs(i,stepTime.elapsed()*0.001,countersBeforeIntegration,countersAfterIntegration, timersBeforeIntegration, timersAfterIntegration, restrictions);
 
         emit sendProgressRotationCutBody(i);
-        emit repaintGUI(freeVortons+symFreeVortons, frames/*+symFrames*/);
+        emit repaintGUI(freeVortons/*+symFreeVortons*/, frames/*+symFrames*/);
 
 
     }
@@ -614,6 +677,11 @@ void Solver::rotationCutBodyLaunchSolver(const FragmentationParameters &fragPar)
     logger.closeFiles();
 }
 
+/*!
+Осуществляет вариацию для определения наилучших параметров сферы
+\param fragPar Параметры разбиения сферы
+\param variateEps Необходимость варьирования радиуса вортона
+*/
 void Solver::variateSphereParameters(FragmentationParameters fragPar, bool variateEps)
 {
 
@@ -766,6 +834,11 @@ void Solver::variateSphereParameters(FragmentationParameters fragPar, bool varia
     emit variatingFinished();
 }
 
+/*!
+Осуществляет вариацию для определения наилучших параметров цилиндра
+\param fragPar Параметры разбиения цилиндра
+\param variateEps Необходимость варьирования радиуса вортона
+*/
 void Solver::variateCylinderParameters(FragmentationParameters fragPar, bool variateEps)
 {
     FragmentationParameters resultFrag=fragPar;
@@ -917,6 +990,11 @@ void Solver::variateCylinderParameters(FragmentationParameters fragPar, bool var
     emit variatingFinished();
 }
 
+/*!
+Осуществляет вариацию для определения наилучших параметров тела вращения
+\param fragPar Параметры разбиения тела вращения
+\param variateEps Необходимость варьирования радиуса вортона
+*/
 void Solver::variateRotationBodyParameters(FragmentationParameters fragPar, bool variateEps)
 {
     FragmentationParameters resultFrag=fragPar;
@@ -1067,6 +1145,11 @@ void Solver::variateRotationBodyParameters(FragmentationParameters fragPar, bool
     emit variatingFinished();
 }
 
+/*!
+Осуществляет вариацию для определения наилучших параметров тела вращения со срезом
+\param fragPar Параметры разбиения тела вращения со срезом
+\param variateEps Необходимость варьирования радиуса вортона
+*/
 void Solver::variateRotationCutBodyParameters(FragmentationParameters fragPar, bool variateEps)
 {
     FragmentationParameters resultFrag=fragPar;
@@ -1217,37 +1300,10 @@ void Solver::variateRotationCutBodyParameters(FragmentationParameters fragPar, b
     emit variatingFinished();
 }
 
-void Solver::reflect(QVector<Vorton> &symFreeVortons, QVector<Vorton> &symNewVortons, QVector<std::shared_ptr<MultiFrame> > symFrames)
-{
-    for (int i=0; i<symFreeVortons.size(); i++)
-    {
-        symFreeVortons[i].setMid(Vector3D(-symFreeVortons[i].getMid().x(),symFreeVortons[i].getMid().y(),symFreeVortons[i].getMid().z()));
-        symFreeVortons[i].setTail(Vector3D(-symFreeVortons[i].getTail().x(),symFreeVortons[i].getTail().y(),symFreeVortons[i].getTail().z()));
-        symFreeVortons[i].setVorticity(-symFreeVortons[i].getVorticity());
-    }
-
-    for (int i=0; i<symNewVortons.size(); i++)
-    {
-        symNewVortons[i].setMid(Vector3D(-symNewVortons[i].getMid().x(),symNewVortons[i].getMid().y(),symNewVortons[i].getMid().z()));
-        symNewVortons[i].setTail(Vector3D(-symNewVortons[i].getTail().x(),symNewVortons[i].getTail().y(),symNewVortons[i].getTail().z()));
-        symNewVortons[i].setVorticity(-symNewVortons[i].getVorticity());
-
-    }
-
-    for (int i=0; i<symFrames.size(); i++)
-    {
-        for (int j=0; j<symFrames[i]->getAnglesNum(); j++)
-        {
-            symFrames[i]->at(j).setMid(Vector3D(-symFrames[i]->at(j).getMid().x(),symFrames[i]->at(j).getMid().y(),symFrames[i]->at(j).getMid().z()));
-            symFrames[i]->at(j).setTail(Vector3D(-symFrames[i]->at(j).getTail().x(),symFrames[i]->at(j).getTail().y(),symFrames[i]->at(j).getTail().z()));
-            symFrames[i]->setCenter(Vector3D(-symFrames[i]->getCenter().x(), symFrames[i]->getCenter().y(), symFrames[i]->getCenter().z()));
-            symFrames[i]->at(j).setVorticity(-symFrames[i]->at(j).getVorticity());
-        }
-    }
-}
-
-
-
+/*!
+Оператор копирования для класса
+\param solver Новое значение
+*/
 void Solver::operator =(const Solver &solver)
 {
     solvPar=solver.solvPar;
@@ -1256,6 +1312,14 @@ void Solver::operator =(const Solver &solver)
     forces=solver.forces;
 }
 
+/*!
+Функция проверки улучшения параметров для вариации (нахождение наименьшей дисперсии С)
+\param dispersion Новая дисперсия С
+\param oldDispersion Старая дисперсия С
+\param fragPar Текущие значения параметров разбиения
+\param resultFrag Лучшие значения параметров разбиения
+\param resultSolv Лучшие значения параметров расчета
+*/
 bool Solver::checkingVariate(double& dispersion, double& oldDispersion, FragmentationParameters& fragPar, FragmentationParameters& resultFrag, SolverParameters& resultSolv)
 {
     if (Solver::explosion==false)
@@ -1276,6 +1340,14 @@ bool Solver::checkingVariate(double& dispersion, double& oldDispersion, Fragment
     return false;
 }
 
+/*!
+Функция проверки улучшения параметров для вариации (нахождение наименьшей дисперсии силы)
+\param dispersion Новая дисперсия силы
+\param oldDispersion Старая дисперсия силы
+\param fragPar Текущие значения параметров разбиения
+\param resultFrag Лучшие значения параметров разбиения
+\param resultSolv Лучшие значения параметров расчета
+*/
 bool Solver::checkingForceVariate(double &dispersion, double &oldDispersion, FragmentationParameters &fragPar, FragmentationParameters &resultFrag, SolverParameters &resultSolv)
 {
     if (Solver::explosion==false)

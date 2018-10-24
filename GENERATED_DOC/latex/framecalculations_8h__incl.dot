@@ -1,0 +1,38 @@
+digraph "C:/Users/Vasily/Documents/VortexMethod/framecalculations.h"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  Node0 [label="C:/Users/Vasily/Documents\l/VortexMethod/framecalculations.h",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
+  Node0 -> Node1 [color="midnightblue",fontsize="10",style="solid"];
+  Node1 [label="QtConcurrent/QtConcurrent",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled"];
+  Node0 -> Node2 [color="midnightblue",fontsize="10",style="solid"];
+  Node2 [label="QTime",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled"];
+  Node0 -> Node3 [color="midnightblue",fontsize="10",style="solid"];
+  Node3 [label="eigen-eigen-5a0156e40feb\l/Eigen/Dense",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled"];
+  Node0 -> Node4 [color="midnightblue",fontsize="10",style="solid"];
+  Node4 [label="eigen-eigen-5a0156e40feb\l/Eigen/LU",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled"];
+  Node0 -> Node5 [color="midnightblue",fontsize="10",style="solid"];
+  Node5 [label="bodyfragmentation.h",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$bodyfragmentation_8h.html",tooltip="Заголовочный файл для описания классов, структур и перечислений для разбиения исходного тела на рамки..."];
+  Node5 -> Node6 [color="midnightblue",fontsize="10",style="solid"];
+  Node6 [label="fourframe.h",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$fourframe_8h_source.html"];
+  Node6 -> Node7 [color="midnightblue",fontsize="10",style="solid"];
+  Node7 [label="multiframe.h",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$multiframe_8h_source.html"];
+  Node7 -> Node8 [color="midnightblue",fontsize="10",style="solid"];
+  Node8 [label="vorton.h",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$vorton_8h_source.html"];
+  Node8 -> Node9 [color="midnightblue",fontsize="10",style="solid"];
+  Node9 [label="vector3d.h",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$vector3d_8h_source.html"];
+  Node9 -> Node10 [color="midnightblue",fontsize="10",style="solid"];
+  Node10 [label="cmath",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled"];
+  Node9 -> Node11 [color="midnightblue",fontsize="10",style="solid"];
+  Node11 [label="QMessageBox",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled"];
+  Node9 -> Node12 [color="midnightblue",fontsize="10",style="solid"];
+  Node12 [label="QVector3D",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled"];
+  Node6 -> Node13 [color="midnightblue",fontsize="10",style="solid"];
+  Node13 [label="memory",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled"];
+  Node5 -> Node14 [color="midnightblue",fontsize="10",style="solid"];
+  Node14 [label="vector2d.h",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$vector2d_8h_source.html"];
+  Node14 -> Node11 [color="midnightblue",fontsize="10",style="solid"];
+  Node14 -> Node10 [color="midnightblue",fontsize="10",style="solid"];
+  Node5 -> Node15 [color="midnightblue",fontsize="10",style="solid"];
+  Node15 [label="QVariant",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled"];
+}

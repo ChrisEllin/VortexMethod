@@ -6,69 +6,91 @@
 #include <eigen-eigen-5a0156e40feb/Eigen/LU>
 #include "bodyfragmentation.h"
 
+/** \file framecalculations.h
+    \brief Заголовочный файл для описания классов, структур и перечислений для работы с рамками
+*/
+
+/*!
+    \brief Контейнер, представляющий собой структуру для параллельных вычислений
+
+    Для дальнейшего распараллеливания с использованием QtConcurrent создается структура, хранящая в себе указатель на вектор вортонов, указатель на вектор свободных вортонов, указатель на вектор рамок, номер текущей рамки для вычислений, скорость потока и размер шага
+*/
 struct Parallel
 {
-    QVector<Vorton> *Vortons;
-    QVector<Vorton> *freeVortons;
-    QVector<std::shared_ptr<MultiFrame>> *frames;
-    int num;
-    Vector3D streamVel;
-    double tau;
+    QVector<Vorton> *Vortons; ///< Указатель на вектор вортонов
+    QVector<Vorton> *freeVortons;  ///< Указатель на вектор вортонов в потоке
+    QVector<std::shared_ptr<MultiFrame>> *frames; ///< Указатель на вектор рамок
+    int num; ///< Номер текущей рамки
+    Vector3D streamVel; ///< Скорость потока
+    double tau; ///< Размер шага
 };
 
-struct Lengths
-{
-    double minLength;
-    double maxLength;
-    double averLength;
-    double lengthDeviation;
-};
+//struct Lengths
+//{
+//    double minLength;
+//    double maxLength;
+//    double averLength;
+//    double lengthDeviation;
+//};
 
+
+/*!
+    \brief Контейнер, представляющий собой структуру для хранения счетчиков
+*/
 struct Counters
 {
-    int unitedNum;
-    int vorticityEliminated;
-    int tooFarNum;
-    int rotatedNum;
-    int underScreenNum;
-    int gotBackNum;
+    int unitedNum; ///<Количество объединенных вортонов
+    int vorticityEliminated; ///<Количество удаленных вортонов по причине малой завихренности
+    int tooFarNum; ///<Количество удаенных вортонов по причине большой дальности
+    int rotatedNum; ///<Количество вортонов развернутых относительно поверзности тела в слое
+    int underScreenNum; ///<Количество вортонов попавших под экран
+    int gotBackNum; ///<Количество вортонов, возвращенных из тела в поток
     void clear();
 };
 
+/*!
+    \brief Контейнер, представляющий собой структуру для хранения сработавших ограничений
+*/
 struct Restrictions
 {
-    int moveRestr;
-    int elongationRestr;
-    int turnRestr;
+    int moveRestr; ///<Количество сработавших ограничений на поворот
+    int elongationRestr; ///<Количество сработавших ограничений на удлинение
+    int turnRestr; ///<Количество сработавших ограничений на поворот
     void clear();
 };
 
+/*!
+    \brief Контейнер, представляющий собой структуру для хранения таймеров
+*/
 struct Timers
 {
-    double integrationTimer;
-    double unionTimer;
-    double removeVorticityTimer;
-    double forceTimer;
-    double farTimer;
-    double getBackAndRotateTimer;
+    double integrationTimer; ///<Время, затраченное на расчет перемещений и удлинений
+    double unionTimer; ///<Время, затраченное на объединение вортонов
+    double removeVorticityTimer; ///<Время, затраченное на удаление вортонов по причине малой завихренности
+    double forceTimer; ///<Время, затраченное на расчет величин действующих на тело сил
+    double farTimer; ///<Время, затраченное на удаление вортонов по причине большой дальности
+    double getBackAndRotateTimer; ///<Время, затраченное на возвращение вортонов из тела в поток и на разворот вортонов относительно поверхности в слое
     void clear();
 };
+
+/*!
+    \brief Класс, содержащий функции для работы с рамками
+
+    Класс, в котором определены все функции, описывающие работу с рамками при проведении расчета
+*/
 
 class FrameCalculations
 {
 private:
 
-    Eigen::MatrixXd matrix;
-    int matrixSize;
+    Eigen::MatrixXd matrix; ///<Матрица, составленная из произведения единичных интенсивностей от каждой из рамок на соответствующую нормаль. Используется для дальнейшего решения СЛАУ и вычисления завихренностей рамок.
+    int matrixSize;  ///<Размер матрицы
 
-    //количество удаленных вортонов в результате действия различных функций
-    Counters counters;
+    Counters counters;  ///<Количество удаленных вортонов в результате действия различных функций
 
-    //количество сработанных ограничений
-    Restrictions restrictions;
+    Restrictions restrictions;  ///<Количество сработанных ограничений
 
-    //таймеры на функции
-    Timers timers;
+    Timers timers;  ///<Таймеры на функции
 
 public:
     FrameCalculations();
@@ -105,8 +127,9 @@ public:
     static Vector3D velocity(const Vector3D point ,const Vector3D streamVel, const QVector<Vorton>& vortons, const QVector<std::shared_ptr<MultiFrame>> frames);
     static Vector3D velocity(const Vector3D point, const Vector3D streamVel, const QVector<Vorton> &vortons);
     static Vorton parallelDisplacement(const Parallel el);
-    static Lengths lengthsCalc(QVector<std::shared_ptr<MultiFrame>> frames);
+    //static Lengths lengthsCalc(QVector<std::shared_ptr<MultiFrame>> frames);
     static void displace(QVector<Vorton> &vortons);
+    static void reflect(QVector<Vorton>& symFreeVortons, QVector<Vorton>& symNewVortons, QVector<std::shared_ptr<MultiFrame>> symFrames);
     static bool insideSphere(const Vorton& vort, const Vector3D& center,const double radius);
     static bool insideSphereLayer(const Vorton& vort, const Vector3D& center,const double radius, const double layerHeight);
     static bool insideCylinder(const Vorton& vort, const double height, const double diameter);
@@ -120,7 +143,7 @@ public:
     static double calcDispersion(const QVector<Vector3D> &cAerodynamics);
 
     static QVector<std::shared_ptr<MultiFrame>> copyFrames(QVector<std::shared_ptr<MultiFrame>> frames);
-    static void translateBody(const Vector3D &translation, QVector<std::shared_ptr<MultiFrame>>& frames, QVector<Vector3D>& controlPoints, QVector<Vector3D>& controlPointsRaised, Vector3D& center, double &xbeg, double &xend);
+    static void translateBody(const Vector3D &translation, QVector<std::shared_ptr<MultiFrame>>& frames, QVector<Vector3D>& controlPoints, QVector<Vector3D>& controlPointsRaised, Vector3D& center, double &xbeg, double &xend, const FragmentationParameters &fragPar);
     static void translateBody(const Vector3D &translation, QVector<std::shared_ptr<MultiFrame>>& frames, QVector<Vector3D>& controlPoints, QVector<Vector3D>& controlPointsRaised, Vector3D& center);
     static void translateVortons(const Vector3D &translation, QVector<Vorton>& vortons);
     Counters getCounters() const;

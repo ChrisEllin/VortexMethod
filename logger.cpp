@@ -1,5 +1,11 @@
 #include "logger.h"
 
+/*!
+Создает каталог для хранения результатов расчета внутри каталога сборки
+\param _type вид рассчитываемого тела
+\param _stype тип расчета
+*/
+
 Logger::Logger(const BodyType _type, const SolvType _stype)
 {
     type=_type;
@@ -55,6 +61,13 @@ Logger::Logger(const BodyType _type, const SolvType _stype)
     createFiles();
 }
 
+/*!
+Создает каталог для хранения результатов расчета по заданному пути
+\param _type вид рассчитываемого тела
+\param _path путь для записи каталога
+\param _stype тип расчета
+*/
+
 Logger::Logger(BodyType _type, QString _path, SolvType _stype)
 {
     type=_type;
@@ -108,6 +121,10 @@ Logger::Logger(BodyType _type, QString _path, SolvType _stype)
     }
     createFiles();
 }
+
+/*!
+Создает необходимые файлы внутри текущего каталога. Функция вызывается автоматически при создании объекта класса.
+*/
 
 void Logger::createFiles()
 {
@@ -172,6 +189,12 @@ void Logger::createFiles()
     }
 }
 
+/*!
+Записывает данные Ср-распределения в файл
+\param cp вектор, содержащий значения Ср
+\param tetas вектор, содержащий значения углов(тета)
+*/
+
 void Logger::writeCpFile(const QVector<double> cp, const QVector<double> tetas)
 {
     for (int i=0; i<cp.size(); i++)
@@ -181,6 +204,17 @@ void Logger::writeCpFile(const QVector<double> cp, const QVector<double> tetas)
     }
     cpTextStream.get()->flush();
 }
+
+/*!
+Записывает данные логов в файл
+\param stepNum текущий шаг расчета
+\param stepTime текущее время расчета
+\param beforeIntegrC значения счетчиков для вортонов с рамок
+\param afterIntegrC значения счетчиков для вортонов в слое
+\param beforeIntegrT значения таймеров вортонов для вортонов с рамок
+\param afterIntegrT значения таймеров для вортонов в слое
+\param restr значения сработанных ограничений
+*/
 
 void Logger::writeLogs(const int stepNum, const double stepTime, const Counters beforeIntegrC, const Counters afterIntegrC, const Timers beforeIntegrT, const Timers afterIntegrT, const Restrictions restr)
 {
@@ -210,6 +244,11 @@ void Logger::writeLogs(const int stepNum, const double stepTime, const Counters 
     logTextStream.get()->flush();
 }
 
+/*!
+Записывает начальные данные расчета в файл
+\param solvPar параметры расчета
+\param fragPar параметры разбиения тела
+*/
 void Logger::writePassport(const SolverParameters& solvPar,const FragmentationParameters& fragPar)
 {
     *passportTextStream.get()<<QString("Параметры расчета: \n\n");
@@ -286,6 +325,12 @@ void Logger::writePassport(const SolverParameters& solvPar,const FragmentationPa
 
 }
 
+/*!
+Записывает начальные данные расчета в файл
+\param solvPar параметры расчета
+\param fragPar параметры разбиения тела
+\param freeMotionPar параметры свободного движения
+*/
 void Logger::writePassport(const SolverParameters &solvPar, const FragmentationParameters &fragPar, const FreeMotionParameters &freeMotionPar)
 {
     writePassport(solvPar,fragPar);
@@ -293,6 +338,11 @@ void Logger::writePassport(const SolverParameters &solvPar, const FragmentationP
     passportTextStream.get()->flush();
 }
 
+/*!
+Записывает значения сил и аэродинамических коэффициентов в файл
+\param forces вектор значения сил
+\param c вектор значения аэродинамических характеристик
+*/
 void Logger::writeForces(const Vector3D forces,const Vector3D c)
 {
     *forcesTextStream.get()<<QString::number(forces.x())+"\t";
@@ -304,12 +354,19 @@ void Logger::writeForces(const Vector3D forces,const Vector3D c)
     forcesTextStream.get()->flush();
 }
 
+/*!
+Записывает время, занятое расчетом, в файл
+\param solvTime значение занятого времени
+*/
 void Logger::writeSolverTime(const double solvTime)
 {
     *logTextStream.get()<<"Расчет занял "+QString::number(solvTime)+" с.\n";
     logTextStream.get()->flush();
 }
 
+/*!
+Закрывает все файлы, открытые для записи
+*/
 void Logger::closeFiles()
 {
     if (logFile->isOpen())
@@ -325,6 +382,10 @@ void Logger::closeFiles()
     }
 }
 
+/*!
+Возвращает текущий путь до кталога для записи
+\return Значение пути
+*/
 QString Logger::getPath()
 {
     return path;

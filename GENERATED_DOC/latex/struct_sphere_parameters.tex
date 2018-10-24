@@ -1,0 +1,62 @@
+\hypertarget{struct_sphere_parameters}{}\section{Структура Sphere\+Parameters}
+\label{struct_sphere_parameters}\index{Sphere\+Parameters@{Sphere\+Parameters}}
+
+
+Структура для хранения параметров сферы  
+
+
+
+
+{\ttfamily \#include $<$bodyfragmentation.\+h$>$}
+
+\subsection*{Открытые члены}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{struct_sphere_parameters_a4cfbd8b09594f387641ee6c365fa9778}{set\+Data}} (const int i, const double value)
+\end{DoxyCompactItemize}
+\subsection*{Открытые атрибуты}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{struct_sphere_parameters_a4272f5d9878591e54effa8b08fc98043}\label{struct_sphere_parameters_a4272f5d9878591e54effa8b08fc98043}} 
+int \mbox{\hyperlink{struct_sphere_parameters_a4272f5d9878591e54effa8b08fc98043}{fi\+Frag\+Num}}
+\begin{DoxyCompactList}\small\item\em Количество разбиений по fi. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_sphere_parameters_a86a882fb87882d37cc8cb2b50dcbe6bc}\label{struct_sphere_parameters_a86a882fb87882d37cc8cb2b50dcbe6bc}} 
+int \mbox{\hyperlink{struct_sphere_parameters_a86a882fb87882d37cc8cb2b50dcbe6bc}{teta\+Frag\+Num}}
+\begin{DoxyCompactList}\small\item\em Количество разбиений по teta. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_sphere_parameters_a293c740a7e310a36a56eb825970dac82}\label{struct_sphere_parameters_a293c740a7e310a36a56eb825970dac82}} 
+double \mbox{\hyperlink{struct_sphere_parameters_a293c740a7e310a36a56eb825970dac82}{radius}}
+\begin{DoxyCompactList}\small\item\em Радиус сферы \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_sphere_parameters_a0e2d5b55ff372125d08e95c2b01678f1}\label{struct_sphere_parameters_a0e2d5b55ff372125d08e95c2b01678f1}} 
+double \mbox{\hyperlink{struct_sphere_parameters_a0e2d5b55ff372125d08e95c2b01678f1}{delta}}
+\begin{DoxyCompactList}\small\item\em Подъем рамок над телом \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_sphere_parameters_a19b6d3a05903b4f898f123d37f4acc87}\label{struct_sphere_parameters_a19b6d3a05903b4f898f123d37f4acc87}} 
+double \mbox{\hyperlink{struct_sphere_parameters_a19b6d3a05903b4f898f123d37f4acc87}{raise}}
+\begin{DoxyCompactList}\small\item\em Подъем контрольных точек для подсчета давления \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_sphere_parameters_a50e53f1c981b58475cd63e01af4f25d8}\label{struct_sphere_parameters_a50e53f1c981b58475cd63e01af4f25d8}} 
+double \mbox{\hyperlink{struct_sphere_parameters_a50e53f1c981b58475cd63e01af4f25d8}{vortons\+Rad}}
+\begin{DoxyCompactList}\small\item\em Радиус вортона \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Подробное описание}
+Структура для хранения параметров сферы 
+
+\subsection{Методы}
+\mbox{\Hypertarget{struct_sphere_parameters_a4cfbd8b09594f387641ee6c365fa9778}\label{struct_sphere_parameters_a4cfbd8b09594f387641ee6c365fa9778}} 
+\index{Sphere\+Parameters@{Sphere\+Parameters}!set\+Data@{set\+Data}}
+\index{set\+Data@{set\+Data}!Sphere\+Parameters@{Sphere\+Parameters}}
+\subsubsection{\texorpdfstring{set\+Data()}{setData()}}
+{\footnotesize\ttfamily void Sphere\+Parameters\+::set\+Data (\begin{DoxyParamCaption}\item[{const int}]{i,  }\item[{const double}]{value }\end{DoxyParamCaption})}
+
+Установка соотвествующего значения в объект структуры параметров разбиения сферы 
+\begin{DoxyParams}{Аргументы}
+{\em i} & Номер поля структуры \\
+\hline
+{\em value} & Значение поля структуры \\
+\hline
+\end{DoxyParams}
+
+
+Объявления и описания членов структур находятся в файлах\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Users/\+Vasily/\+Documents/\+Vortex\+Method/\mbox{\hyperlink{bodyfragmentation_8h}{bodyfragmentation.\+h}}\item 
+C\+:/\+Users/\+Vasily/\+Documents/\+Vortex\+Method/bodyfragmentation.\+cpp\end{DoxyCompactItemize}

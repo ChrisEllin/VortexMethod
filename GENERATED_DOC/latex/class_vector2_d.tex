@@ -1,0 +1,170 @@
+\hypertarget{class_vector2_d}{}\section{Класс Vector2D}
+\label{class_vector2_d}\index{Vector2D@{Vector2D}}
+
+
+Класс, реализующий двумерный вектор с double-\/компонентами  
+
+
+
+
+{\ttfamily \#include $<$vector2d.\+h$>$}
+
+\subsection*{Открытые члены}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_vector2_d_a98e9997ebb7a629f4db52397d4e0d653}{Vector2D}} ()
+\item 
+\mbox{\hyperlink{class_vector2_d_a0a97f6900bdb81fcefe6c37f1100532a}{Vector2D}} (const double \+\_\+x, const double \+\_\+y)
+\item 
+double \mbox{\hyperlink{class_vector2_d_a56b4174bc06988a5df894457c09d9677}{length}} ()
+\item 
+double \mbox{\hyperlink{class_vector2_d_a809281a82c36622fc67f96ec4ee2bbbc}{length\+Squared}} ()
+\item 
+\mbox{\hyperlink{class_vector2_d}{Vector2D}} \mbox{\hyperlink{class_vector2_d_a37ab07daec20b3bbdf8742cb8799f291}{normalized}} ()
+\item 
+void \mbox{\hyperlink{class_vector2_d_af38f392fab690d3fe42dbb248fbe46c7}{x}} (const double \+\_\+x)
+\item 
+void \mbox{\hyperlink{class_vector2_d_a544f0184543c286f599630ad9d390ce7}{y}} (const double \+\_\+y)
+\item 
+double \mbox{\hyperlink{class_vector2_d_a00b90f2937ea343d8cad1c3b4a340baf}{x}} () const
+\item 
+double \mbox{\hyperlink{class_vector2_d_a4989f56e0e142a183ba3b9127f2fa794}{y}} () const
+\item 
+void \mbox{\hyperlink{class_vector2_d_a7966363669d4914b5554d5a8e93ea7d3}{operator=}} (const \mbox{\hyperlink{class_vector2_d}{Vector2D}} \&vec1)
+\item 
+\mbox{\hyperlink{class_vector2_d}{Vector2D}} \mbox{\hyperlink{class_vector2_d_a4eb1b4403004c8632bb2468cf1942ea5}{operator-\/}} ()
+\item 
+double \& \mbox{\hyperlink{class_vector2_d_a36aeaa2a8025f6307489b8f57220c760}{operator\mbox{[}$\,$\mbox{]}}} (const double i)
+\end{DoxyCompactItemize}
+\subsection*{Закрытые данные}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_vector2_d_a6144dc7fbcc1de7ecd760db73c3fb377}\label{class_vector2_d_a6144dc7fbcc1de7ecd760db73c3fb377}} 
+double \mbox{\hyperlink{class_vector2_d_a6144dc7fbcc1de7ecd760db73c3fb377}{X}}
+\begin{DoxyCompactList}\small\item\em X компонента вектора \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_vector2_d_a36ceeb774a2f648e34ba6ecb7a48f5c2}\label{class_vector2_d_a36ceeb774a2f648e34ba6ecb7a48f5c2}} 
+double \mbox{\hyperlink{class_vector2_d_a36ceeb774a2f648e34ba6ecb7a48f5c2}{Y}}
+\begin{DoxyCompactList}\small\item\em Y компонента вектора \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Подробное описание}
+Класс, реализующий двумерный вектор с double-\/компонентами 
+
+\subsection{Конструктор(ы)}
+\mbox{\Hypertarget{class_vector2_d_a98e9997ebb7a629f4db52397d4e0d653}\label{class_vector2_d_a98e9997ebb7a629f4db52397d4e0d653}} 
+\index{Vector2D@{Vector2D}!Vector2D@{Vector2D}}
+\index{Vector2D@{Vector2D}!Vector2D@{Vector2D}}
+\subsubsection{\texorpdfstring{Vector2\+D()}{Vector2D()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Vector2\+D\+::\+Vector2D (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Создает нулевой вектор \mbox{\Hypertarget{class_vector2_d_a0a97f6900bdb81fcefe6c37f1100532a}\label{class_vector2_d_a0a97f6900bdb81fcefe6c37f1100532a}} 
+\index{Vector2D@{Vector2D}!Vector2D@{Vector2D}}
+\index{Vector2D@{Vector2D}!Vector2D@{Vector2D}}
+\subsubsection{\texorpdfstring{Vector2\+D()}{Vector2D()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Vector2\+D\+::\+Vector2D (\begin{DoxyParamCaption}\item[{const double}]{\+\_\+x,  }\item[{const double}]{\+\_\+y }\end{DoxyParamCaption})}
+
+Создает вектор с заданными значениями 
+\begin{DoxyParams}{Аргументы}
+{\em \+\_\+x} & заданная компонента X \\
+\hline
+{\em \+\_\+y} & заданная компонента Y \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{Методы}
+\mbox{\Hypertarget{class_vector2_d_a56b4174bc06988a5df894457c09d9677}\label{class_vector2_d_a56b4174bc06988a5df894457c09d9677}} 
+\index{Vector2D@{Vector2D}!length@{length}}
+\index{length@{length}!Vector2D@{Vector2D}}
+\subsubsection{\texorpdfstring{length()}{length()}}
+{\footnotesize\ttfamily double Vector2\+D\+::length (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Возвращает значение длины вектора \begin{DoxyReturn}{Возвращает}
+Длина вектора 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_vector2_d_a809281a82c36622fc67f96ec4ee2bbbc}\label{class_vector2_d_a809281a82c36622fc67f96ec4ee2bbbc}} 
+\index{Vector2D@{Vector2D}!length\+Squared@{length\+Squared}}
+\index{length\+Squared@{length\+Squared}!Vector2D@{Vector2D}}
+\subsubsection{\texorpdfstring{length\+Squared()}{lengthSquared()}}
+{\footnotesize\ttfamily double Vector2\+D\+::length\+Squared (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Возвращает квадрат значения длины вектора \begin{DoxyReturn}{Возвращает}
+Квадрат длины вектора 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_vector2_d_a37ab07daec20b3bbdf8742cb8799f291}\label{class_vector2_d_a37ab07daec20b3bbdf8742cb8799f291}} 
+\index{Vector2D@{Vector2D}!normalized@{normalized}}
+\index{normalized@{normalized}!Vector2D@{Vector2D}}
+\subsubsection{\texorpdfstring{normalized()}{normalized()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_vector2_d}{Vector2D}} Vector2\+D\+::normalized (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Возвращает нормированный вектор \begin{DoxyReturn}{Возвращает}
+Нормированный вектор 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_vector2_d_a4eb1b4403004c8632bb2468cf1942ea5}\label{class_vector2_d_a4eb1b4403004c8632bb2468cf1942ea5}} 
+\index{Vector2D@{Vector2D}!operator-\/@{operator-\/}}
+\index{operator-\/@{operator-\/}!Vector2D@{Vector2D}}
+\subsubsection{\texorpdfstring{operator-\/()}{operator-()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_vector2_d}{Vector2D}} Vector2\+D\+::operator-\/ (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Оператор смены знака \mbox{\Hypertarget{class_vector2_d_a7966363669d4914b5554d5a8e93ea7d3}\label{class_vector2_d_a7966363669d4914b5554d5a8e93ea7d3}} 
+\index{Vector2D@{Vector2D}!operator=@{operator=}}
+\index{operator=@{operator=}!Vector2D@{Vector2D}}
+\subsubsection{\texorpdfstring{operator=()}{operator=()}}
+{\footnotesize\ttfamily void Vector2\+D\+::operator= (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_vector2_d}{Vector2D}} \&}]{vec1 }\end{DoxyParamCaption})}
+
+Оператор копирования 
+\begin{DoxyParams}{Аргументы}
+{\em vec1} & Новое значение вектора \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_vector2_d_a36aeaa2a8025f6307489b8f57220c760}\label{class_vector2_d_a36aeaa2a8025f6307489b8f57220c760}} 
+\index{Vector2D@{Vector2D}!operator\mbox{[}\mbox{]}@{operator[]}}
+\index{operator\mbox{[}\mbox{]}@{operator[]}!Vector2D@{Vector2D}}
+\subsubsection{\texorpdfstring{operator[]()}{operator[]()}}
+{\footnotesize\ttfamily double \& Vector2\+D\+::operator\mbox{[}$\,$\mbox{]} (\begin{DoxyParamCaption}\item[{const double}]{i }\end{DoxyParamCaption})}
+
+Доступ к элементу двумерного вектора по индексу 
+\begin{DoxyParams}{Аргументы}
+{\em i} & Номер индекса \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_vector2_d_af38f392fab690d3fe42dbb248fbe46c7}\label{class_vector2_d_af38f392fab690d3fe42dbb248fbe46c7}} 
+\index{Vector2D@{Vector2D}!x@{x}}
+\index{x@{x}!Vector2D@{Vector2D}}
+\subsubsection{\texorpdfstring{x()}{x()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily void Vector2\+D\+::x (\begin{DoxyParamCaption}\item[{const double}]{\+\_\+x }\end{DoxyParamCaption})}
+
+Устанавливает значение координаты X 
+\begin{DoxyParams}{Аргументы}
+{\em \+\_\+x} & Задаваемое значение X \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_vector2_d_a00b90f2937ea343d8cad1c3b4a340baf}\label{class_vector2_d_a00b90f2937ea343d8cad1c3b4a340baf}} 
+\index{Vector2D@{Vector2D}!x@{x}}
+\index{x@{x}!Vector2D@{Vector2D}}
+\subsubsection{\texorpdfstring{x()}{x()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily double Vector2\+D\+::x (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+Возвращает значение координаты X \mbox{\Hypertarget{class_vector2_d_a544f0184543c286f599630ad9d390ce7}\label{class_vector2_d_a544f0184543c286f599630ad9d390ce7}} 
+\index{Vector2D@{Vector2D}!y@{y}}
+\index{y@{y}!Vector2D@{Vector2D}}
+\subsubsection{\texorpdfstring{y()}{y()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily void Vector2\+D\+::y (\begin{DoxyParamCaption}\item[{const double}]{\+\_\+y }\end{DoxyParamCaption})}
+
+Устанавливает значение координаты Y 
+\begin{DoxyParams}{Аргументы}
+{\em \+\_\+y} & Задаваемое значение Y \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_vector2_d_a4989f56e0e142a183ba3b9127f2fa794}\label{class_vector2_d_a4989f56e0e142a183ba3b9127f2fa794}} 
+\index{Vector2D@{Vector2D}!y@{y}}
+\index{y@{y}!Vector2D@{Vector2D}}
+\subsubsection{\texorpdfstring{y()}{y()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily double Vector2\+D\+::y (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+Возвращает значение координаты Y 
+
+Объявления и описания членов классов находятся в файлах\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Users/\+Vasily/\+Documents/\+Vortex\+Method/vector2d.\+h\item 
+C\+:/\+Users/\+Vasily/\+Documents/\+Vortex\+Method/vector2d.\+cpp\end{DoxyCompactItemize}

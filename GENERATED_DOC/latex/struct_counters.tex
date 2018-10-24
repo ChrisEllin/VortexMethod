@@ -1,0 +1,55 @@
+\hypertarget{struct_counters}{}\section{Структура Counters}
+\label{struct_counters}\index{Counters@{Counters}}
+
+
+Контейнер, представляющий собой структуру для хранения счетчиков  
+
+
+
+
+{\ttfamily \#include $<$framecalculations.\+h$>$}
+
+\subsection*{Открытые члены}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{struct_counters_ada46b45bb45210aad28a4ebbd23f98f8}{clear}} ()
+\end{DoxyCompactItemize}
+\subsection*{Открытые атрибуты}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{struct_counters_a25dfd9fbd5facab72c59c8024734e8a1}\label{struct_counters_a25dfd9fbd5facab72c59c8024734e8a1}} 
+int \mbox{\hyperlink{struct_counters_a25dfd9fbd5facab72c59c8024734e8a1}{united\+Num}}
+\begin{DoxyCompactList}\small\item\em Количество объединенных вортонов \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_counters_a3e855ce145906bd0246d80021563a57f}\label{struct_counters_a3e855ce145906bd0246d80021563a57f}} 
+int \mbox{\hyperlink{struct_counters_a3e855ce145906bd0246d80021563a57f}{vorticity\+Eliminated}}
+\begin{DoxyCompactList}\small\item\em Количество удаленных вортонов по причине малой завихренности \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_counters_a0f45ba66e6ced122c253acf0c01cceee}\label{struct_counters_a0f45ba66e6ced122c253acf0c01cceee}} 
+int \mbox{\hyperlink{struct_counters_a0f45ba66e6ced122c253acf0c01cceee}{too\+Far\+Num}}
+\begin{DoxyCompactList}\small\item\em Количество удаенных вортонов по причине большой дальности \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_counters_a126045df7733c4b9ae18398d286641a6}\label{struct_counters_a126045df7733c4b9ae18398d286641a6}} 
+int \mbox{\hyperlink{struct_counters_a126045df7733c4b9ae18398d286641a6}{rotated\+Num}}
+\begin{DoxyCompactList}\small\item\em Количество вортонов развернутых относительно поверзности тела в слое \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_counters_aaa22410dbe5aeb0a3d119036ae64443d}\label{struct_counters_aaa22410dbe5aeb0a3d119036ae64443d}} 
+int \mbox{\hyperlink{struct_counters_aaa22410dbe5aeb0a3d119036ae64443d}{under\+Screen\+Num}}
+\begin{DoxyCompactList}\small\item\em Количество вортонов попавших под экран \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_counters_af05db26ce99b16212f87dc4586329aee}\label{struct_counters_af05db26ce99b16212f87dc4586329aee}} 
+int \mbox{\hyperlink{struct_counters_af05db26ce99b16212f87dc4586329aee}{got\+Back\+Num}}
+\begin{DoxyCompactList}\small\item\em Количество вортонов, возвращенных из тела в поток \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Подробное описание}
+Контейнер, представляющий собой структуру для хранения счетчиков 
+
+\subsection{Методы}
+\mbox{\Hypertarget{struct_counters_ada46b45bb45210aad28a4ebbd23f98f8}\label{struct_counters_ada46b45bb45210aad28a4ebbd23f98f8}} 
+\index{Counters@{Counters}!clear@{clear}}
+\index{clear@{clear}!Counters@{Counters}}
+\subsubsection{\texorpdfstring{clear()}{clear()}}
+{\footnotesize\ttfamily void Counters\+::clear (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Обнуляет значения всех счетчиков 
+
+Объявления и описания членов структур находятся в файлах\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Users/\+Vasily/\+Documents/\+Vortex\+Method/\mbox{\hyperlink{framecalculations_8h}{framecalculations.\+h}}\item 
+C\+:/\+Users/\+Vasily/\+Documents/\+Vortex\+Method/framecalculations.\+cpp\end{DoxyCompactItemize}

@@ -3,15 +3,20 @@
 #include <QObject>
 #include "logger.h"
 
+/*!
+    \brief Класс, реализующий расчеты для различных типов тел
+
+    Главный класс, содержащий все расчетчики.
+*/
 class Solver: public QObject
 {
     Q_OBJECT
 private:
-    SolverParameters solvPar;
-    FreeMotionParameters freeMotionPar;
-    QVector<Vector3D> cAerodynamics;
-    QVector<Vector3D> forces;
-    QString logPath;
+    SolverParameters solvPar; ///<Параметры расчета
+    FreeMotionParameters freeMotionPar; ///<Параметры свободного движения
+    QVector<Vector3D> cAerodynamics; ///<Вектор значений С
+    QVector<Vector3D> forces; ///<Вектор значений силы
+    QString logPath; ///<Путь к каталогу для записи результатов расчета
 public:
     Solver();
     Solver(const SolverParameters& parameters);
@@ -28,22 +33,21 @@ public:
     void variateCylinderParameters(FragmentationParameters fragPar, bool variateEps);
     void variateRotationBodyParameters(FragmentationParameters fragPar, bool variateEps);
     void variateRotationCutBodyParameters(FragmentationParameters fragPar, bool variateEps);
-    void reflect(QVector<Vorton>& symFreeVortons, QVector<Vorton>& symNewVortons, QVector<std::shared_ptr<MultiFrame>> symFrames);
     void operator = (const Solver &solver);
-    static bool explosion;
+    static bool explosion;///<Существование "взрыва"
     bool checkingVariate(double& dispersion, double& oldDispersion,FragmentationParameters &fragPar, FragmentationParameters &resultFrag, SolverParameters& resultSolv);
     bool checkingForceVariate(double& dispersion, double& oldDispersion,FragmentationParameters &fragPar, FragmentationParameters &resultFrag, SolverParameters& resultSolv);
 signals:
-    void repaintGUI(const QVector<Vorton>& vortons, const QVector<std::shared_ptr<MultiFrame>>& frames);
-    void variatingFinished();
-    void sendProgressSphere(const int percent);
-    void updateSphereMaximum(const int max);
-    void sendProgressCylinder(const int percent);
-    void updateCylinderMaximum(const int max);
-    void sendProgressRotationBody(const int percent);
-    void updateRotationBodyMaximum(const int max);
-    void sendProgressRotationCutBody(const int percent);
-    void updateRotationCutBodyMaximum(const int max);
+    void repaintGUI(const QVector<Vorton>& vortons, const QVector<std::shared_ptr<MultiFrame>>& frames); ///<Сигнал о перерисовке интерфейса
+    void variatingFinished(); ///<Сигнал об окончании  варьирования
+    void sendProgressSphere(const int percent); ///< Сигнал об текущем прогрессе расчета сферы
+    void updateSphereMaximum(const int max); ///<Сигнал о количестве шагов расчета сферы
+    void sendProgressCylinder(const int percent); ///< Сигнал об текущем прогрессе расчета цилиндра
+    void updateCylinderMaximum(const int max); ///<Сигнал о количестве шагов расчета цилиндра
+    void sendProgressRotationBody(const int percent); ///< Сигнал об текущем прогрессе расчета тела вращения
+    void updateRotationBodyMaximum(const int max); ///<Сигнал о количестве шагов расчета тела вращения
+    void sendProgressRotationCutBody(const int percent); ///< Сигнал об текущем прогрессе расчета тела вращения со срезом
+    void updateRotationCutBodyMaximum(const int max); ///<Сигнал о количестве шагов расчета тела вращения со срезом
 };
 
 #endif // SOLVER_H

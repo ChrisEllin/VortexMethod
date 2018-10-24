@@ -1,0 +1,12 @@
+digraph "C:/Users/Vasily/Documents/VortexMethod/framecalculations.h"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  Node16 [label="C:/Users/Vasily/Documents\l/VortexMethod/framecalculations.h",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
+  Node16 -> Node17 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node17 [label="C:/Users/Vasily/Documents\l/VortexMethod/logger.h",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$logger_8h.html",tooltip="Заголовочный файл для описания классов и перечистлений для работы с файлами "];
+  Node17 -> Node18 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node18 [label="C:/Users/Vasily/Documents\l/VortexMethod/solver.h",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$solver_8h_source.html"];
+  Node18 -> Node19 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node19 [label="C:/Users/Vasily/Documents\l/VortexMethod/mainwindow.h",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$mainwindow_8h_source.html"];
+}

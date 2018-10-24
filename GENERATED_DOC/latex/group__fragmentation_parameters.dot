@@ -1,0 +1,17 @@
+digraph "Параметры разбиения"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir=LR;
+  Node2 [label="Параметры\l цилиндра",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$group__cylinder_parameters.html",tooltip="В данном модуле хранятся параметры, необходимые для разбиения цилиндра. "];
+  Node3 [label="Параметры\l тела вращения",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$group__rotation_body_parameters.html",tooltip="В данном модуле хранятся параметры, необходимые для разбиения тела вращения. "];
+  Node1 [label="Параметры\l сферы",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$group__sphere_parameters.html",tooltip="В данном модуле хранятся параметры, необходимые для разбиения сферы. "];
+  Node4 [label="Дополнительные\l параметры тела\l вращения со срезом",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$group__rotation_bottom_cut_parameters.html",tooltip="В данном модуле хранятся дополнительные параметры, необходимые для разбиения тела вращения..."];
+  Node5 [label="Общие параметры",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$group__common_parameters.html",tooltip="В данном модуле хранятся Общие параметры, необходимые для разбиения тела. "];
+  Node0 [label="Параметры\l разбиения",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
+  Node0->Node1 [shape=plaintext, dir="back", style="solid"];
+  Node0->Node2 [shape=plaintext, dir="back", style="solid"];
+  Node0->Node3 [shape=plaintext, dir="back", style="solid"];
+  Node0->Node4 [shape=plaintext, dir="back", style="solid"];
+  Node0->Node5 [shape=plaintext, dir="back", style="solid"];
+}

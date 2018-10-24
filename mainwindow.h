@@ -11,7 +11,9 @@
 namespace Ui {
 class MainWindow;
 }
-
+/*!
+    \brief Класс, отвечающий за интерфейс основного окна
+*/
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -21,14 +23,14 @@ public:
     ~MainWindow();
 
 private:
-    Ui::MainWindow *ui;
-    SolverSettings *settings;
-    Solver *solver;
-    VariateSettings *variateSettings;
-    bool displaySphere;
-    QShortcut *keyCtrlO;
-    QShortcut *keyCtrlR;
-    QShortcut *keyCtrlH;
+    Ui::MainWindow *ui; ///<Указатель на интерфейс основного окна
+    SolverSettings *settings; ///<Указатель на класс окна настроек расчета
+    Solver *solver; ///<Указатель на класс-расчетчик
+    VariateSettings *variateSettings; ///<Указатель на класс окна настроек вариации
+    bool displaySphere; ///<Необходимость отображения трехмерной сферы
+    QShortcut *keyCtrlO; ///<Указатель на хоткей (Ctrl+O)
+    QShortcut *keyCtrlR; ///<Указатель на хоткей (Ctrl+R)
+    QShortcut *keyCtrlH; ///<Указатель на хоткей (Ctrl+H)
 
     void setParameters(SphereParameters &sphPar);
     void setParameters(CylinderParameters &cylPar);
@@ -73,20 +75,20 @@ public slots:
     void recieveProgressRotationCutBody(const int percentage);
     void drawGUI(const QVector<Vorton>& vortons, const QVector<std::shared_ptr<MultiFrame>>& frames);
 signals:
-    void setPlaneXY();
-    void setPlaneYX();
-    void setPlaneXZ();
-    void setPlaneZX();
-    void setPlaneYZ();
-    void setPlaneZY();
-    void resetPlane();
-    void sendSolverParameters(SolverParameters& solvPar);
-    void drawSegment(QVector3D center, QVector3D top, SArrow::vort_type);
-    void drawSegment(QVector3D center, QVector3D top);
-    void clearSegments(int n = -1);
-    void setRadius(double radius);
-    void setHeight(double height);
-    void changeShape(MainField::shape newShape);
+    void setPlaneXY(); ///<Сигнал о переходе к YX отображению
+    void setPlaneYX(); ///<Сигнал о переходе к XY отображению
+    void setPlaneXZ(); ///<Сигнал о переходе к XZ отображению
+    void setPlaneZX(); ///<Сигнал о переходе к ZX отображению
+    void setPlaneYZ(); ///<Сигнал о переходе к YZ отображению
+    void setPlaneZY(); ///<Сигнал о переходе к ZY отображению
+    void resetPlane(); ///<Сигнал о переходе к начальному отображению
+    void sendSolverParameters(SolverParameters& solvPar); ///<Сигнал, отправляющий параметры расчета
+    void drawSegment(QVector3D center, QVector3D top, SArrow::vort_type); ///<Сигнал об отрисовке с выбором типа отрисовки
+    void drawSegment(QVector3D center, QVector3D top); ///< \overload Сигнал об отрисовке точки
+    void clearSegments(int n = -1); ///<Сигнал об очистке экрана
+    void setRadius(double radius); ///<Сигнал об установке радиуса трехмерной фигуры
+    void setHeight(double height); ///<Сигнал об установке высоты цилиндра
+    void changeShape(MainField::shape newShape); ///<Сигнал об смене типа отображаемой фигуры
 };
 
 #endif // MAINWINDOW_H

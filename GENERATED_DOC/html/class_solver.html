@@ -1,0 +1,778 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.8.14"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>VortexMethod: Класс Solver</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">VortexMethod
+   &#160;<span id="projectnumber">v.2.0</span>
+   </div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Создано системой Doxygen 1.8.14 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+var searchBox = new SearchBox("searchBox", "search",false,'Поиск');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+$(function() {
+  initMenu('',true,false,'search.php','Поиск');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */</script>
+<div id="main-nav"></div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#signals">Сигналы</a> &#124;
+<a href="#pub-methods">Открытые члены</a> &#124;
+<a href="#pub-static-attribs">Статические открытые данные</a> &#124;
+<a href="#pri-attribs">Закрытые данные</a> &#124;
+<a href="class_solver-members.html">Полный список членов класса</a>  </div>
+  <div class="headertitle">
+<div class="title">Класс Solver</div>  </div>
+</div><!--header-->
+<div class="contents">
+
+<p>Класс, реализующий расчеты для различных типов тел  
+ <a href="class_solver.html#details">Подробнее...</a></p>
+
+<p><code>#include &lt;<a class="el" href="solver_8h_source.html">solver.h</a>&gt;</code></p>
+<div class="dynheader">
+Граф наследования:Solver:</div>
+<div class="dyncontent">
+<div class="center"><img src="class_solver__inherit__graph.png" border="0" usemap="#_solver_inherit__map" alt="Inheritance graph"/></div>
+<!-- MAP 0 -->
+<center><span class="legend">[<a href="graph_legend.html">см. легенду</a>]</span></center></div>
+<div class="dynheader">
+Граф связей класса Solver:</div>
+<div class="dyncontent">
+<div class="center"><img src="class_solver__coll__graph.png" border="0" usemap="#_solver_coll__map" alt="Collaboration graph"/></div>
+<!-- MAP 1 -->
+<center><span class="legend">[<a href="graph_legend.html">см. легенду</a>]</span></center></div>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="signals"></a>
+Сигналы</h2></td></tr>
+<tr class="memitem:a2db7492d3c48a426fa2aa16a42086451"><td class="memItemLeft" align="right" valign="top"><a id="a2db7492d3c48a426fa2aa16a42086451"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_solver.html#a2db7492d3c48a426fa2aa16a42086451">repaintGUI</a> (const QVector&lt; <a class="el" href="class_vorton.html">Vorton</a> &gt; &amp;vortons, const QVector&lt; std::shared_ptr&lt; <a class="el" href="class_multi_frame.html">MultiFrame</a> &gt;&gt; &amp;frames)</td></tr>
+<tr class="memdesc:a2db7492d3c48a426fa2aa16a42086451"><td class="mdescLeft">&#160;</td><td class="mdescRight">Сигнал о перерисовке интерфейса <br /></td></tr>
+<tr class="separator:a2db7492d3c48a426fa2aa16a42086451"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a52797f377ea96437322287a0eabb55f7"><td class="memItemLeft" align="right" valign="top"><a id="a52797f377ea96437322287a0eabb55f7"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_solver.html#a52797f377ea96437322287a0eabb55f7">variatingFinished</a> ()</td></tr>
+<tr class="memdesc:a52797f377ea96437322287a0eabb55f7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Сигнал об окончании варьирования <br /></td></tr>
+<tr class="separator:a52797f377ea96437322287a0eabb55f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2e2ba42280ede8c2d2e6648d4febb6cb"><td class="memItemLeft" align="right" valign="top"><a id="a2e2ba42280ede8c2d2e6648d4febb6cb"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_solver.html#a2e2ba42280ede8c2d2e6648d4febb6cb">sendProgressSphere</a> (const int percent)</td></tr>
+<tr class="memdesc:a2e2ba42280ede8c2d2e6648d4febb6cb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Сигнал об текущем прогрессе расчета сферы <br /></td></tr>
+<tr class="separator:a2e2ba42280ede8c2d2e6648d4febb6cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aed07cd44f901f37039be1f0d799cfd94"><td class="memItemLeft" align="right" valign="top"><a id="aed07cd44f901f37039be1f0d799cfd94"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_solver.html#aed07cd44f901f37039be1f0d799cfd94">updateSphereMaximum</a> (const int max)</td></tr>
+<tr class="memdesc:aed07cd44f901f37039be1f0d799cfd94"><td class="mdescLeft">&#160;</td><td class="mdescRight">Сигнал о количестве шагов расчета сферы <br /></td></tr>
+<tr class="separator:aed07cd44f901f37039be1f0d799cfd94"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a01ea12662ac1a65793f2ca8de6a6c29c"><td class="memItemLeft" align="right" valign="top"><a id="a01ea12662ac1a65793f2ca8de6a6c29c"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_solver.html#a01ea12662ac1a65793f2ca8de6a6c29c">sendProgressCylinder</a> (const int percent)</td></tr>
+<tr class="memdesc:a01ea12662ac1a65793f2ca8de6a6c29c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Сигнал об текущем прогрессе расчета цилиндра <br /></td></tr>
+<tr class="separator:a01ea12662ac1a65793f2ca8de6a6c29c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8f847ba6e08038a9063bc4aef35f3f5c"><td class="memItemLeft" align="right" valign="top"><a id="a8f847ba6e08038a9063bc4aef35f3f5c"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_solver.html#a8f847ba6e08038a9063bc4aef35f3f5c">updateCylinderMaximum</a> (const int max)</td></tr>
+<tr class="memdesc:a8f847ba6e08038a9063bc4aef35f3f5c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Сигнал о количестве шагов расчета цилиндра <br /></td></tr>
+<tr class="separator:a8f847ba6e08038a9063bc4aef35f3f5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1aa3bbe52e9e325034882d458885086a"><td class="memItemLeft" align="right" valign="top"><a id="a1aa3bbe52e9e325034882d458885086a"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_solver.html#a1aa3bbe52e9e325034882d458885086a">sendProgressRotationBody</a> (const int percent)</td></tr>
+<tr class="memdesc:a1aa3bbe52e9e325034882d458885086a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Сигнал об текущем прогрессе расчета тела вращения <br /></td></tr>
+<tr class="separator:a1aa3bbe52e9e325034882d458885086a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a67d4754aac48886023fae54effe2ef8c"><td class="memItemLeft" align="right" valign="top"><a id="a67d4754aac48886023fae54effe2ef8c"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_solver.html#a67d4754aac48886023fae54effe2ef8c">updateRotationBodyMaximum</a> (const int max)</td></tr>
+<tr class="memdesc:a67d4754aac48886023fae54effe2ef8c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Сигнал о количестве шагов расчета тела вращения <br /></td></tr>
+<tr class="separator:a67d4754aac48886023fae54effe2ef8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3483160c5bbf4723167a508b73f8f65a"><td class="memItemLeft" align="right" valign="top"><a id="a3483160c5bbf4723167a508b73f8f65a"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_solver.html#a3483160c5bbf4723167a508b73f8f65a">sendProgressRotationCutBody</a> (const int percent)</td></tr>
+<tr class="memdesc:a3483160c5bbf4723167a508b73f8f65a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Сигнал об текущем прогрессе расчета тела вращения со срезом <br /></td></tr>
+<tr class="separator:a3483160c5bbf4723167a508b73f8f65a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a89c79ac1ef46ac2fc758032525c40176"><td class="memItemLeft" align="right" valign="top"><a id="a89c79ac1ef46ac2fc758032525c40176"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_solver.html#a89c79ac1ef46ac2fc758032525c40176">updateRotationCutBodyMaximum</a> (const int max)</td></tr>
+<tr class="memdesc:a89c79ac1ef46ac2fc758032525c40176"><td class="mdescLeft">&#160;</td><td class="mdescRight">Сигнал о количестве шагов расчета тела вращения со срезом <br /></td></tr>
+<tr class="separator:a89c79ac1ef46ac2fc758032525c40176"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
+Открытые члены</h2></td></tr>
+<tr class="memitem:a9dfe7ae9ce617e8a6398be34284c907a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_solver.html#a9dfe7ae9ce617e8a6398be34284c907a">Solver</a> ()</td></tr>
+<tr class="separator:a9dfe7ae9ce617e8a6398be34284c907a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a27080c3f6ed244ee49f33f7582191363"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_solver.html#a27080c3f6ed244ee49f33f7582191363">Solver</a> (const <a class="el" href="struct_solver_parameters.html">SolverParameters</a> &amp;parameters)</td></tr>
+<tr class="separator:a27080c3f6ed244ee49f33f7582191363"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6af37d6f19720654c973f5e5ddef3dfe"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_solver.html#a6af37d6f19720654c973f5e5ddef3dfe">Solver</a> (const <a class="el" href="struct_solver_parameters.html">SolverParameters</a> &amp;parameters, const <a class="el" href="struct_free_motion_parameters.html">FreeMotionParameters</a> &amp;motionParameters)</td></tr>
+<tr class="separator:a6af37d6f19720654c973f5e5ddef3dfe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a84fbf208353fc2c7426daae963f43a38"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_solver.html#a84fbf208353fc2c7426daae963f43a38">sphereSolver</a> (const <a class="el" href="struct_fragmentation_parameters.html">FragmentationParameters</a> &amp;fragPar)</td></tr>
+<tr class="separator:a84fbf208353fc2c7426daae963f43a38"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adeb1acdbfb1be98fc7fb74708e7da782"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_solver.html#adeb1acdbfb1be98fc7fb74708e7da782">sphereFreeMotionSolver</a> (const <a class="el" href="struct_fragmentation_parameters.html">FragmentationParameters</a> &amp;fragPar)</td></tr>
+<tr class="separator:adeb1acdbfb1be98fc7fb74708e7da782"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a698fb6dbd8238df0120eee6027538878"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_solver.html#a698fb6dbd8238df0120eee6027538878">cylinderSolver</a> (const <a class="el" href="struct_fragmentation_parameters.html">FragmentationParameters</a> &amp;fragPar)</td></tr>
+<tr class="separator:a698fb6dbd8238df0120eee6027538878"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab33207a4b60cd437bcc2f58b04c147ca"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_solver.html#ab33207a4b60cd437bcc2f58b04c147ca">rotationBodySolver</a> (const <a class="el" href="struct_fragmentation_parameters.html">FragmentationParameters</a> &amp;fragPar)</td></tr>
+<tr class="separator:ab33207a4b60cd437bcc2f58b04c147ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a76f649c12fed87fcd5a04be0f6c090df"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_solver.html#a76f649c12fed87fcd5a04be0f6c090df">rotationCutBodySolver</a> (const <a class="el" href="struct_fragmentation_parameters.html">FragmentationParameters</a> &amp;fragPar)</td></tr>
+<tr class="separator:a76f649c12fed87fcd5a04be0f6c090df"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6f0cf72490a4ccba78dd13c49c3c1b85"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_solver.html#a6f0cf72490a4ccba78dd13c49c3c1b85">rotationCutBodySolverNearScreen</a> (const <a class="el" href="struct_fragmentation_parameters.html">FragmentationParameters</a> &amp;fragPar, const double screenDistance)</td></tr>
+<tr class="separator:a6f0cf72490a4ccba78dd13c49c3c1b85"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3b238272aed6898fd756e15a41ea0109"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_solver.html#a3b238272aed6898fd756e15a41ea0109">rotationCutBodyFreeMotionSolver</a> (const <a class="el" href="struct_fragmentation_parameters.html">FragmentationParameters</a> &amp;fragPar)</td></tr>
+<tr class="separator:a3b238272aed6898fd756e15a41ea0109"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9c473ff1a6df13539a931cace5dfff45"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_solver.html#a9c473ff1a6df13539a931cace5dfff45">rotationCutBodyLaunchSolver</a> (const <a class="el" href="struct_fragmentation_parameters.html">FragmentationParameters</a> &amp;fragPar)</td></tr>
+<tr class="separator:a9c473ff1a6df13539a931cace5dfff45"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa62532c15197fb20b689f8f20e51a187"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_solver.html#aa62532c15197fb20b689f8f20e51a187">variateSphereParameters</a> (<a class="el" href="struct_fragmentation_parameters.html">FragmentationParameters</a> fragPar, bool variateEps)</td></tr>
+<tr class="separator:aa62532c15197fb20b689f8f20e51a187"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acab3ecdd76d6a1b50ec0b714042e8539"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_solver.html#acab3ecdd76d6a1b50ec0b714042e8539">variateCylinderParameters</a> (<a class="el" href="struct_fragmentation_parameters.html">FragmentationParameters</a> fragPar, bool variateEps)</td></tr>
+<tr class="separator:acab3ecdd76d6a1b50ec0b714042e8539"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ade1d614110546924f185d41d2d9534ff"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_solver.html#ade1d614110546924f185d41d2d9534ff">variateRotationBodyParameters</a> (<a class="el" href="struct_fragmentation_parameters.html">FragmentationParameters</a> fragPar, bool variateEps)</td></tr>
+<tr class="separator:ade1d614110546924f185d41d2d9534ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6b420cf828bc7c3f8d45af84af7c0123"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_solver.html#a6b420cf828bc7c3f8d45af84af7c0123">variateRotationCutBodyParameters</a> (<a class="el" href="struct_fragmentation_parameters.html">FragmentationParameters</a> fragPar, bool variateEps)</td></tr>
+<tr class="separator:a6b420cf828bc7c3f8d45af84af7c0123"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afe651e3156a48c7c69a027b2604cf469"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_solver.html#afe651e3156a48c7c69a027b2604cf469">operator=</a> (const <a class="el" href="class_solver.html">Solver</a> &amp;solver)</td></tr>
+<tr class="separator:afe651e3156a48c7c69a027b2604cf469"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa6bcb806c9c27e2749783072e79a1bee"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_solver.html#aa6bcb806c9c27e2749783072e79a1bee">checkingVariate</a> (double &amp;dispersion, double &amp;oldDispersion, <a class="el" href="struct_fragmentation_parameters.html">FragmentationParameters</a> &amp;fragPar, <a class="el" href="struct_fragmentation_parameters.html">FragmentationParameters</a> &amp;resultFrag, <a class="el" href="struct_solver_parameters.html">SolverParameters</a> &amp;resultSolv)</td></tr>
+<tr class="separator:aa6bcb806c9c27e2749783072e79a1bee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac248de801df706a545e4d72a7bf1b9e0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_solver.html#ac248de801df706a545e4d72a7bf1b9e0">checkingForceVariate</a> (double &amp;dispersion, double &amp;oldDispersion, <a class="el" href="struct_fragmentation_parameters.html">FragmentationParameters</a> &amp;fragPar, <a class="el" href="struct_fragmentation_parameters.html">FragmentationParameters</a> &amp;resultFrag, <a class="el" href="struct_solver_parameters.html">SolverParameters</a> &amp;resultSolv)</td></tr>
+<tr class="separator:ac248de801df706a545e4d72a7bf1b9e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
+Статические открытые данные</h2></td></tr>
+<tr class="memitem:adcc2d65b392682f9d7b0a0aad09990b8"><td class="memItemLeft" align="right" valign="top"><a id="adcc2d65b392682f9d7b0a0aad09990b8"></a>
+static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_solver.html#adcc2d65b392682f9d7b0a0aad09990b8">explosion</a> =false</td></tr>
+<tr class="memdesc:adcc2d65b392682f9d7b0a0aad09990b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Существование "взрыва". <br /></td></tr>
+<tr class="separator:adcc2d65b392682f9d7b0a0aad09990b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
+Закрытые данные</h2></td></tr>
+<tr class="memitem:a025ba583b5a9d409c2709c3353fe6528"><td class="memItemLeft" align="right" valign="top"><a id="a025ba583b5a9d409c2709c3353fe6528"></a>
+<a class="el" href="struct_solver_parameters.html">SolverParameters</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_solver.html#a025ba583b5a9d409c2709c3353fe6528">solvPar</a></td></tr>
+<tr class="memdesc:a025ba583b5a9d409c2709c3353fe6528"><td class="mdescLeft">&#160;</td><td class="mdescRight">Параметры расчета <br /></td></tr>
+<tr class="separator:a025ba583b5a9d409c2709c3353fe6528"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2c9be370367477b6c90d32102efa157f"><td class="memItemLeft" align="right" valign="top"><a id="a2c9be370367477b6c90d32102efa157f"></a>
+<a class="el" href="struct_free_motion_parameters.html">FreeMotionParameters</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_solver.html#a2c9be370367477b6c90d32102efa157f">freeMotionPar</a></td></tr>
+<tr class="memdesc:a2c9be370367477b6c90d32102efa157f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Параметры свободного движения <br /></td></tr>
+<tr class="separator:a2c9be370367477b6c90d32102efa157f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1689a3de99009e073fe71adaf217f198"><td class="memItemLeft" align="right" valign="top"><a id="a1689a3de99009e073fe71adaf217f198"></a>
+QVector&lt; <a class="el" href="class_vector3_d.html">Vector3D</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_solver.html#a1689a3de99009e073fe71adaf217f198">cAerodynamics</a></td></tr>
+<tr class="memdesc:a1689a3de99009e073fe71adaf217f198"><td class="mdescLeft">&#160;</td><td class="mdescRight">Вектор значений С <br /></td></tr>
+<tr class="separator:a1689a3de99009e073fe71adaf217f198"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7a6b63bc3a9f3eb6fe78e277a284dc9b"><td class="memItemLeft" align="right" valign="top"><a id="a7a6b63bc3a9f3eb6fe78e277a284dc9b"></a>
+QVector&lt; <a class="el" href="class_vector3_d.html">Vector3D</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_solver.html#a7a6b63bc3a9f3eb6fe78e277a284dc9b">forces</a></td></tr>
+<tr class="memdesc:a7a6b63bc3a9f3eb6fe78e277a284dc9b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Вектор значений силы <br /></td></tr>
+<tr class="separator:a7a6b63bc3a9f3eb6fe78e277a284dc9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5aa8351fa034173fb987c9ec93666abe"><td class="memItemLeft" align="right" valign="top"><a id="a5aa8351fa034173fb987c9ec93666abe"></a>
+QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_solver.html#a5aa8351fa034173fb987c9ec93666abe">logPath</a></td></tr>
+<tr class="memdesc:a5aa8351fa034173fb987c9ec93666abe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Путь к каталогу для записи результатов расчета <br /></td></tr>
+<tr class="separator:a5aa8351fa034173fb987c9ec93666abe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Подробное описание</h2>
+<div class="textblock"><p>Класс, реализующий расчеты для различных типов тел </p>
+<p>Главный класс, содержащий все расчетчики. </p>
+</div><h2 class="groupheader">Конструктор(ы)</h2>
+<a id="a9dfe7ae9ce617e8a6398be34284c907a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9dfe7ae9ce617e8a6398be34284c907a">&#9670;&nbsp;</a></span>Solver() <span class="overload">[1/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Solver::Solver </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Создает экземпляр класса с нулевыми параметрами </p>
+
+</div>
+</div>
+<a id="a27080c3f6ed244ee49f33f7582191363"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a27080c3f6ed244ee49f33f7582191363">&#9670;&nbsp;</a></span>Solver() <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Solver::Solver </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="struct_solver_parameters.html">SolverParameters</a> &amp;&#160;</td>
+          <td class="paramname"><em>parameters</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Создает экземпляр класса для расчета неподвижного тела с заданными параметрами </p><dl class="params"><dt>Аргументы</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">parameters</td><td>Параметры расчета </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a6af37d6f19720654c973f5e5ddef3dfe"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6af37d6f19720654c973f5e5ddef3dfe">&#9670;&nbsp;</a></span>Solver() <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Solver::Solver </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="struct_solver_parameters.html">SolverParameters</a> &amp;&#160;</td>
+          <td class="paramname"><em>parameters</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="struct_free_motion_parameters.html">FreeMotionParameters</a> &amp;&#160;</td>
+          <td class="paramname"><em>motionParameters</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Создает экземпляр класса для расчета движущегося тела с заданными параметрами </p><dl class="params"><dt>Аргументы</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">parameters</td><td>Параметры расчета </td></tr>
+    <tr><td class="paramname">motionParameters</td><td>Параметры свободного движения </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<h2 class="groupheader">Методы</h2>
+<a id="ac248de801df706a545e4d72a7bf1b9e0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac248de801df706a545e4d72a7bf1b9e0">&#9670;&nbsp;</a></span>checkingForceVariate()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Solver::checkingForceVariate </td>
+          <td>(</td>
+          <td class="paramtype">double &amp;&#160;</td>
+          <td class="paramname"><em>dispersion</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double &amp;&#160;</td>
+          <td class="paramname"><em>oldDispersion</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="struct_fragmentation_parameters.html">FragmentationParameters</a> &amp;&#160;</td>
+          <td class="paramname"><em>fragPar</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="struct_fragmentation_parameters.html">FragmentationParameters</a> &amp;&#160;</td>
+          <td class="paramname"><em>resultFrag</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="struct_solver_parameters.html">SolverParameters</a> &amp;&#160;</td>
+          <td class="paramname"><em>resultSolv</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Функция проверки улучшения параметров для вариации (нахождение наименьшей дисперсии силы) </p><dl class="params"><dt>Аргументы</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">dispersion</td><td>Новая дисперсия силы </td></tr>
+    <tr><td class="paramname">oldDispersion</td><td>Старая дисперсия силы </td></tr>
+    <tr><td class="paramname">fragPar</td><td>Текущие значения параметров разбиения </td></tr>
+    <tr><td class="paramname">resultFrag</td><td>Лучшие значения параметров разбиения </td></tr>
+    <tr><td class="paramname">resultSolv</td><td>Лучшие значения параметров расчета </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="aa6bcb806c9c27e2749783072e79a1bee"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa6bcb806c9c27e2749783072e79a1bee">&#9670;&nbsp;</a></span>checkingVariate()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Solver::checkingVariate </td>
+          <td>(</td>
+          <td class="paramtype">double &amp;&#160;</td>
+          <td class="paramname"><em>dispersion</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double &amp;&#160;</td>
+          <td class="paramname"><em>oldDispersion</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="struct_fragmentation_parameters.html">FragmentationParameters</a> &amp;&#160;</td>
+          <td class="paramname"><em>fragPar</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="struct_fragmentation_parameters.html">FragmentationParameters</a> &amp;&#160;</td>
+          <td class="paramname"><em>resultFrag</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="struct_solver_parameters.html">SolverParameters</a> &amp;&#160;</td>
+          <td class="paramname"><em>resultSolv</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Функция проверки улучшения параметров для вариации (нахождение наименьшей дисперсии С) </p><dl class="params"><dt>Аргументы</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">dispersion</td><td>Новая дисперсия С </td></tr>
+    <tr><td class="paramname">oldDispersion</td><td>Старая дисперсия С </td></tr>
+    <tr><td class="paramname">fragPar</td><td>Текущие значения параметров разбиения </td></tr>
+    <tr><td class="paramname">resultFrag</td><td>Лучшие значения параметров разбиения </td></tr>
+    <tr><td class="paramname">resultSolv</td><td>Лучшие значения параметров расчета </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a698fb6dbd8238df0120eee6027538878"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a698fb6dbd8238df0120eee6027538878">&#9670;&nbsp;</a></span>cylinderSolver()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Solver::cylinderSolver </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="struct_fragmentation_parameters.html">FragmentationParameters</a> &amp;&#160;</td>
+          <td class="paramname"><em>fragPar</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Осуществляет расчет неподвижного цилиндра с заданными параметрами </p><dl class="params"><dt>Аргументы</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fragPar</td><td>Параметры разбиения цилиндра </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="afe651e3156a48c7c69a027b2604cf469"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afe651e3156a48c7c69a027b2604cf469">&#9670;&nbsp;</a></span>operator=()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Solver::operator= </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="class_solver.html">Solver</a> &amp;&#160;</td>
+          <td class="paramname"><em>solver</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Оператор копирования для класса </p><dl class="params"><dt>Аргументы</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">solver</td><td>Новое значение </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ab33207a4b60cd437bcc2f58b04c147ca"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab33207a4b60cd437bcc2f58b04c147ca">&#9670;&nbsp;</a></span>rotationBodySolver()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Solver::rotationBodySolver </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="struct_fragmentation_parameters.html">FragmentationParameters</a> &amp;&#160;</td>
+          <td class="paramname"><em>fragPar</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Осуществляет расчет неподвижного тела вращения с заданными параметрами </p><dl class="params"><dt>Аргументы</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fragPar</td><td>Параметры разбиения тела вращения </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a3b238272aed6898fd756e15a41ea0109"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3b238272aed6898fd756e15a41ea0109">&#9670;&nbsp;</a></span>rotationCutBodyFreeMotionSolver()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Solver::rotationCutBodyFreeMotionSolver </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="struct_fragmentation_parameters.html">FragmentationParameters</a> &amp;&#160;</td>
+          <td class="paramname"><em>fragPar</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Осуществляет расчет движущегося тела вращения со срезом с заданными параметрами </p><dl class="params"><dt>Аргументы</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fragPar</td><td>Параметры разбиения тела вращения со срезом </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a9c473ff1a6df13539a931cace5dfff45"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9c473ff1a6df13539a931cace5dfff45">&#9670;&nbsp;</a></span>rotationCutBodyLaunchSolver()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Solver::rotationCutBodyLaunchSolver </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="struct_fragmentation_parameters.html">FragmentationParameters</a> &amp;&#160;</td>
+          <td class="paramname"><em>fragPar</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Осуществляет расчет задачи старта для тела вращения со срезом с заданными параметрами </p><dl class="params"><dt>Аргументы</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fragPar</td><td>Параметры разбиения тела вращения со срезом </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a76f649c12fed87fcd5a04be0f6c090df"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a76f649c12fed87fcd5a04be0f6c090df">&#9670;&nbsp;</a></span>rotationCutBodySolver()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Solver::rotationCutBodySolver </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="struct_fragmentation_parameters.html">FragmentationParameters</a> &amp;&#160;</td>
+          <td class="paramname"><em>fragPar</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Осуществляет расчет неподвижного тела вращения со срезом с заданными параметрами </p><dl class="params"><dt>Аргументы</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fragPar</td><td>Параметры разбиения тела вращения со срезом </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a6f0cf72490a4ccba78dd13c49c3c1b85"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6f0cf72490a4ccba78dd13c49c3c1b85">&#9670;&nbsp;</a></span>rotationCutBodySolverNearScreen()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Solver::rotationCutBodySolverNearScreen </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="struct_fragmentation_parameters.html">FragmentationParameters</a> &amp;&#160;</td>
+          <td class="paramname"><em>fragPar</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const double&#160;</td>
+          <td class="paramname"><em>screenDistance</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Осуществляет расчет неподвижного тела вращения со срезом с заданными параметрами вблизи экрана </p><dl class="params"><dt>Аргументы</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fragPar</td><td>Параметры разбиения тела вращения со срезом </td></tr>
+    <tr><td class="paramname">screenDistance</td><td>Расстояние между дном тела и экраном </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="adeb1acdbfb1be98fc7fb74708e7da782"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adeb1acdbfb1be98fc7fb74708e7da782">&#9670;&nbsp;</a></span>sphereFreeMotionSolver()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Solver::sphereFreeMotionSolver </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="struct_fragmentation_parameters.html">FragmentationParameters</a> &amp;&#160;</td>
+          <td class="paramname"><em>fragPar</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Осуществляет расчет движущейся сферы с заданными параметрами </p><dl class="params"><dt>Аргументы</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fragPar</td><td>Параметры разбиения сферы </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a84fbf208353fc2c7426daae963f43a38"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a84fbf208353fc2c7426daae963f43a38">&#9670;&nbsp;</a></span>sphereSolver()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Solver::sphereSolver </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="struct_fragmentation_parameters.html">FragmentationParameters</a> &amp;&#160;</td>
+          <td class="paramname"><em>fragPar</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Осуществляет расчет неподвижной сферы с заданными параметрами </p><dl class="params"><dt>Аргументы</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fragPar</td><td>Параметры разбиения сферы </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="acab3ecdd76d6a1b50ec0b714042e8539"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acab3ecdd76d6a1b50ec0b714042e8539">&#9670;&nbsp;</a></span>variateCylinderParameters()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Solver::variateCylinderParameters </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_fragmentation_parameters.html">FragmentationParameters</a>&#160;</td>
+          <td class="paramname"><em>fragPar</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>variateEps</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Осуществляет вариацию для определения наилучших параметров цилиндра </p><dl class="params"><dt>Аргументы</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fragPar</td><td>Параметры разбиения цилиндра </td></tr>
+    <tr><td class="paramname">variateEps</td><td>Необходимость варьирования радиуса вортона </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ade1d614110546924f185d41d2d9534ff"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ade1d614110546924f185d41d2d9534ff">&#9670;&nbsp;</a></span>variateRotationBodyParameters()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Solver::variateRotationBodyParameters </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_fragmentation_parameters.html">FragmentationParameters</a>&#160;</td>
+          <td class="paramname"><em>fragPar</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>variateEps</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Осуществляет вариацию для определения наилучших параметров тела вращения </p><dl class="params"><dt>Аргументы</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fragPar</td><td>Параметры разбиения тела вращения </td></tr>
+    <tr><td class="paramname">variateEps</td><td>Необходимость варьирования радиуса вортона </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a6b420cf828bc7c3f8d45af84af7c0123"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6b420cf828bc7c3f8d45af84af7c0123">&#9670;&nbsp;</a></span>variateRotationCutBodyParameters()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Solver::variateRotationCutBodyParameters </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_fragmentation_parameters.html">FragmentationParameters</a>&#160;</td>
+          <td class="paramname"><em>fragPar</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>variateEps</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Осуществляет вариацию для определения наилучших параметров тела вращения со срезом </p><dl class="params"><dt>Аргументы</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fragPar</td><td>Параметры разбиения тела вращения со срезом </td></tr>
+    <tr><td class="paramname">variateEps</td><td>Необходимость варьирования радиуса вортона </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="aa62532c15197fb20b689f8f20e51a187"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa62532c15197fb20b689f8f20e51a187">&#9670;&nbsp;</a></span>variateSphereParameters()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Solver::variateSphereParameters </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_fragmentation_parameters.html">FragmentationParameters</a>&#160;</td>
+          <td class="paramname"><em>fragPar</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>variateEps</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Осуществляет вариацию для определения наилучших параметров сферы </p><dl class="params"><dt>Аргументы</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fragPar</td><td>Параметры разбиения сферы </td></tr>
+    <tr><td class="paramname">variateEps</td><td>Необходимость варьирования радиуса вортона </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<hr/>Объявления и описания членов классов находятся в файлах:<ul>
+<li>C:/Users/Vasily/Documents/VortexMethod/<a class="el" href="solver_8h_source.html">solver.h</a></li>
+<li>C:/Users/Vasily/Documents/VortexMethod/solver.cpp</li>
+</ul>
+</div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Создано системой &#160;<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/>
+</a> 1.8.14
+</small></address>
+</body>
+</html>

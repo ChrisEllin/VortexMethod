@@ -1,6 +1,11 @@
 #include "solversettings.h"
 #include "ui_solversettings.h"
 
+/*!
+Установка соотвествующего значения в объект структуры
+\param i Номер поля структуры
+\param value Значение поля структуры
+*/
 void SolverParameters::setData(const int i, const double value)
 {
     switch (i)
@@ -47,16 +52,27 @@ void SolverParameters::setData(const int i, const double value)
     }
 }
 
+/*!
+Установка значения скорости потока в объект структуры
+\param value Значение скорости потока
+*/
 void SolverParameters::setData(const Vector3D value)
 {
     streamVel=value;
 }
 
+/*!
+Установка значения скорости свободного движения тела в объект структуры
+\param value Значение скорости потока
+*/
 void FreeMotionParameters::setData(const Vector3D value)
 {
     bodyVel=value;
 }
 
+/*!
+Создание формы и инициализация стандартных и текущих параметров
+*/
 SolverSettings::SolverSettings(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::SolverSettings)
@@ -83,21 +99,35 @@ SolverSettings::SolverSettings(QWidget *parent) :
     freeMotionPar=standartFreeMotionPar;
 }
 
+/*!
+Возвращает текущие параметры расчета
+\return Текущие параметры расчета
+*/
 SolverParameters SolverSettings::getSolverParameters()
 {
     return solvPar;
 }
 
+/*!
+Возвращает текущие параметры свободного движения
+\return Текущие параметры свободного движения
+*/
 FreeMotionParameters SolverSettings::getFreeMotionParameters()
 {
     return freeMotionPar;
 }
 
+/*!
+Удаляет текущую форму
+*/
 SolverSettings::~SolverSettings()
 {
     delete ui;
 }
 
+/*!
+Устанавливает текущие параметры расчета
+*/
 void SolverSettings::setSolverParameters(SolverParameters &newSolvPar)
 {
     ui->maxMoveLineEdit->setText(QString::number(newSolvPar.maxMove));
@@ -120,6 +150,9 @@ void SolverSettings::setSolverParameters(SolverParameters &newSolvPar)
     solvPar=newSolvPar;
 }
 
+/*!
+Сохраняет текущие параметры расчета
+*/
 void SolverSettings::on_saveSolverSettingsPushButton_clicked()
 {
     if (ui->stepLineEdit->text().isEmpty())
@@ -213,6 +246,9 @@ void SolverSettings::on_saveSolverSettingsPushButton_clicked()
     hide();
 }
 
+/*!
+Сбрасывает текущие параметры расчета
+*/
 void SolverSettings::on_resetSettingsPushButton_clicked()
 {
     solvPar=standartPar;
@@ -234,6 +270,9 @@ void SolverSettings::on_resetSettingsPushButton_clicked()
     ui->zVelStreamLineEdit->setText(QString::number(solvPar.streamVel.z()));
 }
 
+/*!
+Сохраняет текущие параметры свободного движения
+*/
 void SolverSettings::on_saveFreeMotionSettingsPushButton_clicked()
 {
     if (ui->xVelBodyLineEdit->text().isEmpty()||ui->yVelBodyLineEdit->text().isEmpty()||ui->zVelBodyLineEdit->text().isEmpty())
@@ -246,6 +285,9 @@ void SolverSettings::on_saveFreeMotionSettingsPushButton_clicked()
     hide();
 }
 
+/*!
+Сбрасывает текущие параметры свободного движения
+*/
 void SolverSettings::on_resetFreeMotionSettingsPushButton_clicked()
 {
     freeMotionPar=standartFreeMotionPar;

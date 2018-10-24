@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.8.14"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>VortexMethod: Исходный файл C:/Users/Vasily/Documents/VortexMethod/vector2d.h</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">VortexMethod
+   &#160;<span id="projectnumber">v.2.0</span>
+   </div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Создано системой Doxygen 1.8.14 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+var searchBox = new SearchBox("searchBox", "search",false,'Поиск');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+$(function() {
+  initMenu('',true,false,'search.php','Поиск');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */</script>
+<div id="main-nav"></div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="dir_e6bb53534ac0e427887cf7a94c0c004e.html">C:</a></li><li class="navelem"><a class="el" href="dir_8ceffd4ee35c3518d4e8bdc7e638efe8.html">Users</a></li><li class="navelem"><a class="el" href="dir_68fe78b4eb952f4bc68c9609bd3ad245.html">Vasily</a></li><li class="navelem"><a class="el" href="dir_677ebbd0a3dbc5c6b9f3854a38563884.html">Documents</a></li><li class="navelem"><a class="el" href="dir_ba5e697c0829996ea7942d3e1ec5ac35.html">VortexMethod</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="headertitle">
+<div class="title">vector2d.h</div>  </div>
+</div><!--header-->
+<div class="contents">
+<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#ifndef VECTOR2D_H</span></div><div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#define VECTOR2D_H</span></div><div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &lt;QMessageBox&gt;</span></div><div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &lt;cmath&gt;</span></div><div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;</div><div class="line"><a name="l00009"></a><span class="lineno"><a class="line" href="class_vector2_d.html">    9</a></span>&#160;<span class="keyword">class </span><a class="code" href="class_vector2_d.html">Vector2D</a></div><div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;{</div><div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="keyword">private</span>:</div><div class="line"><a name="l00012"></a><span class="lineno"><a class="line" href="class_vector2_d.html#a6144dc7fbcc1de7ecd760db73c3fb377">   12</a></span>&#160;    <span class="keywordtype">double</span> <a class="code" href="class_vector2_d.html#a6144dc7fbcc1de7ecd760db73c3fb377">X</a>; </div><div class="line"><a name="l00013"></a><span class="lineno"><a class="line" href="class_vector2_d.html#a36ceeb774a2f648e34ba6ecb7a48f5c2">   13</a></span>&#160;    <span class="keywordtype">double</span> <a class="code" href="class_vector2_d.html#a36ceeb774a2f648e34ba6ecb7a48f5c2">Y</a>; </div><div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="keyword">public</span>:</div><div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    <a class="code" href="class_vector2_d.html#a98e9997ebb7a629f4db52397d4e0d653">Vector2D</a>();</div><div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    <a class="code" href="class_vector2_d.html#a98e9997ebb7a629f4db52397d4e0d653">Vector2D</a>(<span class="keyword">const</span> <span class="keywordtype">double</span> _x, <span class="keyword">const</span> <span class="keywordtype">double</span> _y);</div><div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;</div><div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    <span class="keywordtype">double</span> <a class="code" href="class_vector2_d.html#a56b4174bc06988a5df894457c09d9677">length</a>();</div><div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    <span class="keywordtype">double</span> <a class="code" href="class_vector2_d.html#a809281a82c36622fc67f96ec4ee2bbbc">lengthSquared</a>();</div><div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    <a class="code" href="class_vector2_d.html">Vector2D</a> <a class="code" href="class_vector2_d.html#a37ab07daec20b3bbdf8742cb8799f291">normalized</a>();</div><div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_vector2_d.html#a00b90f2937ea343d8cad1c3b4a340baf">x</a>(<span class="keyword">const</span> <span class="keywordtype">double</span> _x);</div><div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_vector2_d.html#a4989f56e0e142a183ba3b9127f2fa794">y</a>(<span class="keyword">const</span> <span class="keywordtype">double</span> _y);</div><div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;</div><div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    <span class="keywordtype">double</span> <a class="code" href="class_vector2_d.html#a00b90f2937ea343d8cad1c3b4a340baf">x</a>() <span class="keyword">const</span>;</div><div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    <span class="keywordtype">double</span> <a class="code" href="class_vector2_d.html#a4989f56e0e142a183ba3b9127f2fa794">y</a>() <span class="keyword">const</span>;</div><div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;</div><div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_vector2_d.html#a7966363669d4914b5554d5a8e93ea7d3">operator = </a>(<span class="keyword">const</span> <a class="code" href="class_vector2_d.html">Vector2D</a> &amp;vec1);</div><div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    <a class="code" href="class_vector2_d.html">Vector2D</a> <a class="code" href="class_vector2_d.html#a4eb1b4403004c8632bb2468cf1942ea5">operator -</a>();</div><div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    <span class="keywordtype">double</span>&amp; <a class="code" href="class_vector2_d.html#a36aeaa2a8025f6307489b8f57220c760">operator[]</a>(<span class="keyword">const</span> <span class="keywordtype">double</span> i);</div><div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;};</div><div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div><div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<a class="code" href="class_vector2_d.html">Vector2D</a> operator + (<span class="keyword">const</span> <a class="code" href="class_vector2_d.html">Vector2D</a> &amp;vec1, <span class="keyword">const</span> <a class="code" href="class_vector2_d.html">Vector2D</a> &amp;vec2);</div><div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<a class="code" href="class_vector2_d.html">Vector2D</a> operator - (<span class="keyword">const</span> <a class="code" href="class_vector2_d.html">Vector2D</a> &amp;vec1, <span class="keyword">const</span> <a class="code" href="class_vector2_d.html">Vector2D</a> &amp;vec2);</div><div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<a class="code" href="class_vector2_d.html">Vector2D</a> operator * (<span class="keyword">const</span> <a class="code" href="class_vector2_d.html">Vector2D</a> &amp;vec1, <span class="keyword">const</span> <span class="keywordtype">double</span> value);</div><div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<a class="code" href="class_vector2_d.html">Vector2D</a> operator * (<span class="keyword">const</span> <span class="keywordtype">double</span> value, <span class="keyword">const</span> <a class="code" href="class_vector2_d.html">Vector2D</a> &amp;vec1);</div><div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<a class="code" href="class_vector2_d.html">Vector2D</a> operator / (<span class="keyword">const</span> <a class="code" href="class_vector2_d.html">Vector2D</a> &amp;vec1, <span class="keyword">const</span> <span class="keywordtype">double</span> value);</div><div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="keywordtype">void</span> operator += (<a class="code" href="class_vector2_d.html">Vector2D</a> &amp;vec1, <span class="keyword">const</span> <a class="code" href="class_vector2_d.html">Vector2D</a> &amp;vec2);</div><div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="keywordtype">void</span> operator -= (<a class="code" href="class_vector2_d.html">Vector2D</a> &amp;vec1, <span class="keyword">const</span> <a class="code" href="class_vector2_d.html">Vector2D</a> &amp;vec2);</div><div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="keywordtype">void</span> operator *= (<a class="code" href="class_vector2_d.html">Vector2D</a> &amp;vec1, <span class="keyword">const</span> <span class="keywordtype">double</span> value);</div><div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="keywordtype">void</span> operator /= (<a class="code" href="class_vector2_d.html">Vector2D</a> &amp;vec1, <span class="keyword">const</span> <span class="keywordtype">double</span> value);</div><div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="keywordtype">bool</span> operator == (<span class="keyword">const</span> <a class="code" href="class_vector2_d.html">Vector2D</a>&amp; vec1, <span class="keyword">const</span> <a class="code" href="class_vector2_d.html">Vector2D</a>&amp; vec2);</div><div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="keywordtype">bool</span> operator != (<span class="keyword">const</span> <a class="code" href="class_vector2_d.html">Vector2D</a>&amp; vec1, <span class="keyword">const</span> <a class="code" href="class_vector2_d.html">Vector2D</a>&amp; vec2);</div><div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;</div><div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="preprocessor">#endif // VECTOR2D_H</span></div><div class="ttc" id="class_vector2_d_html_a37ab07daec20b3bbdf8742cb8799f291"><div class="ttname"><a href="class_vector2_d.html#a37ab07daec20b3bbdf8742cb8799f291">Vector2D::normalized</a></div><div class="ttdeci">Vector2D normalized()</div><div class="ttdef"><b>Definition:</b> vector2d.cpp:44</div></div>
+<div class="ttc" id="class_vector2_d_html_a4eb1b4403004c8632bb2468cf1942ea5"><div class="ttname"><a href="class_vector2_d.html#a4eb1b4403004c8632bb2468cf1942ea5">Vector2D::operator-</a></div><div class="ttdeci">Vector2D operator-()</div><div class="ttdef"><b>Definition:</b> vector2d.cpp:96</div></div>
+<div class="ttc" id="class_vector2_d_html_a6144dc7fbcc1de7ecd760db73c3fb377"><div class="ttname"><a href="class_vector2_d.html#a6144dc7fbcc1de7ecd760db73c3fb377">Vector2D::X</a></div><div class="ttdeci">double X</div><div class="ttdoc">X компонента вектора </div><div class="ttdef"><b>Definition:</b> vector2d.h:12</div></div>
+<div class="ttc" id="class_vector2_d_html_a4989f56e0e142a183ba3b9127f2fa794"><div class="ttname"><a href="class_vector2_d.html#a4989f56e0e142a183ba3b9127f2fa794">Vector2D::y</a></div><div class="ttdeci">double y() const</div><div class="ttdef"><b>Definition:</b> vector2d.cpp:78</div></div>
+<div class="ttc" id="class_vector2_d_html_a36ceeb774a2f648e34ba6ecb7a48f5c2"><div class="ttname"><a href="class_vector2_d.html#a36ceeb774a2f648e34ba6ecb7a48f5c2">Vector2D::Y</a></div><div class="ttdeci">double Y</div><div class="ttdoc">Y компонента вектора </div><div class="ttdef"><b>Definition:</b> vector2d.h:13</div></div>
+<div class="ttc" id="class_vector2_d_html_a36aeaa2a8025f6307489b8f57220c760"><div class="ttname"><a href="class_vector2_d.html#a36aeaa2a8025f6307489b8f57220c760">Vector2D::operator[]</a></div><div class="ttdeci">double &amp; operator[](const double i)</div><div class="ttdef"><b>Definition:</b> vector2d.cpp:107</div></div>
+<div class="ttc" id="class_vector2_d_html_a809281a82c36622fc67f96ec4ee2bbbc"><div class="ttname"><a href="class_vector2_d.html#a809281a82c36622fc67f96ec4ee2bbbc">Vector2D::lengthSquared</a></div><div class="ttdeci">double lengthSquared()</div><div class="ttdef"><b>Definition:</b> vector2d.cpp:35</div></div>
+<div class="ttc" id="class_vector2_d_html"><div class="ttname"><a href="class_vector2_d.html">Vector2D</a></div><div class="ttdoc">Класс, реализующий двумерный вектор с double-компонентами </div><div class="ttdef"><b>Definition:</b> vector2d.h:9</div></div>
+<div class="ttc" id="class_vector2_d_html_a98e9997ebb7a629f4db52397d4e0d653"><div class="ttname"><a href="class_vector2_d.html#a98e9997ebb7a629f4db52397d4e0d653">Vector2D::Vector2D</a></div><div class="ttdeci">Vector2D()</div><div class="ttdef"><b>Definition:</b> vector2d.cpp:6</div></div>
+<div class="ttc" id="class_vector2_d_html_a7966363669d4914b5554d5a8e93ea7d3"><div class="ttname"><a href="class_vector2_d.html#a7966363669d4914b5554d5a8e93ea7d3">Vector2D::operator=</a></div><div class="ttdeci">void operator=(const Vector2D &amp;vec1)</div><div class="ttdef"><b>Definition:</b> vector2d.cpp:87</div></div>
+<div class="ttc" id="class_vector2_d_html_a56b4174bc06988a5df894457c09d9677"><div class="ttname"><a href="class_vector2_d.html#a56b4174bc06988a5df894457c09d9677">Vector2D::length</a></div><div class="ttdeci">double length()</div><div class="ttdef"><b>Definition:</b> vector2d.cpp:26</div></div>
+<div class="ttc" id="class_vector2_d_html_a00b90f2937ea343d8cad1c3b4a340baf"><div class="ttname"><a href="class_vector2_d.html#a00b90f2937ea343d8cad1c3b4a340baf">Vector2D::x</a></div><div class="ttdeci">double x() const</div><div class="ttdef"><b>Definition:</b> vector2d.cpp:70</div></div>
+</div><!-- fragment --></div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Создано системой &#160;<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/>
+</a> 1.8.14
+</small></address>
+</body>
+</html>

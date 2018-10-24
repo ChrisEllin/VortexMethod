@@ -2,13 +2,19 @@
 #define MultiFrame_H
 #include "vorton.h"
 
+/*!
+    \brief Класс, представляющий собой многоугольную рамку
+
+    Создает многоугольную рамку из вортон-отрезков для последующего построения сетки вокруг тела
+*/
+
 class MultiFrame
 {
 protected:
-    int anglesNum;
-    double vorticity;
-    QVector<Vorton> vortons;
-    Vector3D center;
+    int anglesNum; ///<Количество углов
+    double vorticity; ///<Завихренность рамки (Гамма)
+    QVector<Vorton> vortons; ///<Вектор вортон-отрезков, из которых состоит рамка
+    Vector3D center; ///<Центр рамки в трехмерном пространстве
 public:
     MultiFrame();
     MultiFrame(const int anglesNumber, const Vector3D& r0, const Vector3D& r01, const Vector3D& r11, const double eps);

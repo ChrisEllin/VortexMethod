@@ -1,0 +1,55 @@
+\hypertarget{struct_timers}{}\section{Структура Timers}
+\label{struct_timers}\index{Timers@{Timers}}
+
+
+Контейнер, представляющий собой структуру для хранения таймеров  
+
+
+
+
+{\ttfamily \#include $<$framecalculations.\+h$>$}
+
+\subsection*{Открытые члены}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{struct_timers_afc4db9e23485b679e2f069f2860a4326}{clear}} ()
+\end{DoxyCompactItemize}
+\subsection*{Открытые атрибуты}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{struct_timers_affd258e9976a6f79f70beaca10811e2a}\label{struct_timers_affd258e9976a6f79f70beaca10811e2a}} 
+double \mbox{\hyperlink{struct_timers_affd258e9976a6f79f70beaca10811e2a}{integration\+Timer}}
+\begin{DoxyCompactList}\small\item\em Время, затраченное на расчет перемещений и удлинений \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_timers_a12e4298f8f6516bb1d87bcdf00e8a53a}\label{struct_timers_a12e4298f8f6516bb1d87bcdf00e8a53a}} 
+double \mbox{\hyperlink{struct_timers_a12e4298f8f6516bb1d87bcdf00e8a53a}{union\+Timer}}
+\begin{DoxyCompactList}\small\item\em Время, затраченное на объединение вортонов \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_timers_a3f9d970ccfbeec3fb0cc9d58e9a274bf}\label{struct_timers_a3f9d970ccfbeec3fb0cc9d58e9a274bf}} 
+double \mbox{\hyperlink{struct_timers_a3f9d970ccfbeec3fb0cc9d58e9a274bf}{remove\+Vorticity\+Timer}}
+\begin{DoxyCompactList}\small\item\em Время, затраченное на удаление вортонов по причине малой завихренности \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_timers_ad7b79d88bce6e9f7964db7528bd58f46}\label{struct_timers_ad7b79d88bce6e9f7964db7528bd58f46}} 
+double \mbox{\hyperlink{struct_timers_ad7b79d88bce6e9f7964db7528bd58f46}{force\+Timer}}
+\begin{DoxyCompactList}\small\item\em Время, затраченное на расчет величин действующих на тело сил \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_timers_ab2f42ccccc54fade82616e38d849cb3e}\label{struct_timers_ab2f42ccccc54fade82616e38d849cb3e}} 
+double \mbox{\hyperlink{struct_timers_ab2f42ccccc54fade82616e38d849cb3e}{far\+Timer}}
+\begin{DoxyCompactList}\small\item\em Время, затраченное на удаление вортонов по причине большой дальности \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_timers_a69059d6a877837dd7079e86232ec4085}\label{struct_timers_a69059d6a877837dd7079e86232ec4085}} 
+double \mbox{\hyperlink{struct_timers_a69059d6a877837dd7079e86232ec4085}{get\+Back\+And\+Rotate\+Timer}}
+\begin{DoxyCompactList}\small\item\em Время, затраченное на возвращение вортонов из тела в поток и на разворот вортонов относительно поверхности в слое \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Подробное описание}
+Контейнер, представляющий собой структуру для хранения таймеров 
+
+\subsection{Методы}
+\mbox{\Hypertarget{struct_timers_afc4db9e23485b679e2f069f2860a4326}\label{struct_timers_afc4db9e23485b679e2f069f2860a4326}} 
+\index{Timers@{Timers}!clear@{clear}}
+\index{clear@{clear}!Timers@{Timers}}
+\subsubsection{\texorpdfstring{clear()}{clear()}}
+{\footnotesize\ttfamily void Timers\+::clear (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Обнуляет значения всех таймеров 
+
+Объявления и описания членов структур находятся в файлах\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Users/\+Vasily/\+Documents/\+Vortex\+Method/\mbox{\hyperlink{framecalculations_8h}{framecalculations.\+h}}\item 
+C\+:/\+Users/\+Vasily/\+Documents/\+Vortex\+Method/framecalculations.\+cpp\end{DoxyCompactItemize}

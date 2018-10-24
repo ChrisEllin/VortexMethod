@@ -1,0 +1,374 @@
+\hypertarget{class_multi_frame}{}\section{Класс Multi\+Frame}
+\label{class_multi_frame}\index{Multi\+Frame@{Multi\+Frame}}
+
+
+Класс, представляющий собой многоугольную рамку  
+
+
+
+
+{\ttfamily \#include $<$multiframe.\+h$>$}
+
+
+
+Граф наследования\+:Multi\+Frame\+:
+% FIG 0
+
+
+Граф связей класса Multi\+Frame\+:
+% FIG 1
+\subsection*{Открытые члены}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_multi_frame_a08ec547ed70cf94539b3a52c2b51363b}{Multi\+Frame}} ()
+\item 
+\mbox{\hyperlink{class_multi_frame_ac999837ae56636f06eafc9b932c37082}{Multi\+Frame}} (const int angles\+Number, const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&r0, const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&r01, const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&r11, const double eps)
+\item 
+virtual \mbox{\hyperlink{class_vorton}{Vorton}} \& \mbox{\hyperlink{class_multi_frame_ad2dbc878f956dcf3301c6a7138411e6c}{operator\mbox{[}$\,$\mbox{]}}} (std\+::size\+\_\+t i)
+\item 
+virtual \mbox{\hyperlink{class_vorton}{Vorton}} \& \mbox{\hyperlink{class_multi_frame_a5295ef9753e14e5ea136a18563a918b8}{at}} (int i)
+\item 
+virtual \mbox{\hyperlink{class_vector3_d}{Vector3D}} \mbox{\hyperlink{class_multi_frame_a7bc27f76622612b9ccef915c848e492d}{q}} (const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&point) const
+\item 
+virtual \mbox{\hyperlink{class_vector3_d}{Vector3D}} \mbox{\hyperlink{class_multi_frame_a8da38b4d64ae762dfcb995911031ebf8}{q\+Help}} (const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&point) const
+\item 
+virtual \mbox{\hyperlink{class_vector3_d}{Vector3D}} \mbox{\hyperlink{class_multi_frame_a18a1755403fa12c2f59e81078e1dd34e}{velocity}} (const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&point) const
+\item 
+virtual void \mbox{\hyperlink{class_multi_frame_ae06b45f3403f1c6b03d3c6d58aa9f519}{set\+Vorticity}} (const double \+\_\+vorticity)
+\item 
+virtual \mbox{\hyperlink{struct_vel_bsym}{Vel\+Bsym}} \mbox{\hyperlink{class_multi_frame_a60269c2c56aace32bb0fe0a70731a309}{Vel\+And\+Bsym}} (const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&point) const
+\item 
+virtual Q\+Vector$<$ \mbox{\hyperlink{class_vector3_d}{Vector3D}} $>$ \mbox{\hyperlink{class_multi_frame_a0860bf9a98789ee07334f28e0015769a}{get\+Three\+Edges}} () const
+\item 
+virtual double \mbox{\hyperlink{class_multi_frame_af0c54493c44094ca492e2ec653a3a956}{solid\+Angle\+Frame}} (const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&point) const
+\item 
+virtual double \mbox{\hyperlink{class_multi_frame_ac9aa5421ef5127a6465a2ead23b97c78}{fi}} (const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&point) const
+\item 
+virtual void \mbox{\hyperlink{class_multi_frame_aa572cc6695d008943b4f3f4e585742e4}{translate}} (const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&translation)
+\item 
+virtual Q\+Vector$<$ \mbox{\hyperlink{class_vorton}{Vorton}} $>$ \mbox{\hyperlink{class_multi_frame_a33c0682a1b9c8966c52f8c1274febde2}{get\+Vortons}} () const
+\item 
+virtual Q\+Vector$<$ \mbox{\hyperlink{class_vorton}{Vorton}} $>$ \mbox{\hyperlink{class_multi_frame_a676285039ba30dd258b04104b2139f90}{get\+Lifted\+Vortons}} (const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&translation) const
+\item 
+virtual double \mbox{\hyperlink{class_multi_frame_aec90f5195c25d12a0caae0cf0fd27864}{get\+Vorticity}} () const
+\item 
+virtual int \mbox{\hyperlink{class_multi_frame_a6ac6294e45d6337e72d91cec60080ff4}{get\+Angles\+Num}} () const
+\item 
+virtual void \mbox{\hyperlink{class_multi_frame_a7a89904f35c2d3e87f38e9c207a58f61}{set\+Center}} (const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&\+\_\+center)
+\item 
+virtual \mbox{\hyperlink{class_vector3_d}{Vector3D}} \mbox{\hyperlink{class_multi_frame_a60bcd87f0a269b421ad4539325898bd7}{get\+Center}} () const
+\end{DoxyCompactItemize}
+\subsection*{Открытые статические члены}
+\begin{DoxyCompactItemize}
+\item 
+static double \mbox{\hyperlink{class_multi_frame_aa7f6c2151ad01f190edd3757f5ef8162}{solid\+Angle}} (const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&v1, const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&v2, const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&v3, const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&point)
+\end{DoxyCompactItemize}
+\subsection*{Защищенные данные}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_multi_frame_a45c105d3e683c9743692bc758b51b908}\label{class_multi_frame_a45c105d3e683c9743692bc758b51b908}} 
+int \mbox{\hyperlink{class_multi_frame_a45c105d3e683c9743692bc758b51b908}{angles\+Num}}
+\begin{DoxyCompactList}\small\item\em Количество углов \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_multi_frame_a6a8405bde51da4e85db02bf0945a92a1}\label{class_multi_frame_a6a8405bde51da4e85db02bf0945a92a1}} 
+double \mbox{\hyperlink{class_multi_frame_a6a8405bde51da4e85db02bf0945a92a1}{vorticity}}
+\begin{DoxyCompactList}\small\item\em Завихренность рамки (Гамма) \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_multi_frame_a188448fa03c5f3cf96cd1f4f3ee9e35f}\label{class_multi_frame_a188448fa03c5f3cf96cd1f4f3ee9e35f}} 
+Q\+Vector$<$ \mbox{\hyperlink{class_vorton}{Vorton}} $>$ \mbox{\hyperlink{class_multi_frame_a188448fa03c5f3cf96cd1f4f3ee9e35f}{vortons}}
+\begin{DoxyCompactList}\small\item\em Вектор вортон-\/отрезков, из которых состоит рамка \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_multi_frame_a0d42c7c25aa6ad15d9003510c2356e21}\label{class_multi_frame_a0d42c7c25aa6ad15d9003510c2356e21}} 
+\mbox{\hyperlink{class_vector3_d}{Vector3D}} \mbox{\hyperlink{class_multi_frame_a0d42c7c25aa6ad15d9003510c2356e21}{center}}
+\begin{DoxyCompactList}\small\item\em Центр рамки в трехмерном пространстве \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Подробное описание}
+Класс, представляющий собой многоугольную рамку 
+
+Создает многоугольную рамку из вортон-\/отрезков для последующего построения сетки вокруг тела 
+
+\subsection{Конструктор(ы)}
+\mbox{\Hypertarget{class_multi_frame_a08ec547ed70cf94539b3a52c2b51363b}\label{class_multi_frame_a08ec547ed70cf94539b3a52c2b51363b}} 
+\index{Multi\+Frame@{Multi\+Frame}!Multi\+Frame@{Multi\+Frame}}
+\index{Multi\+Frame@{Multi\+Frame}!Multi\+Frame@{Multi\+Frame}}
+\subsubsection{\texorpdfstring{Multi\+Frame()}{MultiFrame()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Multi\+Frame\+::\+Multi\+Frame (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Cоздает пустую рамку \mbox{\Hypertarget{class_multi_frame_ac999837ae56636f06eafc9b932c37082}\label{class_multi_frame_ac999837ae56636f06eafc9b932c37082}} 
+\index{Multi\+Frame@{Multi\+Frame}!Multi\+Frame@{Multi\+Frame}}
+\index{Multi\+Frame@{Multi\+Frame}!Multi\+Frame@{Multi\+Frame}}
+\subsubsection{\texorpdfstring{Multi\+Frame()}{MultiFrame()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Multi\+Frame\+::\+Multi\+Frame (\begin{DoxyParamCaption}\item[{const int}]{angles\+Number,  }\item[{const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&}]{r0,  }\item[{const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&}]{r01,  }\item[{const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&}]{r11,  }\item[{const double}]{eps }\end{DoxyParamCaption})}
+
+Записывает рамку из заданных значений 
+\begin{DoxyParams}{Аргументы}
+{\em angles\+Number} & количество углов \\
+\hline
+{\em r0} & координата центра рамки \\
+\hline
+{\em r01} & координата первого угла рамки \\
+\hline
+{\em r11} & координата второго угла рамки \\
+\hline
+{\em eps} & значение радиуса вортон-\/отрезка \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{Методы}
+\mbox{\Hypertarget{class_multi_frame_a5295ef9753e14e5ea136a18563a918b8}\label{class_multi_frame_a5295ef9753e14e5ea136a18563a918b8}} 
+\index{Multi\+Frame@{Multi\+Frame}!at@{at}}
+\index{at@{at}!Multi\+Frame@{Multi\+Frame}}
+\subsubsection{\texorpdfstring{at()}{at()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_vorton}{Vorton}} \& Multi\+Frame\+::at (\begin{DoxyParamCaption}\item[{int}]{i }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+Возращает вортон-\/отрезок с заданным номером 
+\begin{DoxyParams}{Аргументы}
+{\em i} & номер искомого вортон-\/отрезка \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Возвращает}
+искомый вортон-\/отрезок 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_multi_frame_ac9aa5421ef5127a6465a2ead23b97c78}\label{class_multi_frame_ac9aa5421ef5127a6465a2ead23b97c78}} 
+\index{Multi\+Frame@{Multi\+Frame}!fi@{fi}}
+\index{fi@{fi}!Multi\+Frame@{Multi\+Frame}}
+\subsubsection{\texorpdfstring{fi()}{fi()}}
+{\footnotesize\ttfamily double Multi\+Frame\+::fi (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&}]{point }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [virtual]}}
+
+Возращает значение угла fi от рамки в заданной точке 
+\begin{DoxyParams}{Аргументы}
+{\em point} & заданная точка \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Возвращает}
+значение угла fi 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_multi_frame_a6ac6294e45d6337e72d91cec60080ff4}\label{class_multi_frame_a6ac6294e45d6337e72d91cec60080ff4}} 
+\index{Multi\+Frame@{Multi\+Frame}!get\+Angles\+Num@{get\+Angles\+Num}}
+\index{get\+Angles\+Num@{get\+Angles\+Num}!Multi\+Frame@{Multi\+Frame}}
+\subsubsection{\texorpdfstring{get\+Angles\+Num()}{getAnglesNum()}}
+{\footnotesize\ttfamily int Multi\+Frame\+::get\+Angles\+Num (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [virtual]}}
+
+Возвращает количество углов рамки \begin{DoxyReturn}{Возвращает}
+количество углов 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_multi_frame_a60bcd87f0a269b421ad4539325898bd7}\label{class_multi_frame_a60bcd87f0a269b421ad4539325898bd7}} 
+\index{Multi\+Frame@{Multi\+Frame}!get\+Center@{get\+Center}}
+\index{get\+Center@{get\+Center}!Multi\+Frame@{Multi\+Frame}}
+\subsubsection{\texorpdfstring{get\+Center()}{getCenter()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_vector3_d}{Vector3D}} Multi\+Frame\+::get\+Center (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [virtual]}}
+
+Возвращает значение центра рамки \begin{DoxyReturn}{Возвращает}
+Координата центра рамки 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_multi_frame_a676285039ba30dd258b04104b2139f90}\label{class_multi_frame_a676285039ba30dd258b04104b2139f90}} 
+\index{Multi\+Frame@{Multi\+Frame}!get\+Lifted\+Vortons@{get\+Lifted\+Vortons}}
+\index{get\+Lifted\+Vortons@{get\+Lifted\+Vortons}!Multi\+Frame@{Multi\+Frame}}
+\subsubsection{\texorpdfstring{get\+Lifted\+Vortons()}{getLiftedVortons()}}
+{\footnotesize\ttfamily Q\+Vector$<$ \mbox{\hyperlink{class_vorton}{Vorton}} $>$ Multi\+Frame\+::get\+Lifted\+Vortons (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&}]{translation }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [virtual]}}
+
+Возвращает поднятые вортон-\/отрезки полученные от рамки 
+\begin{DoxyParams}{Аргументы}
+{\em translation} & направление подъема \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Возвращает}
+вектор вортон-\/отрезков 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_multi_frame_a0860bf9a98789ee07334f28e0015769a}\label{class_multi_frame_a0860bf9a98789ee07334f28e0015769a}} 
+\index{Multi\+Frame@{Multi\+Frame}!get\+Three\+Edges@{get\+Three\+Edges}}
+\index{get\+Three\+Edges@{get\+Three\+Edges}!Multi\+Frame@{Multi\+Frame}}
+\subsubsection{\texorpdfstring{get\+Three\+Edges()}{getThreeEdges()}}
+{\footnotesize\ttfamily Q\+Vector$<$ \mbox{\hyperlink{class_vector3_d}{Vector3D}} $>$ Multi\+Frame\+::get\+Three\+Edges (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [virtual]}}
+
+Возращает три грани рамки \begin{DoxyReturn}{Возвращает}
+вектор, состоящий из трех концов вортон-\/отрезков 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_multi_frame_aec90f5195c25d12a0caae0cf0fd27864}\label{class_multi_frame_aec90f5195c25d12a0caae0cf0fd27864}} 
+\index{Multi\+Frame@{Multi\+Frame}!get\+Vorticity@{get\+Vorticity}}
+\index{get\+Vorticity@{get\+Vorticity}!Multi\+Frame@{Multi\+Frame}}
+\subsubsection{\texorpdfstring{get\+Vorticity()}{getVorticity()}}
+{\footnotesize\ttfamily double Multi\+Frame\+::get\+Vorticity (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [virtual]}}
+
+Возвращает значение завихренности рамки \begin{DoxyReturn}{Возвращает}
+значение завихренности 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_multi_frame_a33c0682a1b9c8966c52f8c1274febde2}\label{class_multi_frame_a33c0682a1b9c8966c52f8c1274febde2}} 
+\index{Multi\+Frame@{Multi\+Frame}!get\+Vortons@{get\+Vortons}}
+\index{get\+Vortons@{get\+Vortons}!Multi\+Frame@{Multi\+Frame}}
+\subsubsection{\texorpdfstring{get\+Vortons()}{getVortons()}}
+{\footnotesize\ttfamily Q\+Vector$<$ \mbox{\hyperlink{class_vorton}{Vorton}} $>$ Multi\+Frame\+::get\+Vortons (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [virtual]}}
+
+Возвращает вортон-\/отрезки полученные от рамки \begin{DoxyReturn}{Возвращает}
+вектор вортон-\/отрезков 
+\end{DoxyReturn}
+
+
+Переопределяется в \mbox{\hyperlink{class_four_frame_a52bff30c98e07de59f17234fc5af03e0}{Four\+Frame}}.
+
+\mbox{\Hypertarget{class_multi_frame_ad2dbc878f956dcf3301c6a7138411e6c}\label{class_multi_frame_ad2dbc878f956dcf3301c6a7138411e6c}} 
+\index{Multi\+Frame@{Multi\+Frame}!operator\mbox{[}\mbox{]}@{operator[]}}
+\index{operator\mbox{[}\mbox{]}@{operator[]}!Multi\+Frame@{Multi\+Frame}}
+\subsubsection{\texorpdfstring{operator[]()}{operator[]()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_vorton}{Vorton}} \& Multi\+Frame\+::operator\mbox{[}$\,$\mbox{]} (\begin{DoxyParamCaption}\item[{std\+::size\+\_\+t}]{i }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+Возращает вортон-\/отрезок с заданным номером 
+\begin{DoxyParams}{Аргументы}
+{\em i} & номер искомого вортон-\/отрезка \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Возвращает}
+искомый вортон-\/отрезок 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_multi_frame_a7bc27f76622612b9ccef915c848e492d}\label{class_multi_frame_a7bc27f76622612b9ccef915c848e492d}} 
+\index{Multi\+Frame@{Multi\+Frame}!q@{q}}
+\index{q@{q}!Multi\+Frame@{Multi\+Frame}}
+\subsubsection{\texorpdfstring{q()}{q()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_vector3_d}{Vector3D}} Multi\+Frame\+::q (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&}]{point }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [virtual]}}
+
+Возращает значение интенсивности от рамки в заданной точке 
+\begin{DoxyParams}{Аргументы}
+{\em point} & координата точки для расчета \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Возвращает}
+значение интенсивности 
+\end{DoxyReturn}
+
+
+Переопределяется в \mbox{\hyperlink{class_four_frame_af3eabfc6f9c3315f5475d66af3cf2630}{Four\+Frame}}.
+
+\mbox{\Hypertarget{class_multi_frame_a8da38b4d64ae762dfcb995911031ebf8}\label{class_multi_frame_a8da38b4d64ae762dfcb995911031ebf8}} 
+\index{Multi\+Frame@{Multi\+Frame}!q\+Help@{q\+Help}}
+\index{q\+Help@{q\+Help}!Multi\+Frame@{Multi\+Frame}}
+\subsubsection{\texorpdfstring{q\+Help()}{qHelp()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_vector3_d}{Vector3D}} Multi\+Frame\+::q\+Help (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&}]{point }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [virtual]}}
+
+Возращает значение единичной интенсивности от рамки в заданной точке 
+\begin{DoxyParams}{Аргументы}
+{\em point} & координата точки для расчета \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Возвращает}
+значение единичной интенсивности 
+\end{DoxyReturn}
+
+
+Переопределяется в \mbox{\hyperlink{class_four_frame_aa6339751887314ff05ca479255b21432}{Four\+Frame}}.
+
+\mbox{\Hypertarget{class_multi_frame_a7a89904f35c2d3e87f38e9c207a58f61}\label{class_multi_frame_a7a89904f35c2d3e87f38e9c207a58f61}} 
+\index{Multi\+Frame@{Multi\+Frame}!set\+Center@{set\+Center}}
+\index{set\+Center@{set\+Center}!Multi\+Frame@{Multi\+Frame}}
+\subsubsection{\texorpdfstring{set\+Center()}{setCenter()}}
+{\footnotesize\ttfamily void Multi\+Frame\+::set\+Center (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&}]{\+\_\+center }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+Устанавливает значение центра рамки 
+\begin{DoxyParams}{Аргументы}
+{\em \+\_\+center} & новая координата центра \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_multi_frame_ae06b45f3403f1c6b03d3c6d58aa9f519}\label{class_multi_frame_ae06b45f3403f1c6b03d3c6d58aa9f519}} 
+\index{Multi\+Frame@{Multi\+Frame}!set\+Vorticity@{set\+Vorticity}}
+\index{set\+Vorticity@{set\+Vorticity}!Multi\+Frame@{Multi\+Frame}}
+\subsubsection{\texorpdfstring{set\+Vorticity()}{setVorticity()}}
+{\footnotesize\ttfamily void Multi\+Frame\+::set\+Vorticity (\begin{DoxyParamCaption}\item[{const double}]{\+\_\+vorticity }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+Задает значение завихренности для рамки 
+\begin{DoxyParams}{Аргументы}
+{\em \+\_\+vorticity} & новое значение завихренности \\
+\hline
+\end{DoxyParams}
+
+
+Переопределяется в \mbox{\hyperlink{class_four_frame_a14e84439f6615d56e5fbc32d438ea2d5}{Four\+Frame}}.
+
+\mbox{\Hypertarget{class_multi_frame_aa7f6c2151ad01f190edd3757f5ef8162}\label{class_multi_frame_aa7f6c2151ad01f190edd3757f5ef8162}} 
+\index{Multi\+Frame@{Multi\+Frame}!solid\+Angle@{solid\+Angle}}
+\index{solid\+Angle@{solid\+Angle}!Multi\+Frame@{Multi\+Frame}}
+\subsubsection{\texorpdfstring{solid\+Angle()}{solidAngle()}}
+{\footnotesize\ttfamily double Multi\+Frame\+::solid\+Angle (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&}]{v1,  }\item[{const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&}]{v2,  }\item[{const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&}]{v3,  }\item[{const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&}]{point }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Возращает значение телесного угла треугольной рамки в заданной точке 
+\begin{DoxyParams}{Аргументы}
+{\em v1} & координаты первой грани рамки \\
+\hline
+{\em v2} & координаты второй грани рамки \\
+\hline
+{\em v3} & координаты третьей грани рамки \\
+\hline
+{\em point} & заданная точка \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Возвращает}
+значение телесного угла 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_multi_frame_af0c54493c44094ca492e2ec653a3a956}\label{class_multi_frame_af0c54493c44094ca492e2ec653a3a956}} 
+\index{Multi\+Frame@{Multi\+Frame}!solid\+Angle\+Frame@{solid\+Angle\+Frame}}
+\index{solid\+Angle\+Frame@{solid\+Angle\+Frame}!Multi\+Frame@{Multi\+Frame}}
+\subsubsection{\texorpdfstring{solid\+Angle\+Frame()}{solidAngleFrame()}}
+{\footnotesize\ttfamily double Multi\+Frame\+::solid\+Angle\+Frame (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&}]{point }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [virtual]}}
+
+Возращает значение телесного угла рамки в заданной точке 
+\begin{DoxyParams}{Аргументы}
+{\em point} & заданная точка \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Возвращает}
+значение телесного угла 
+\end{DoxyReturn}
+
+
+Переопределяется в \mbox{\hyperlink{class_four_frame_ad48011ddf75d8af53e02cb51145701bf}{Four\+Frame}}.
+
+\mbox{\Hypertarget{class_multi_frame_aa572cc6695d008943b4f3f4e585742e4}\label{class_multi_frame_aa572cc6695d008943b4f3f4e585742e4}} 
+\index{Multi\+Frame@{Multi\+Frame}!translate@{translate}}
+\index{translate@{translate}!Multi\+Frame@{Multi\+Frame}}
+\subsubsection{\texorpdfstring{translate()}{translate()}}
+{\footnotesize\ttfamily void Multi\+Frame\+::translate (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&}]{translation }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+Переносит рамку по заданному направлению 
+\begin{DoxyParams}{Аргументы}
+{\em translation} & направление переноса \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_multi_frame_a60269c2c56aace32bb0fe0a70731a309}\label{class_multi_frame_a60269c2c56aace32bb0fe0a70731a309}} 
+\index{Multi\+Frame@{Multi\+Frame}!Vel\+And\+Bsym@{Vel\+And\+Bsym}}
+\index{Vel\+And\+Bsym@{Vel\+And\+Bsym}!Multi\+Frame@{Multi\+Frame}}
+\subsubsection{\texorpdfstring{Vel\+And\+Bsym()}{VelAndBsym()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_vel_bsym}{Vel\+Bsym}} Multi\+Frame\+::\+Vel\+And\+Bsym (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&}]{point }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [virtual]}}
+
+Возращает значение скорости и тензора деформации от рамки в заданной точке 
+\begin{DoxyParams}{Аргументы}
+{\em \+\_\+vorticity} & новое значение завихренности \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Возвращает}
+значение скорости и тензора деформации 
+\end{DoxyReturn}
+
+
+Переопределяется в \mbox{\hyperlink{class_four_frame_a950100331ec16cb70fc8d89fce01e84f}{Four\+Frame}}.
+
+\mbox{\Hypertarget{class_multi_frame_a18a1755403fa12c2f59e81078e1dd34e}\label{class_multi_frame_a18a1755403fa12c2f59e81078e1dd34e}} 
+\index{Multi\+Frame@{Multi\+Frame}!velocity@{velocity}}
+\index{velocity@{velocity}!Multi\+Frame@{Multi\+Frame}}
+\subsubsection{\texorpdfstring{velocity()}{velocity()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_vector3_d}{Vector3D}} Multi\+Frame\+::velocity (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_vector3_d}{Vector3D}} \&}]{point }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [virtual]}}
+
+Возращает значение скорости от рамки в заданной точке 
+\begin{DoxyParams}{Аргументы}
+{\em point} & координата точки для расчета \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Возвращает}
+значение скорости 
+\end{DoxyReturn}
+
+
+Переопределяется в \mbox{\hyperlink{class_four_frame_a0127ebf5b1fd643a590006afdf395e30}{Four\+Frame}}.
+
+
+
+Объявления и описания членов классов находятся в файлах\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Users/\+Vasily/\+Documents/\+Vortex\+Method/multiframe.\+h\item 
+C\+:/\+Users/\+Vasily/\+Documents/\+Vortex\+Method/multiframe.\+cpp\end{DoxyCompactItemize}

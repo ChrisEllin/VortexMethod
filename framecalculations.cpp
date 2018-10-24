@@ -1,20 +1,32 @@
 #include "framecalculations.h"
 
+/*!
+Обнуляет значения всех счетчиков
+*/
 void Counters::clear()
 {
     unitedNum=vorticityEliminated=tooFarNum=rotatedNum=gotBackNum=underScreenNum=0;
 }
 
+/*!
+Обнуляет значения всех ограничений
+*/
 void Restrictions::clear()
 {
     moveRestr=elongationRestr=turnRestr=0;
 }
 
+/*!
+Обнуляет значения всех таймеров
+*/
 void Timers::clear()
 {
     getBackAndRotateTimer=forceTimer=unionTimer=farTimer=integrationTimer=removeVorticityTimer=0.0;
 }
 
+/*!
+Создает объект класса для работы с рамками с обнуленными счетчиками, ограничениями и таймерами
+*/
 FrameCalculations::FrameCalculations()
 {
 
@@ -23,6 +35,11 @@ FrameCalculations::FrameCalculations()
     timers.clear();
 }
 
+/*!
+Рассчитывает значения углов тета для сферы
+\param tetaFragNum Количество разбиений тела по тета
+\return Вектор с рассчитанными значениями углов тета
+*/
 QVector<double> FrameCalculations::calcTetas(const int tetaFragNum)
 {
     QVector<double> tetas;
@@ -33,6 +50,12 @@ QVector<double> FrameCalculations::calcTetas(const int tetaFragNum)
     return tetas;
 }
 
+/*!
+Рассчитывает значения элементов матрицы, составленной из произведения единичных интенсивностей от каждой из рамок на соответствующую нормаль и вычисляет обратную к ней
+\param frames Вектор рамок
+\param controlPoints Вектор контрольных точек
+\param normals Вектор нормалей
+*/
 void FrameCalculations::matrixCalc(QVector<std::shared_ptr<MultiFrame> > frames, const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals)
 {
     matrixSize=frames.size()+1;
@@ -49,6 +72,14 @@ void FrameCalculations::matrixCalc(QVector<std::shared_ptr<MultiFrame> > frames,
 
 }
 
+/*!
+Рассчитывает значения столбца b для решения СЛАУ вида A*x=b, где А-матрица, х-искомый столбец.
+\param streamVel Скорость потока
+\param vortons Вектор содержащий текущие вортоны в потоке
+\param normals Вектор нормалей
+\param controlPoints Вектор контрольных точек
+\return Столбец b
+*/
 Eigen::VectorXd FrameCalculations::columnCalc(const Vector3D streamVel, const QVector<Vorton> &vortons, const QVector<Vector3D> &normals, const QVector<Vector3D> controlPoints)
 {
     Eigen::VectorXd column(matrixSize);
@@ -58,11 +89,23 @@ Eigen::VectorXd FrameCalculations::columnCalc(const Vector3D streamVel, const QV
     return column;
 }
 
+/*!
+Рассчитывает значения столбца x путем решения СЛАУ вида A*x=b, где А-матрица, b-известный столбец.
+\param column Столбец b
+\return Столбец x, содержащий значения завихренностей рамок
+*/
 Eigen::VectorXd FrameCalculations::vorticitiesCalc(const Eigen::VectorXd &column)
 {
     return Eigen::VectorXd(matrix*column);
 }
 
+/*!
+Функция объединения близлежащих вортонов
+\param[in,out] vortons Вектор, содержащий вортоны для объединения
+\param[in] eStar Максимальное расстояние для объединения
+\param[in] eDoubleStar Минимальный косинус угла для объединения
+\param[in] vortonRad Радиус вортон-отрезков
+*/
 void FrameCalculations::unionVortons(QVector<Vorton> &vortons,const double eStar,const double eDoubleStar,const double vortonRad)
 {
     QTime start = QTime::currentTime();
@@ -94,6 +137,11 @@ void FrameCalculations::unionVortons(QVector<Vorton> &vortons,const double eStar
     timers.unionTimer=start.elapsed()*0.01;
 }
 
+/*!
+Функция удаления вортонов с малой завихренностью
+\param[in,out] vortons Вектор, содержащий вортоны для удаления
+\param[in] minVorticity Минимальное значение завихренности для объединения
+*/
 void FrameCalculations::removeSmallVorticity(QVector<Vorton> &vortons,const double minVorticity)
 {
     QTime start = QTime::currentTime();
@@ -108,6 +156,12 @@ void FrameCalculations::removeSmallVorticity(QVector<Vorton> &vortons,const doub
     timers.removeVorticityTimer=start.elapsed()*0.01;
 }
 
+/*!
+Функция удаления вортонов удаленных на большое расстояние от центра сферы
+\param[in,out] vortons Вектор, содержащий вортоны для удаления
+\param[in] farDistance Максимальное значение расстояния от центра для учета влияния
+\param[in] bodyCenter Координата центра сферы
+*/
 void FrameCalculations::removeFarSphere(QVector<Vorton> &vortons, const double farDistance, const Vector3D bodyCenter)
 {
     QTime start = QTime::currentTime();
@@ -122,6 +176,12 @@ void FrameCalculations::removeFarSphere(QVector<Vorton> &vortons, const double f
     timers.farTimer=start.elapsed()*0.01;
 }
 
+/*!
+Функция удаления вортонов удаленных на большое расстояние от центра цилиндра
+\param[in,out] vortons Вектор, содержащий вортоны для удаления
+\param[in] farDistance Максимальное значение расстояния от центра для учета влияния
+\param[in] bodyCenter Координата высота цилиндра
+*/
 void FrameCalculations::removeFarCylinder(QVector<Vorton> &vortons, const double farDistance, const double height)
 {
     QTime start = QTime::currentTime();
@@ -136,16 +196,38 @@ void FrameCalculations::removeFarCylinder(QVector<Vorton> &vortons, const double
     timers.farTimer=start.elapsed()*0.01;
 }
 
+/*!
+Функция удаления вортонов удаленных на большое расстояние от центра тела вращения
+\param[in,out] vortons Вектор, содержащий вортоны для удаления
+\param[in] farDistance Максимальное значение расстояния от центра для учета влияния
+\param[in] bodyCenter Координата центра тела вращения
+*/
 void FrameCalculations::removeFarRotationBody(QVector<Vorton>& vortons, const double farDistance, const Vector3D bodyCenter)
 {
     removeFarSphere(vortons,farDistance,bodyCenter);
 }
 
+/*!
+Функция удаления вортонов удаленных на большое расстояние от центра тела вращения со срезом дна
+\param[in,out] vortons Вектор, содержащий вортоны для удаления
+\param[in] farDistance Максимальное значение расстояния от центра для учета влияния
+\param[in] bodyCenter Координата центра тела вращения со срезом дна
+*/
 void FrameCalculations::removeFarRotationCutBody(QVector<Vorton> &vortons, const double farDistance, const Vector3D bodyCenter)
 {
     removeFarSphere(vortons,farDistance,bodyCenter);
 }
 
+/*!
+Функция расчета перемещений и удалений для вортонов с рамок и вортонов в потоке
+\param[in,out] freeVortons Вектор, содержащий вортоны в потоке
+\param[in,out] newVortons Вектор, содержащий вортоны с рамок
+\param[in] step Размер шага
+\param[in] streamVel Скорость потока
+\param[in] eDelta Максимальное значение удлинения
+\param[in] fiMax Максимальное значение угла поворота
+\param[in] maxMove Максимальное перемещения
+*/
 void FrameCalculations::displacementCalc(QVector<Vorton> &freeVortons, QVector<Vorton> &newVortons, double step, Vector3D streamVel, double eDelta, double fiMax, double maxMove)
 {
     QTime start = QTime::currentTime();
@@ -198,6 +280,18 @@ void FrameCalculations::displacementCalc(QVector<Vorton> &freeVortons, QVector<V
     timers.integrationTimer=start.elapsed()*0.01;
 }
 
+/*!
+Функция расчета перемещений и удалений для вортонов с рамок и вортонов в потоке при решении задачи старта
+\param[in,out] freeVortons Вектор, содержащий вортоны в потоке
+\param[in,out] newVortons Вектор, содержащий вортоны с рамок
+\param[in,out] symFreeVortons Симметричный вектор вектору, содержащему вортоны в потоке
+\param[in,out] symNewVortons Симметричный вектор вектору, содержащему вортоны с рамок
+\param[in] step Размер шага
+\param[in] streamVel Скорость потока
+\param[in] eDelta Максимальное значение удлинения
+\param[in] fiMax Максимальное значение угла поворота
+\param[in] maxMove Максимальное перемещения
+*/
 void FrameCalculations::displacementLaunchCalc(QVector<Vorton> &freeVortons, QVector<Vorton> &newVortons, QVector<Vorton> &symFreeVortons, QVector<Vorton> &symNewVortons, double step, Vector3D streamVel, double eDelta, double fiMax, double maxMove)
 {
     QTime start = QTime::currentTime();
@@ -253,17 +347,31 @@ void FrameCalculations::displacementLaunchCalc(QVector<Vorton> &freeVortons, QVe
     timers.integrationTimer=start.elapsed()*0.01;
 }
 
+/*!
+Функция установки размера матрицы
+\param size Размер матрциы
+*/
 void FrameCalculations::setMatrixSize(int size)
 {
     matrixSize=size;
 }
 
+/*!
+Функция установки завихренностей рамкам
+\param[in,out] frames Вектор, содержащий рамки
+\param[in] vorticities Вектор, содержащий завихренности для рамок
+*/
 void FrameCalculations::setVorticity(QVector<std::shared_ptr<MultiFrame> > frames, const Eigen::VectorXd vorticities)
 {
     for (int i=0; i<vorticities.size()-1; i++)
         frames[i]->setVorticity(vorticities(i));
 }
 
+/*!
+Функция, возвращающая вектор вортонов с рамок
+\param frames Вектор, содержащий рамки
+\return Вектор, содержащий вортоны с рамок
+*/
 QVector<Vorton> FrameCalculations::getFrameVortons(QVector<std::shared_ptr<MultiFrame> > frames)
 {
     QVector<Vorton> vortons;
@@ -272,6 +380,13 @@ QVector<Vorton> FrameCalculations::getFrameVortons(QVector<std::shared_ptr<Multi
     return vortons;
 }
 
+/*!
+Функция, возвращающая вектор поднятых вортонов с рамок по нормали
+\param frames Вектор, содержащий рамки
+\param normals Вектор, содержащий нормали
+\param deltaUp Величина подъема вортонов по нормали
+\return Вектор, содержащий вортоны с рамок
+*/
 QVector<Vorton> FrameCalculations::getLiftedFrameVortons(QVector<std::shared_ptr<MultiFrame> > frames, const QVector<Vector3D> &normals, const double deltaUp)
 {
     QVector<Vorton> vortons;
@@ -280,6 +395,17 @@ QVector<Vorton> FrameCalculations::getLiftedFrameVortons(QVector<std::shared_ptr
     return vortons;
 }
 
+/*!
+Функция расчета давления в точке
+\param point Точка для расчета давления в точке
+\param streamVel Скорость потока
+\param streamPres Давление потока
+\param density Плотность среды
+\param frames Вектор, содержащий рамки
+\param freeVortons Вектор, содержащий вортоны в потоке
+\param tau Величина шага
+\return Значение давления
+*/
 double FrameCalculations::pressureCalc(const Vector3D point, const Vector3D streamVel, const double streamPres, const double density, QVector<std::shared_ptr<MultiFrame> > frames, QVector<Vorton> freeVortons, double tau)
 {
     double velAdd=0.5*(Vector3D::dotProduct(streamVel, streamVel)-pow((FrameCalculations::velocity(point, streamVel, freeVortons, frames).length()),2));
@@ -292,6 +418,19 @@ double FrameCalculations::pressureCalc(const Vector3D point, const Vector3D stre
     return streamPres+density*(velAdd+scal/tau-framesAdd/tau);
 }
 
+/*!
+Функция расчета силы, действующей на тело
+\param streamVel Скорость потока
+\param streamPres Давление потока
+\param density Плотность среды
+\param frames Вектор, содержащий рамки
+\param freeVortons Вектор, содержащий вортоны в потоке
+\param tau Величина шага
+\param squares Вектор, содержащий площади рамок
+\param controlPointsRaised Вектор, содержащий контрольные точки для вычисления давлений
+\param normals Вектор, содержащий нормали
+\return Значение силы
+*/
 Vector3D FrameCalculations::forceCalc(const Vector3D streamVel, double streamPres, double density, QVector<std::shared_ptr<MultiFrame> > frames, const QVector<Vorton> &freeVortons, const double tau, const QVector<double> &squares, const QVector<Vector3D> &controlPointsRaised, const QVector<Vector3D> &normals)
 {
     QTime start = QTime::currentTime();
@@ -305,6 +444,22 @@ Vector3D FrameCalculations::forceCalc(const Vector3D streamVel, double streamPre
     return force;
 }
 
+/*!
+Функция суммирования соответствующих значений ср
+\param[in] stepNum Номер текущего шага
+\param[in,out] cp Вектор для записи значений ср
+\param[in] fiFragNum Количество разбиений по фи
+\param[in] radius Радиус сферы
+\param[in] pointsRaising Величина подъема точек для вычисления давления
+\param[in] tetas Вектор значений углов тета
+\param[in] streamVel Скорость потока
+\param[in] streamPres Давление потока
+\param[in] density Плотность среды
+\param[in] frames Вектор, содержащий рамки
+\param[in] freeVortons Вектор, содержащий вортоны в потоке
+\param[in] tau Величина шага
+\param[in] center Координата центра сферы
+*/
 void FrameCalculations::cpSum(const int stepNum, QVector<double> &cp, const int fiFragNum, const double radius, const double pointsRaising, const QVector<double> &tetas, const Vector3D streamVel, const double streamPres, const double density, const QVector<std::shared_ptr<MultiFrame>> frames, QVector<Vorton> freeVortons, double tau, const Vector3D center)
 {
     if (stepNum>=200)
@@ -320,12 +475,26 @@ void FrameCalculations::cpSum(const int stepNum, QVector<double> &cp, const int 
     }
 }
 
+/*!
+Функция расчета средних значений ср
+\param[in,out] cp Вектор значений ср
+\param[in] stepsNum Количество шагов расчета
+*/
 void FrameCalculations::cpAverage(QVector<double> &cp, const int stepsNum)
 {
     for (int i=0; i<cp.size(); i++)
         cp[i]/=stepsNum-200;
 }
 
+/*!
+Функция, возвращающая вортоны из тела в поток и разворачивающая вортонов относительно поверхности сферы в слое
+\param[in,out] vortons Вектор, содержащий вортоны для функции
+\param[in] center Координата центра сферы
+\param[in] radius Величина радиуса сферы
+\param[in] layerHeight Величина слоя
+\param[in] controlPoints Вектор, содержащий контрольные точки
+\param[in] normals Вектор, содержащий нормали
+*/
 void FrameCalculations::getBackAndRotateSphere(QVector<Vorton> &vortons, const Vector3D center, const double radius, const double layerHeight, const QVector<Vector3D>& controlPoints, const QVector<Vector3D>& normals)
 {
     QTime start=QTime::currentTime();
@@ -350,6 +519,15 @@ void FrameCalculations::getBackAndRotateSphere(QVector<Vorton> &vortons, const V
     timers.getBackAndRotateTimer=start.elapsed()*0.001;
 }
 
+/*!
+Функция, возвращающая вортоны из тела в поток и разворачивающая вортонов относительно поверхности цилиндра в слое
+\param[in,out] vortons Вектор, содержащий вортоны для функции
+\param[in] height Высота цилиндра
+\param[in] diameter Диаметр цилиндра
+\param[in] layerHeight Величина слоя
+\param[in] controlPoints Вектор, содержащий контрольные точки
+\param[in] normals Вектор, содержащий нормали
+*/
 void FrameCalculations::getBackAndRotateCylinder(QVector<Vorton> &vortons, const double height, const double diameter, const double layerHeight, const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals)
 {
     QTime start=QTime::currentTime();
@@ -372,6 +550,15 @@ void FrameCalculations::getBackAndRotateCylinder(QVector<Vorton> &vortons, const
     timers.getBackAndRotateTimer=start.elapsed()*0.001;
 }
 
+/*!
+Функция, возвращающая вортоны из тела в поток и разворачивающая вортонов относительно поверхности тела вращения в слое
+\param[in,out] vortons Вектор, содержащий вортоны для функции
+\param[in] xBeg Минимальное значение координаты х тела
+\param[in] xEnd Максимальное значение координаты х тела
+\param[in] layerHeight Величина слоя
+\param[in] controlPoints Вектор, содержащий контрольные точки
+\param[in] normals Вектор, содержащий нормали
+*/
 void FrameCalculations::getBackAndRotateRotationBody(QVector<Vorton>& vortons, const double xBeg, const double xEnd, const double layerHeight, const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals)
 {
     QTime start=QTime::currentTime();
@@ -394,6 +581,15 @@ void FrameCalculations::getBackAndRotateRotationBody(QVector<Vorton>& vortons, c
     timers.getBackAndRotateTimer=start.elapsed()*0.001;
 }
 
+/*!
+Функция, возвращающая вортоны из тела в поток и разворачивающая вортонов относительно поверхности тела вращения со срезом в слое
+\param[in,out] vortons Вектор, содержащий вортоны для функции
+\param[in] xBeg Минимальное значение координаты х тела
+\param[in] xEnd Максимальное значение координаты х тела
+\param[in] layerHeight Величина слоя
+\param[in] controlPoints Вектор, содержащий контрольные точки
+\param[in] normals Вектор, содержащий нормали
+*/
 void FrameCalculations::getBackAndRotateRotationCutBody(QVector<Vorton> &vortons, const double xBeg, const double xEnd, const double layerHeight, const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals)
 {
     QTime start=QTime::currentTime();
@@ -416,6 +612,15 @@ void FrameCalculations::getBackAndRotateRotationCutBody(QVector<Vorton> &vortons
     timers.getBackAndRotateTimer=start.elapsed()*0.001;
 }
 
+/*!
+Функция, возвращающая вортоны из тела в поток и разворачивающая вортонов относительно поверхности тела вращения со срезом в слое при решении задачи старта
+\param[in,out] vortons Вектор, содержащий вортоны для функции
+\param[in] xBeg Минимальное значение координаты х тела
+\param[in] xEnd Максимальное значение координаты х тела
+\param[in] layerHeight Величина слоя
+\param[in] controlPoints Вектор, содержащий контрольные точки
+\param[in] normals Вектор, содержащий нормали
+*/
 void FrameCalculations::getBackAndRotateRotationCutLaunchedBody(QVector<Vorton> &vortons, const double xBeg, const double xEnd, const double layerHeight, const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals)
 {
     QTime start=QTime::currentTime();
@@ -443,11 +648,23 @@ void FrameCalculations::getBackAndRotateRotationCutLaunchedBody(QVector<Vorton> 
     timers.getBackAndRotateTimer=start.elapsed()*0.001;
 }
 
+/*!
+Функция, добавляющая вортон в вектор. Создана для совместимости с QtConcurrent
+\param[in,out] vortons Вектор, содержащий вортоны для функции
+\param[in] vort Вортон для добавления
+*/
 void FrameCalculations::addToVortonsVec(QVector<Vorton> &vortons, const Vorton vort)
 {
     vortons.push_back(vort);
 }
 
+/*!
+Функция расчета скорости и тензора деформации от вектора вортонов в точке.
+\param point Точка расчета
+\param streamVel Скорость потока
+\param vortons Вектор, содержащий вортоны
+\return Значение скорости и тензора деформации
+*/
 VelBsym FrameCalculations::velocityAndBsymm(const Vector3D point,const  Vector3D streamVel, const QVector<Vorton> &vortons)
 {
     VelBsym res = VelBsym (streamVel);
@@ -456,7 +673,15 @@ VelBsym FrameCalculations::velocityAndBsymm(const Vector3D point,const  Vector3D
     return res;
 }
 
-Vector3D FrameCalculations::velocity(const Vector3D point, const Vector3D streamVel, const QVector<Vorton> &vortons, const QVector<std::shared_ptr<MultiFrame> > frames)
+/*!
+Функция расчета скорости от вектора вортонов и вектора рамок в точке.
+\param point Точка расчета
+\param streamVel Скорость потока
+\param vortons Вектор, содержащий вортоны
+\param frames Вектор, содержащий рамки
+\return Значение скорости
+*/
+Vector3D FrameCalculations::velocity(const Vector3D point, const Vector3D streamVel, const QVector<Vorton> &vortons, const QVector<std::shared_ptr<MultiFrame>> frames)
 {
     Vector3D vel=streamVel;
     for (int i=0; i<vortons.size(); i++)
@@ -466,6 +691,14 @@ Vector3D FrameCalculations::velocity(const Vector3D point, const Vector3D stream
     return vel;
 }
 
+/*!
+Функция расчета скорости от вектора вортонов  в точке.
+\overload
+\param point Точка расчета
+\param streamVel Скорость потока
+\param vortons Вектор, содержащий вортоны
+\return Значение скорости
+*/
 Vector3D FrameCalculations::velocity(const Vector3D point, const Vector3D streamVel, const QVector<Vorton> &vortons)
 {
     Vector3D vel=streamVel;
@@ -474,6 +707,11 @@ Vector3D FrameCalculations::velocity(const Vector3D point, const Vector3D stream
     return vel;
 }
 
+/*!
+Функция расчета перемещения и удлинения вортона. Создана для совместимости с QtConcurrent
+\param el Элемент структуры для расчета
+\return Вортон с рассчитанным значением перемещения и удлинения
+*/
 Vorton FrameCalculations::parallelDisplacement(const Parallel el)
 {
     Vorton res=el.Vortons->at(el.num);
@@ -487,6 +725,10 @@ Vorton FrameCalculations::parallelDisplacement(const Parallel el)
     return res;
 }
 
+/*!
+Функция для изменения положения вортона согласно рассчитанному перемещению и изменению.
+\param[in,out] vortons Вектор вортонов
+*/
 void FrameCalculations::displace(QVector<Vorton> &vortons)
 {
     for (int i=0; i<vortons.size(); i++)
@@ -496,6 +738,48 @@ void FrameCalculations::displace(QVector<Vorton> &vortons)
     }
 }
 
+/*!
+Функция для отражения положения вортонов и рамок относительно оси х
+\param[in,out] symFreeVortons Вектор вортонов в слое
+\param[in,out] symNewVortons Вектор вортонов с рамок
+\param[in,out] symFrames Вектор рамок
+*/
+void FrameCalculations::reflect(QVector<Vorton> &symFreeVortons, QVector<Vorton> &symNewVortons, QVector<std::shared_ptr<MultiFrame>> symFrames)
+{
+    for (int i=0; i<symFreeVortons.size(); i++)
+    {
+        symFreeVortons[i].setMid(Vector3D(-symFreeVortons[i].getMid().x(),symFreeVortons[i].getMid().y(),symFreeVortons[i].getMid().z()));
+        symFreeVortons[i].setTail(Vector3D(-symFreeVortons[i].getTail().x(),symFreeVortons[i].getTail().y(),symFreeVortons[i].getTail().z()));
+        symFreeVortons[i].setVorticity(-symFreeVortons[i].getVorticity());
+    }
+
+    for (int i=0; i<symNewVortons.size(); i++)
+    {
+        symNewVortons[i].setMid(Vector3D(-symNewVortons[i].getMid().x(),symNewVortons[i].getMid().y(),symNewVortons[i].getMid().z()));
+        symNewVortons[i].setTail(Vector3D(-symNewVortons[i].getTail().x(),symNewVortons[i].getTail().y(),symNewVortons[i].getTail().z()));
+        symNewVortons[i].setVorticity(-symNewVortons[i].getVorticity());
+
+    }
+
+    for (int i=0; i<symFrames.size(); i++)
+    {
+        for (int j=0; j<symFrames[i]->getAnglesNum(); j++)
+        {
+            symFrames[i]->at(j).setMid(Vector3D(-symFrames[i]->at(j).getMid().x(),symFrames[i]->at(j).getMid().y(),symFrames[i]->at(j).getMid().z()));
+            symFrames[i]->at(j).setTail(Vector3D(-symFrames[i]->at(j).getTail().x(),symFrames[i]->at(j).getTail().y(),symFrames[i]->at(j).getTail().z()));
+            symFrames[i]->setCenter(Vector3D(-symFrames[i]->getCenter().x(), symFrames[i]->getCenter().y(), symFrames[i]->getCenter().z()));
+            symFrames[i]->at(j).setVorticity(-symFrames[i]->at(j).getVorticity());
+        }
+    }
+}
+
+/*!
+Функция для проверки попадания вортона внутрь сферы
+\param vorton Вортон
+\param center Центра сферы
+\param radius Радиус сферы
+\return Определение попадания внутрь сферы
+*/
 bool FrameCalculations::insideSphere(const Vorton& vort, const Vector3D& center, const double radius)
 {
     if ((vort.getMid()-center).length()<radius)
@@ -503,6 +787,14 @@ bool FrameCalculations::insideSphere(const Vorton& vort, const Vector3D& center,
     return false;
 }
 
+/*!
+Функция для проверки попадания вортона внутрь слоя вокруг сферы
+\param vorton Вортон
+\param center Центр сферы
+\param radius Радиус сферы
+\param layerHeight Высота слоя
+\return Определение попадания внутрь слоя вокруг сферы
+*/
 bool FrameCalculations::insideSphereLayer(const Vorton& vort, const Vector3D& center, const double radius, const double layerHeight)
 {
     if ((vort.getMid()-center).length()<radius+layerHeight)
@@ -510,6 +802,13 @@ bool FrameCalculations::insideSphereLayer(const Vorton& vort, const Vector3D& ce
     return false;
 }
 
+/*!
+Функция для проверки попадания вортона внутрь цилиндра
+\param vorton Вортон
+\param height Высота цилиндра
+\param diameter Диаметр цилиндра
+\return Определение попадания внутрь цилиндра
+*/
 bool FrameCalculations::insideCylinder(const Vorton &vort, const double height, const double diameter)
 {
     if ((vort.getMid().y()>0)&&(vort.getMid().y()<height)&&((pow(vort.getMid().x(),2)+pow(vort.getMid().z(),2))<0.25*pow(diameter,2)))
@@ -517,6 +816,14 @@ bool FrameCalculations::insideCylinder(const Vorton &vort, const double height, 
     return false;
 }
 
+/*!
+Функция для проверки попадания вортона внутрь слоя вокруг цилиндра
+\param vorton Вортон
+\param height Высота цилиндра
+\param diameter Диаметр цилиндра
+\param layerHeight Высота слоя
+\return Определение попадания внутрь слоя вокруг цилиндра
+*/
 bool FrameCalculations::insideCylinderLayer(const Vorton &vort, const double height, const double diameter, const double layerHeight)
 {
     if ((vort.getMid().y()>-layerHeight)&&(vort.getMid().y()<height+layerHeight)&&((pow(vort.getMid().x(),2)+pow(vort.getMid().z(),2))<pow(0.5*diameter+layerHeight,2)))
@@ -524,6 +831,13 @@ bool FrameCalculations::insideCylinderLayer(const Vorton &vort, const double hei
     return false;
 }
 
+/*!
+Функция для проверки попадания вортона внутрь тела вращения
+\param vorton Вортон
+\param xBeg Минимальная координата х тела
+\param xEnd Максимальная координата х тела
+\return Определение попадания внутрь тела вращения
+*/
 bool FrameCalculations::insideRotationBody(const Vorton &vort, const double xBeg, const double xEnd)
 {
     if((vort.getMid().x()>=xBeg) && (vort.getMid().x()<=xEnd) && ((pow(vort.getMid().z(),2)+pow(vort.getMid().y(),2))<pow(BodyFragmentation::presetFunctionF(vort.getMid().x()),2)))
@@ -531,6 +845,14 @@ bool FrameCalculations::insideRotationBody(const Vorton &vort, const double xBeg
     return false;
 }
 
+/*!
+Функция для проверки попадания вортона внутрь слоя вокруг тела вращения
+\param vorton Вортон
+\param xBeg Минимальная координата х тела
+\param xEnd Максимальная координата х тела
+\param layerHeight Высота слоя
+\return Определение попадания внутрь слоя вокруг тела вращения
+*/
 bool FrameCalculations::insideRotationBodyLayer(const Vorton &vort, const double xBeg, const double xEnd, const double layerHeight)
 {
     if((vort.getMid().x()>=xBeg-layerHeight) && (vort.getMid().x()<=xEnd+layerHeight) && ((pow(vort.getMid().z(),2)+pow(vort.getMid().y(),2))<pow(BodyFragmentation::presetFunctionF(vort.getMid().x())+layerHeight,2)))
@@ -538,6 +860,13 @@ bool FrameCalculations::insideRotationBodyLayer(const Vorton &vort, const double
     return false;
 }
 
+/*!
+Функция для проверки попадания вортона внутрь тела вращения со срезом дна
+\param vorton Вортон
+\param xBeg Минимальная координата х тела
+\param xEnd Максимальная координата х тела
+\return Определение попадания внутрь тела вращения со срезом дна
+*/
 bool FrameCalculations::insideRotationCutBody(const Vorton &vort, const double xBeg, const double xEnd)
 {
     if((vort.getMid().x()>=xBeg) && (vort.getMid().x()<=xEnd) && ((pow(vort.getMid().z(),2)+pow(vort.getMid().y(),2))<pow(BodyFragmentation::presetFunctionG(vort.getMid().x()),2)))
@@ -545,6 +874,14 @@ bool FrameCalculations::insideRotationCutBody(const Vorton &vort, const double x
     return false;
 }
 
+/*!
+Функция для проверки попадания вортона внутрь слоя вокруг тела вращения со срезом дна
+\param vorton Вортон
+\param xBeg Минимальная координата х тела
+\param xEnd Максимальная координата х тела
+\param layerHeight Высота слоя
+\return Определение попадания внутрь слоя вокруг тела вращения со срезом дна
+*/
 bool FrameCalculations::insideRotationCutBodyLayer(const Vorton &vort, const double xBeg, const double xEnd, const double layerHeight)
 {
     if((vort.getMid().x()>=xBeg-layerHeight) && (vort.getMid().x()<=xEnd+layerHeight) && ((pow(vort.getMid().z(),2)+pow(vort.getMid().y(),2))<pow(BodyFragmentation::presetFunctionG(vort.getMid().x())+layerHeight,2)))
@@ -552,6 +889,11 @@ bool FrameCalculations::insideRotationCutBodyLayer(const Vorton &vort, const dou
     return false;
 }
 
+/*!
+Функция для проверки попадания вортона под экран
+\param vorton Вортон
+\return Определение вортона под экран
+*/
 bool FrameCalculations::insideScreen(Vorton &vort)
 {
     if (vort.getMid().x()>0.0 || vort.getTail().x()>0.0)
@@ -559,7 +901,11 @@ bool FrameCalculations::insideScreen(Vorton &vort)
     return false;
 }
 
-
+/*!
+Функция для проверки возможного "взрыва" вортонов
+\param vortons Вектор вортонов
+\return Определение вортона под экран
+*/
 bool FrameCalculations::exploseSphere(const QVector<Vorton> &vortons)
 {
     int counter=0;
@@ -575,6 +921,11 @@ bool FrameCalculations::exploseSphere(const QVector<Vorton> &vortons)
     return false;
 }
 
+/*!
+Функция для расчета дисперсии вектора С
+\param cAerodynamics Вектор С
+\return Значение дисперсии
+*/
 double FrameCalculations::calcDispersion(const QVector<Vector3D> &cAerodynamics)
 {
     Vector3D cAver;
@@ -593,6 +944,11 @@ double FrameCalculations::calcDispersion(const QVector<Vector3D> &cAerodynamics)
     return dispersion;
 }
 
+/*!
+Функция для копирования вектора рамок
+\param frames Вектор рамок
+\return Скопированный вектор рамок
+*/
 QVector<std::shared_ptr<MultiFrame> > FrameCalculations::copyFrames(QVector<std::shared_ptr<MultiFrame> > frames)
 {
     QVector<std::shared_ptr<MultiFrame>> copyingFrames;
@@ -603,7 +959,18 @@ QVector<std::shared_ptr<MultiFrame> > FrameCalculations::copyFrames(QVector<std:
     return copyingFrames;
 }
 
-void FrameCalculations::translateBody(const Vector3D &translation, QVector<std::shared_ptr<MultiFrame> > &frames, QVector<Vector3D> &controlPoints, QVector<Vector3D> &controlPointsRaised, Vector3D &center, double &xbeg, double &xend)
+/*!
+Функция для перемещения тела при решении задачи старта
+\param[in] translation Вектор переноса
+\param[in,out] frames Вектор рамок
+\param[in,out] controlPoints Вектор контрольных точек
+\param[in,out] controlPointsRaised Вектор контрольных точек для расчета давлений
+\param[in,out] center Центр тела
+\param[in] xBeg Минимальная координата х тела
+\param[in] xEnd Максимальная координата х тела
+\param[in] fragPar Параметры разбиения
+*/
+void FrameCalculations::translateBody(const Vector3D &translation, QVector<std::shared_ptr<MultiFrame>> &frames, QVector<Vector3D> &controlPoints, QVector<Vector3D> &controlPointsRaised, Vector3D &center, double &xbeg, double &xend, const FragmentationParameters &fragPar)
 {
     for (int i=0; i<frames.size(); i++)
         frames[i]->translate(translation);
@@ -613,11 +980,22 @@ void FrameCalculations::translateBody(const Vector3D &translation, QVector<std::
         controlPointsRaised[i].translate(translation);
     }
    center+=translation;
-   xbeg+=translation.x();
-   xend+=translation.x();
+   if (xbeg!=fragPar.rotationBodyXBeg)
+        xbeg+=translation.x();
+   if (xend!=fragPar.rotationBodyXEnd)
+        xend+=translation.x();
 }
 
-void FrameCalculations::translateBody(const Vector3D &translation, QVector<std::shared_ptr<MultiFrame> > &frames, QVector<Vector3D> &controlPoints, QVector<Vector3D> &controlPointsRaised, Vector3D &center)
+/*!
+Функция для перемещения тела.
+\overload
+\param[in] translation Вектор переноса
+\param[in,out] frames Вектор рамок
+\param[in,out] controlPoints Вектор контрольных точек
+\param[in,out] controlPointsRaised Вектор контрольных точек для расчета давлений
+\param[in,out] center Центр тела
+*/
+void FrameCalculations::translateBody(const Vector3D &translation, QVector<std::shared_ptr<MultiFrame>> &frames, QVector<Vector3D> &controlPoints, QVector<Vector3D> &controlPointsRaised, Vector3D &center)
 {
     for (int i=0; i<frames.size(); i++)
         frames[i]->translate(translation);
@@ -629,42 +1007,71 @@ void FrameCalculations::translateBody(const Vector3D &translation, QVector<std::
    center+=translation;
 }
 
+/*!
+Функция для перемещения вектора вортонов
+\param[in] translation Вектор переноса
+\param[in,out] vortons Вектор вортонов
+*/
 void FrameCalculations::translateVortons(const Vector3D &translation, QVector<Vorton> &vortons)
 {
     for (int i=0; i<vortons.size(); i++)
         vortons[i].translate(translation);
 }
 
+/*!
+Функция возвращающая значения счетчиков
+\return Структура с текущими значениями счетчиков
+*/
 Counters FrameCalculations::getCounters() const
 {
     return counters;
 }
 
+/*!
+Функция возвращающая значения сработавших ограничений
+\return Структура с текущими значениями сработавших ограничений
+*/
 Restrictions FrameCalculations::getRestrictions() const
 {
     return restrictions;
 }
 
+/*!
+Функция возвращающая значения таймеров
+\return Структура с текущими значениями таймеров
+*/
 Timers FrameCalculations::getTimers() const
 {
     return timers;
 }
 
+/*!
+Функция обнуляющая значения счетчиков
+*/
 void FrameCalculations::clearCounters()
 {
     counters.clear();
 }
 
+/*!
+Функция обнуляющая значения сработавших ограничений
+*/
 void FrameCalculations::clearRestrictions()
 {
     restrictions.clear();
 }
 
+/*!
+Функция обнуляющая значения сработавших таймеров
+*/
 void FrameCalculations::clearTimers()
 {
     timers.clear();
 }
 
+/*!
+Функция обнуляющая значения сработавших счетчиков, сработавших ограничений, таймеров
+*/
 void FrameCalculations::clear()
 {
     clearTimers();

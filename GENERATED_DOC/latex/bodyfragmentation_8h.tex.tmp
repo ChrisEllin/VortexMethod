@@ -1,0 +1,70 @@
+\hypertarget{bodyfragmentation_8h}{}\section{Файл C\+:/\+Users/\+Vasily/\+Documents/\+Vortex\+Method/bodyfragmentation.h}
+\label{bodyfragmentation_8h}\index{C\+:/\+Users/\+Vasily/\+Documents/\+Vortex\+Method/bodyfragmentation.\+h@{C\+:/\+Users/\+Vasily/\+Documents/\+Vortex\+Method/bodyfragmentation.\+h}}
+
+
+Заголовочный файл для описания классов, структур и перечислений для разбиения исходного тела на рамки  
+
+
+{\ttfamily \#include \char`\"{}fourframe.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}vector2d.\+h\char`\"{}}\newline
+{\ttfamily \#include $<$Q\+Variant$>$}\newline
+Граф включаемых заголовочных файлов для bodyfragmentation.\+h\+:
+% FIG 0
+Граф файлов, в которые включается этот файл\+:
+% FIG 1
+\subsection*{Классы}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_fragmentation_parameters}{Fragmentation\+Parameters}}
+\begin{DoxyCompactList}\small\item\em Структура, хранящая параметры разбиения \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{struct_sphere_parameters}{Sphere\+Parameters}}
+\begin{DoxyCompactList}\small\item\em Структура для хранения параметров сферы \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{struct_cylinder_parameters}{Cylinder\+Parameters}}
+\begin{DoxyCompactList}\small\item\em Структура для хранения параметров цилиндра \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{struct_rotation_body_parameters}{Rotation\+Body\+Parameters}}
+\begin{DoxyCompactList}\small\item\em Структура для хранения параметров тела вращения \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{struct_rotation_cut_body_parameters}{Rotation\+Cut\+Body\+Parameters}}
+\begin{DoxyCompactList}\small\item\em Структура для хранения параметров тела вращения со срезом \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_body_fragmentation}{Body\+Fragmentation}}
+\begin{DoxyCompactList}\small\item\em Класс, описывающие разбиение тела \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Перечисления}
+\begin{DoxyCompactItemize}
+\item 
+enum \mbox{\hyperlink{bodyfragmentation_8h_acf0ce63e34327e5bc336f9fe3d2d47a2}{Body\+Type}} \{ \mbox{\hyperlink{bodyfragmentation_8h_acf0ce63e34327e5bc336f9fe3d2d47a2aae4f0962d104ea473feec5598689316d}{S\+P\+H\+E\+RE}}, 
+\mbox{\hyperlink{bodyfragmentation_8h_acf0ce63e34327e5bc336f9fe3d2d47a2a888b08e657c6e46ad6f758e66b4e6bd2}{C\+Y\+L\+I\+N\+D\+ER}}, 
+\mbox{\hyperlink{bodyfragmentation_8h_acf0ce63e34327e5bc336f9fe3d2d47a2abee421b07ea558875d323b52b16d61a9}{R\+O\+T\+A\+T\+I\+O\+N\+B\+O\+DY}}, 
+\mbox{\hyperlink{bodyfragmentation_8h_acf0ce63e34327e5bc336f9fe3d2d47a2adf0d00cd1f67607c5c492db1b8cb8246}{R\+O\+T\+A\+T\+I\+O\+N\+B\+O\+T\+T\+O\+M\+C\+UT}}
+ \}
+\end{DoxyCompactItemize}
+
+
+\subsection{Подробное описание}
+Заголовочный файл для описания классов, структур и перечислений для разбиения исходного тела на рамки 
+
+
+
+\subsection{Перечисления}
+\mbox{\Hypertarget{bodyfragmentation_8h_acf0ce63e34327e5bc336f9fe3d2d47a2}\label{bodyfragmentation_8h_acf0ce63e34327e5bc336f9fe3d2d47a2}} 
+\index{bodyfragmentation.\+h@{bodyfragmentation.\+h}!Body\+Type@{Body\+Type}}
+\index{Body\+Type@{Body\+Type}!bodyfragmentation.\+h@{bodyfragmentation.\+h}}
+\subsubsection{\texorpdfstring{Body\+Type}{BodyType}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{bodyfragmentation_8h_acf0ce63e34327e5bc336f9fe3d2d47a2}{Body\+Type}}}
+
+Типы расчитываемых тел. \begin{DoxyEnumFields}{Элементы перечислений}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{S\+P\+H\+E\+RE@{S\+P\+H\+E\+RE}!bodyfragmentation.\+h@{bodyfragmentation.\+h}}\index{bodyfragmentation.\+h@{bodyfragmentation.\+h}!S\+P\+H\+E\+RE@{S\+P\+H\+E\+RE}}}\mbox{\Hypertarget{bodyfragmentation_8h_acf0ce63e34327e5bc336f9fe3d2d47a2aae4f0962d104ea473feec5598689316d}\label{bodyfragmentation_8h_acf0ce63e34327e5bc336f9fe3d2d47a2aae4f0962d104ea473feec5598689316d}} 
+S\+P\+H\+E\+RE&Сфера \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{C\+Y\+L\+I\+N\+D\+ER@{C\+Y\+L\+I\+N\+D\+ER}!bodyfragmentation.\+h@{bodyfragmentation.\+h}}\index{bodyfragmentation.\+h@{bodyfragmentation.\+h}!C\+Y\+L\+I\+N\+D\+ER@{C\+Y\+L\+I\+N\+D\+ER}}}\mbox{\Hypertarget{bodyfragmentation_8h_acf0ce63e34327e5bc336f9fe3d2d47a2a888b08e657c6e46ad6f758e66b4e6bd2}\label{bodyfragmentation_8h_acf0ce63e34327e5bc336f9fe3d2d47a2a888b08e657c6e46ad6f758e66b4e6bd2}} 
+C\+Y\+L\+I\+N\+D\+ER&Цилиндр \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{R\+O\+T\+A\+T\+I\+O\+N\+B\+O\+DY@{R\+O\+T\+A\+T\+I\+O\+N\+B\+O\+DY}!bodyfragmentation.\+h@{bodyfragmentation.\+h}}\index{bodyfragmentation.\+h@{bodyfragmentation.\+h}!R\+O\+T\+A\+T\+I\+O\+N\+B\+O\+DY@{R\+O\+T\+A\+T\+I\+O\+N\+B\+O\+DY}}}\mbox{\Hypertarget{bodyfragmentation_8h_acf0ce63e34327e5bc336f9fe3d2d47a2abee421b07ea558875d323b52b16d61a9}\label{bodyfragmentation_8h_acf0ce63e34327e5bc336f9fe3d2d47a2abee421b07ea558875d323b52b16d61a9}} 
+R\+O\+T\+A\+T\+I\+O\+N\+B\+O\+DY&Тело вращения \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{R\+O\+T\+A\+T\+I\+O\+N\+B\+O\+T\+T\+O\+M\+C\+UT@{R\+O\+T\+A\+T\+I\+O\+N\+B\+O\+T\+T\+O\+M\+C\+UT}!bodyfragmentation.\+h@{bodyfragmentation.\+h}}\index{bodyfragmentation.\+h@{bodyfragmentation.\+h}!R\+O\+T\+A\+T\+I\+O\+N\+B\+O\+T\+T\+O\+M\+C\+UT@{R\+O\+T\+A\+T\+I\+O\+N\+B\+O\+T\+T\+O\+M\+C\+UT}}}\mbox{\Hypertarget{bodyfragmentation_8h_acf0ce63e34327e5bc336f9fe3d2d47a2adf0d00cd1f67607c5c492db1b8cb8246}\label{bodyfragmentation_8h_acf0ce63e34327e5bc336f9fe3d2d47a2adf0d00cd1f67607c5c492db1b8cb8246}} 
+R\+O\+T\+A\+T\+I\+O\+N\+B\+O\+T\+T\+O\+M\+C\+UT&Тело вращения со срезом дна \\
+\hline
+
+\end{DoxyEnumFields}

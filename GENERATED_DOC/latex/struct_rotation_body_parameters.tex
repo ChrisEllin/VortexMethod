@@ -1,0 +1,68 @@
+\hypertarget{struct_rotation_body_parameters}{}\section{Структура Rotation\+Body\+Parameters}
+\label{struct_rotation_body_parameters}\index{Rotation\+Body\+Parameters@{Rotation\+Body\+Parameters}}
+
+
+Структура для хранения параметров тела вращения  
+
+
+
+
+{\ttfamily \#include $<$bodyfragmentation.\+h$>$}
+
+\subsection*{Открытые члены}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{struct_rotation_body_parameters_a0e0a77e37999193d1605464f2fee3b5c}{set\+Data}} (const int i, const double value)
+\end{DoxyCompactItemize}
+\subsection*{Открытые атрибуты}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{struct_rotation_body_parameters_a69e64fe69a16c995ba2c379a3fc66c84}\label{struct_rotation_body_parameters_a69e64fe69a16c995ba2c379a3fc66c84}} 
+int \mbox{\hyperlink{struct_rotation_body_parameters_a69e64fe69a16c995ba2c379a3fc66c84}{fi\+Frag\+Num}}
+\begin{DoxyCompactList}\small\item\em Количество разбиений по fi. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_rotation_body_parameters_a5bc1cbff94a1ea6d9ef8aae5c740a83d}\label{struct_rotation_body_parameters_a5bc1cbff94a1ea6d9ef8aae5c740a83d}} 
+int \mbox{\hyperlink{struct_rotation_body_parameters_a5bc1cbff94a1ea6d9ef8aae5c740a83d}{part\+Frag\+Num}}
+\begin{DoxyCompactList}\small\item\em Количество разбиений по длине \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_rotation_body_parameters_a47f6db33a7f6ad9289632dbc56216339}\label{struct_rotation_body_parameters_a47f6db33a7f6ad9289632dbc56216339}} 
+double \mbox{\hyperlink{struct_rotation_body_parameters_a47f6db33a7f6ad9289632dbc56216339}{x\+Beg}}
+\begin{DoxyCompactList}\small\item\em Координата начала тела по X. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_rotation_body_parameters_ac71fd217c1b61ef801557530017787bc}\label{struct_rotation_body_parameters_ac71fd217c1b61ef801557530017787bc}} 
+double \mbox{\hyperlink{struct_rotation_body_parameters_ac71fd217c1b61ef801557530017787bc}{x\+End}}
+\begin{DoxyCompactList}\small\item\em Координата конца тела по Y. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_rotation_body_parameters_a90fd17c634cf3557e83f88bf50f9d960}\label{struct_rotation_body_parameters_a90fd17c634cf3557e83f88bf50f9d960}} 
+double \mbox{\hyperlink{struct_rotation_body_parameters_a90fd17c634cf3557e83f88bf50f9d960}{section\+Distance}}
+\begin{DoxyCompactList}\small\item\em Величина среза \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_rotation_body_parameters_a1d72d0ec82dc00ce8591bb7f00309a28}\label{struct_rotation_body_parameters_a1d72d0ec82dc00ce8591bb7f00309a28}} 
+double \mbox{\hyperlink{struct_rotation_body_parameters_a1d72d0ec82dc00ce8591bb7f00309a28}{delta}}
+\begin{DoxyCompactList}\small\item\em Подъем рамок над телом \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_rotation_body_parameters_a1a8c15e4f598f3c1df4bd8a703e6d35d}\label{struct_rotation_body_parameters_a1a8c15e4f598f3c1df4bd8a703e6d35d}} 
+double \mbox{\hyperlink{struct_rotation_body_parameters_a1a8c15e4f598f3c1df4bd8a703e6d35d}{raise}}
+\begin{DoxyCompactList}\small\item\em Подъем контрольных точек для подсчета давления \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_rotation_body_parameters_a2dd755dc9bd17a5d70f1b508809f5bec}\label{struct_rotation_body_parameters_a2dd755dc9bd17a5d70f1b508809f5bec}} 
+double \mbox{\hyperlink{struct_rotation_body_parameters_a2dd755dc9bd17a5d70f1b508809f5bec}{vortons\+Rad}}
+\begin{DoxyCompactList}\small\item\em Радиус вортона \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Подробное описание}
+Структура для хранения параметров тела вращения 
+
+\subsection{Методы}
+\mbox{\Hypertarget{struct_rotation_body_parameters_a0e0a77e37999193d1605464f2fee3b5c}\label{struct_rotation_body_parameters_a0e0a77e37999193d1605464f2fee3b5c}} 
+\index{Rotation\+Body\+Parameters@{Rotation\+Body\+Parameters}!set\+Data@{set\+Data}}
+\index{set\+Data@{set\+Data}!Rotation\+Body\+Parameters@{Rotation\+Body\+Parameters}}
+\subsubsection{\texorpdfstring{set\+Data()}{setData()}}
+{\footnotesize\ttfamily void Rotation\+Body\+Parameters\+::set\+Data (\begin{DoxyParamCaption}\item[{const int}]{i,  }\item[{const double}]{value }\end{DoxyParamCaption})}
+
+Установка соотвествующего значения в объект структуры параметров разбиения тела вращения 
+\begin{DoxyParams}{Аргументы}
+{\em i} & Номер поля структуры \\
+\hline
+{\em value} & Значение поля структуры \\
+\hline
+\end{DoxyParams}
+
+
+Объявления и описания членов структур находятся в файлах\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Users/\+Vasily/\+Documents/\+Vortex\+Method/\mbox{\hyperlink{bodyfragmentation_8h}{bodyfragmentation.\+h}}\item 
+C\+:/\+Users/\+Vasily/\+Documents/\+Vortex\+Method/bodyfragmentation.\+cpp\end{DoxyCompactItemize}

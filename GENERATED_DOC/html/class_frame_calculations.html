@@ -1,0 +1,2789 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.8.14"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>VortexMethod: Класс FrameCalculations</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">VortexMethod
+   &#160;<span id="projectnumber">v.2.0</span>
+   </div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Создано системой Doxygen 1.8.14 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+var searchBox = new SearchBox("searchBox", "search",false,'Поиск');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+$(function() {
+  initMenu('',true,false,'search.php','Поиск');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */</script>
+<div id="main-nav"></div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#pub-methods">Открытые члены</a> &#124;
+<a href="#pub-static-methods">Открытые статические члены</a> &#124;
+<a href="#pri-attribs">Закрытые данные</a> &#124;
+<a href="class_frame_calculations-members.html">Полный список членов класса</a>  </div>
+  <div class="headertitle">
+<div class="title">Класс FrameCalculations</div>  </div>
+</div><!--header-->
+<div class="contents">
+
+<p>Класс, содержащий функции для работы с рамками  
+ <a href="class_frame_calculations.html#details">Подробнее...</a></p>
+
+<p><code>#include &lt;<a class="el" href="framecalculations_8h_source.html">framecalculations.h</a>&gt;</code></p>
+<div class="dynheader">
+Граф связей класса FrameCalculations:</div>
+<div class="dyncontent">
+<div class="center"><img src="class_frame_calculations__coll__graph.png" border="0" usemap="#_frame_calculations_coll__map" alt="Collaboration graph"/></div>
+<!-- MAP 0 -->
+<center><span class="legend">[<a href="graph_legend.html">см. легенду</a>]</span></center></div>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
+Открытые члены</h2></td></tr>
+<tr class="memitem:a4175dc61a498d4b905abb48e0e202052"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_frame_calculations.html#a4175dc61a498d4b905abb48e0e202052">FrameCalculations</a> ()</td></tr>
+<tr class="separator:a4175dc61a498d4b905abb48e0e202052"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa0d92606bc8a66387657521b8cac1a0f"><td class="memItemLeft" align="right" valign="top">QVector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_frame_calculations.html#aa0d92606bc8a66387657521b8cac1a0f">calcTetas</a> (const int tetaFragNum)</td></tr>
+<tr class="separator:aa0d92606bc8a66387657521b8cac1a0f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:affd2bc2a5ee409d78ddab871a75e2d7c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_frame_calculations.html#affd2bc2a5ee409d78ddab871a75e2d7c">matrixCalc</a> (QVector&lt; std::shared_ptr&lt; <a class="el" href="class_multi_frame.html">MultiFrame</a> &gt;&gt; frames, const QVector&lt; <a class="el" href="class_vector3_d.html">Vector3D</a> &gt; &amp;controlPoints, const QVector&lt; <a class="el" href="class_vector3_d.html">Vector3D</a> &gt; &amp;normals)</td></tr>
+<tr class="separator:affd2bc2a5ee409d78ddab871a75e2d7c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aac24f14642695a675439a535f6215c37"><td class="memItemLeft" align="right" valign="top">Eigen::VectorXd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_frame_calculations.html#aac24f14642695a675439a535f6215c37">columnCalc</a> (const <a class="el" href="class_vector3_d.html">Vector3D</a> streamVel, const QVector&lt; <a class="el" href="class_vorton.html">Vorton</a> &gt; &amp;vortons, const QVector&lt; <a class="el" href="class_vector3_d.html">Vector3D</a> &gt; &amp;normals, const QVector&lt; <a class="el" href="class_vector3_d.html">Vector3D</a> &gt; controlPoints)</td></tr>
+<tr class="separator:aac24f14642695a675439a535f6215c37"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8d7e2813ad4725d6866ecfe3b5a1b76c"><td class="memItemLeft" align="right" valign="top">Eigen::VectorXd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_frame_calculations.html#a8d7e2813ad4725d6866ecfe3b5a1b76c">vorticitiesCalc</a> (const Eigen::VectorXd &amp;column)</td></tr>
+<tr class="separator:a8d7e2813ad4725d6866ecfe3b5a1b76c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaa9598a64ef87159b79348f4d0d28262"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_frame_calculations.html#aaa9598a64ef87159b79348f4d0d28262">unionVortons</a> (QVector&lt; <a class="el" href="class_vorton.html">Vorton</a> &gt; &amp;vortons, const double eStar, const double eDoubleStar, const double vortonRad)</td></tr>
+<tr class="separator:aaa9598a64ef87159b79348f4d0d28262"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a27231d13fa8cd2a6bc59b37089927db7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_frame_calculations.html#a27231d13fa8cd2a6bc59b37089927db7">removeSmallVorticity</a> (QVector&lt; <a class="el" href="class_vorton.html">Vorton</a> &gt; &amp;vortons, const double minVorticity)</td></tr>
+<tr class="separator:a27231d13fa8cd2a6bc59b37089927db7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad410b0c3981f536fd531d87044ecf9f1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_frame_calculations.html#ad410b0c3981f536fd531d87044ecf9f1">removeFarSphere</a> (QVector&lt; <a class="el" href="class_vorton.html">Vorton</a> &gt; &amp;vortons, const double farDistance, const <a class="el" href="class_vector3_d.html">Vector3D</a> bodyCenter)</td></tr>
+<tr class="separator:ad410b0c3981f536fd531d87044ecf9f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5e1d67a2cc2b5389c07152cd753c052e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_frame_calculations.html#a5e1d67a2cc2b5389c07152cd753c052e">removeFarCylinder</a> (QVector&lt; <a class="el" href="class_vorton.html">Vorton</a> &gt; &amp;vortons, const double farDistance, const double height)</td></tr>
+<tr class="separator:a5e1d67a2cc2b5389c07152cd753c052e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1281503aec01e524716b8bbaafb9eb17"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_frame_calculations.html#a1281503aec01e524716b8bbaafb9eb17">removeFarRotationBody</a> (QVector&lt; <a class="el" href="class_vorton.html">Vorton</a> &gt; &amp;vortons, const double farDistance, const <a class="el" href="class_vector3_d.html">Vector3D</a> bodyCenter)</td></tr>
+<tr class="separator:a1281503aec01e524716b8bbaafb9eb17"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4f23f04e070d94b6840f707cf5752bd8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_frame_calculations.html#a4f23f04e070d94b6840f707cf5752bd8">removeFarRotationCutBody</a> (QVector&lt; <a class="el" href="class_vorton.html">Vorton</a> &gt; &amp;vortons, const double farDistance, const <a class="el" href="class_vector3_d.html">Vector3D</a> bodyCenter)</td></tr>
+<tr class="separator:a4f23f04e070d94b6840f707cf5752bd8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2f559b61c1377f8379c7bc4b814e5574"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_frame_calculations.html#a2f559b61c1377f8379c7bc4b814e5574">displacementCalc</a> (QVector&lt; <a class="el" href="class_vorton.html">Vorton</a> &gt; &amp;freeVortons, QVector&lt; <a class="el" href="class_vorton.html">Vorton</a> &gt; &amp;newVortons, double step, <a class="el" href="class_vector3_d.html">Vector3D</a> streamVel, double eDelta, double fiMax, double maxMove)</td></tr>
+<tr class="separator:a2f559b61c1377f8379c7bc4b814e5574"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad739531b97f13c6136b250e720a30730"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_frame_calculations.html#ad739531b97f13c6136b250e720a30730">displacementLaunchCalc</a> (QVector&lt; <a class="el" href="class_vorton.html">Vorton</a> &gt; &amp;freeVortons, QVector&lt; <a class="el" href="class_vorton.html">Vorton</a> &gt; &amp;newVortons, QVector&lt; <a class="el" href="class_vorton.html">Vorton</a> &gt; &amp;symFreeVortons, QVector&lt; <a class="el" href="class_vorton.html">Vorton</a> &gt; &amp;symNewVortons, double step, <a class="el" href="class_vector3_d.html">Vector3D</a> streamVel, double eDelta, double fiMax, double maxMove)</td></tr>
+<tr class="separator:ad739531b97f13c6136b250e720a30730"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8bf93b3abdacbef2e5297b8daceefdcc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_frame_calculations.html#a8bf93b3abdacbef2e5297b8daceefdcc">setMatrixSize</a> (int size)</td></tr>
+<tr class="separator:a8bf93b3abdacbef2e5297b8daceefdcc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a136c7a54ad8afbf2fdcbb3fc797f3ba1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_vector3_d.html">Vector3D</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_frame_calculations.html#a136c7a54ad8afbf2fdcbb3fc797f3ba1">forceCalc</a> (const <a class="el" href="class_vector3_d.html">Vector3D</a> streamVel, double streamPres, double density, QVector&lt; std::shared_ptr&lt; <a class="el" href="class_multi_frame.html">MultiFrame</a> &gt;&gt; frames, const QVector&lt; <a class="el" href="class_vorton.html">Vorton</a> &gt; &amp;freeVortons, const double tau, const QVector&lt; double &gt; &amp;squares, const QVector&lt; <a class="el" href="class_vector3_d.html">Vector3D</a> &gt; &amp;controlPointsRaised, const QVector&lt; <a class="el" href="class_vector3_d.html">Vector3D</a> &gt; &amp;normals)</td></tr>
+<tr class="separator:a136c7a54ad8afbf2fdcbb3fc797f3ba1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a99c3a5907c5e1c2876e6e12101401971"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_frame_calculations.html#a99c3a5907c5e1c2876e6e12101401971">cpSum</a> (const int stepNum, QVector&lt; double &gt; &amp;cp, const int fiFragNum, const double radius, const double pointsRaising, const QVector&lt; double &gt; &amp;tetas, const <a class="el" href="class_vector3_d.html">Vector3D</a> streamVel, const double streamPres, const double density, const QVector&lt; std::shared_ptr&lt; <a class="el" href="class_multi_frame.html">MultiFrame</a> &gt;&gt; frames, QVector&lt; <a class="el" href="class_vorton.html">Vorton</a> &gt; freeVortons, double tau, const <a class="el" href="class_vector3_d.html">Vector3D</a> center)</td></tr>
+<tr class="separator:a99c3a5907c5e1c2876e6e12101401971"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a77e3c83528fea04364fa98db998aace8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_frame_calculations.html#a77e3c83528fea04364fa98db998aace8">cpAverage</a> (QVector&lt; double &gt; &amp;cp, const int stepsNum)</td></tr>
+<tr class="separator:a77e3c83528fea04364fa98db998aace8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aedf68cd06f1f6fbd3c9115c5fb69c4db"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_frame_calculations.html#aedf68cd06f1f6fbd3c9115c5fb69c4db">getBackAndRotateSphere</a> (QVector&lt; <a class="el" href="class_vorton.html">Vorton</a> &gt; &amp;vortons, const <a class="el" href="class_vector3_d.html">Vector3D</a> center, const double radius, const double layerHeight, const QVector&lt; <a class="el" href="class_vector3_d.html">Vector3D</a> &gt; &amp;controlPoints, const QVector&lt; <a class="el" href="class_vector3_d.html">Vector3D</a> &gt; &amp;normals)</td></tr>
+<tr class="separator:aedf68cd06f1f6fbd3c9115c5fb69c4db"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afd20c0630e581591b2d5e678434b9370"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_frame_calculations.html#afd20c0630e581591b2d5e678434b9370">getBackAndRotateCylinder</a> (QVector&lt; <a class="el" href="class_vorton.html">Vorton</a> &gt; &amp;vortons, const double height, const double diameter, const double layerHeight, const QVector&lt; <a class="el" href="class_vector3_d.html">Vector3D</a> &gt; &amp;controlPoints, const QVector&lt; <a class="el" href="class_vector3_d.html">Vector3D</a> &gt; &amp;normals)</td></tr>
+<tr class="separator:afd20c0630e581591b2d5e678434b9370"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0e15153409aef5fb5d96d8ca8d0f7db4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_frame_calculations.html#a0e15153409aef5fb5d96d8ca8d0f7db4">getBackAndRotateRotationBody</a> (QVector&lt; <a class="el" href="class_vorton.html">Vorton</a> &gt; &amp;vortons, const double xBeg, const double xEnd, const double layerHeight, const QVector&lt; <a class="el" href="class_vector3_d.html">Vector3D</a> &gt; &amp;controlPoints, const QVector&lt; <a class="el" href="class_vector3_d.html">Vector3D</a> &gt; &amp;normals)</td></tr>
+<tr class="separator:a0e15153409aef5fb5d96d8ca8d0f7db4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a268e00aa70b0a22c814aa7a99ef71f6e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_frame_calculations.html#a268e00aa70b0a22c814aa7a99ef71f6e">getBackAndRotateRotationCutBody</a> (QVector&lt; <a class="el" href="class_vorton.html">Vorton</a> &gt; &amp;vortons, const double xBeg, const double xEnd, const double layerHeight, const QVector&lt; <a class="el" href="class_vector3_d.html">Vector3D</a> &gt; &amp;controlPoints, const QVector&lt; <a class="el" href="class_vector3_d.html">Vector3D</a> &gt; &amp;normals)</td></tr>
+<tr class="separator:a268e00aa70b0a22c814aa7a99ef71f6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad196b47eb903ad247d5cab647817b308"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_frame_calculations.html#ad196b47eb903ad247d5cab647817b308">getBackAndRotateRotationCutLaunchedBody</a> (QVector&lt; <a class="el" href="class_vorton.html">Vorton</a> &gt; &amp;vortons, const double xBeg, const double xEnd, const double layerHeight, const QVector&lt; <a class="el" href="class_vector3_d.html">Vector3D</a> &gt; &amp;controlPoints, const QVector&lt; <a class="el" href="class_vector3_d.html">Vector3D</a> &gt; &amp;normals)</td></tr>
+<tr class="separator:ad196b47eb903ad247d5cab647817b308"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4df4278fb394bbd9d3ac74ce9f4d3af8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_counters.html">Counters</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_frame_calculations.html#a4df4278fb394bbd9d3ac74ce9f4d3af8">getCounters</a> () const</td></tr>
+<tr class="separator:a4df4278fb394bbd9d3ac74ce9f4d3af8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5564dbc6d6f6cce07cc09bdb446ebd2d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_restrictions.html">Restrictions</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_frame_calculations.html#a5564dbc6d6f6cce07cc09bdb446ebd2d">getRestrictions</a> () const</td></tr>
+<tr class="separator:a5564dbc6d6f6cce07cc09bdb446ebd2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae02bfaca62d087af7c2a84981d3218f9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_timers.html">Timers</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_frame_calculations.html#ae02bfaca62d087af7c2a84981d3218f9">getTimers</a> () const</td></tr>
+<tr class="separator:ae02bfaca62d087af7c2a84981d3218f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a687365cd35332f572afbc8eeb9f51a86"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_frame_calculations.html#a687365cd35332f572afbc8eeb9f51a86">clearCounters</a> ()</td></tr>
+<tr class="separator:a687365cd35332f572afbc8eeb9f51a86"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6b220c05309876a8e74f756e4b650eba"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_frame_calculations.html#a6b220c05309876a8e74f756e4b650eba">clearRestrictions</a> ()</td></tr>
+<tr class="separator:a6b220c05309876a8e74f756e4b650eba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae223d1579ad207a8325ef6825982ba97"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_frame_calculations.html#ae223d1579ad207a8325ef6825982ba97">clearTimers</a> ()</td></tr>
+<tr class="separator:ae223d1579ad207a8325ef6825982ba97"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5839ed07938c0985151452a1e0de98ed"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_frame_calculations.html#a5839ed07938c0985151452a1e0de98ed">clear</a> ()</td></tr>
+<tr class="separator:a5839ed07938c0985151452a1e0de98ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
+Открытые статические члены</h2></td></tr>
+<tr class="memitem:a564f527920433ef1fc56b8476abc381d"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_frame_calculations.html#a564f527920433ef1fc56b8476abc381d">setVorticity</a> (QVector&lt; std::shared_ptr&lt; <a class="el" href="class_multi_frame.html">MultiFrame</a> &gt;&gt; frames, const Eigen::VectorXd vorticities)</td></tr>
+<tr class="separator:a564f527920433ef1fc56b8476abc381d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a36e9c485fa20dc63addfa5f859466a4f"><td class="memItemLeft" align="right" valign="top">static QVector&lt; <a class="el" href="class_vorton.html">Vorton</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_frame_calculations.html#a36e9c485fa20dc63addfa5f859466a4f">getFrameVortons</a> (QVector&lt; std::shared_ptr&lt; <a class="el" href="class_multi_frame.html">MultiFrame</a> &gt;&gt; frames)</td></tr>
+<tr class="separator:a36e9c485fa20dc63addfa5f859466a4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5d8360d713e0b70ef16836c393875898"><td class="memItemLeft" align="right" valign="top">static QVector&lt; <a class="el" href="class_vorton.html">Vorton</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_frame_calculations.html#a5d8360d713e0b70ef16836c393875898">getLiftedFrameVortons</a> (QVector&lt; std::shared_ptr&lt; <a class="el" href="class_multi_frame.html">MultiFrame</a> &gt;&gt; frames, const QVector&lt; <a class="el" href="class_vector3_d.html">Vector3D</a> &gt; &amp;normals, const double deltaUp)</td></tr>
+<tr class="separator:a5d8360d713e0b70ef16836c393875898"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a649d97062701534e3c658717aa7fc328"><td class="memItemLeft" align="right" valign="top">static double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_frame_calculations.html#a649d97062701534e3c658717aa7fc328">pressureCalc</a> (const <a class="el" href="class_vector3_d.html">Vector3D</a> point, const <a class="el" href="class_vector3_d.html">Vector3D</a> streamVel, const double streamPres, const double density, QVector&lt; std::shared_ptr&lt; <a class="el" href="class_multi_frame.html">MultiFrame</a> &gt;&gt; frames, QVector&lt; <a class="el" href="class_vorton.html">Vorton</a> &gt; freeVortons, double tau)</td></tr>
+<tr class="separator:a649d97062701534e3c658717aa7fc328"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aefef30822ffab57ba2a36750470a9589"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_frame_calculations.html#aefef30822ffab57ba2a36750470a9589">addToVortonsVec</a> (QVector&lt; <a class="el" href="class_vorton.html">Vorton</a> &gt; &amp;vortons, const <a class="el" href="class_vorton.html">Vorton</a> vort)</td></tr>
+<tr class="separator:aefef30822ffab57ba2a36750470a9589"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a970373138ceb791f8fe4983be4fe3453"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="struct_vel_bsym.html">VelBsym</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_frame_calculations.html#a970373138ceb791f8fe4983be4fe3453">velocityAndBsymm</a> (const <a class="el" href="class_vector3_d.html">Vector3D</a> point, const <a class="el" href="class_vector3_d.html">Vector3D</a> streamVel, const QVector&lt; <a class="el" href="class_vorton.html">Vorton</a> &gt; &amp;vortons)</td></tr>
+<tr class="separator:a970373138ceb791f8fe4983be4fe3453"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaabc376bcaef6089f68adb42720d5685"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="class_vector3_d.html">Vector3D</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_frame_calculations.html#aaabc376bcaef6089f68adb42720d5685">velocity</a> (const <a class="el" href="class_vector3_d.html">Vector3D</a> point, const <a class="el" href="class_vector3_d.html">Vector3D</a> streamVel, const QVector&lt; <a class="el" href="class_vorton.html">Vorton</a> &gt; &amp;vortons, const QVector&lt; std::shared_ptr&lt; <a class="el" href="class_multi_frame.html">MultiFrame</a> &gt;&gt; frames)</td></tr>
+<tr class="separator:aaabc376bcaef6089f68adb42720d5685"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aff26c6410791c4d75edb5c138df673bf"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="class_vector3_d.html">Vector3D</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_frame_calculations.html#aff26c6410791c4d75edb5c138df673bf">velocity</a> (const <a class="el" href="class_vector3_d.html">Vector3D</a> point, const <a class="el" href="class_vector3_d.html">Vector3D</a> streamVel, const QVector&lt; <a class="el" href="class_vorton.html">Vorton</a> &gt; &amp;vortons)</td></tr>
+<tr class="separator:aff26c6410791c4d75edb5c138df673bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af93869af49ce3792da3f5de49e38b7fe"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="class_vorton.html">Vorton</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_frame_calculations.html#af93869af49ce3792da3f5de49e38b7fe">parallelDisplacement</a> (const <a class="el" href="struct_parallel.html">Parallel</a> el)</td></tr>
+<tr class="separator:af93869af49ce3792da3f5de49e38b7fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a157c3ea3b901afbd9b1b7dbd982b1366"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_frame_calculations.html#a157c3ea3b901afbd9b1b7dbd982b1366">displace</a> (QVector&lt; <a class="el" href="class_vorton.html">Vorton</a> &gt; &amp;vortons)</td></tr>
+<tr class="separator:a157c3ea3b901afbd9b1b7dbd982b1366"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac0e6d436b6b6f167fb0a80853ee8e69a"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_frame_calculations.html#ac0e6d436b6b6f167fb0a80853ee8e69a">reflect</a> (QVector&lt; <a class="el" href="class_vorton.html">Vorton</a> &gt; &amp;symFreeVortons, QVector&lt; <a class="el" href="class_vorton.html">Vorton</a> &gt; &amp;symNewVortons, QVector&lt; std::shared_ptr&lt; <a class="el" href="class_multi_frame.html">MultiFrame</a> &gt;&gt; symFrames)</td></tr>
+<tr class="separator:ac0e6d436b6b6f167fb0a80853ee8e69a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac52a1cd2bc6838daac5b900df04de699"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_frame_calculations.html#ac52a1cd2bc6838daac5b900df04de699">insideSphere</a> (const <a class="el" href="class_vorton.html">Vorton</a> &amp;vort, const <a class="el" href="class_vector3_d.html">Vector3D</a> &amp;center, const double radius)</td></tr>
+<tr class="separator:ac52a1cd2bc6838daac5b900df04de699"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6a6518700d039f2efee19ea430496123"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_frame_calculations.html#a6a6518700d039f2efee19ea430496123">insideSphereLayer</a> (const <a class="el" href="class_vorton.html">Vorton</a> &amp;vort, const <a class="el" href="class_vector3_d.html">Vector3D</a> &amp;center, const double radius, const double layerHeight)</td></tr>
+<tr class="separator:a6a6518700d039f2efee19ea430496123"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a51a235539c794106ae632f2a221c3318"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_frame_calculations.html#a51a235539c794106ae632f2a221c3318">insideCylinder</a> (const <a class="el" href="class_vorton.html">Vorton</a> &amp;vort, const double height, const double diameter)</td></tr>
+<tr class="separator:a51a235539c794106ae632f2a221c3318"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abef7349db128b308764a2045983108db"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_frame_calculations.html#abef7349db128b308764a2045983108db">insideCylinderLayer</a> (const <a class="el" href="class_vorton.html">Vorton</a> &amp;vort, const double height, const double diameter, const double layerHeight)</td></tr>
+<tr class="separator:abef7349db128b308764a2045983108db"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a99f895bb639a2d8bf98648a5ec55b5b0"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_frame_calculations.html#a99f895bb639a2d8bf98648a5ec55b5b0">insideRotationBody</a> (const <a class="el" href="class_vorton.html">Vorton</a> &amp;vort, const double xBeg, const double xEnd)</td></tr>
+<tr class="separator:a99f895bb639a2d8bf98648a5ec55b5b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4de864fbf60a109e3d4b7b0954b08258"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_frame_calculations.html#a4de864fbf60a109e3d4b7b0954b08258">insideRotationBodyLayer</a> (const <a class="el" href="class_vorton.html">Vorton</a> &amp;vort, const double xBeg, const double xEnd, const double layerHeight)</td></tr>
+<tr class="separator:a4de864fbf60a109e3d4b7b0954b08258"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a32559ea09afd92c7b207b9d7db6e809d"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_frame_calculations.html#a32559ea09afd92c7b207b9d7db6e809d">insideRotationCutBody</a> (const <a class="el" href="class_vorton.html">Vorton</a> &amp;vort, const double xBeg, const double xEnd)</td></tr>
+<tr class="separator:a32559ea09afd92c7b207b9d7db6e809d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a39873d69a67397e20b19ac0de71e00c5"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_frame_calculations.html#a39873d69a67397e20b19ac0de71e00c5">insideRotationCutBodyLayer</a> (const <a class="el" href="class_vorton.html">Vorton</a> &amp;vort, const double xBeg, const double xEnd, const double layerHeight)</td></tr>
+<tr class="separator:a39873d69a67397e20b19ac0de71e00c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acf3ff54e7c4b940de0b53c5c82a85a03"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_frame_calculations.html#acf3ff54e7c4b940de0b53c5c82a85a03">insideScreen</a> (<a class="el" href="class_vorton.html">Vorton</a> &amp;vort)</td></tr>
+<tr class="separator:acf3ff54e7c4b940de0b53c5c82a85a03"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6d5278ddbe021167c1ba71e68620e3df"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_frame_calculations.html#a6d5278ddbe021167c1ba71e68620e3df">exploseSphere</a> (const QVector&lt; <a class="el" href="class_vorton.html">Vorton</a> &gt; &amp;vortons)</td></tr>
+<tr class="separator:a6d5278ddbe021167c1ba71e68620e3df"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0d4e2c1b30822b5e25fe39593febb978"><td class="memItemLeft" align="right" valign="top">static double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_frame_calculations.html#a0d4e2c1b30822b5e25fe39593febb978">calcDispersion</a> (const QVector&lt; <a class="el" href="class_vector3_d.html">Vector3D</a> &gt; &amp;cAerodynamics)</td></tr>
+<tr class="separator:a0d4e2c1b30822b5e25fe39593febb978"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ada975cd3e9d7edf466f9d31867044506"><td class="memItemLeft" align="right" valign="top">static QVector&lt; std::shared_ptr&lt; <a class="el" href="class_multi_frame.html">MultiFrame</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_frame_calculations.html#ada975cd3e9d7edf466f9d31867044506">copyFrames</a> (QVector&lt; std::shared_ptr&lt; <a class="el" href="class_multi_frame.html">MultiFrame</a> &gt;&gt; frames)</td></tr>
+<tr class="separator:ada975cd3e9d7edf466f9d31867044506"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a854853c14187eec031c860438a886514"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_frame_calculations.html#a854853c14187eec031c860438a886514">translateBody</a> (const <a class="el" href="class_vector3_d.html">Vector3D</a> &amp;translation, QVector&lt; std::shared_ptr&lt; <a class="el" href="class_multi_frame.html">MultiFrame</a> &gt;&gt; &amp;frames, QVector&lt; <a class="el" href="class_vector3_d.html">Vector3D</a> &gt; &amp;controlPoints, QVector&lt; <a class="el" href="class_vector3_d.html">Vector3D</a> &gt; &amp;controlPointsRaised, <a class="el" href="class_vector3_d.html">Vector3D</a> &amp;center, double &amp;xbeg, double &amp;xend, const <a class="el" href="struct_fragmentation_parameters.html">FragmentationParameters</a> &amp;fragPar)</td></tr>
+<tr class="separator:a854853c14187eec031c860438a886514"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9180d3ce990339ef141c53064eefca20"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_frame_calculations.html#a9180d3ce990339ef141c53064eefca20">translateBody</a> (const <a class="el" href="class_vector3_d.html">Vector3D</a> &amp;translation, QVector&lt; std::shared_ptr&lt; <a class="el" href="class_multi_frame.html">MultiFrame</a> &gt;&gt; &amp;frames, QVector&lt; <a class="el" href="class_vector3_d.html">Vector3D</a> &gt; &amp;controlPoints, QVector&lt; <a class="el" href="class_vector3_d.html">Vector3D</a> &gt; &amp;controlPointsRaised, <a class="el" href="class_vector3_d.html">Vector3D</a> &amp;center)</td></tr>
+<tr class="separator:a9180d3ce990339ef141c53064eefca20"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8b261b5f1f933306a66a4461aae64e64"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_frame_calculations.html#a8b261b5f1f933306a66a4461aae64e64">translateVortons</a> (const <a class="el" href="class_vector3_d.html">Vector3D</a> &amp;translation, QVector&lt; <a class="el" href="class_vorton.html">Vorton</a> &gt; &amp;vortons)</td></tr>
+<tr class="separator:a8b261b5f1f933306a66a4461aae64e64"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
+Закрытые данные</h2></td></tr>
+<tr class="memitem:ab3ba753d8837dd08a5bc79167bd0c058"><td class="memItemLeft" align="right" valign="top"><a id="ab3ba753d8837dd08a5bc79167bd0c058"></a>
+Eigen::MatrixXd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_frame_calculations.html#ab3ba753d8837dd08a5bc79167bd0c058">matrix</a></td></tr>
+<tr class="memdesc:ab3ba753d8837dd08a5bc79167bd0c058"><td class="mdescLeft">&#160;</td><td class="mdescRight">Матрица, составленная из произведения единичных интенсивностей от каждой из рамок на соответствующую нормаль. Используется для дальнейшего решения СЛАУ и вычисления завихренностей рамок. <br /></td></tr>
+<tr class="separator:ab3ba753d8837dd08a5bc79167bd0c058"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad5b30f8065f1cc4f76dfd8972c668524"><td class="memItemLeft" align="right" valign="top"><a id="ad5b30f8065f1cc4f76dfd8972c668524"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_frame_calculations.html#ad5b30f8065f1cc4f76dfd8972c668524">matrixSize</a></td></tr>
+<tr class="memdesc:ad5b30f8065f1cc4f76dfd8972c668524"><td class="mdescLeft">&#160;</td><td class="mdescRight">Размер матрицы <br /></td></tr>
+<tr class="separator:ad5b30f8065f1cc4f76dfd8972c668524"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afc998f9041eec85da5b0646d441b1bff"><td class="memItemLeft" align="right" valign="top"><a id="afc998f9041eec85da5b0646d441b1bff"></a>
+<a class="el" href="struct_counters.html">Counters</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_frame_calculations.html#afc998f9041eec85da5b0646d441b1bff">counters</a></td></tr>
+<tr class="memdesc:afc998f9041eec85da5b0646d441b1bff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Количество удаленных вортонов в результате действия различных функций <br /></td></tr>
+<tr class="separator:afc998f9041eec85da5b0646d441b1bff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0413851b46b65f387b57148406d68caa"><td class="memItemLeft" align="right" valign="top"><a id="a0413851b46b65f387b57148406d68caa"></a>
+<a class="el" href="struct_restrictions.html">Restrictions</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_frame_calculations.html#a0413851b46b65f387b57148406d68caa">restrictions</a></td></tr>
+<tr class="memdesc:a0413851b46b65f387b57148406d68caa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Количество сработанных ограничений <br /></td></tr>
+<tr class="separator:a0413851b46b65f387b57148406d68caa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0d2282b3ff7496733a6004241e0740c3"><td class="memItemLeft" align="right" valign="top"><a id="a0d2282b3ff7496733a6004241e0740c3"></a>
+<a class="el" href="struct_timers.html">Timers</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_frame_calculations.html#a0d2282b3ff7496733a6004241e0740c3">timers</a></td></tr>
+<tr class="memdesc:a0d2282b3ff7496733a6004241e0740c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Таймеры на функции <br /></td></tr>
+<tr class="separator:a0d2282b3ff7496733a6004241e0740c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Подробное описание</h2>
+<div class="textblock"><p>Класс, содержащий функции для работы с рамками </p>
+<p>Класс, в котором определены все функции, описывающие работу с рамками при проведении расчета </p>
+</div><h2 class="groupheader">Конструктор(ы)</h2>
+<a id="a4175dc61a498d4b905abb48e0e202052"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4175dc61a498d4b905abb48e0e202052">&#9670;&nbsp;</a></span>FrameCalculations()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">FrameCalculations::FrameCalculations </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Создает объект класса для работы с рамками с обнуленными счетчиками, ограничениями и таймерами </p>
+
+</div>
+</div>
+<h2 class="groupheader">Методы</h2>
+<a id="aefef30822ffab57ba2a36750470a9589"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aefef30822ffab57ba2a36750470a9589">&#9670;&nbsp;</a></span>addToVortonsVec()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void FrameCalculations::addToVortonsVec </td>
+          <td>(</td>
+          <td class="paramtype">QVector&lt; <a class="el" href="class_vorton.html">Vorton</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>vortons</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="class_vorton.html">Vorton</a>&#160;</td>
+          <td class="paramname"><em>vort</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Функция, добавляющая вортон в вектор. Создана для совместимости с QtConcurrent </p><dl class="params"><dt>Аргументы</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">vortons</td><td>Вектор, содержащий вортоны для функции </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">vort</td><td>Вортон для добавления </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a0d4e2c1b30822b5e25fe39593febb978"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0d4e2c1b30822b5e25fe39593febb978">&#9670;&nbsp;</a></span>calcDispersion()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">double FrameCalculations::calcDispersion </td>
+          <td>(</td>
+          <td class="paramtype">const QVector&lt; <a class="el" href="class_vector3_d.html">Vector3D</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>cAerodynamics</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Функция для расчета дисперсии вектора С </p><dl class="params"><dt>Аргументы</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">cAerodynamics</td><td>Вектор С </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Возвращает</dt><dd>Значение дисперсии </dd></dl>
+
+</div>
+</div>
+<a id="aa0d92606bc8a66387657521b8cac1a0f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa0d92606bc8a66387657521b8cac1a0f">&#9670;&nbsp;</a></span>calcTetas()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">QVector&lt; double &gt; FrameCalculations::calcTetas </td>
+          <td>(</td>
+          <td class="paramtype">const int&#160;</td>
+          <td class="paramname"><em>tetaFragNum</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Рассчитывает значения углов тета для сферы </p><dl class="params"><dt>Аргументы</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">tetaFragNum</td><td>Количество разбиений тела по тета </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Возвращает</dt><dd>Вектор с рассчитанными значениями углов тета </dd></dl>
+
+</div>
+</div>
+<a id="a5839ed07938c0985151452a1e0de98ed"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5839ed07938c0985151452a1e0de98ed">&#9670;&nbsp;</a></span>clear()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void FrameCalculations::clear </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Функция обнуляющая значения сработавших счетчиков, сработавших ограничений, таймеров </p>
+
+</div>
+</div>
+<a id="a687365cd35332f572afbc8eeb9f51a86"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a687365cd35332f572afbc8eeb9f51a86">&#9670;&nbsp;</a></span>clearCounters()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void FrameCalculations::clearCounters </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Функция обнуляющая значения счетчиков </p>
+
+</div>
+</div>
+<a id="a6b220c05309876a8e74f756e4b650eba"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6b220c05309876a8e74f756e4b650eba">&#9670;&nbsp;</a></span>clearRestrictions()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void FrameCalculations::clearRestrictions </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Функция обнуляющая значения сработавших ограничений </p>
+
+</div>
+</div>
+<a id="ae223d1579ad207a8325ef6825982ba97"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae223d1579ad207a8325ef6825982ba97">&#9670;&nbsp;</a></span>clearTimers()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void FrameCalculations::clearTimers </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Функция обнуляющая значения сработавших таймеров </p>
+
+</div>
+</div>
+<a id="aac24f14642695a675439a535f6215c37"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aac24f14642695a675439a535f6215c37">&#9670;&nbsp;</a></span>columnCalc()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Eigen::VectorXd FrameCalculations::columnCalc </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="class_vector3_d.html">Vector3D</a>&#160;</td>
+          <td class="paramname"><em>streamVel</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const QVector&lt; <a class="el" href="class_vorton.html">Vorton</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>vortons</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const QVector&lt; <a class="el" href="class_vector3_d.html">Vector3D</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>normals</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const QVector&lt; <a class="el" href="class_vector3_d.html">Vector3D</a> &gt;&#160;</td>
+          <td class="paramname"><em>controlPoints</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Рассчитывает значения столбца b для решения СЛАУ вида A*x=b, где А-матрица, х-искомый столбец. </p><dl class="params"><dt>Аргументы</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">streamVel</td><td>Скорость потока </td></tr>
+    <tr><td class="paramname">vortons</td><td>Вектор содержащий текущие вортоны в потоке </td></tr>
+    <tr><td class="paramname">normals</td><td>Вектор нормалей </td></tr>
+    <tr><td class="paramname">controlPoints</td><td>Вектор контрольных точек </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Возвращает</dt><dd>Столбец b </dd></dl>
+
+</div>
+</div>
+<a id="ada975cd3e9d7edf466f9d31867044506"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ada975cd3e9d7edf466f9d31867044506">&#9670;&nbsp;</a></span>copyFrames()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">QVector&lt; std::shared_ptr&lt; <a class="el" href="class_multi_frame.html">MultiFrame</a> &gt; &gt; FrameCalculations::copyFrames </td>
+          <td>(</td>
+          <td class="paramtype">QVector&lt; std::shared_ptr&lt; <a class="el" href="class_multi_frame.html">MultiFrame</a> &gt;&gt;&#160;</td>
+          <td class="paramname"><em>frames</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Функция для копирования вектора рамок </p><dl class="params"><dt>Аргументы</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">frames</td><td>Вектор рамок </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Возвращает</dt><dd>Скопированный вектор рамок </dd></dl>
+
+</div>
+</div>
+<a id="a77e3c83528fea04364fa98db998aace8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a77e3c83528fea04364fa98db998aace8">&#9670;&nbsp;</a></span>cpAverage()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void FrameCalculations::cpAverage </td>
+          <td>(</td>
+          <td class="paramtype">QVector&lt; double &gt; &amp;&#160;</td>
+          <td class="paramname"><em>cp</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const int&#160;</td>
+          <td class="paramname"><em>stepsNum</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Функция расчета средних значений ср </p><dl class="params"><dt>Аргументы</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">cp</td><td>Вектор значений ср </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">stepsNum</td><td>Количество шагов расчета </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a99c3a5907c5e1c2876e6e12101401971"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a99c3a5907c5e1c2876e6e12101401971">&#9670;&nbsp;</a></span>cpSum()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void FrameCalculations::cpSum </td>
+          <td>(</td>
+          <td class="paramtype">const int&#160;</td>
+          <td class="paramname"><em>stepNum</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">QVector&lt; double &gt; &amp;&#160;</td>
+          <td class="paramname"><em>cp</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const int&#160;</td>
+          <td class="paramname"><em>fiFragNum</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const double&#160;</td>
+          <td class="paramname"><em>radius</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const double&#160;</td>
+          <td class="paramname"><em>pointsRaising</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const QVector&lt; double &gt; &amp;&#160;</td>
+          <td class="paramname"><em>tetas</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="class_vector3_d.html">Vector3D</a>&#160;</td>
+          <td class="paramname"><em>streamVel</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const double&#160;</td>
+          <td class="paramname"><em>streamPres</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const double&#160;</td>
+          <td class="paramname"><em>density</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const QVector&lt; std::shared_ptr&lt; <a class="el" href="class_multi_frame.html">MultiFrame</a> &gt;&gt;&#160;</td>
+          <td class="paramname"><em>frames</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">QVector&lt; <a class="el" href="class_vorton.html">Vorton</a> &gt;&#160;</td>
+          <td class="paramname"><em>freeVortons</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>tau</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="class_vector3_d.html">Vector3D</a>&#160;</td>
+          <td class="paramname"><em>center</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Функция суммирования соответствующих значений ср </p><dl class="params"><dt>Аргументы</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">stepNum</td><td>Номер текущего шага </td></tr>
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">cp</td><td>Вектор для записи значений ср </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">fiFragNum</td><td>Количество разбиений по фи </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">radius</td><td>Радиус сферы </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">pointsRaising</td><td>Величина подъема точек для вычисления давления </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">tetas</td><td>Вектор значений углов тета </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">streamVel</td><td>Скорость потока </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">streamPres</td><td>Давление потока </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">density</td><td>Плотность среды </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">frames</td><td>Вектор, содержащий рамки </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">freeVortons</td><td>Вектор, содержащий вортоны в потоке </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">tau</td><td>Величина шага </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">center</td><td>Координата центра сферы </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a157c3ea3b901afbd9b1b7dbd982b1366"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a157c3ea3b901afbd9b1b7dbd982b1366">&#9670;&nbsp;</a></span>displace()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void FrameCalculations::displace </td>
+          <td>(</td>
+          <td class="paramtype">QVector&lt; <a class="el" href="class_vorton.html">Vorton</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>vortons</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Функция для изменения положения вортона согласно рассчитанному перемещению и изменению. </p><dl class="params"><dt>Аргументы</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">vortons</td><td>Вектор вортонов </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a2f559b61c1377f8379c7bc4b814e5574"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2f559b61c1377f8379c7bc4b814e5574">&#9670;&nbsp;</a></span>displacementCalc()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void FrameCalculations::displacementCalc </td>
+          <td>(</td>
+          <td class="paramtype">QVector&lt; <a class="el" href="class_vorton.html">Vorton</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>freeVortons</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">QVector&lt; <a class="el" href="class_vorton.html">Vorton</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>newVortons</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>step</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="class_vector3_d.html">Vector3D</a>&#160;</td>
+          <td class="paramname"><em>streamVel</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>eDelta</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>fiMax</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>maxMove</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Функция расчета перемещений и удалений для вортонов с рамок и вортонов в потоке </p><dl class="params"><dt>Аргументы</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">freeVortons</td><td>Вектор, содержащий вортоны в потоке </td></tr>
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">newVortons</td><td>Вектор, содержащий вортоны с рамок </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">step</td><td>Размер шага </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">streamVel</td><td>Скорость потока </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">eDelta</td><td>Максимальное значение удлинения </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">fiMax</td><td>Максимальное значение угла поворота </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">maxMove</td><td>Максимальное перемещения </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ad739531b97f13c6136b250e720a30730"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad739531b97f13c6136b250e720a30730">&#9670;&nbsp;</a></span>displacementLaunchCalc()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void FrameCalculations::displacementLaunchCalc </td>
+          <td>(</td>
+          <td class="paramtype">QVector&lt; <a class="el" href="class_vorton.html">Vorton</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>freeVortons</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">QVector&lt; <a class="el" href="class_vorton.html">Vorton</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>newVortons</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">QVector&lt; <a class="el" href="class_vorton.html">Vorton</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>symFreeVortons</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">QVector&lt; <a class="el" href="class_vorton.html">Vorton</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>symNewVortons</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>step</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="class_vector3_d.html">Vector3D</a>&#160;</td>
+          <td class="paramname"><em>streamVel</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>eDelta</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>fiMax</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>maxMove</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Функция расчета перемещений и удалений для вортонов с рамок и вортонов в потоке при решении задачи старта </p><dl class="params"><dt>Аргументы</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">freeVortons</td><td>Вектор, содержащий вортоны в потоке </td></tr>
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">newVortons</td><td>Вектор, содержащий вортоны с рамок </td></tr>
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">symFreeVortons</td><td>Симметричный вектор вектору, содержащему вортоны в потоке </td></tr>
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">symNewVortons</td><td>Симметричный вектор вектору, содержащему вортоны с рамок </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">step</td><td>Размер шага </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">streamVel</td><td>Скорость потока </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">eDelta</td><td>Максимальное значение удлинения </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">fiMax</td><td>Максимальное значение угла поворота </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">maxMove</td><td>Максимальное перемещения </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a6d5278ddbe021167c1ba71e68620e3df"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6d5278ddbe021167c1ba71e68620e3df">&#9670;&nbsp;</a></span>exploseSphere()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool FrameCalculations::exploseSphere </td>
+          <td>(</td>
+          <td class="paramtype">const QVector&lt; <a class="el" href="class_vorton.html">Vorton</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>vortons</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Функция для проверки возможного "взрыва" вортонов </p><dl class="params"><dt>Аргументы</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">vortons</td><td>Вектор вортонов </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Возвращает</dt><dd>Определение вортона под экран </dd></dl>
+
+</div>
+</div>
+<a id="a136c7a54ad8afbf2fdcbb3fc797f3ba1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a136c7a54ad8afbf2fdcbb3fc797f3ba1">&#9670;&nbsp;</a></span>forceCalc()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_vector3_d.html">Vector3D</a> FrameCalculations::forceCalc </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="class_vector3_d.html">Vector3D</a>&#160;</td>
+          <td class="paramname"><em>streamVel</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>streamPres</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>density</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">QVector&lt; std::shared_ptr&lt; <a class="el" href="class_multi_frame.html">MultiFrame</a> &gt;&gt;&#160;</td>
+          <td class="paramname"><em>frames</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const QVector&lt; <a class="el" href="class_vorton.html">Vorton</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>freeVortons</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const double&#160;</td>
+          <td class="paramname"><em>tau</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const QVector&lt; double &gt; &amp;&#160;</td>
+          <td class="paramname"><em>squares</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const QVector&lt; <a class="el" href="class_vector3_d.html">Vector3D</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>controlPointsRaised</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const QVector&lt; <a class="el" href="class_vector3_d.html">Vector3D</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>normals</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Функция расчета силы, действующей на тело </p><dl class="params"><dt>Аргументы</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">streamVel</td><td>Скорость потока </td></tr>
+    <tr><td class="paramname">streamPres</td><td>Давление потока </td></tr>
+    <tr><td class="paramname">density</td><td>Плотность среды </td></tr>
+    <tr><td class="paramname">frames</td><td>Вектор, содержащий рамки </td></tr>
+    <tr><td class="paramname">freeVortons</td><td>Вектор, содержащий вортоны в потоке </td></tr>
+    <tr><td class="paramname">tau</td><td>Величина шага </td></tr>
+    <tr><td class="paramname">squares</td><td>Вектор, содержащий площади рамок </td></tr>
+    <tr><td class="paramname">controlPointsRaised</td><td>Вектор, содержащий контрольные точки для вычисления давлений </td></tr>
+    <tr><td class="paramname">normals</td><td>Вектор, содержащий нормали </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Возвращает</dt><dd>Значение силы </dd></dl>
+
+</div>
+</div>
+<a id="afd20c0630e581591b2d5e678434b9370"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afd20c0630e581591b2d5e678434b9370">&#9670;&nbsp;</a></span>getBackAndRotateCylinder()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void FrameCalculations::getBackAndRotateCylinder </td>
+          <td>(</td>
+          <td class="paramtype">QVector&lt; <a class="el" href="class_vorton.html">Vorton</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>vortons</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const double&#160;</td>
+          <td class="paramname"><em>height</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const double&#160;</td>
+          <td class="paramname"><em>diameter</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const double&#160;</td>
+          <td class="paramname"><em>layerHeight</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const QVector&lt; <a class="el" href="class_vector3_d.html">Vector3D</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>controlPoints</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const QVector&lt; <a class="el" href="class_vector3_d.html">Vector3D</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>normals</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Функция, возвращающая вортоны из тела в поток и разворачивающая вортонов относительно поверхности цилиндра в слое </p><dl class="params"><dt>Аргументы</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">vortons</td><td>Вектор, содержащий вортоны для функции </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">height</td><td>Высота цилиндра </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">diameter</td><td>Диаметр цилиндра </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">layerHeight</td><td>Величина слоя </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">controlPoints</td><td>Вектор, содержащий контрольные точки </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">normals</td><td>Вектор, содержащий нормали </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a0e15153409aef5fb5d96d8ca8d0f7db4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0e15153409aef5fb5d96d8ca8d0f7db4">&#9670;&nbsp;</a></span>getBackAndRotateRotationBody()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void FrameCalculations::getBackAndRotateRotationBody </td>
+          <td>(</td>
+          <td class="paramtype">QVector&lt; <a class="el" href="class_vorton.html">Vorton</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>vortons</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const double&#160;</td>
+          <td class="paramname"><em>xBeg</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const double&#160;</td>
+          <td class="paramname"><em>xEnd</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const double&#160;</td>
+          <td class="paramname"><em>layerHeight</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const QVector&lt; <a class="el" href="class_vector3_d.html">Vector3D</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>controlPoints</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const QVector&lt; <a class="el" href="class_vector3_d.html">Vector3D</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>normals</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Функция, возвращающая вортоны из тела в поток и разворачивающая вортонов относительно поверхности тела вращения в слое </p><dl class="params"><dt>Аргументы</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">vortons</td><td>Вектор, содержащий вортоны для функции </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">xBeg</td><td>Минимальное значение координаты х тела </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">xEnd</td><td>Максимальное значение координаты х тела </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">layerHeight</td><td>Величина слоя </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">controlPoints</td><td>Вектор, содержащий контрольные точки </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">normals</td><td>Вектор, содержащий нормали </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a268e00aa70b0a22c814aa7a99ef71f6e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a268e00aa70b0a22c814aa7a99ef71f6e">&#9670;&nbsp;</a></span>getBackAndRotateRotationCutBody()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void FrameCalculations::getBackAndRotateRotationCutBody </td>
+          <td>(</td>
+          <td class="paramtype">QVector&lt; <a class="el" href="class_vorton.html">Vorton</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>vortons</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const double&#160;</td>
+          <td class="paramname"><em>xBeg</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const double&#160;</td>
+          <td class="paramname"><em>xEnd</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const double&#160;</td>
+          <td class="paramname"><em>layerHeight</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const QVector&lt; <a class="el" href="class_vector3_d.html">Vector3D</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>controlPoints</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const QVector&lt; <a class="el" href="class_vector3_d.html">Vector3D</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>normals</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Функция, возвращающая вортоны из тела в поток и разворачивающая вортонов относительно поверхности тела вращения со срезом в слое </p><dl class="params"><dt>Аргументы</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">vortons</td><td>Вектор, содержащий вортоны для функции </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">xBeg</td><td>Минимальное значение координаты х тела </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">xEnd</td><td>Максимальное значение координаты х тела </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">layerHeight</td><td>Величина слоя </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">controlPoints</td><td>Вектор, содержащий контрольные точки </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">normals</td><td>Вектор, содержащий нормали </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ad196b47eb903ad247d5cab647817b308"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad196b47eb903ad247d5cab647817b308">&#9670;&nbsp;</a></span>getBackAndRotateRotationCutLaunchedBody()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void FrameCalculations::getBackAndRotateRotationCutLaunchedBody </td>
+          <td>(</td>
+          <td class="paramtype">QVector&lt; <a class="el" href="class_vorton.html">Vorton</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>vortons</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const double&#160;</td>
+          <td class="paramname"><em>xBeg</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const double&#160;</td>
+          <td class="paramname"><em>xEnd</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const double&#160;</td>
+          <td class="paramname"><em>layerHeight</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const QVector&lt; <a class="el" href="class_vector3_d.html">Vector3D</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>controlPoints</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const QVector&lt; <a class="el" href="class_vector3_d.html">Vector3D</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>normals</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Функция, возвращающая вортоны из тела в поток и разворачивающая вортонов относительно поверхности тела вращения со срезом в слое при решении задачи старта </p><dl class="params"><dt>Аргументы</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">vortons</td><td>Вектор, содержащий вортоны для функции </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">xBeg</td><td>Минимальное значение координаты х тела </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">xEnd</td><td>Максимальное значение координаты х тела </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">layerHeight</td><td>Величина слоя </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">controlPoints</td><td>Вектор, содержащий контрольные точки </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">normals</td><td>Вектор, содержащий нормали </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="aedf68cd06f1f6fbd3c9115c5fb69c4db"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aedf68cd06f1f6fbd3c9115c5fb69c4db">&#9670;&nbsp;</a></span>getBackAndRotateSphere()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void FrameCalculations::getBackAndRotateSphere </td>
+          <td>(</td>
+          <td class="paramtype">QVector&lt; <a class="el" href="class_vorton.html">Vorton</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>vortons</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="class_vector3_d.html">Vector3D</a>&#160;</td>
+          <td class="paramname"><em>center</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const double&#160;</td>
+          <td class="paramname"><em>radius</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const double&#160;</td>
+          <td class="paramname"><em>layerHeight</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const QVector&lt; <a class="el" href="class_vector3_d.html">Vector3D</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>controlPoints</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const QVector&lt; <a class="el" href="class_vector3_d.html">Vector3D</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>normals</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Функция, возвращающая вортоны из тела в поток и разворачивающая вортонов относительно поверхности сферы в слое </p><dl class="params"><dt>Аргументы</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">vortons</td><td>Вектор, содержащий вортоны для функции </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">center</td><td>Координата центра сферы </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">radius</td><td>Величина радиуса сферы </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">layerHeight</td><td>Величина слоя </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">controlPoints</td><td>Вектор, содержащий контрольные точки </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">normals</td><td>Вектор, содержащий нормали </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a4df4278fb394bbd9d3ac74ce9f4d3af8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4df4278fb394bbd9d3ac74ce9f4d3af8">&#9670;&nbsp;</a></span>getCounters()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="struct_counters.html">Counters</a> FrameCalculations::getCounters </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Функция возвращающая значения счетчиков </p><dl class="section return"><dt>Возвращает</dt><dd>Структура с текущими значениями счетчиков </dd></dl>
+
+</div>
+</div>
+<a id="a36e9c485fa20dc63addfa5f859466a4f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a36e9c485fa20dc63addfa5f859466a4f">&#9670;&nbsp;</a></span>getFrameVortons()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">QVector&lt; <a class="el" href="class_vorton.html">Vorton</a> &gt; FrameCalculations::getFrameVortons </td>
+          <td>(</td>
+          <td class="paramtype">QVector&lt; std::shared_ptr&lt; <a class="el" href="class_multi_frame.html">MultiFrame</a> &gt;&gt;&#160;</td>
+          <td class="paramname"><em>frames</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Функция, возвращающая вектор вортонов с рамок </p><dl class="params"><dt>Аргументы</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">frames</td><td>Вектор, содержащий рамки </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Возвращает</dt><dd>Вектор, содержащий вортоны с рамок </dd></dl>
+
+</div>
+</div>
+<a id="a5d8360d713e0b70ef16836c393875898"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5d8360d713e0b70ef16836c393875898">&#9670;&nbsp;</a></span>getLiftedFrameVortons()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">QVector&lt; <a class="el" href="class_vorton.html">Vorton</a> &gt; FrameCalculations::getLiftedFrameVortons </td>
+          <td>(</td>
+          <td class="paramtype">QVector&lt; std::shared_ptr&lt; <a class="el" href="class_multi_frame.html">MultiFrame</a> &gt;&gt;&#160;</td>
+          <td class="paramname"><em>frames</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const QVector&lt; <a class="el" href="class_vector3_d.html">Vector3D</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>normals</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const double&#160;</td>
+          <td class="paramname"><em>deltaUp</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Функция, возвращающая вектор поднятых вортонов с рамок по нормали </p><dl class="params"><dt>Аргументы</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">frames</td><td>Вектор, содержащий рамки </td></tr>
+    <tr><td class="paramname">normals</td><td>Вектор, содержащий нормали </td></tr>
+    <tr><td class="paramname">deltaUp</td><td>Величина подъема вортонов по нормали </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Возвращает</dt><dd>Вектор, содержащий вортоны с рамок </dd></dl>
+
+</div>
+</div>
+<a id="a5564dbc6d6f6cce07cc09bdb446ebd2d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5564dbc6d6f6cce07cc09bdb446ebd2d">&#9670;&nbsp;</a></span>getRestrictions()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="struct_restrictions.html">Restrictions</a> FrameCalculations::getRestrictions </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Функция возвращающая значения сработавших ограничений </p><dl class="section return"><dt>Возвращает</dt><dd>Структура с текущими значениями сработавших ограничений </dd></dl>
+
+</div>
+</div>
+<a id="ae02bfaca62d087af7c2a84981d3218f9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae02bfaca62d087af7c2a84981d3218f9">&#9670;&nbsp;</a></span>getTimers()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="struct_timers.html">Timers</a> FrameCalculations::getTimers </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Функция возвращающая значения таймеров </p><dl class="section return"><dt>Возвращает</dt><dd>Структура с текущими значениями таймеров </dd></dl>
+
+</div>
+</div>
+<a id="a51a235539c794106ae632f2a221c3318"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a51a235539c794106ae632f2a221c3318">&#9670;&nbsp;</a></span>insideCylinder()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool FrameCalculations::insideCylinder </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="class_vorton.html">Vorton</a> &amp;&#160;</td>
+          <td class="paramname"><em>vort</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const double&#160;</td>
+          <td class="paramname"><em>height</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const double&#160;</td>
+          <td class="paramname"><em>diameter</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Функция для проверки попадания вортона внутрь цилиндра </p><dl class="params"><dt>Аргументы</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">vorton</td><td>Вортон </td></tr>
+    <tr><td class="paramname">height</td><td>Высота цилиндра </td></tr>
+    <tr><td class="paramname">diameter</td><td>Диаметр цилиндра </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Возвращает</dt><dd>Определение попадания внутрь цилиндра </dd></dl>
+
+</div>
+</div>
+<a id="abef7349db128b308764a2045983108db"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abef7349db128b308764a2045983108db">&#9670;&nbsp;</a></span>insideCylinderLayer()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool FrameCalculations::insideCylinderLayer </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="class_vorton.html">Vorton</a> &amp;&#160;</td>
+          <td class="paramname"><em>vort</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const double&#160;</td>
+          <td class="paramname"><em>height</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const double&#160;</td>
+          <td class="paramname"><em>diameter</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const double&#160;</td>
+          <td class="paramname"><em>layerHeight</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Функция для проверки попадания вортона внутрь слоя вокруг цилиндра </p><dl class="params"><dt>Аргументы</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">vorton</td><td>Вортон </td></tr>
+    <tr><td class="paramname">height</td><td>Высота цилиндра </td></tr>
+    <tr><td class="paramname">diameter</td><td>Диаметр цилиндра </td></tr>
+    <tr><td class="paramname">layerHeight</td><td>Высота слоя </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Возвращает</dt><dd>Определение попадания внутрь слоя вокруг цилиндра </dd></dl>
+
+</div>
+</div>
+<a id="a99f895bb639a2d8bf98648a5ec55b5b0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a99f895bb639a2d8bf98648a5ec55b5b0">&#9670;&nbsp;</a></span>insideRotationBody()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool FrameCalculations::insideRotationBody </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="class_vorton.html">Vorton</a> &amp;&#160;</td>
+          <td class="paramname"><em>vort</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const double&#160;</td>
+          <td class="paramname"><em>xBeg</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const double&#160;</td>
+          <td class="paramname"><em>xEnd</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Функция для проверки попадания вортона внутрь тела вращения </p><dl class="params"><dt>Аргументы</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">vorton</td><td>Вортон </td></tr>
+    <tr><td class="paramname">xBeg</td><td>Минимальная координата х тела </td></tr>
+    <tr><td class="paramname">xEnd</td><td>Максимальная координата х тела </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Возвращает</dt><dd>Определение попадания внутрь тела вращения </dd></dl>
+
+</div>
+</div>
+<a id="a4de864fbf60a109e3d4b7b0954b08258"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4de864fbf60a109e3d4b7b0954b08258">&#9670;&nbsp;</a></span>insideRotationBodyLayer()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool FrameCalculations::insideRotationBodyLayer </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="class_vorton.html">Vorton</a> &amp;&#160;</td>
+          <td class="paramname"><em>vort</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const double&#160;</td>
+          <td class="paramname"><em>xBeg</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const double&#160;</td>
+          <td class="paramname"><em>xEnd</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const double&#160;</td>
+          <td class="paramname"><em>layerHeight</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Функция для проверки попадания вортона внутрь слоя вокруг тела вращения </p><dl class="params"><dt>Аргументы</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">vorton</td><td>Вортон </td></tr>
+    <tr><td class="paramname">xBeg</td><td>Минимальная координата х тела </td></tr>
+    <tr><td class="paramname">xEnd</td><td>Максимальная координата х тела </td></tr>
+    <tr><td class="paramname">layerHeight</td><td>Высота слоя </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Возвращает</dt><dd>Определение попадания внутрь слоя вокруг тела вращения </dd></dl>
+
+</div>
+</div>
+<a id="a32559ea09afd92c7b207b9d7db6e809d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a32559ea09afd92c7b207b9d7db6e809d">&#9670;&nbsp;</a></span>insideRotationCutBody()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool FrameCalculations::insideRotationCutBody </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="class_vorton.html">Vorton</a> &amp;&#160;</td>
+          <td class="paramname"><em>vort</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const double&#160;</td>
+          <td class="paramname"><em>xBeg</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const double&#160;</td>
+          <td class="paramname"><em>xEnd</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Функция для проверки попадания вортона внутрь тела вращения со срезом дна </p><dl class="params"><dt>Аргументы</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">vorton</td><td>Вортон </td></tr>
+    <tr><td class="paramname">xBeg</td><td>Минимальная координата х тела </td></tr>
+    <tr><td class="paramname">xEnd</td><td>Максимальная координата х тела </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Возвращает</dt><dd>Определение попадания внутрь тела вращения со срезом дна </dd></dl>
+
+</div>
+</div>
+<a id="a39873d69a67397e20b19ac0de71e00c5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a39873d69a67397e20b19ac0de71e00c5">&#9670;&nbsp;</a></span>insideRotationCutBodyLayer()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool FrameCalculations::insideRotationCutBodyLayer </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="class_vorton.html">Vorton</a> &amp;&#160;</td>
+          <td class="paramname"><em>vort</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const double&#160;</td>
+          <td class="paramname"><em>xBeg</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const double&#160;</td>
+          <td class="paramname"><em>xEnd</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const double&#160;</td>
+          <td class="paramname"><em>layerHeight</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Функция для проверки попадания вортона внутрь слоя вокруг тела вращения со срезом дна </p><dl class="params"><dt>Аргументы</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">vorton</td><td>Вортон </td></tr>
+    <tr><td class="paramname">xBeg</td><td>Минимальная координата х тела </td></tr>
+    <tr><td class="paramname">xEnd</td><td>Максимальная координата х тела </td></tr>
+    <tr><td class="paramname">layerHeight</td><td>Высота слоя </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Возвращает</dt><dd>Определение попадания внутрь слоя вокруг тела вращения со срезом дна </dd></dl>
+
+</div>
+</div>
+<a id="acf3ff54e7c4b940de0b53c5c82a85a03"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acf3ff54e7c4b940de0b53c5c82a85a03">&#9670;&nbsp;</a></span>insideScreen()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool FrameCalculations::insideScreen </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_vorton.html">Vorton</a> &amp;&#160;</td>
+          <td class="paramname"><em>vort</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Функция для проверки попадания вортона под экран </p><dl class="params"><dt>Аргументы</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">vorton</td><td>Вортон </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Возвращает</dt><dd>Определение вортона под экран </dd></dl>
+
+</div>
+</div>
+<a id="ac52a1cd2bc6838daac5b900df04de699"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac52a1cd2bc6838daac5b900df04de699">&#9670;&nbsp;</a></span>insideSphere()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool FrameCalculations::insideSphere </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="class_vorton.html">Vorton</a> &amp;&#160;</td>
+          <td class="paramname"><em>vort</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="class_vector3_d.html">Vector3D</a> &amp;&#160;</td>
+          <td class="paramname"><em>center</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const double&#160;</td>
+          <td class="paramname"><em>radius</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Функция для проверки попадания вортона внутрь сферы </p><dl class="params"><dt>Аргументы</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">vorton</td><td>Вортон </td></tr>
+    <tr><td class="paramname">center</td><td>Центра сферы </td></tr>
+    <tr><td class="paramname">radius</td><td>Радиус сферы </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Возвращает</dt><dd>Определение попадания внутрь сферы </dd></dl>
+
+</div>
+</div>
+<a id="a6a6518700d039f2efee19ea430496123"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6a6518700d039f2efee19ea430496123">&#9670;&nbsp;</a></span>insideSphereLayer()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool FrameCalculations::insideSphereLayer </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="class_vorton.html">Vorton</a> &amp;&#160;</td>
+          <td class="paramname"><em>vort</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="class_vector3_d.html">Vector3D</a> &amp;&#160;</td>
+          <td class="paramname"><em>center</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const double&#160;</td>
+          <td class="paramname"><em>radius</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const double&#160;</td>
+          <td class="paramname"><em>layerHeight</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Функция для проверки попадания вортона внутрь слоя вокруг сферы </p><dl class="params"><dt>Аргументы</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">vorton</td><td>Вортон </td></tr>
+    <tr><td class="paramname">center</td><td>Центр сферы </td></tr>
+    <tr><td class="paramname">radius</td><td>Радиус сферы </td></tr>
+    <tr><td class="paramname">layerHeight</td><td>Высота слоя </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Возвращает</dt><dd>Определение попадания внутрь слоя вокруг сферы </dd></dl>
+
+</div>
+</div>
+<a id="affd2bc2a5ee409d78ddab871a75e2d7c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#affd2bc2a5ee409d78ddab871a75e2d7c">&#9670;&nbsp;</a></span>matrixCalc()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void FrameCalculations::matrixCalc </td>
+          <td>(</td>
+          <td class="paramtype">QVector&lt; std::shared_ptr&lt; <a class="el" href="class_multi_frame.html">MultiFrame</a> &gt;&gt;&#160;</td>
+          <td class="paramname"><em>frames</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const QVector&lt; <a class="el" href="class_vector3_d.html">Vector3D</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>controlPoints</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const QVector&lt; <a class="el" href="class_vector3_d.html">Vector3D</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>normals</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Рассчитывает значения элементов матрицы, составленной из произведения единичных интенсивностей от каждой из рамок на соответствующую нормаль и вычисляет обратную к ней </p><dl class="params"><dt>Аргументы</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">frames</td><td>Вектор рамок </td></tr>
+    <tr><td class="paramname">controlPoints</td><td>Вектор контрольных точек </td></tr>
+    <tr><td class="paramname">normals</td><td>Вектор нормалей </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="af93869af49ce3792da3f5de49e38b7fe"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af93869af49ce3792da3f5de49e38b7fe">&#9670;&nbsp;</a></span>parallelDisplacement()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_vorton.html">Vorton</a> FrameCalculations::parallelDisplacement </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="struct_parallel.html">Parallel</a>&#160;</td>
+          <td class="paramname"><em>el</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Функция расчета перемещения и удлинения вортона. Создана для совместимости с QtConcurrent </p><dl class="params"><dt>Аргументы</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">el</td><td>Элемент структуры для расчета </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Возвращает</dt><dd>Вортон с рассчитанным значением перемещения и удлинения </dd></dl>
+
+</div>
+</div>
+<a id="a649d97062701534e3c658717aa7fc328"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a649d97062701534e3c658717aa7fc328">&#9670;&nbsp;</a></span>pressureCalc()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">double FrameCalculations::pressureCalc </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="class_vector3_d.html">Vector3D</a>&#160;</td>
+          <td class="paramname"><em>point</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="class_vector3_d.html">Vector3D</a>&#160;</td>
+          <td class="paramname"><em>streamVel</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const double&#160;</td>
+          <td class="paramname"><em>streamPres</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const double&#160;</td>
+          <td class="paramname"><em>density</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">QVector&lt; std::shared_ptr&lt; <a class="el" href="class_multi_frame.html">MultiFrame</a> &gt;&gt;&#160;</td>
+          <td class="paramname"><em>frames</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">QVector&lt; <a class="el" href="class_vorton.html">Vorton</a> &gt;&#160;</td>
+          <td class="paramname"><em>freeVortons</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>tau</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Функция расчета давления в точке </p><dl class="params"><dt>Аргументы</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">point</td><td>Точка для расчета давления в точке </td></tr>
+    <tr><td class="paramname">streamVel</td><td>Скорость потока </td></tr>
+    <tr><td class="paramname">streamPres</td><td>Давление потока </td></tr>
+    <tr><td class="paramname">density</td><td>Плотность среды </td></tr>
+    <tr><td class="paramname">frames</td><td>Вектор, содержащий рамки </td></tr>
+    <tr><td class="paramname">freeVortons</td><td>Вектор, содержащий вортоны в потоке </td></tr>
+    <tr><td class="paramname">tau</td><td>Величина шага </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Возвращает</dt><dd>Значение давления </dd></dl>
+
+</div>
+</div>
+<a id="ac0e6d436b6b6f167fb0a80853ee8e69a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac0e6d436b6b6f167fb0a80853ee8e69a">&#9670;&nbsp;</a></span>reflect()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void FrameCalculations::reflect </td>
+          <td>(</td>
+          <td class="paramtype">QVector&lt; <a class="el" href="class_vorton.html">Vorton</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>symFreeVortons</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">QVector&lt; <a class="el" href="class_vorton.html">Vorton</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>symNewVortons</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">QVector&lt; std::shared_ptr&lt; <a class="el" href="class_multi_frame.html">MultiFrame</a> &gt;&gt;&#160;</td>
+          <td class="paramname"><em>symFrames</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Функция для отражения положения вортонов и рамок относительно оси х </p><dl class="params"><dt>Аргументы</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">symFreeVortons</td><td>Вектор вортонов в слое </td></tr>
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">symNewVortons</td><td>Вектор вортонов с рамок </td></tr>
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">symFrames</td><td>Вектор рамок </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a5e1d67a2cc2b5389c07152cd753c052e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5e1d67a2cc2b5389c07152cd753c052e">&#9670;&nbsp;</a></span>removeFarCylinder()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void FrameCalculations::removeFarCylinder </td>
+          <td>(</td>
+          <td class="paramtype">QVector&lt; <a class="el" href="class_vorton.html">Vorton</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>vortons</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const double&#160;</td>
+          <td class="paramname"><em>farDistance</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const double&#160;</td>
+          <td class="paramname"><em>height</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Функция удаления вортонов удаленных на большое расстояние от центра цилиндра </p><dl class="params"><dt>Аргументы</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">vortons</td><td>Вектор, содержащий вортоны для удаления </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">farDistance</td><td>Максимальное значение расстояния от центра для учета влияния </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">bodyCenter</td><td>Координата высота цилиндра </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a1281503aec01e524716b8bbaafb9eb17"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1281503aec01e524716b8bbaafb9eb17">&#9670;&nbsp;</a></span>removeFarRotationBody()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void FrameCalculations::removeFarRotationBody </td>
+          <td>(</td>
+          <td class="paramtype">QVector&lt; <a class="el" href="class_vorton.html">Vorton</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>vortons</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const double&#160;</td>
+          <td class="paramname"><em>farDistance</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="class_vector3_d.html">Vector3D</a>&#160;</td>
+          <td class="paramname"><em>bodyCenter</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Функция удаления вортонов удаленных на большое расстояние от центра тела вращения </p><dl class="params"><dt>Аргументы</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">vortons</td><td>Вектор, содержащий вортоны для удаления </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">farDistance</td><td>Максимальное значение расстояния от центра для учета влияния </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">bodyCenter</td><td>Координата центра тела вращения </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a4f23f04e070d94b6840f707cf5752bd8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4f23f04e070d94b6840f707cf5752bd8">&#9670;&nbsp;</a></span>removeFarRotationCutBody()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void FrameCalculations::removeFarRotationCutBody </td>
+          <td>(</td>
+          <td class="paramtype">QVector&lt; <a class="el" href="class_vorton.html">Vorton</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>vortons</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const double&#160;</td>
+          <td class="paramname"><em>farDistance</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="class_vector3_d.html">Vector3D</a>&#160;</td>
+          <td class="paramname"><em>bodyCenter</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Функция удаления вортонов удаленных на большое расстояние от центра тела вращения со срезом дна </p><dl class="params"><dt>Аргументы</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">vortons</td><td>Вектор, содержащий вортоны для удаления </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">farDistance</td><td>Максимальное значение расстояния от центра для учета влияния </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">bodyCenter</td><td>Координата центра тела вращения со срезом дна </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ad410b0c3981f536fd531d87044ecf9f1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad410b0c3981f536fd531d87044ecf9f1">&#9670;&nbsp;</a></span>removeFarSphere()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void FrameCalculations::removeFarSphere </td>
+          <td>(</td>
+          <td class="paramtype">QVector&lt; <a class="el" href="class_vorton.html">Vorton</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>vortons</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const double&#160;</td>
+          <td class="paramname"><em>farDistance</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="class_vector3_d.html">Vector3D</a>&#160;</td>
+          <td class="paramname"><em>bodyCenter</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Функция удаления вортонов удаленных на большое расстояние от центра сферы </p><dl class="params"><dt>Аргументы</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">vortons</td><td>Вектор, содержащий вортоны для удаления </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">farDistance</td><td>Максимальное значение расстояния от центра для учета влияния </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">bodyCenter</td><td>Координата центра сферы </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a27231d13fa8cd2a6bc59b37089927db7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a27231d13fa8cd2a6bc59b37089927db7">&#9670;&nbsp;</a></span>removeSmallVorticity()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void FrameCalculations::removeSmallVorticity </td>
+          <td>(</td>
+          <td class="paramtype">QVector&lt; <a class="el" href="class_vorton.html">Vorton</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>vortons</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const double&#160;</td>
+          <td class="paramname"><em>minVorticity</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Функция удаления вортонов с малой завихренностью </p><dl class="params"><dt>Аргументы</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">vortons</td><td>Вектор, содержащий вортоны для удаления </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">minVorticity</td><td>Минимальное значение завихренности для объединения </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a8bf93b3abdacbef2e5297b8daceefdcc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8bf93b3abdacbef2e5297b8daceefdcc">&#9670;&nbsp;</a></span>setMatrixSize()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void FrameCalculations::setMatrixSize </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>size</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Функция установки размера матрицы </p><dl class="params"><dt>Аргументы</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">size</td><td>Размер матрциы </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a564f527920433ef1fc56b8476abc381d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a564f527920433ef1fc56b8476abc381d">&#9670;&nbsp;</a></span>setVorticity()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void FrameCalculations::setVorticity </td>
+          <td>(</td>
+          <td class="paramtype">QVector&lt; std::shared_ptr&lt; <a class="el" href="class_multi_frame.html">MultiFrame</a> &gt;&gt;&#160;</td>
+          <td class="paramname"><em>frames</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const Eigen::VectorXd&#160;</td>
+          <td class="paramname"><em>vorticities</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Функция установки завихренностей рамкам </p><dl class="params"><dt>Аргументы</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">frames</td><td>Вектор, содержащий рамки </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">vorticities</td><td>Вектор, содержащий завихренности для рамок </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a854853c14187eec031c860438a886514"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a854853c14187eec031c860438a886514">&#9670;&nbsp;</a></span>translateBody() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void FrameCalculations::translateBody </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="class_vector3_d.html">Vector3D</a> &amp;&#160;</td>
+          <td class="paramname"><em>translation</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">QVector&lt; std::shared_ptr&lt; <a class="el" href="class_multi_frame.html">MultiFrame</a> &gt;&gt; &amp;&#160;</td>
+          <td class="paramname"><em>frames</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">QVector&lt; <a class="el" href="class_vector3_d.html">Vector3D</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>controlPoints</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">QVector&lt; <a class="el" href="class_vector3_d.html">Vector3D</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>controlPointsRaised</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="class_vector3_d.html">Vector3D</a> &amp;&#160;</td>
+          <td class="paramname"><em>center</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double &amp;&#160;</td>
+          <td class="paramname"><em>xbeg</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double &amp;&#160;</td>
+          <td class="paramname"><em>xend</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="struct_fragmentation_parameters.html">FragmentationParameters</a> &amp;&#160;</td>
+          <td class="paramname"><em>fragPar</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Функция для перемещения тела при решении задачи старта </p><dl class="params"><dt>Аргументы</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">translation</td><td>Вектор переноса </td></tr>
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">frames</td><td>Вектор рамок </td></tr>
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">controlPoints</td><td>Вектор контрольных точек </td></tr>
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">controlPointsRaised</td><td>Вектор контрольных точек для расчета давлений </td></tr>
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">center</td><td>Центр тела </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">xBeg</td><td>Минимальная координата х тела </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">xEnd</td><td>Максимальная координата х тела </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">fragPar</td><td>Параметры разбиения </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a9180d3ce990339ef141c53064eefca20"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9180d3ce990339ef141c53064eefca20">&#9670;&nbsp;</a></span>translateBody() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void FrameCalculations::translateBody </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="class_vector3_d.html">Vector3D</a> &amp;&#160;</td>
+          <td class="paramname"><em>translation</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">QVector&lt; std::shared_ptr&lt; <a class="el" href="class_multi_frame.html">MultiFrame</a> &gt;&gt; &amp;&#160;</td>
+          <td class="paramname"><em>frames</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">QVector&lt; <a class="el" href="class_vector3_d.html">Vector3D</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>controlPoints</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">QVector&lt; <a class="el" href="class_vector3_d.html">Vector3D</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>controlPointsRaised</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="class_vector3_d.html">Vector3D</a> &amp;&#160;</td>
+          <td class="paramname"><em>center</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Функция для перемещения тела. Эта функция перегружена и предоставляется исключительно для удобства использования. Она отличается от вышеупомянутой только фактическими аргументами. </p><dl class="params"><dt>Аргументы</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">translation</td><td>Вектор переноса </td></tr>
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">frames</td><td>Вектор рамок </td></tr>
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">controlPoints</td><td>Вектор контрольных точек </td></tr>
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">controlPointsRaised</td><td>Вектор контрольных точек для расчета давлений </td></tr>
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">center</td><td>Центр тела </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a8b261b5f1f933306a66a4461aae64e64"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8b261b5f1f933306a66a4461aae64e64">&#9670;&nbsp;</a></span>translateVortons()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void FrameCalculations::translateVortons </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="class_vector3_d.html">Vector3D</a> &amp;&#160;</td>
+          <td class="paramname"><em>translation</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">QVector&lt; <a class="el" href="class_vorton.html">Vorton</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>vortons</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Функция для перемещения вектора вортонов </p><dl class="params"><dt>Аргументы</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">translation</td><td>Вектор переноса </td></tr>
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">vortons</td><td>Вектор вортонов </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="aaa9598a64ef87159b79348f4d0d28262"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaa9598a64ef87159b79348f4d0d28262">&#9670;&nbsp;</a></span>unionVortons()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void FrameCalculations::unionVortons </td>
+          <td>(</td>
+          <td class="paramtype">QVector&lt; <a class="el" href="class_vorton.html">Vorton</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>vortons</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const double&#160;</td>
+          <td class="paramname"><em>eStar</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const double&#160;</td>
+          <td class="paramname"><em>eDoubleStar</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const double&#160;</td>
+          <td class="paramname"><em>vortonRad</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Функция объединения близлежащих вортонов </p><dl class="params"><dt>Аргументы</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">vortons</td><td>Вектор, содержащий вортоны для объединения </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">eStar</td><td>Максимальное расстояние для объединения </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">eDoubleStar</td><td>Минимальный косинус угла для объединения </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">vortonRad</td><td>Радиус вортон-отрезков </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="aaabc376bcaef6089f68adb42720d5685"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaabc376bcaef6089f68adb42720d5685">&#9670;&nbsp;</a></span>velocity() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_vector3_d.html">Vector3D</a> FrameCalculations::velocity </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="class_vector3_d.html">Vector3D</a>&#160;</td>
+          <td class="paramname"><em>point</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="class_vector3_d.html">Vector3D</a>&#160;</td>
+          <td class="paramname"><em>streamVel</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const QVector&lt; <a class="el" href="class_vorton.html">Vorton</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>vortons</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const QVector&lt; std::shared_ptr&lt; <a class="el" href="class_multi_frame.html">MultiFrame</a> &gt;&gt;&#160;</td>
+          <td class="paramname"><em>frames</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Функция расчета скорости от вектора вортонов и вектора рамок в точке. </p><dl class="params"><dt>Аргументы</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">point</td><td>Точка расчета </td></tr>
+    <tr><td class="paramname">streamVel</td><td>Скорость потока </td></tr>
+    <tr><td class="paramname">vortons</td><td>Вектор, содержащий вортоны </td></tr>
+    <tr><td class="paramname">frames</td><td>Вектор, содержащий рамки </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Возвращает</dt><dd>Значение скорости </dd></dl>
+
+</div>
+</div>
+<a id="aff26c6410791c4d75edb5c138df673bf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aff26c6410791c4d75edb5c138df673bf">&#9670;&nbsp;</a></span>velocity() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_vector3_d.html">Vector3D</a> FrameCalculations::velocity </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="class_vector3_d.html">Vector3D</a>&#160;</td>
+          <td class="paramname"><em>point</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="class_vector3_d.html">Vector3D</a>&#160;</td>
+          <td class="paramname"><em>streamVel</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const QVector&lt; <a class="el" href="class_vorton.html">Vorton</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>vortons</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Функция расчета скорости от вектора вортонов в точке. Эта функция перегружена и предоставляется исключительно для удобства использования. Она отличается от вышеупомянутой только фактическими аргументами. </p><dl class="params"><dt>Аргументы</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">point</td><td>Точка расчета </td></tr>
+    <tr><td class="paramname">streamVel</td><td>Скорость потока </td></tr>
+    <tr><td class="paramname">vortons</td><td>Вектор, содержащий вортоны </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Возвращает</dt><dd>Значение скорости </dd></dl>
+
+</div>
+</div>
+<a id="a970373138ceb791f8fe4983be4fe3453"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a970373138ceb791f8fe4983be4fe3453">&#9670;&nbsp;</a></span>velocityAndBsymm()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="struct_vel_bsym.html">VelBsym</a> FrameCalculations::velocityAndBsymm </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="class_vector3_d.html">Vector3D</a>&#160;</td>
+          <td class="paramname"><em>point</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="class_vector3_d.html">Vector3D</a>&#160;</td>
+          <td class="paramname"><em>streamVel</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const QVector&lt; <a class="el" href="class_vorton.html">Vorton</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>vortons</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Функция расчета скорости и тензора деформации от вектора вортонов в точке. </p><dl class="params"><dt>Аргументы</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">point</td><td>Точка расчета </td></tr>
+    <tr><td class="paramname">streamVel</td><td>Скорость потока </td></tr>
+    <tr><td class="paramname">vortons</td><td>Вектор, содержащий вортоны </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Возвращает</dt><dd>Значение скорости и тензора деформации </dd></dl>
+
+</div>
+</div>
+<a id="a8d7e2813ad4725d6866ecfe3b5a1b76c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8d7e2813ad4725d6866ecfe3b5a1b76c">&#9670;&nbsp;</a></span>vorticitiesCalc()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Eigen::VectorXd FrameCalculations::vorticitiesCalc </td>
+          <td>(</td>
+          <td class="paramtype">const Eigen::VectorXd &amp;&#160;</td>
+          <td class="paramname"><em>column</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Рассчитывает значения столбца x путем решения СЛАУ вида A*x=b, где А-матрица, b-известный столбец. </p><dl class="params"><dt>Аргументы</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">column</td><td>Столбец b </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Возвращает</dt><dd>Столбец x, содержащий значения завихренностей рамок </dd></dl>
+
+</div>
+</div>
+<hr/>Объявления и описания членов классов находятся в файлах:<ul>
+<li>C:/Users/Vasily/Documents/VortexMethod/<a class="el" href="framecalculations_8h_source.html">framecalculations.h</a></li>
+<li>C:/Users/Vasily/Documents/VortexMethod/framecalculations.cpp</li>
+</ul>
+</div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Создано системой &#160;<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/>
+</a> 1.8.14
+</small></address>
+</body>
+</html>

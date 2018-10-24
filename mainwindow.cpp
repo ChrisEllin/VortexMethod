@@ -3,6 +3,9 @@
 #include <QStyleFactory>
 
 
+/*!
+Создает экземмпляр главного окна; настраивает сигнально-слотовую связь.
+*/
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -67,41 +70,65 @@ MainWindow::MainWindow(QWidget *parent) :
 
 }
 
+/*!
+Переводит изображение в XY вид
+*/
 void MainWindow::on_toolButtonViewXY_clicked()
 {
     setPlaneXY();
 }
 
+/*!
+Переводит изображение в YX вид
+*/
 void MainWindow::on_toolButtonViewYX_clicked()
 {
     setPlaneYX();
 }
 
+/*!
+Переводит изображение в XZ вид
+*/
 void MainWindow::on_toolButtonViewXZ_clicked()
 {
     setPlaneXZ();
 }
 
+/*!
+Переводит изображение в ZX вид
+*/
 void MainWindow::on_toolButtonViewZX_clicked()
 {
     setPlaneZX();
 }
 
+/*!
+Переводит изображение в YZ вид
+*/
 void MainWindow::on_toolButtonViewYZ_clicked()
 {
     setPlaneYZ();
 }
 
+/*!
+Переводит изображение в ZY вид
+*/
 void MainWindow::on_toolButtonViewZY_clicked()
 {
     setPlaneZY();
 }
 
+/*!
+Переводит изображение в изначальный вид
+*/
 void MainWindow::on_toolButtonViewReset_clicked()
 {
     resetPlane();
 }
 
+/*!
+Запускает соответствующий расчет по нажатию (Ctrl+R).
+*/
 void MainWindow::keyCtrlRActiavated()
 {
     if (ui->tabWidget->currentIndex()==0)
@@ -122,6 +149,9 @@ void MainWindow::keyCtrlRActiavated()
     }
 }
 
+/*!
+Изменяет масштаб картинки при повороте колеса мыши.
+*/
 void MainWindow::wheelEvent(QWheelEvent* e)
 {
     if (e->angleDelta().y() > 0)
@@ -130,6 +160,9 @@ void MainWindow::wheelEvent(QWheelEvent* e)
         ui->toolButtonViewZoomOut->clicked();
 }
 
+/*!
+Удаляет главное и дополнительные окна.
+*/
 MainWindow::~MainWindow()
 {
     delete ui;
@@ -141,6 +174,10 @@ MainWindow::~MainWindow()
     delete variateSettings;
 }
 
+/*!
+Устанавливает параметры разбиения сферы в интерфейс основного окна
+\param sphPar Параметры разбиения сферы
+*/
 void MainWindow::setParameters(SphereParameters& sphPar)
 {
     ui->pointsRaisingSphereLineEdit->setText(QString::number(sphPar.raise));
@@ -152,6 +189,10 @@ void MainWindow::setParameters(SphereParameters& sphPar)
     ui->tabWidget->setCurrentIndex(0);
 }
 
+/*!
+Устанавливает параметры разбиения цилиндра в интерфейс основного окна
+\param sphPar Параметры разбиения цилиндра
+*/
 void MainWindow::setParameters(CylinderParameters &cylPar)
 {
     ui->pointsRaisingCylinderLineEdit->setText(QString::number(cylPar.raise));
@@ -165,6 +206,10 @@ void MainWindow::setParameters(CylinderParameters &cylPar)
     ui->tabWidget->setCurrentIndex(1);
 }
 
+/*!
+Устанавливает параметры разбиения тела вращения в интерфейс основного окна
+\param sphPar Параметры разбиения тела вращения
+*/
 void MainWindow::setParameters(RotationBodyParameters &rotBodyPar)
 {
     ui->pointsRaisingRotationBodyLineEdit->setText(QString::number(rotBodyPar.raise));
@@ -178,6 +223,9 @@ void MainWindow::setParameters(RotationBodyParameters &rotBodyPar)
     ui->tabWidget->setCurrentIndex(2);
 }
 
+/*!
+Запускает расчет сферы с заданными параметрами. Проверяет полноту данных для этого.
+*/
 void MainWindow::on_sphereSolverPushButton_clicked()
 {
     if(ui->fiSphereLineEdit->text().isEmpty())
@@ -236,6 +284,9 @@ void MainWindow::on_sphereSolverPushButton_clicked()
     ui->variateSphereSolverPushButton->setDisabled(true);
 }
 
+/*!
+Запускает вариацию параметров сферы с начальными параметрами. Проверяет полноту данных для этого.
+*/
 void MainWindow::on_variateSphereSolverPushButton_clicked()
 {
     if(ui->fiSphereLineEdit->text().isEmpty())
@@ -287,6 +338,9 @@ void MainWindow::on_variateSphereSolverPushButton_clicked()
 
 }
 
+/*!
+Запускает расчет цилиндра с заданными параметрами. Проверяет полноту данных для этого.
+*/
 void MainWindow::on_cylinderSolverPushButton_clicked()
 {
     if(ui->fiCylinderLineEdit->text().isEmpty())
@@ -360,6 +414,9 @@ void MainWindow::on_cylinderSolverPushButton_clicked()
     ui->variateCylinderSolverPushButton->setDisabled(true);
 }
 
+/*!
+Запускает расчет тела вращения с заданными параметрами. Проверяет полноту данных для этого.
+*/
 void MainWindow::on_rotationBodySolverPushButton_clicked()
 {
     if(ui->fiRotationBodyLineEdit->text().isEmpty())
@@ -433,16 +490,25 @@ void MainWindow::on_rotationBodySolverPushButton_clicked()
     ui->rotationBodySolverPushButton->setDisabled(true);
 }
 
+/*!
+Выводит дополнительное окно о завершении вариации
+*/
 void MainWindow::showInfo()
 {
     QMessageBox::information(this, tr("Информация"),tr("Вариация параметров завершена"));
 }
 
+/*!
+Выводит дополнительное окно с настройками расчета
+*/
 void MainWindow::showSettings()
 {
     settings->show();
 }
 
+/*!
+Отображает трехмерную сферу
+*/
 void MainWindow::showSphere()
 {
     displaySphere=!displaySphere;
@@ -452,11 +518,17 @@ void MainWindow::showSphere()
         emit changeShape(MainField::None);
 }
 
+/*!
+Выводит дополнительное окно с настройками вариации
+*/
 void MainWindow::showVariateSettings()
 {
     variateSettings->show();
 }
 
+/*!
+Открывает файл с начальными данными расчета для последующего произведения расчета с ними
+*/
 void MainWindow::openPassport()
 {
     QString passportPath=QFileDialog::getOpenFileName(this, tr("Открыть паспорт-файл"),"", tr("Текстовые файлы(*.txt)"));
@@ -591,6 +663,10 @@ void MainWindow::openPassport()
     passport.close();
 }
 
+/*!
+Выводит текущий прогресс расчета сферы
+\param percentage Текущий шаг
+*/
 void MainWindow::recieveProgressSphere(const int percentage)
 {
     ui->sphereProgressBar->setValue(percentage);
@@ -608,6 +684,10 @@ void MainWindow::recieveProgressSphere(const int percentage)
     }
 }
 
+/*!
+Выводит текущий прогресс расчета цилиндра
+\param percentage Текущий шаг
+*/
 void MainWindow::recieveProgressCylinder(const int percentage)
 {
     ui->cylinderProgressBar->setValue(percentage);
@@ -626,6 +706,10 @@ void MainWindow::recieveProgressCylinder(const int percentage)
     }
 }
 
+/*!
+Выводит текущий прогресс расчета тела вращения
+\param percentage Текущий шаг
+*/
 void MainWindow::recieveProgressRotationBody(const int percentage)
 {
     ui->rotationBodyProgressBar->setValue(percentage);
@@ -644,6 +728,10 @@ void MainWindow::recieveProgressRotationBody(const int percentage)
     }
 }
 
+/*!
+Выводит текущий прогресс расчета тела вращения со срезом
+\param percentage Текущий шаг
+*/
 void MainWindow::recieveProgressRotationCutBody(const int percentage)
 {
     ui->rotationCutBodyProgressBar->setValue(percentage);
@@ -667,6 +755,11 @@ void MainWindow::recieveProgressRotationCutBody(const int percentage)
     }
 }
 
+/*!
+Перерисовывает визуализацию расчета
+\param vortons Вектор вортонов(отображается точками)
+\param frames Вектор рамок(отображается стрелками)
+*/
 void MainWindow::drawGUI(const QVector<Vorton> &vortons, const QVector<std::shared_ptr<MultiFrame> > &frames)
 {
     clearSegments();
@@ -689,6 +782,9 @@ void MainWindow::drawGUI(const QVector<Vorton> &vortons, const QVector<std::shar
     }
 }
 
+/*!
+Запускает расчет тела вращения со срезом с заданными параметрами. Проверяет полноту данных для этого.
+*/
 void MainWindow::on_rotationCutBodySolverPushButton_clicked()
 {
     if(ui->fiRotationCutBodyLineEdit->text().isEmpty())
@@ -775,6 +871,9 @@ void MainWindow::on_rotationCutBodySolverPushButton_clicked()
     ui->variateRotationCutBodySolverPushButton->setDisabled(true);
 }
 
+/*!
+Запускает расчет движущегося тела вращения с заданными параметрами. Проверяет полноту данных для этого.
+*/
 void MainWindow::on_rotationCutBodyFreeMotionSolverPushButton_clicked()
 {
     if(ui->fiRotationCutBodyLineEdit->text().isEmpty())
@@ -859,6 +958,9 @@ void MainWindow::on_rotationCutBodyFreeMotionSolverPushButton_clicked()
     ui->rotationCutBodyLaunchSolverPushButton->setDisabled(true);
 }
 
+/*!
+Запускает расчет задачи старта для тела вращения с заданными параметрами. Проверяет полноту данных для этого.
+*/
 void MainWindow::on_rotationCutBodyLaunchSolverPushButton_clicked()
 {
     if(ui->fiRotationCutBodyLineEdit->text().isEmpty())
@@ -945,6 +1047,9 @@ void MainWindow::on_rotationCutBodyLaunchSolverPushButton_clicked()
     ui->variateRotationCutBodySolverPushButton->setDisabled(true);
 }
 
+/*!
+Запускает расчет задачи старта для сферы с заданными параметрами. Проверяет полноту данных для этого.
+*/
 void MainWindow::on_sphereFreeMotionSolverPushButton_clicked()
 {
     if(ui->fiSphereLineEdit->text().isEmpty())
@@ -1004,6 +1109,9 @@ void MainWindow::on_sphereFreeMotionSolverPushButton_clicked()
     ui->variateSphereSolverPushButton->setDisabled(true);
 }
 
+/*!
+Запускает вариацию параметров цилиндра с начальными параметрами. Проверяет полноту данных для этого.
+*/
 void MainWindow::on_variateCylinderSolverPushButton_clicked()
 {
     if(ui->fiCylinderLineEdit->text().isEmpty())
@@ -1068,6 +1176,9 @@ void MainWindow::on_variateCylinderSolverPushButton_clicked()
     QFuture<void> cylinderFuture=QtConcurrent::run(solver,&Solver::variateCylinderParameters, fragPar,variateSettings->getInfo());
 }
 
+/*!
+Запускает вариацию параметров тела вращения с начальными параметрами. Проверяет полноту данных для этого.
+*/
 void MainWindow::on_variateRotationBodySolverPushButton_clicked()
 {
     if(ui->fiRotationBodyLineEdit->text().isEmpty())
@@ -1131,6 +1242,9 @@ void MainWindow::on_variateRotationBodySolverPushButton_clicked()
     QFuture<void> rotationBodyFuture=QtConcurrent::run(solver,&Solver::variateRotationBodyParameters, fragPar,variateSettings->getInfo());
 }
 
+/*!
+Запускает вариацию параметров тела вращения со срезом с начальными параметрами. Проверяет полноту данных для этого.
+*/
 void MainWindow::on_variateRotationCutBodySolverPushButton_clicked()
 {
     if(ui->fiRotationCutBodyLineEdit->text().isEmpty())
@@ -1202,6 +1316,9 @@ void MainWindow::on_variateRotationCutBodySolverPushButton_clicked()
     QFuture<void> rotationCutBodyFuture=QtConcurrent::run(solver,&Solver::variateRotationCutBodyParameters, fragPar, variateSettings->getInfo());
 }
 
+/*!
+Запускает расчет тела вращения со срезом вблизи экрана с заданными параметрами. Проверяет полноту данных для этого.
+*/
 void MainWindow::on_rotationCutBodyNearScreenPushButton_clicked()
 {
     if(ui->fiRotationCutBodyLineEdit->text().isEmpty())

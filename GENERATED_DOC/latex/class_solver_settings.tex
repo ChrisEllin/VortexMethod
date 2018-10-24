@@ -1,0 +1,139 @@
+\hypertarget{class_solver_settings}{}\section{Класс Solver\+Settings}
+\label{class_solver_settings}\index{Solver\+Settings@{Solver\+Settings}}
+
+
+Класс, отвечающий за интерфейс формы настроек расчета и свободного движения  
+
+
+
+
+{\ttfamily \#include $<$solversettings.\+h$>$}
+
+
+
+Граф наследования\+:Solver\+Settings\+:
+% FIG 0
+
+
+Граф связей класса Solver\+Settings\+:
+% FIG 1
+\subsection*{Открытые слоты}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{class_solver_settings_ac72ad464747097ad1dc8b88768ca7cad}{set\+Solver\+Parameters}} (\mbox{\hyperlink{struct_solver_parameters}{Solver\+Parameters}} \&new\+Solv\+Par)
+\end{DoxyCompactItemize}
+\subsection*{Открытые члены}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_solver_settings_ab479afee5cefe333747cc121bc7ae5e7}{Solver\+Settings}} (Q\+Widget $\ast$parent=0)
+\item 
+\mbox{\hyperlink{struct_solver_parameters}{Solver\+Parameters}} \mbox{\hyperlink{class_solver_settings_aef7243e388288a838bfc1cb0bfece815}{get\+Solver\+Parameters}} ()
+\item 
+\mbox{\hyperlink{struct_free_motion_parameters}{Free\+Motion\+Parameters}} \mbox{\hyperlink{class_solver_settings_a0b9e0d4142c92abcce9738fbac7d0f3c}{get\+Free\+Motion\+Parameters}} ()
+\item 
+\mbox{\hyperlink{class_solver_settings_a233ef39aabfee58f26c1594419a2c3d3}{$\sim$\+Solver\+Settings}} ()
+\end{DoxyCompactItemize}
+\subsection*{Закрытые слоты}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{class_solver_settings_a0419c649ec7741ee258fce119d392905}{on\+\_\+save\+Solver\+Settings\+Push\+Button\+\_\+clicked}} ()
+\item 
+void \mbox{\hyperlink{class_solver_settings_aed5d865a1e727b9cf4e2ec81bbaed8ab}{on\+\_\+reset\+Settings\+Push\+Button\+\_\+clicked}} ()
+\item 
+void \mbox{\hyperlink{class_solver_settings_a20637d6f070d2b382e3d875aba91eccc}{on\+\_\+save\+Free\+Motion\+Settings\+Push\+Button\+\_\+clicked}} ()
+\item 
+void \mbox{\hyperlink{class_solver_settings_a9d3176e0bf47b4d8ab9969f9e3b359ab}{on\+\_\+reset\+Free\+Motion\+Settings\+Push\+Button\+\_\+clicked}} ()
+\end{DoxyCompactItemize}
+\subsection*{Закрытые данные}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_solver_settings_ad6f0125e10c976b4d048b2d92c95d6c9}\label{class_solver_settings_ad6f0125e10c976b4d048b2d92c95d6c9}} 
+Ui\+::\+Solver\+Settings $\ast$ \mbox{\hyperlink{class_solver_settings_ad6f0125e10c976b4d048b2d92c95d6c9}{ui}}
+\begin{DoxyCompactList}\small\item\em Указатель на объект формы \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_solver_settings_affa3bd1ad23b06b880db8740b57c5f96}\label{class_solver_settings_affa3bd1ad23b06b880db8740b57c5f96}} 
+\mbox{\hyperlink{struct_solver_parameters}{Solver\+Parameters}} \mbox{\hyperlink{class_solver_settings_affa3bd1ad23b06b880db8740b57c5f96}{standart\+Par}}
+\begin{DoxyCompactList}\small\item\em Стандартные настройки параметров расчета \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_solver_settings_a03385bd8239db19a7d5e4f7f0febab44}\label{class_solver_settings_a03385bd8239db19a7d5e4f7f0febab44}} 
+\mbox{\hyperlink{struct_solver_parameters}{Solver\+Parameters}} \mbox{\hyperlink{class_solver_settings_a03385bd8239db19a7d5e4f7f0febab44}{solv\+Par}}
+\begin{DoxyCompactList}\small\item\em Текущие настройки параметров расчета \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_solver_settings_a9154b73101b811bb76e83e4185393fc8}\label{class_solver_settings_a9154b73101b811bb76e83e4185393fc8}} 
+\mbox{\hyperlink{struct_free_motion_parameters}{Free\+Motion\+Parameters}} \mbox{\hyperlink{class_solver_settings_a9154b73101b811bb76e83e4185393fc8}{free\+Motion\+Par}}
+\begin{DoxyCompactList}\small\item\em Стандартные настройки параметров свободного движения \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_solver_settings_a774f1e1c9827ee39da08957606082901}\label{class_solver_settings_a774f1e1c9827ee39da08957606082901}} 
+\mbox{\hyperlink{struct_free_motion_parameters}{Free\+Motion\+Parameters}} \mbox{\hyperlink{class_solver_settings_a774f1e1c9827ee39da08957606082901}{standart\+Free\+Motion\+Par}}
+\begin{DoxyCompactList}\small\item\em Текущие настройки параметров свободного движения \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Подробное описание}
+Класс, отвечающий за интерфейс формы настроек расчета и свободного движения 
+
+\subsection{Конструктор(ы)}
+\mbox{\Hypertarget{class_solver_settings_ab479afee5cefe333747cc121bc7ae5e7}\label{class_solver_settings_ab479afee5cefe333747cc121bc7ae5e7}} 
+\index{Solver\+Settings@{Solver\+Settings}!Solver\+Settings@{Solver\+Settings}}
+\index{Solver\+Settings@{Solver\+Settings}!Solver\+Settings@{Solver\+Settings}}
+\subsubsection{\texorpdfstring{Solver\+Settings()}{SolverSettings()}}
+{\footnotesize\ttfamily Solver\+Settings\+::\+Solver\+Settings (\begin{DoxyParamCaption}\item[{Q\+Widget $\ast$}]{parent = {\ttfamily 0} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [explicit]}}
+
+Создание формы и инициализация стандартных и текущих параметров \mbox{\Hypertarget{class_solver_settings_a233ef39aabfee58f26c1594419a2c3d3}\label{class_solver_settings_a233ef39aabfee58f26c1594419a2c3d3}} 
+\index{Solver\+Settings@{Solver\+Settings}!````~Solver\+Settings@{$\sim$\+Solver\+Settings}}
+\index{````~Solver\+Settings@{$\sim$\+Solver\+Settings}!Solver\+Settings@{Solver\+Settings}}
+\subsubsection{\texorpdfstring{$\sim$\+Solver\+Settings()}{~SolverSettings()}}
+{\footnotesize\ttfamily Solver\+Settings\+::$\sim$\+Solver\+Settings (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Удаляет текущую форму 
+
+\subsection{Методы}
+\mbox{\Hypertarget{class_solver_settings_a0b9e0d4142c92abcce9738fbac7d0f3c}\label{class_solver_settings_a0b9e0d4142c92abcce9738fbac7d0f3c}} 
+\index{Solver\+Settings@{Solver\+Settings}!get\+Free\+Motion\+Parameters@{get\+Free\+Motion\+Parameters}}
+\index{get\+Free\+Motion\+Parameters@{get\+Free\+Motion\+Parameters}!Solver\+Settings@{Solver\+Settings}}
+\subsubsection{\texorpdfstring{get\+Free\+Motion\+Parameters()}{getFreeMotionParameters()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_free_motion_parameters}{Free\+Motion\+Parameters}} Solver\+Settings\+::get\+Free\+Motion\+Parameters (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Возвращает текущие параметры свободного движения \begin{DoxyReturn}{Возвращает}
+Текущие параметры свободного движения 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_solver_settings_aef7243e388288a838bfc1cb0bfece815}\label{class_solver_settings_aef7243e388288a838bfc1cb0bfece815}} 
+\index{Solver\+Settings@{Solver\+Settings}!get\+Solver\+Parameters@{get\+Solver\+Parameters}}
+\index{get\+Solver\+Parameters@{get\+Solver\+Parameters}!Solver\+Settings@{Solver\+Settings}}
+\subsubsection{\texorpdfstring{get\+Solver\+Parameters()}{getSolverParameters()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_solver_parameters}{Solver\+Parameters}} Solver\+Settings\+::get\+Solver\+Parameters (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Возвращает текущие параметры расчета \begin{DoxyReturn}{Возвращает}
+Текущие параметры расчета 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_solver_settings_a9d3176e0bf47b4d8ab9969f9e3b359ab}\label{class_solver_settings_a9d3176e0bf47b4d8ab9969f9e3b359ab}} 
+\index{Solver\+Settings@{Solver\+Settings}!on\+\_\+reset\+Free\+Motion\+Settings\+Push\+Button\+\_\+clicked@{on\+\_\+reset\+Free\+Motion\+Settings\+Push\+Button\+\_\+clicked}}
+\index{on\+\_\+reset\+Free\+Motion\+Settings\+Push\+Button\+\_\+clicked@{on\+\_\+reset\+Free\+Motion\+Settings\+Push\+Button\+\_\+clicked}!Solver\+Settings@{Solver\+Settings}}
+\subsubsection{\texorpdfstring{on\+\_\+reset\+Free\+Motion\+Settings\+Push\+Button\+\_\+clicked}{on\_resetFreeMotionSettingsPushButton\_clicked}}
+{\footnotesize\ttfamily void Solver\+Settings\+::on\+\_\+reset\+Free\+Motion\+Settings\+Push\+Button\+\_\+clicked (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}, {\ttfamily [slot]}}
+
+Сбрасывает текущие параметры свободного движения \mbox{\Hypertarget{class_solver_settings_aed5d865a1e727b9cf4e2ec81bbaed8ab}\label{class_solver_settings_aed5d865a1e727b9cf4e2ec81bbaed8ab}} 
+\index{Solver\+Settings@{Solver\+Settings}!on\+\_\+reset\+Settings\+Push\+Button\+\_\+clicked@{on\+\_\+reset\+Settings\+Push\+Button\+\_\+clicked}}
+\index{on\+\_\+reset\+Settings\+Push\+Button\+\_\+clicked@{on\+\_\+reset\+Settings\+Push\+Button\+\_\+clicked}!Solver\+Settings@{Solver\+Settings}}
+\subsubsection{\texorpdfstring{on\+\_\+reset\+Settings\+Push\+Button\+\_\+clicked}{on\_resetSettingsPushButton\_clicked}}
+{\footnotesize\ttfamily void Solver\+Settings\+::on\+\_\+reset\+Settings\+Push\+Button\+\_\+clicked (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}, {\ttfamily [slot]}}
+
+Сбрасывает текущие параметры расчета \mbox{\Hypertarget{class_solver_settings_a20637d6f070d2b382e3d875aba91eccc}\label{class_solver_settings_a20637d6f070d2b382e3d875aba91eccc}} 
+\index{Solver\+Settings@{Solver\+Settings}!on\+\_\+save\+Free\+Motion\+Settings\+Push\+Button\+\_\+clicked@{on\+\_\+save\+Free\+Motion\+Settings\+Push\+Button\+\_\+clicked}}
+\index{on\+\_\+save\+Free\+Motion\+Settings\+Push\+Button\+\_\+clicked@{on\+\_\+save\+Free\+Motion\+Settings\+Push\+Button\+\_\+clicked}!Solver\+Settings@{Solver\+Settings}}
+\subsubsection{\texorpdfstring{on\+\_\+save\+Free\+Motion\+Settings\+Push\+Button\+\_\+clicked}{on\_saveFreeMotionSettingsPushButton\_clicked}}
+{\footnotesize\ttfamily void Solver\+Settings\+::on\+\_\+save\+Free\+Motion\+Settings\+Push\+Button\+\_\+clicked (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}, {\ttfamily [slot]}}
+
+Сохраняет текущие параметры свободного движения \mbox{\Hypertarget{class_solver_settings_a0419c649ec7741ee258fce119d392905}\label{class_solver_settings_a0419c649ec7741ee258fce119d392905}} 
+\index{Solver\+Settings@{Solver\+Settings}!on\+\_\+save\+Solver\+Settings\+Push\+Button\+\_\+clicked@{on\+\_\+save\+Solver\+Settings\+Push\+Button\+\_\+clicked}}
+\index{on\+\_\+save\+Solver\+Settings\+Push\+Button\+\_\+clicked@{on\+\_\+save\+Solver\+Settings\+Push\+Button\+\_\+clicked}!Solver\+Settings@{Solver\+Settings}}
+\subsubsection{\texorpdfstring{on\+\_\+save\+Solver\+Settings\+Push\+Button\+\_\+clicked}{on\_saveSolverSettingsPushButton\_clicked}}
+{\footnotesize\ttfamily void Solver\+Settings\+::on\+\_\+save\+Solver\+Settings\+Push\+Button\+\_\+clicked (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}, {\ttfamily [slot]}}
+
+Сохраняет текущие параметры расчета \mbox{\Hypertarget{class_solver_settings_ac72ad464747097ad1dc8b88768ca7cad}\label{class_solver_settings_ac72ad464747097ad1dc8b88768ca7cad}} 
+\index{Solver\+Settings@{Solver\+Settings}!set\+Solver\+Parameters@{set\+Solver\+Parameters}}
+\index{set\+Solver\+Parameters@{set\+Solver\+Parameters}!Solver\+Settings@{Solver\+Settings}}
+\subsubsection{\texorpdfstring{set\+Solver\+Parameters}{setSolverParameters}}
+{\footnotesize\ttfamily void Solver\+Settings\+::set\+Solver\+Parameters (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_solver_parameters}{Solver\+Parameters}} \&}]{new\+Solv\+Par }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [slot]}}
+
+Устанавливает текущие параметры расчета 
+
+Объявления и описания членов классов находятся в файлах\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Users/\+Vasily/\+Documents/\+Vortex\+Method/solversettings.\+h\item 
+C\+:/\+Users/\+Vasily/\+Documents/\+Vortex\+Method/solversettings.\+cpp\end{DoxyCompactItemize}
