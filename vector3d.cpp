@@ -232,6 +232,11 @@ double& Vector3D::operator[](const double i)
     exit(1);
 }
 
+bool Vector3D::fabsCompare(double a, double b)
+{
+    return (fabs(a) < fabs(b));
+}
+
 /*!
 Рассчитывает сигнум-функцию от переменной
 \param val Значение переменной

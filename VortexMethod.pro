@@ -37,7 +37,8 @@ SOURCES += \
     solversettings.cpp \
     logger.cpp \
     vector2d.cpp \
-    variatesettings.cpp
+    variatesettings.cpp \
+    preprocessorsettings.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -52,12 +53,14 @@ HEADERS += \
     solversettings.h \
     logger.h \
     vector2d.h \
-    variatesettings.h
+    variatesettings.h \
+    preprocessorsettings.h
 
 FORMS += \
         mainwindow.ui \
     solversettings.ui \
-    variatesettings.ui
+    variatesettings.ui \
+    preprocessorsettings.ui
 
 RESOURCES += \
     resources.qrc

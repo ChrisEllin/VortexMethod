@@ -39,11 +39,12 @@ private:
     QString path; ///<Текущий путь записи каталога; если пуст - каталог сборки
     BodyType type; ///<Вид рассчитываемого тела
 public:
+    Logger();
     Logger(BodyType _type, SolvType _stype=NOOPTIMIZATION);
     Logger(BodyType _type, QString _path, SolvType _stype=NOOPTIMIZATION);
     void createFiles();
     void writeCpFile(const QVector<double> cp, const QVector<double> tetas);
-    void writeLogs(const int stepNum, const double stepTime, const Counters beforeIntegrC, const Counters afterIntegrC, const Timers beforeIntegrT, const Timers afterIntegrT, const Restrictions restr);
+    void writeLogs(const int stepNum, const double stepTime, const int freeVortonsSize, const Counters beforeIntegrC, const Counters afterIntegrC, const Timers beforeIntegrT, const Timers afterIntegrT, const Restrictions restr);
     void writePassport(const SolverParameters& solvPar,const FragmentationParameters& fragPar);
     void writePassport(const SolverParameters& solvPar,const FragmentationParameters& fragPar, const FreeMotionParameters& freeMotionPar);
     void writeForces(const Vector3D forces, const Vector3D c);

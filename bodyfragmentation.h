@@ -184,6 +184,7 @@ public:
     static double presetFunctionF(double x);
     static double presetDeriveFunctionF(double x);
     static double presetFunctionG(double x);
+    static double presetFunctionG(double x, double xBeg);
     static double presetDeriveFunctionG(double x);
     QVector<Vector3D> getControlPoints() const;
     QVector<Vector3D> getNormals() const;

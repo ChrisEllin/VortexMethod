@@ -7,6 +7,7 @@
 #include <QFileDialog>
 #include <QShortcut>
 #include "variatesettings.h"
+#include "preprocessorsettings.h"
 
 namespace Ui {
 class MainWindow;
@@ -27,6 +28,7 @@ private:
     SolverSettings *settings; ///<Указатель на класс окна настроек расчета
     Solver *solver; ///<Указатель на класс-расчетчик
     VariateSettings *variateSettings; ///<Указатель на класс окна настроек вариации
+    PreprocessorSettings *preprocessor;
     bool displaySphere; ///<Необходимость отображения трехмерной сферы
     QShortcut *keyCtrlO; ///<Указатель на хоткей (Ctrl+O)
     QShortcut *keyCtrlR; ///<Указатель на хоткей (Ctrl+R)
@@ -49,6 +51,7 @@ private slots:
     void on_sphereSolverPushButton_clicked();
     void showSettings();
     void showSphere();
+    void showPreprocessor();
     void showVariateSettings();
     void openPassport();
     void on_cylinderSolverPushButton_clicked();
@@ -67,8 +70,11 @@ private slots:
 
     void on_rotationCutBodyNearScreenPushButton_clicked();
 
+    void on_rotationBodyFreeMotionSolverPushButton_clicked();
+
 public slots:
     void showInfo();
+    void setMaxGamma(double maxGamma);
     void recieveProgressSphere(const int percentage);
     void recieveProgressCylinder(const int percentage);
     void recieveProgressRotationBody(const int percentage);

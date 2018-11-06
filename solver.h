@@ -25,6 +25,7 @@ public:
     void sphereFreeMotionSolver(const FragmentationParameters& fragPar);
     void cylinderSolver(const FragmentationParameters& fragPar);
     void rotationBodySolver(const FragmentationParameters& fragPar);
+    void rotationBodyFreeMotionSolver(const FragmentationParameters &fragPar);
     void rotationCutBodySolver(const FragmentationParameters& fragPar);
     void rotationCutBodySolverNearScreen(const FragmentationParameters& fragPar, const double screenDistance);
     void rotationCutBodyFreeMotionSolver(const FragmentationParameters &fragPar);
@@ -34,10 +35,12 @@ public:
     void variateRotationBodyParameters(FragmentationParameters fragPar, bool variateEps);
     void variateRotationCutBodyParameters(FragmentationParameters fragPar, bool variateEps);
     void operator = (const Solver &solver);
+    Logger *createLog(BodyType type);
     static bool explosion;///<Существование "взрыва"
     bool checkingVariate(double& dispersion, double& oldDispersion,FragmentationParameters &fragPar, FragmentationParameters &resultFrag, SolverParameters& resultSolv);
     bool checkingForceVariate(double& dispersion, double& oldDispersion,FragmentationParameters &fragPar, FragmentationParameters &resultFrag, SolverParameters& resultSolv);
 signals:
+    void sendMaxGamma(double maxGamma);
     void repaintGUI(const QVector<Vorton>& vortons, const QVector<std::shared_ptr<MultiFrame>>& frames); ///<Сигнал о перерисовке интерфейса
     void variatingFinished(); ///<Сигнал об окончании  варьирования
     void sendProgressSphere(const int percent); ///< Сигнал об текущем прогрессе расчета сферы

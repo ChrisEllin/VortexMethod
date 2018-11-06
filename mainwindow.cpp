@@ -29,6 +29,7 @@ MainWindow::MainWindow(QWidget *parent) :
     solver=new Solver();
     settings =new SolverSettings();
     variateSettings = new VariateSettings();
+    preprocessor = new PreprocessorSettings();
     connect (this, SIGNAL(setPlaneXY()), ui->openGLWidget, SLOT(setPlaneXY()));
     connect (this, SIGNAL(setPlaneYX()), ui->openGLWidget, SLOT(setPlaneYX()));
     connect (this, SIGNAL(setPlaneXZ()), ui->openGLWidget, SLOT(setPlaneXZ()));
@@ -45,6 +46,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect (this, SIGNAL(setHeight(double)), ui->openGLWidget, SLOT(setHeight(double)));
     connect (this, SIGNAL(setRadius(double)), ui->openGLWidget, SLOT(setRadius(double)));
     connect (ui->settingsOpenAction, SIGNAL(triggered(bool)), this, SLOT(showSettings()));
+    connect (ui->preprocessorSettingsOpenAction, SIGNAL(triggered(bool)), this, SLOT(showPreprocessor()));
     connect (ui->variationSettingsOpenAction, SIGNAL(triggered(bool)), this, SLOT(showVariateSettings()));
     connect (solver, SIGNAL(sendProgressSphere(const int)), this, SLOT(recieveProgressSphere(const int)), Qt::BlockingQueuedConnection);
     connect (solver, SIGNAL(sendProgressCylinder(const int)), this, SLOT(recieveProgressCylinder(const int)), Qt::BlockingQueuedConnection);
@@ -63,6 +65,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect (keyCtrlR, SIGNAL(activated()), this, SLOT(keyCtrlRActiavated()));
     connect (keyCtrlH, SIGNAL(activated()), this, SLOT(showSphere()));
     connect (solver, SIGNAL(variatingFinished()), this, SLOT(showInfo()));
+    connect (solver, SIGNAL(sendMaxGamma(double)), this, SLOT(setMaxGamma(double)));
     displaySphere=true;
     showSphere();
     ui->openGLWidget->backgroundColor = Qt::white;
@@ -168,6 +171,7 @@ MainWindow::~MainWindow()
     delete ui;
     delete settings;
     delete solver;
+    delete preprocessor;
     delete keyCtrlO;
     delete keyCtrlH;
     delete keyCtrlR;
@@ -488,6 +492,7 @@ void MainWindow::on_rotationBodySolverPushButton_clicked()
     ui->xEndRotationBodyLineEdit->setDisabled(true);
     ui->rotationBodySolverPushButton->setDisabled(true);
     ui->rotationBodySolverPushButton->setDisabled(true);
+    ui->rotationBodyFreeMotionSolverPushButton->setDisabled(true);
 }
 
 /*!
@@ -496,6 +501,11 @@ void MainWindow::on_rotationBodySolverPushButton_clicked()
 void MainWindow::showInfo()
 {
     QMessageBox::information(this, tr("Информация"),tr("Вариация параметров завершена"));
+}
+
+void MainWindow::setMaxGamma(double maxGamma)
+{
+    ui->maxGammaLineEdit->setText(QString::number(maxGamma));
 }
 
 /*!
@@ -516,6 +526,11 @@ void MainWindow::showSphere()
         emit changeShape(MainField::Sphere);
     else
         emit changeShape(MainField::None);
+}
+
+void MainWindow::showPreprocessor()
+{
+    preprocessor->show();
 }
 
 /*!
@@ -725,6 +740,7 @@ void MainWindow::recieveProgressRotationBody(const int percentage)
         ui->xEndRotationBodyLineEdit->setDisabled(false);
         ui->rotationBodySolverPushButton->setDisabled(false);
         ui->variateRotationBodySolverPushButton->setDisabled(false);
+        ui->rotationBodyFreeMotionSolverPushButton->setDisabled(false);
     }
 }
 
@@ -763,7 +779,7 @@ void MainWindow::recieveProgressRotationCutBody(const int percentage)
 void MainWindow::drawGUI(const QVector<Vorton> &vortons, const QVector<std::shared_ptr<MultiFrame> > &frames)
 {
     clearSegments();
-
+    Vector3D boundaries=preprocessor->getBoundaries();
     for (int i=0; i<frames.size(); i++)
     {
         for (int j = 0; j < frames[i]->getAnglesNum(); j++)
@@ -773,12 +789,15 @@ void MainWindow::drawGUI(const QVector<Vorton> &vortons, const QVector<std::shar
             emit drawSegment(2.0*mid - tail, tail, SArrow::Grid);
         }
     }
+    ui->freeVortonsQuantityLineEdit->setText(QString::number(vortons.size()));
 
     for (int i=0; i<vortons.size(); i++)
     {
         QVector3D mid=Vector3D::toQVector3D(vortons[i].getMid());
         QVector3D tail=Vector3D::toQVector3D(vortons[i].getTail());
-        emit drawSegment(2.0*mid-tail, tail);
+        if (!(boundaries!=Vector3D(0.0,0.0,0.0)&&(fabs(vortons[i].getMid().x())>boundaries.x()||fabs(vortons[i].getMid().y())>boundaries.y()||fabs(vortons[i].getMid().z())>boundaries.z()
+                                     ||fabs(vortons[i].getTail().x())>boundaries.x()||fabs(vortons[i].getTail().y())>boundaries.y()||fabs(vortons[i].getTail().z())>boundaries.z())))
+            emit drawSegment(2.0*mid-tail, tail);
     }
 }
 
@@ -1403,4 +1422,79 @@ void MainWindow::on_rotationCutBodyNearScreenPushButton_clicked()
     ui->rotationCutBodyLaunchSolverPushButton->setDisabled(true);
     ui->rotationCutBodyNearScreenPushButton->setDisabled(true);
     ui->variateRotationCutBodySolverPushButton->setDisabled(true);
+}
+
+void MainWindow::on_rotationBodyFreeMotionSolverPushButton_clicked()
+{
+    if(ui->fiRotationBodyLineEdit->text().isEmpty())
+    {
+        QMessageBox::critical(this, tr("Ошибка"), tr("Не введено количество разбиений по фи"));
+        return;
+    }
+
+    if(ui->partRotationBodyLineEdit->text().isEmpty())
+    {
+        QMessageBox::critical(this, tr("Ошибка"), tr("Не введено количество разбиений по частям"));
+        return;
+    }
+    if(ui->xBegRotationBodyLineEdit->text().isEmpty())
+    {
+        QMessageBox::critical(this, tr("Ошибка"), tr("Не введена начальная координата по Х"));
+        return;
+    }
+
+    if (ui->deltaRotationBodyFragmLineEdit->text().isEmpty())
+    {
+        QMessageBox::critical(this, tr("Ошибка"), tr("Не введена высота для подъема отрезков при разбиении"));
+        return;
+    }
+    if (ui->epsilonRotationBodyLineEdit->text().isEmpty())
+    {
+        QMessageBox::critical(this, tr("Ошибка"), tr("Не введено значение радиуса вортона"));
+        return;
+    }
+    if (ui->pointsRaisingRotationBodyLineEdit->text().isEmpty())
+    {
+        QMessageBox::critical(this, tr("Ошибка"), tr("Не введена высота подъема точек для вычисления давления"));
+        return;
+    }
+
+    if (ui->xEndRotationBodyLineEdit->text().isEmpty())
+    {
+        QMessageBox::critical(this, tr("Ошибка"), tr("Не введена конечная координата по X"));
+        return;
+    }
+    if (ui->sectionDistanceRotationBodyLineEdit->text().isEmpty())
+    {
+        QMessageBox::critical(this, tr("Ошибка"), tr("Не введена высота среза"));
+        return;
+    }
+
+    FragmentationParameters fragPar;
+    fragPar.rotationBodyFiFragNum=ui->fiRotationBodyLineEdit->text().toInt();
+    fragPar.rotationBodyPartFragNum=ui->partRotationBodyLineEdit->text().toInt();
+    fragPar.rotationBodyXBeg=ui->xBegRotationBodyLineEdit->text().toDouble();
+    fragPar.rotationBodyXEnd=ui->xEndRotationBodyLineEdit->text().toDouble();
+    fragPar.rotationBodySectionDistance=ui->sectionDistanceRotationBodyLineEdit->text().toDouble();
+    fragPar.vortonsRad=ui->epsilonRotationBodyLineEdit->text().toDouble();
+    fragPar.delta=ui->deltaRotationBodyFragmLineEdit->text().toDouble();
+    fragPar.pointsRaising=ui->pointsRaisingRotationBodyLineEdit->text().toDouble();
+
+    SolverParameters solvPar=settings->getSolverParameters();
+    FreeMotionParameters freeMotionPar=settings->getFreeMotionParameters();
+
+    *solver=Solver(solvPar,freeMotionPar);
+    QFuture<void> rotationBodyFuture=QtConcurrent::run(solver,&Solver::rotationBodyFreeMotionSolver, fragPar);
+
+    ui->pointsRaisingRotationBodyLineEdit->setDisabled(true);
+    ui->epsilonRotationBodyLineEdit->setDisabled(true);
+    ui->deltaRotationBodyFragmLineEdit->setDisabled(true);
+    ui->partRotationBodyLineEdit->setDisabled(true);
+    ui->fiRotationBodyLineEdit->setDisabled(true);
+    ui->sectionDistanceRotationBodyLineEdit->setDisabled(true);
+    ui->xBegRotationBodyLineEdit->setDisabled(true);
+    ui->xEndRotationBodyLineEdit->setDisabled(true);
+    ui->rotationBodySolverPushButton->setDisabled(true);
+    ui->rotationBodySolverPushButton->setDisabled(true);
+    ui->rotationBodyFreeMotionSolverPushButton->setDisabled(true);
 }

@@ -451,6 +451,7 @@ void BodyFragmentation::rotationCutBodyFragmantation()
         double derivative=BodyFragmentation::presetDeriveFunctionG(xArr[i]);
         s[i]=s[i-1]+height*sqrt(1+derivative*derivative);
     }
+
     double length=s[s.size()-2];
     for (int i=0; i<rotationBottomCutBody.partFragNum; i++)
     {
@@ -468,6 +469,13 @@ void BodyFragmentation::rotationCutBodyFragmantation()
 
     for (int i=0; i<part.size(); i++)
         part[i]+=forUp[i]*rotationBottomCutBody.delta;
+
+    for (int i=0; i<part.size(); i++)
+    {
+        part[i]-=Vector2D(part[part.size()-1].x()-rotationBottomCutBody.xEnd,0.0);
+        if (i!=part.size()-1)
+            forControlPoint[i]-=Vector2D(part[part.size()-1].x()-rotationBottomCutBody.xEnd,0.0);
+    }
 
     for (int j=0; j<rotationBottomCutBody.partFragNum-1; j++)
     {
@@ -571,6 +579,9 @@ void BodyFragmentation::rotationCutBodyLaunchFragmentation(const int i, const Ve
             double derivative=BodyFragmentation::presetDeriveFunctionG(xArr[i]);
             s[i]=s[i-1]+height*sqrt(1+derivative*derivative);
         }
+//        for (int i=0; i<xArr.size();i++)
+//            xArr[i]-=xArr[xArr.size()-1];
+
         double length=s[s.size()-2];
         for (int i=0; i<rotationBottomCutBody.partFragNum; i++)
         {
@@ -610,6 +621,12 @@ void BodyFragmentation::rotationCutBodyLaunchFragmentation(const int i, const Ve
         for (int i=0; i<part.size(); i++)
             part[i]+=forUp[i]*rotationBottomCutBody.delta;
 
+        for (int i=0; i<part.size(); i++)
+        {
+            part[i]-=Vector2D(part[part.size()-1].x(),0.0);
+            if (i!=part.size()-1)
+                forControlPoint[i]-=Vector2D(part[part.size()-1].x(),0.0);
+        }
         int newPartFragmNum = part.size()-1;
 
         for (int j=0; j<newPartFragmNum; j++)
@@ -724,6 +741,19 @@ double BodyFragmentation::presetFunctionG(double x)
 {
     if ((x>=0)&&(x<=1.4)) return 2*sqrt(1-(x-1.4)*(x-1.4)/(1.4*1.4));
     if ((x>=1.4)&&(x<=5)) return 2;
+    return 0.0;
+}
+
+/*!
+Высчитывает значение функции g(x)
+\param x Значение х
+\param xBeg Нижняя граница функции
+\return Возвращаемое значение функции
+*/
+double BodyFragmentation::presetFunctionG(double x, double xBeg)
+{
+    if ((x>=xBeg)&&(x<=1.4+xBeg)) return 2*sqrt(1-(x-xBeg-1.4)*(x-xBeg-1.4)/(1.4*1.4));
+    if ((x>=1.4+xBeg)&&(x<=xBeg+5)) return 2;
     return 0.0;
 }
 

@@ -41,7 +41,7 @@ public:
     void operator = (const Vector3D &vec1);
     Vector3D operator -();
     double& operator[](const double i);
-
+    static bool fabsCompare(double a, double b);
     static int sign(int val);
     static int sign(double val);
 };

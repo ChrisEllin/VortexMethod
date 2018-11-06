@@ -6,6 +6,11 @@
 \param _stype тип расчета
 */
 
+Logger::Logger()
+{
+
+}
+
 Logger::Logger(const BodyType _type, const SolvType _stype)
 {
     type=_type;
@@ -44,11 +49,6 @@ Logger::Logger(const BodyType _type, const SolvType _stype)
             path+=QDateTime::currentDateTime().toString("dd.MM.yyyy_hh.mm.ss");
             folder.mkdir("RotationBottomCut_"+QDateTime::currentDateTime().toString("dd.MM.yyyy_hh.mm.ss"));
             break;
-        }
-        default:
-        {
-            QMessageBox::critical(new QWidget(), tr("Ошибка"), tr("Попытка записи несоответствующего тела"));
-            exit(1);
         }
         }
     }
@@ -105,11 +105,6 @@ Logger::Logger(BodyType _type, QString _path, SolvType _stype)
             path+=QDateTime::currentDateTime().toString("dd.MM.yyyy_hh.mm.ss");
             folder.mkdir("RotationBottomCut_"+QDateTime::currentDateTime().toString("dd.MM.yyyy_hh.mm.ss"));
             break;
-        }
-        default:
-        {
-            QMessageBox::critical(new QWidget(), tr("Ошибка"), tr("Попытка записи несоответствующего тела"));
-            exit(1);
         }
         }
     }
@@ -216,7 +211,7 @@ void Logger::writeCpFile(const QVector<double> cp, const QVector<double> tetas)
 \param restr значения сработанных ограничений
 */
 
-void Logger::writeLogs(const int stepNum, const double stepTime, const Counters beforeIntegrC, const Counters afterIntegrC, const Timers beforeIntegrT, const Timers afterIntegrT, const Restrictions restr)
+void Logger::writeLogs(const int stepNum, const double stepTime, const int freeVortonsSize, const Counters beforeIntegrC, const Counters afterIntegrC, const Timers beforeIntegrT, const Timers afterIntegrT, const Restrictions restr)
 {
     *logTextStream.get()<<"Начата запись шага расчета №"+QString::number(stepNum)+" \n\n";
     *logTextStream.get()<<"С рамок объединилось "+QString::number(beforeIntegrC.unitedNum)+" вортонов \n";
@@ -225,7 +220,10 @@ void Logger::writeLogs(const int stepNum, const double stepTime, const Counters 
     *logTextStream.get()<<"Из слоя развернуто относительно поверхности "+QString::number(afterIntegrC.rotatedNum)+" вортонов \n";
     *logTextStream.get()<<"В слое объединилось "+QString::number(afterIntegrC.unitedNum)+" вортонов \n";
     *logTextStream.get()<<"В слое удалилось по гамме "+QString::number(afterIntegrC.vorticityEliminated)+" вортонов \n";
-    *logTextStream.get()<<"По причине большой дальности удалено"+QString::number(afterIntegrC.tooFarNum)+" вортонов \n\n";
+    if (afterIntegrC.underScreenNum!=0)
+        *logTextStream.get()<<"Под экран попало "+QString::number(afterIntegrC.underScreenNum)+" вортонов \n";
+    *logTextStream.get()<<"По причине большой дальности удалено"+QString::number(afterIntegrC.tooFarNum)+" вортонов \n";
+    *logTextStream.get()<<"Всего вортонов в потоке:"+QString::number(freeVortonsSize)+"\n\n";
 
     *logTextStream.get()<<"Ограничение на перемещение сработало "+QString::number(restr.moveRestr)+" раз\n";
     *logTextStream.get()<<"Ограничение на поворот сработало "+QString::number(restr.turnRestr)+" раз\n";
