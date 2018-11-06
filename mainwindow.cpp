@@ -66,6 +66,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect (keyCtrlH, SIGNAL(activated()), this, SLOT(showSphere()));
     connect (solver, SIGNAL(variatingFinished()), this, SLOT(showInfo()));
     connect (solver, SIGNAL(sendMaxGamma(double)), this, SLOT(setMaxGamma(double)));
+    connect (ui->updateScreenAction, SIGNAL(triggered(bool)), this, SLOT(updateScreen()));
     displaySphere=true;
     showSphere();
     ui->openGLWidget->backgroundColor = Qt::white;
@@ -176,6 +177,37 @@ MainWindow::~MainWindow()
     delete keyCtrlH;
     delete keyCtrlR;
     delete variateSettings;
+}
+
+bool MainWindow::checkDrawing(const Vector3D &mid,const Vector3D &tail)
+{
+    Boundaries boundaries=preprocessor->getBoundaries();
+    if (mid.x()<boundaries.minBoundary.x())
+        return false;
+    if (mid.y()<boundaries.minBoundary.y())
+        return false;
+    if (mid.z()<boundaries.minBoundary.z())
+        return false;
+    if (mid.x()>boundaries.maxBoundary.x())
+        return false;
+    if (mid.y()>boundaries.maxBoundary.y())
+        return false;
+    if (mid.z()>boundaries.maxBoundary.z())
+        return false;
+    if (tail.x()<boundaries.minBoundary.x())
+        return false;
+    if (tail.y()<boundaries.minBoundary.y())
+        return false;
+    if (tail.z()<boundaries.minBoundary.z())
+        return false;
+    if (tail.x()>boundaries.maxBoundary.x())
+        return false;
+    if (tail.y()>boundaries.maxBoundary.y())
+        return false;
+    if (tail.z()>boundaries.maxBoundary.z())
+        return false;
+    return true;
+
 }
 
 /*!
@@ -779,7 +811,8 @@ void MainWindow::recieveProgressRotationCutBody(const int percentage)
 void MainWindow::drawGUI(const QVector<Vorton> &vortons, const QVector<std::shared_ptr<MultiFrame> > &frames)
 {
     clearSegments();
-    Vector3D boundaries=preprocessor->getBoundaries();
+    currentVortons=vortons;
+    currentFrames=frames;
     for (int i=0; i<frames.size(); i++)
     {
         for (int j = 0; j < frames[i]->getAnglesNum(); j++)
@@ -795,8 +828,7 @@ void MainWindow::drawGUI(const QVector<Vorton> &vortons, const QVector<std::shar
     {
         QVector3D mid=Vector3D::toQVector3D(vortons[i].getMid());
         QVector3D tail=Vector3D::toQVector3D(vortons[i].getTail());
-        if (!(boundaries!=Vector3D(0.0,0.0,0.0)&&(fabs(vortons[i].getMid().x())>boundaries.x()||fabs(vortons[i].getMid().y())>boundaries.y()||fabs(vortons[i].getMid().z())>boundaries.z()
-                                     ||fabs(vortons[i].getTail().x())>boundaries.x()||fabs(vortons[i].getTail().y())>boundaries.y()||fabs(vortons[i].getTail().z())>boundaries.z())))
+        if (checkDrawing(vortons[i].getMid(),vortons[i].getTail())                                                                             )
             emit drawSegment(2.0*mid-tail, tail);
     }
 }
@@ -1126,6 +1158,11 @@ void MainWindow::on_sphereFreeMotionSolverPushButton_clicked()
     ui->sphereSolverPushButton->setDisabled(true);
     ui->sphereFreeMotionSolverPushButton->setDisabled(true);
     ui->variateSphereSolverPushButton->setDisabled(true);
+}
+
+void MainWindow::updateScreen()
+{
+    drawGUI(currentVortons,currentFrames);
 }
 
 /*!

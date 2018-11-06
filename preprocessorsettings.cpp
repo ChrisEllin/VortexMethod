@@ -9,12 +9,19 @@ PreprocessorSettings::PreprocessorSettings(QWidget *parent) :
     setWindowTitle("Настройки препроцессора");
 }
 
-Vector3D PreprocessorSettings::getBoundaries()
+Boundaries PreprocessorSettings::getBoundaries()
 {
-    boundary.x(ui->xBoundaryLineEdit->text().toDouble());
-    boundary.y(ui->yBoundaryLineEdit->text().toDouble());
-    boundary.z(ui->zBoundaryLineEdit->text().toDouble());
-    return boundary;
+    Vector3D minBoundary;
+    Vector3D maxBoundary;
+    minBoundary.x(ui->xMinBoundaryLineEdit->text().toDouble());
+    minBoundary.y(ui->yMinBoundaryLineEdit->text().toDouble());
+    minBoundary.z(ui->zMinBoundaryLineEdit->text().toDouble());
+    maxBoundary.x(ui->xMaxBoundaryLineEdit->text().toDouble());
+    maxBoundary.y(ui->yMaxBoundaryLineEdit->text().toDouble());
+    maxBoundary.z(ui->zMaxBoundaryLineEdit->text().toDouble());
+    boundaries.maxBoundary=maxBoundary;
+    boundaries.minBoundary=minBoundary;
+    return boundaries;
 }
 
 PreprocessorSettings::~PreprocessorSettings()

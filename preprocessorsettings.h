@@ -3,6 +3,12 @@
 #include "vector3d.h"
 #include <QDialog>
 
+struct Boundaries
+{
+    Vector3D minBoundary;
+    Vector3D maxBoundary;
+};
+
 namespace Ui {
 class PreprocessorSettings;
 }
@@ -13,12 +19,12 @@ class PreprocessorSettings : public QDialog
 
 public:
     explicit PreprocessorSettings(QWidget *parent = nullptr);
-    Vector3D getBoundaries();
+    Boundaries getBoundaries();
     ~PreprocessorSettings();
 
 private:
     Ui::PreprocessorSettings *ui;
-    Vector3D boundary;
+    Boundaries boundaries;
 };
 
 #endif // PREPROCESSORSETTINGS_H

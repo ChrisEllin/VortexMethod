@@ -129,7 +129,7 @@
       <item row="0" column="0">
        <widget class="QTabWidget" name="tabWidget">
         <property name="currentIndex">
-         <number>2</number>
+         <number>3</number>
         </property>
         <widget class="QWidget" name="tab">
          <attribute name="title">
@@ -1168,6 +1168,7 @@
     <addaction name="displaySphereAction"/>
     <addaction name="variationSettingsOpenAction"/>
     <addaction name="preprocessorSettingsOpenAction"/>
+    <addaction name="updateScreenAction"/>
    </widget>
    <addaction name="openMenu"/>
    <addaction name="settingsMenu"/>
@@ -1204,6 +1205,11 @@
   <action name="preprocessorSettingsOpenAction">
    <property name="text">
     <string>Настройки препроцессора</string>
+   </property>
+  </action>
+  <action name="updateScreenAction">
+   <property name="text">
+    <string>Обновить экран</string>
    </property>
   </action>
  </widget>

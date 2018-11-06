@@ -33,7 +33,9 @@ private:
     QShortcut *keyCtrlO; ///<Указатель на хоткей (Ctrl+O)
     QShortcut *keyCtrlR; ///<Указатель на хоткей (Ctrl+R)
     QShortcut *keyCtrlH; ///<Указатель на хоткей (Ctrl+H)
-
+    QVector<Vorton> currentVortons;
+    QVector<std::shared_ptr<MultiFrame>> currentFrames;
+    bool checkDrawing(const Vector3D &mid, const Vector3D &tail);
     void setParameters(SphereParameters &sphPar);
     void setParameters(CylinderParameters &cylPar);
     void setParameters(RotationBodyParameters &rotBodyPar);
@@ -61,7 +63,7 @@ private slots:
     void on_rotationCutBodyFreeMotionSolverPushButton_clicked();
     void on_rotationCutBodyLaunchSolverPushButton_clicked();
     void on_sphereFreeMotionSolverPushButton_clicked();
-
+    void updateScreen();
     void on_variateCylinderSolverPushButton_clicked();
 
     void on_variateRotationBodySolverPushButton_clicked();
