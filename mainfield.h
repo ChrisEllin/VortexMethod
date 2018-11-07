@@ -70,6 +70,8 @@ private:
 //    QMatrix4x4 fixedMatrix;
     double zoom;
 
+    float boundaryRange;
+
     QTimer timer;
 
     bool turning;
@@ -91,13 +93,14 @@ private:
     void drawAxis();
     void drawMarker();
     void updateMarker();
+    void updateBoundaries(QVector3D vector);
     QMatrix4x4 setMatrix();
     void setZoom(double zoom);
 public:
     double radius;
     double axisLength;
     enum shape {Cylinder, Sphere, Other, None} Shape;
-    explicit MainField(QWidget *parent = 0);
+    explicit MainField(QWidget *parent = nullptr);
     ~MainField();
 
     QColor backgroundColor;

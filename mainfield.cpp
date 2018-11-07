@@ -24,7 +24,11 @@ void MainField::setZoom(double zoom)
     float perspective = zoom * 60.0f;
     matrixProjection.setToIdentity();
 //    matrixProjection.perspective(perspective, (float)width()/height(), 0.1f, 100.0f);
-    matrixProjection.perspective(perspective, static_cast<float>(width())/static_cast<float>(height()), 0.1f, 100.0f);
+//    matrixProjection.perspective(perspective, static_cast<float>(width())/static_cast<float>(height()), 0.1f, 100.0f);
+//    matrixProjection.ortho(-width()/2, width()/2, -height()/2, height()/2, -100, 100);
+    float r = posEye.length();
+    matrixProjection.ortho(-r*zoom, r*zoom, -r*zoom, r*zoom, -100, 100);
+//    matrixProjection.ortho(-FARSIDE, FARSIDE, -FARSIDE, FARSIDE, -FARSIDE, FARSIDE);
     this->zoom = zoom;
 }
 
@@ -43,13 +47,14 @@ MainField::MainField(QWidget *parent) :
     zoom = 1.0;
     emit zoomChanged(zoom * 100.0);
 
-    faceProgram = NULL;
-    blackBorderProgram = NULL;
-    lineProgram = NULL;
+    faceProgram = nullptr;
+    blackBorderProgram = nullptr;
+    lineProgram = nullptr;
     Shape = MainField::Sphere;
     drawFreeType = Points;
     drawGridType = Arrow;
     radius = 1.0;
+    boundaryRange = QVector3D(-FARSIDE, -FARSIDE, -FARSIDE).length();
 
     for (int i = 0; i < 4; i++)
     {
@@ -240,8 +245,11 @@ void MainField::initializeGL()
 //     }
 
     ///                             Выставляем камеру
-    matrixProjection.perspective(60.0f, (float)width()/height(), 0.1f, 100.0f);
-    posEye = QVector3D(FARSIDE*zoom, FARSIDE*zoom, FARSIDE*zoom);
+//    matrixProjection.perspective(60.0f, (float)width()/height(), 0.1f, 100.0f);
+//     matrixProjection.ortho(-FARSIDE, FARSIDE, -FARSIDE, FARSIDE, -FARSIDE, FARSIDE);
+     posEye = QVector3D(boundaryRange*zoom, boundaryRange*zoom, boundaryRange*zoom);
+     float r = posEye.length();
+     matrixProjection.ortho(-r, r, -r, r, -100, 100);
     posCenter = QVector3D(0, 0, 0);
     posUp = QVector3D(0, 1, 0);
     matrixCamera.lookAt(posEye, posCenter, posUp);
@@ -372,13 +380,17 @@ void MainField::drawGrid()
             arrowheadData.append (grid[i].arrowHead);
         }
 
-        blackBorderProgram->bind();
+//        blackBorderProgram->bind();
+        lineProgram->bind();
+        int colorLocation = lineProgram->attributeLocation("colAttr");
+        QColor color(Qt::darkBlue);
+        lineProgram->setAttributeValue(colorLocation, color.red(), color.green(), color.blue());
 
         QMatrix4x4 matrix = setMatrix();
-        int matrixLocation = blackBorderProgram->uniformLocation ("matrixView");
-        blackBorderProgram->setUniformValue(matrixLocation, matrix);
+        int matrixLocation = lineProgram->uniformLocation ("matrixView");
+        lineProgram->setUniformValue(matrixLocation, matrix);
 
-        int vertexLocation = blackBorderProgram->attributeLocation("posAttr");
+        int vertexLocation = lineProgram->attributeLocation("posAttr");
 
         QOpenGLBuffer vertBufferLines;
         QOpenGLBuffer vertBufferArrowheads;
@@ -391,14 +403,16 @@ void MainField::drawGrid()
         vertBufferLines.bind();
         vertBufferLines.allocate(lineData.data(), lineData.size()*sizeof(QVector3D));
 
-        blackBorderProgram->enableAttributeArray(vertexLocation);
-        blackBorderProgram->setAttributeBuffer(vertexLocation, GL_FLOAT, 0, 3);
+//        blackBorderProgram->enableAttributeArray(vertexLocation);
+//        blackBorderProgram->setAttributeBuffer(vertexLocation, GL_FLOAT, 0, 3);
+        lineProgram->enableAttributeArray(vertexLocation);
+        lineProgram->setAttributeBuffer(vertexLocation, GL_FLOAT, 0, 3);
     //    lineCylinderProgram->setAttributeValue (1, QColor(Qt::green));
 
         glDrawArrays(GL_LINES, 0, lineData.size());
 
         vertBufferArrowheads.bind();
-        blackBorderProgram->setAttributeBuffer(vertexLocation, GL_FLOAT, 0, 3);
+        lineProgram->setAttributeBuffer(vertexLocation, GL_FLOAT, 0, 3);
 
         for (int i = 0; i < grid.size(); i++)
         {
@@ -412,13 +426,17 @@ void MainField::drawGrid()
             lineData.append((grid[i].botCenter + grid[i].topCenter)/2);
         }
 
-        blackBorderProgram->bind();
+//        blackBorderProgram->bind();
+        lineProgram->bind();
+        int colorLocation = lineProgram->attributeLocation("colAttr");
+        QColor color(Qt::red);
+        lineProgram->setAttributeValue(colorLocation, color.red(), color.green(), color.blue());
 
         QMatrix4x4 matrix = setMatrix();
-        int matrixLocation = blackBorderProgram->uniformLocation ("matrixView");
-        blackBorderProgram->setUniformValue(matrixLocation, matrix);
+        int matrixLocation = lineProgram->uniformLocation ("matrixView");
+        lineProgram->setUniformValue(matrixLocation, matrix);
 
-        int vertexLocation = blackBorderProgram->attributeLocation("posAttr");
+        int vertexLocation = lineProgram->attributeLocation("posAttr");
 
         QOpenGLBuffer vertBufferLines;
 
@@ -426,12 +444,13 @@ void MainField::drawGrid()
         vertBufferLines.bind();
         vertBufferLines.allocate(lineData.data(), lineData.size()*sizeof(QVector3D));
 
-        blackBorderProgram->enableAttributeArray(vertexLocation);
-        blackBorderProgram->setAttributeBuffer(vertexLocation, GL_FLOAT, 0, 3);
+        lineProgram->enableAttributeArray(vertexLocation);
+        lineProgram->setAttributeBuffer(vertexLocation, GL_FLOAT, 0, 3);
     //    lineCylinderProgram->setAttributeValue (1, QColor(Qt::green));
 
         glDrawArrays(GL_POINTS, 0, lineData.size());
     }
+//    lineProgram->release();
     vao.release();
 }
 
@@ -807,13 +826,13 @@ void MainField::drawSphere(double r)
     fbo.bind();
 
     indexBufferTop.bind();
-    glDrawElements(GL_TRIANGLE_FAN, ITHA_STEPS + 2, GL_UNSIGNED_SHORT, 0);
+    glDrawElements(GL_TRIANGLE_FAN, ITHA_STEPS + 2, GL_UNSIGNED_SHORT, nullptr);
 
     indexBufferSides.bind();
-    glDrawElements(GL_TRIANGLE_STRIP, INDEX_COUNT, GL_UNSIGNED_SHORT, 0);
+    glDrawElements(GL_TRIANGLE_STRIP, INDEX_COUNT, GL_UNSIGNED_SHORT, nullptr);
 
     indexBufferBottom.bind();
-    glDrawElements(GL_TRIANGLE_FAN, ITHA_STEPS + 2, GL_UNSIGNED_SHORT, 0);
+    glDrawElements(GL_TRIANGLE_FAN, ITHA_STEPS + 2, GL_UNSIGNED_SHORT, nullptr);
 
 //    QImage image = fbo.toImage();
 //    sendScreenshot(image);
@@ -842,10 +861,10 @@ void MainField::drawSphere(double r)
     faceProgram->setAttributeBuffer(normalLocation, GL_FLOAT, 0, 3);
 
     indexBufferTop.bind();
-    glDrawElements(GL_TRIANGLE_FAN, ITHA_STEPS + 2, GL_UNSIGNED_SHORT, 0);
+    glDrawElements(GL_TRIANGLE_FAN, ITHA_STEPS + 2, GL_UNSIGNED_SHORT, nullptr);
 
     indexBufferSides.bind();
-    glDrawElements(GL_TRIANGLE_STRIP, INDEX_COUNT, GL_UNSIGNED_SHORT, 0);
+    glDrawElements(GL_TRIANGLE_STRIP, INDEX_COUNT, GL_UNSIGNED_SHORT, nullptr);
 
     indexBufferBottom.bind();
     glDrawElements(GL_TRIANGLE_FAN, ITHA_STEPS + 2, GL_UNSIGNED_SHORT, 0);
@@ -874,12 +893,13 @@ void MainField::drawAxis()
     int colorLocation = lineProgram->attributeLocation("colAttr");
 
     lineProgram->enableAttributeArray(vertexLocation);
-    lineProgram->enableAttributeArray(colorLocation);
+//    lineProgram->enableAttributeArray(colorLocation);
 
     lineProgram->setAttributeBuffer(vertexLocation, GL_FLOAT, offsetof(Vertex, coord), 3, sizeof(Vertex));
-    lineProgram->setAttributeBuffer(colorLocation, GL_FLOAT, offsetof(Vertex, color), 3, sizeof(Vertex));
+//    lineProgram->setAttributeBuffer(colorLocation, GL_FLOAT, offsetof(Vertex, color), 3, sizeof(Vertex));
+    lineProgram->setAttributeValue(colorLocation, 1.0f, 0.0f, 0.0f);
 
-    glDrawElements (GL_LINES, 6, GL_UNSIGNED_SHORT, 0);
+    glDrawElements (GL_LINES, 6, GL_UNSIGNED_SHORT, nullptr);
 
     lineProgram->release();
     axisIndexBuffer.release();
@@ -908,10 +928,11 @@ void MainField::drawMarker()
     vertBuffer.allocate(marker, 4*sizeof(Vertex));
 
     lineProgram->enableAttributeArray(vertexLocation);
-    lineProgram->enableAttributeArray(colorLocation);
+//    lineProgram->enableAttributeArray(colorLocation);
 
     lineProgram->setAttributeBuffer(vertexLocation, GL_FLOAT, offsetof(Vertex, coord), 3, sizeof(Vertex));
-    lineProgram->setAttributeBuffer(colorLocation, GL_FLOAT, offsetof(Vertex, color), 3, sizeof(Vertex));
+//    lineProgram->setAttributeBuffer(colorLocation, GL_FLOAT, offsetof(Vertex, color), 3, sizeof(Vertex));
+    lineProgram->setAttributeValue(colorLocation, MARKER_COLOR.redF(), MARKER_COLOR.greenF(), MARKER_COLOR.blueF());
 
     glLineWidth(1.0);
     glDrawArrays(GL_LINES, 0, 4);
@@ -934,6 +955,14 @@ void MainField::updateMarker()
         marker[i].coord += posCenter;
     }
 
+}
+
+void MainField::updateBoundaries(QVector3D vector)
+{
+    if (vector.length()*1.2f > boundaryRange)
+    {
+        boundaryRange = vector.length()*1.2f;
+    }
 }
 
 void MainField::resizeGL(int w, int h)
@@ -1068,7 +1097,7 @@ void MainField::mouseReleaseEvent(QMouseEvent* e)
 void MainField::setPlaneXY()
 {
     matrixCamera = QMatrix4x4();
-    posEye = QVector3D(0, 0, FARSIDE*zoom);
+    posEye = QVector3D(0, 0, boundaryRange*zoom);
     posCenter = QVector3D(0, 0, 0);
     posUp = QVector3D(0, 1, 0);
     matrixCamera.lookAt(posEye, posCenter, posUp);
@@ -1080,7 +1109,7 @@ void MainField::setPlaneXY()
 void MainField::setPlaneYX()
 {
     matrixCamera = QMatrix4x4();
-    posEye = QVector3D(0, 0, -FARSIDE*zoom);
+    posEye = QVector3D(0, 0, -boundaryRange*zoom);
     posCenter = QVector3D(0, 0, 0);
     posUp = QVector3D(1, 0, 0);
     matrixCamera.lookAt(posEye, posCenter, posUp);
@@ -1092,7 +1121,7 @@ void MainField::setPlaneYX()
 void MainField::setPlaneXZ()
 {
     matrixCamera = QMatrix4x4();
-    posEye = QVector3D(0, -FARSIDE*zoom, 0);
+    posEye = QVector3D(0, -boundaryRange*zoom, 0);
     posCenter = QVector3D(0, 0, 0);
     posUp = QVector3D(0, 0, 1);
     matrixCamera.lookAt(posEye, posCenter, posUp);
@@ -1104,7 +1133,7 @@ void MainField::setPlaneXZ()
 void MainField::setPlaneZX()
 {
     matrixCamera = QMatrix4x4();
-    posEye = QVector3D(0, FARSIDE*zoom, 0);
+    posEye = QVector3D(0, boundaryRange*zoom, 0);
     posCenter = QVector3D(0, 0, 0);
     posUp = QVector3D(1, 0, 0);
     matrixCamera.lookAt(posEye, posCenter, posUp);
@@ -1116,7 +1145,7 @@ void MainField::setPlaneZX()
 void MainField::setPlaneYZ()
 {
     matrixCamera = QMatrix4x4();
-    posEye = QVector3D(FARSIDE*zoom, 0, 0);
+    posEye = QVector3D(boundaryRange*zoom, 0, 0);
     posCenter = QVector3D(0, 0, 0);
     posUp = QVector3D(0, 0, 1);
     matrixCamera.lookAt(posEye, posCenter, posUp);
@@ -1127,7 +1156,7 @@ void MainField::setPlaneYZ()
 void MainField::setPlaneZY()
 {
     matrixCamera = QMatrix4x4();
-    posEye = QVector3D(-FARSIDE*zoom, 0, 0);
+    posEye = QVector3D(-boundaryRange*zoom, 0, 0);
     posCenter = QVector3D(0, 0, 0);
     posUp = QVector3D(0, 1, 0);
     matrixCamera.lookAt(posEye, posCenter, posUp);
@@ -1161,7 +1190,7 @@ void MainField::updateZoom(double zoom)
 void MainField::resetPlane()
 {
     matrixCamera = QMatrix4x4();
-    posEye = QVector3D(FARSIDE*zoom, FARSIDE*zoom, FARSIDE*zoom);
+    posEye = QVector3D(boundaryRange*zoom, boundaryRange*zoom, boundaryRange*zoom);
     posCenter = QVector3D(0, 0, 0);
     posUp = QVector3D(0, 1, 0);
     matrixCamera.lookAt(posEye, posCenter, posUp);
@@ -1176,6 +1205,8 @@ void MainField::addVorton (QVector3D botCenter, QVector3D topCenter, SArrow::vor
 {
     const double MINIMAL_LENGTH = 0.05;
     SArrow cylinder;
+    updateBoundaries(botCenter);
+    updateBoundaries(topCenter);
     cylinder.topCenter = topCenter;
     cylinder.botCenter = botCenter;
     cylinder.vortonType = drawType;
