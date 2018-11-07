@@ -1,9 +1,21 @@
 #include "solver.h"
+
+bool Solver::interrupted=false;
 bool Solver::explosion=false;
 
 /*!
 Создает экземпляр класса с нулевыми параметрами
 */
+
+bool Solver::checkFinishing()
+{
+    if (interrupted)
+    {
+        emit finishSolver();
+        return true;
+    }
+    return false;
+}
 
 Solver::Solver()
 {
@@ -64,7 +76,10 @@ void Solver::sphereSolver(const FragmentationParameters &fragPar)
 
     for (int i=0; i<solvPar.stepsNum; i++)
     {
+
         QTime stepTime=QTime::currentTime();
+        if(checkFinishing())
+            return;
         newVortons.clear();
         Eigen::VectorXd column=functions.columnCalc(solvPar.streamVel,freeVortons,normals,controlPoints);
         Eigen::VectorXd vorticities=functions.vorticitiesCalc(column);
@@ -151,6 +166,8 @@ void Solver::sphereFreeMotionSolver(const FragmentationParameters &fragPar)
     logger->writePassport(solvPar,fragPar);
     for (int i=0; i<solvPar.stepsNum; i++)
     {
+        if(checkFinishing())
+            return;
         QTime stepTime=QTime::currentTime();
         newVortons.clear();
         Eigen::VectorXd column=functions.columnCalc(relVel,freeVortons,normals,controlPoints);
@@ -226,6 +243,8 @@ void Solver::cylinderSolver(const FragmentationParameters& fragPar)
     logger->writePassport(solvPar,fragPar);
     for (int i=0; i<solvPar.stepsNum; i++)
     {
+        if(checkFinishing())
+            return;
         QTime stepTime=QTime::currentTime();
         newVortons.clear();
         Eigen::VectorXd column=functions.columnCalc(solvPar.streamVel,freeVortons,normals,controlPoints);
@@ -303,6 +322,8 @@ void Solver::rotationBodySolver(const FragmentationParameters &fragPar)
     logger->writePassport(solvPar,fragPar);
     for (int i=0; i<solvPar.stepsNum; i++)
     {
+        if(checkFinishing())
+            return;
         QTime stepTime=QTime::currentTime();
         newVortons.clear();
         Eigen::VectorXd column=functions.columnCalc(solvPar.streamVel,freeVortons,normals,controlPoints);
@@ -376,6 +397,8 @@ void Solver::rotationBodyFreeMotionSolver(const FragmentationParameters &fragPar
     logger->writePassport(solvPar,fragPar);
     for (int i=0; i<solvPar.stepsNum; i++)
     {
+        if(checkFinishing())
+            return;
         QTime stepTime=QTime::currentTime();
         newVortons.clear();
         Eigen::VectorXd column=functions.columnCalc(relVel,freeVortons,normals,controlPoints);
@@ -452,6 +475,8 @@ void Solver::rotationCutBodySolver(const FragmentationParameters &fragPar)
     logger->writePassport(solvPar,fragPar);
     for (int i=0; i<solvPar.stepsNum; i++)
     {
+        if(checkFinishing())
+            return;
         QTime stepTime=QTime::currentTime();
         newVortons.clear();
         Eigen::VectorXd column=functions.columnCalc(solvPar.streamVel,freeVortons,normals,controlPoints);
@@ -530,6 +555,8 @@ void Solver::rotationCutBodySolverNearScreen(const FragmentationParameters &frag
     logger->writePassport(solvPar,fragPar);
     for (int i=0; i<solvPar.stepsNum; i++)
     {
+        if(checkFinishing())
+           return;
         QTime stepTime=QTime::currentTime();
         newVortons.clear();
         Eigen::VectorXd column=functions.columnCalc(solvPar.streamVel,freeVortons,normals,controlPoints);
@@ -614,6 +641,8 @@ void Solver::rotationCutBodyFreeMotionSolver(const FragmentationParameters &frag
         logger->writePassport(solvPar,fragPar);
         for (int i=0; i<solvPar.stepsNum; i++)
         {
+            if(checkFinishing())
+               return;
             QTime stepTime=QTime::currentTime();
             newVortons.clear();
             Eigen::VectorXd column=functions.columnCalc(relVel,freeVortons,normals,controlPoints);
@@ -688,6 +717,8 @@ void Solver::rotationCutBodyLaunchSolver(const FragmentationParameters &fragPar)
     BodyFragmentation fragmentation(BodyType::ROTATIONBOTTOMCUT, fragPar, true);
     for (int i=0; i<solvPar.stepsNum; i++)
     {
+        if(checkFinishing())
+            return;
         fragmentation.rotationCutBodyLaunchFragmentation(i,freeMotionPar.bodyVel,solvPar.tau);
         QVector<Vector3D> controlPoints=fragmentation.getControlPoints();
         QVector<Vector3D> normals=fragmentation.getNormals();

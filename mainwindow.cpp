@@ -67,11 +67,34 @@ MainWindow::MainWindow(QWidget *parent) :
     connect (solver, SIGNAL(variatingFinished()), this, SLOT(showInfo()));
     connect (solver, SIGNAL(sendMaxGamma(double)), this, SLOT(setMaxGamma(double)));
     connect (ui->updateScreenAction, SIGNAL(triggered(bool)), this, SLOT(updateScreen()));
+    connect (solver, SIGNAL(finishSolver()), this, SLOT(solverFinished()));
     displaySphere=true;
     showSphere();
     ui->openGLWidget->backgroundColor = Qt::white;
     QApplication::setStyle(QStyleFactory::create("fusion"));
 
+    closeBox.setWindowTitle("Завершение работы");
+    closeBox.setLabelText("Ожидайте завершения работы программы");
+    closeBox.setMaximum(0);
+    closeBox.setMinimum(0);
+    closeBox.setValue(0);
+    closeBox.setCancelButton(0);
+    closeBox.setWindowFlags(Qt::Window | Qt::WindowTitleHint | Qt::CustomizeWindowHint);
+
+    closeBox.close();
+    solving=false;
+
+}
+
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    Solver::interrupted=true;
+    if (solving)
+    {
+        closeBox.open();
+        closeBox.show();
+        event->ignore();
+    }
 }
 
 /*!
@@ -309,6 +332,7 @@ void MainWindow::on_sphereSolverPushButton_clicked()
 
     *solver=Solver(solvPar);
     QFuture<void> sphereFuture=QtConcurrent::run(solver,&Solver::sphereSolver, fragPar);
+    solving=true;
     ui->pointsRaisingSphereLineEdit->setDisabled(true);
     ui->epsilonSphereLineEdit->setDisabled(true);
     ui->deltaSphereFragmLineEdit->setDisabled(true);
@@ -371,7 +395,7 @@ void MainWindow::on_variateSphereSolverPushButton_clicked()
     *solver=Solver(solvPar);
     ui->sphereProgressBar->setEnabled(false);
     QFuture<void> sphereFuture=QtConcurrent::run(solver,&Solver::variateSphereParameters, fragPar,variateSettings->getInfo());
-
+    solving=true;
 }
 
 /*!
@@ -437,7 +461,7 @@ void MainWindow::on_cylinderSolverPushButton_clicked()
 
     *solver=Solver(solvPar);
     QFuture<void> cylinderFuture=QtConcurrent::run(solver,&Solver::cylinderSolver, fragPar);
-
+    solving=true;
     ui->pointsRaisingCylinderLineEdit->setDisabled(true);
     ui->epsilonCylinderLineEdit->setDisabled(true);
     ui->deltaCylinderFragmLineEdit->setDisabled(true);
@@ -513,6 +537,7 @@ void MainWindow::on_rotationBodySolverPushButton_clicked()
 
     *solver=Solver(solvPar);
     QFuture<void> rotationBodyFuture=QtConcurrent::run(solver,&Solver::rotationBodySolver, fragPar);
+    solving=true;
 
     ui->pointsRaisingRotationBodyLineEdit->setDisabled(true);
     ui->epsilonRotationBodyLineEdit->setDisabled(true);
@@ -533,6 +558,13 @@ void MainWindow::on_rotationBodySolverPushButton_clicked()
 void MainWindow::showInfo()
 {
     QMessageBox::information(this, tr("Информация"),tr("Вариация параметров завершена"));
+}
+
+void MainWindow::solverFinished()
+{
+    closeBox.close();
+    solving=false;
+    close();
 }
 
 void MainWindow::setMaxGamma(double maxGamma)
@@ -905,7 +937,7 @@ void MainWindow::on_rotationCutBodySolverPushButton_clicked()
 
     *solver=Solver(solvPar);
     QFuture<void> rotationCutBodyFuture=QtConcurrent::run(solver,&Solver::rotationCutBodySolver, fragPar);
-
+    solving=true;
     ui->pointsRaisingRotationCutBodyLineEdit->setDisabled(true);
     ui->radRotationCutBodyLineEdit->setDisabled(true);
     ui->epsilonRotationCutBodyLineEdit->setDisabled(true);
@@ -994,7 +1026,7 @@ void MainWindow::on_rotationCutBodyFreeMotionSolverPushButton_clicked()
     FreeMotionParameters freeMotionPar=settings->getFreeMotionParameters();
     *solver=Solver(solvPar,freeMotionPar);
     QFuture<void> rotationCutBodyFuture=QtConcurrent::run(solver,&Solver::rotationCutBodyFreeMotionSolver, fragPar);
-
+    solving=true;
     ui->pointsRaisingRotationCutBodyLineEdit->setDisabled(true);
     ui->radRotationCutBodyLineEdit->setDisabled(true);
     ui->epsilonRotationCutBodyLineEdit->setDisabled(true);
@@ -1081,6 +1113,7 @@ void MainWindow::on_rotationCutBodyLaunchSolverPushButton_clicked()
     FreeMotionParameters freeMotionPar=settings->getFreeMotionParameters();
     *solver=Solver(solvPar,freeMotionPar);
     QFuture<void> rotationCutBodyFuture=QtConcurrent::run(solver,&Solver::rotationCutBodyLaunchSolver, fragPar);
+    solving=true;
 
     ui->pointsRaisingRotationCutBodyLineEdit->setDisabled(true);
     ui->radRotationCutBodyLineEdit->setDisabled(true);
@@ -1149,6 +1182,7 @@ void MainWindow::on_sphereFreeMotionSolverPushButton_clicked()
     FreeMotionParameters freeMotionPar=settings->getFreeMotionParameters();
     *solver=Solver(solvPar,freeMotionPar);
     QFuture<void> sphereFuture=QtConcurrent::run(solver,&Solver::sphereFreeMotionSolver, fragPar);
+    solving=true;
     ui->pointsRaisingSphereLineEdit->setDisabled(true);
     ui->epsilonSphereLineEdit->setDisabled(true);
     ui->deltaSphereFragmLineEdit->setDisabled(true);
@@ -1226,7 +1260,7 @@ void MainWindow::on_variateCylinderSolverPushButton_clicked()
     fragPar.pointsRaising=ui->pointsRaisingCylinderLineEdit->text().toDouble();
 
     SolverParameters solvPar=settings->getSolverParameters();
-
+    solving=true;
     *solver=Solver(solvPar);
     ui->cylinderProgressBar->setEnabled(false);
     QFuture<void> cylinderFuture=QtConcurrent::run(solver,&Solver::variateCylinderParameters, fragPar,variateSettings->getInfo());
@@ -1293,7 +1327,7 @@ void MainWindow::on_variateRotationBodySolverPushButton_clicked()
     fragPar.pointsRaising=ui->pointsRaisingRotationBodyLineEdit->text().toDouble();
 
     SolverParameters solvPar=settings->getSolverParameters();
-
+    solving=true;
     *solver=Solver(solvPar);
     QFuture<void> rotationBodyFuture=QtConcurrent::run(solver,&Solver::variateRotationBodyParameters, fragPar,variateSettings->getInfo());
 }
@@ -1370,6 +1404,7 @@ void MainWindow::on_variateRotationCutBodySolverPushButton_clicked()
 
     *solver=Solver(solvPar);
     QFuture<void> rotationCutBodyFuture=QtConcurrent::run(solver,&Solver::variateRotationCutBodyParameters, fragPar, variateSettings->getInfo());
+    solving=true;
 }
 
 /*!
@@ -1444,7 +1479,7 @@ void MainWindow::on_rotationCutBodyNearScreenPushButton_clicked()
 
     *solver=Solver(solvPar);
     QFuture<void> rotationCutBodyFuture=QtConcurrent::run(solver,&Solver::rotationCutBodySolverNearScreen, fragPar, variateSettings->getScreenDistance());
-
+    solving=true;
     ui->pointsRaisingRotationCutBodyLineEdit->setDisabled(true);
     ui->radRotationCutBodyLineEdit->setDisabled(true);
     ui->epsilonRotationCutBodyLineEdit->setDisabled(true);
@@ -1522,7 +1557,7 @@ void MainWindow::on_rotationBodyFreeMotionSolverPushButton_clicked()
 
     *solver=Solver(solvPar,freeMotionPar);
     QFuture<void> rotationBodyFuture=QtConcurrent::run(solver,&Solver::rotationBodyFreeMotionSolver, fragPar);
-
+    solving=true;
     ui->pointsRaisingRotationBodyLineEdit->setDisabled(true);
     ui->epsilonRotationBodyLineEdit->setDisabled(true);
     ui->deltaRotationBodyFragmLineEdit->setDisabled(true);

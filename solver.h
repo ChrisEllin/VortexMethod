@@ -8,16 +8,20 @@
 
     Главный класс, содержащий все расчетчики.
 */
+
 class Solver: public QObject
 {
     Q_OBJECT
 private:
+
     SolverParameters solvPar; ///<Параметры расчета
     FreeMotionParameters freeMotionPar; ///<Параметры свободного движения
     QVector<Vector3D> cAerodynamics; ///<Вектор значений С
     QVector<Vector3D> forces; ///<Вектор значений силы
     QString logPath; ///<Путь к каталогу для записи результатов расчета
+    bool checkFinishing();
 public:
+    static bool interrupted;
     Solver();
     Solver(const SolverParameters& parameters);
     Solver(const SolverParameters& parameters, const FreeMotionParameters& motionParameters);
@@ -40,6 +44,7 @@ public:
     bool checkingVariate(double& dispersion, double& oldDispersion,FragmentationParameters &fragPar, FragmentationParameters &resultFrag, SolverParameters& resultSolv);
     bool checkingForceVariate(double& dispersion, double& oldDispersion,FragmentationParameters &fragPar, FragmentationParameters &resultFrag, SolverParameters& resultSolv);
 signals:
+    void finishSolver();
     void sendMaxGamma(double maxGamma);
     void repaintGUI(const QVector<Vorton>& vortons, const QVector<std::shared_ptr<MultiFrame>>& frames); ///<Сигнал о перерисовке интерфейса
     void variatingFinished(); ///<Сигнал об окончании  варьирования

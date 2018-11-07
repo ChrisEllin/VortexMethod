@@ -8,6 +8,7 @@
 #include <QShortcut>
 #include "variatesettings.h"
 #include "preprocessorsettings.h"
+#include <QProgressDialog>
 
 namespace Ui {
 class MainWindow;
@@ -21,13 +22,16 @@ class MainWindow : public QMainWindow
 
 public:
     explicit MainWindow(QWidget *parent = 0);
+    void closeEvent(QCloseEvent *event);
     ~MainWindow();
 
 private:
+    bool solving;
     Ui::MainWindow *ui; ///<Указатель на интерфейс основного окна
     SolverSettings *settings; ///<Указатель на класс окна настроек расчета
     Solver *solver; ///<Указатель на класс-расчетчик
     VariateSettings *variateSettings; ///<Указатель на класс окна настроек вариации
+    QProgressDialog closeBox;
     PreprocessorSettings *preprocessor;
     bool displaySphere; ///<Необходимость отображения трехмерной сферы
     QShortcut *keyCtrlO; ///<Указатель на хоткей (Ctrl+O)
@@ -76,6 +80,7 @@ private slots:
 
 public slots:
     void showInfo();
+    void solverFinished();
     void setMaxGamma(double maxGamma);
     void recieveProgressSphere(const int percentage);
     void recieveProgressCylinder(const int percentage);
