@@ -27,6 +27,7 @@ MainWindow::MainWindow(QWidget *parent) :
     format.setSamples(8);
     ui->openGLWidget->setFormat(format);
     solver=new Solver();
+    waitForOpen=new Logger();
     settings =new SolverSettings();
     variateSettings = new VariateSettings();
     preprocessor = new PreprocessorSettings();
@@ -68,6 +69,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect (solver, SIGNAL(sendMaxGamma(double)), this, SLOT(setMaxGamma(double)));
     connect (ui->updateScreenAction, SIGNAL(triggered(bool)), this, SLOT(updateScreen()));
     connect (solver, SIGNAL(finishSolver()), this, SLOT(solverFinished()));
+    connect (ui->openVortonsDirAction, SIGNAL(triggered()),this, SLOT(openDirectory()));
+    connect (waitForOpen, SIGNAL(sendVortons(const QVector<Vorton>&, const QVector<Vorton>&)), this , SLOT(drawGUI(const QVector<Vorton>&, const QVector<Vorton>&)),Qt::BlockingQueuedConnection);
     displaySphere=true;
     showSphere();
     ui->openGLWidget->backgroundColor = Qt::white;
@@ -199,6 +202,7 @@ MainWindow::~MainWindow()
     delete keyCtrlO;
     delete keyCtrlH;
     delete keyCtrlR;
+    delete waitForOpen;
     delete variateSettings;
 }
 
@@ -280,6 +284,12 @@ void MainWindow::setParameters(RotationBodyParameters &rotBodyPar)
     ui->xEndRotationBodyLineEdit->setText(QString::number(rotBodyPar.xEnd));
     ui->sectionDistanceRotationBodyLineEdit->setText(QString::number(rotBodyPar.sectionDistance));
     ui->tabWidget->setCurrentIndex(2);
+}
+
+void MainWindow::openDirectory()
+{
+    QString vortonsDir=QFileDialog::getExistingDirectory(this, tr("Выберите папку"), "/home", QFileDialog::ShowDirsOnly|QFileDialog::DontResolveSymlinks);
+    QFuture<void> sphereFuture=QtConcurrent::run(waitForOpen, &Logger::openVortonFiles,vortonsDir);
 }
 
 /*!
@@ -760,6 +770,7 @@ void MainWindow::recieveProgressSphere(const int percentage)
         ui->sphereSolverPushButton->setDisabled(false);
         ui->variateSphereSolverPushButton->setDisabled(false);
         ui->sphereFreeMotionSolverPushButton->setDisabled(false);
+        solving=false;
     }
 }
 
@@ -782,6 +793,7 @@ void MainWindow::recieveProgressCylinder(const int percentage)
         ui->diameterCylinderLineEdit->setDisabled(false);
         ui->cylinderSolverPushButton->setDisabled(false);
         ui->variateCylinderSolverPushButton->setDisabled(false);
+        solving=false;
     }
 }
 
@@ -805,6 +817,7 @@ void MainWindow::recieveProgressRotationBody(const int percentage)
         ui->rotationBodySolverPushButton->setDisabled(false);
         ui->variateRotationBodySolverPushButton->setDisabled(false);
         ui->rotationBodyFreeMotionSolverPushButton->setDisabled(false);
+        solving=false;
     }
 }
 
@@ -832,6 +845,7 @@ void MainWindow::recieveProgressRotationCutBody(const int percentage)
         ui->rotationCutBodyLaunchSolverPushButton->setDisabled(false);
         ui->rotationCutBodyNearScreenPushButton->setDisabled(false);
         ui->variateRotationCutBodySolverPushButton->setDisabled(false);
+        solving=false;
     }
 }
 
@@ -860,7 +874,31 @@ void MainWindow::drawGUI(const QVector<Vorton> &vortons, const QVector<std::shar
     {
         QVector3D mid=Vector3D::toQVector3D(vortons[i].getMid());
         QVector3D tail=Vector3D::toQVector3D(vortons[i].getTail());
-        if (checkDrawing(vortons[i].getMid(),vortons[i].getTail())                                                                             )
+        if (checkDrawing(vortons[i].getMid(),vortons[i].getTail()))
+            emit drawSegment(2.0*mid-tail, tail);
+    }
+}
+
+
+void MainWindow::drawGUI(const QVector<Vorton> &vortons, const QVector<Vorton> &frames)
+{
+    clearSegments();
+    for (int i=0; i<frames.size(); i++)
+    {
+        QVector3D mid=Vector3D::toQVector3D(frames[i].getMid());
+        QVector3D tail=Vector3D::toQVector3D(frames[i].getTail());
+         emit drawSegment(2.0*mid-tail, tail,SArrow::Grid);
+    }
+    ui->freeVortonsQuantityLineEdit->setText(QString::number(vortons.size()));
+    QVector<double> vorticities;
+    for (int i=0; i<vortons.size(); i++)
+        vorticities.push_back(vortons[i].getVorticity());
+    ui->maxGammaLineEdit->setText(QString::number(*std::max_element(vorticities.begin(),vorticities.end(),Vector3D::fabsCompare)));
+    for (int i=0; i<vortons.size(); i++)
+    {
+        QVector3D mid=Vector3D::toQVector3D(vortons[i].getMid());
+        QVector3D tail=Vector3D::toQVector3D(vortons[i].getTail());
+        if (checkDrawing(vortons[i].getMid(),vortons[i].getTail()))
             emit drawSegment(2.0*mid-tail, tail);
     }
 }

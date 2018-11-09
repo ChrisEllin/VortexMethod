@@ -1,4 +1,4 @@
-#ifndef MAINWINDOW_H
+ #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
 #include <QMainWindow>
@@ -24,7 +24,8 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     void closeEvent(QCloseEvent *event);
     ~MainWindow();
-
+    QVector<Vorton> currentVortons;
+    QVector<std::shared_ptr<MultiFrame>> currentFrames;
 private:
     bool solving;
     Ui::MainWindow *ui; ///<Указатель на интерфейс основного окна
@@ -32,19 +33,20 @@ private:
     Solver *solver; ///<Указатель на класс-расчетчик
     VariateSettings *variateSettings; ///<Указатель на класс окна настроек вариации
     QProgressDialog closeBox;
+    Logger* waitForOpen;
     PreprocessorSettings *preprocessor;
     bool displaySphere; ///<Необходимость отображения трехмерной сферы
     QShortcut *keyCtrlO; ///<Указатель на хоткей (Ctrl+O)
     QShortcut *keyCtrlR; ///<Указатель на хоткей (Ctrl+R)
     QShortcut *keyCtrlH; ///<Указатель на хоткей (Ctrl+H)
-    QVector<Vorton> currentVortons;
-    QVector<std::shared_ptr<MultiFrame>> currentFrames;
+
     bool checkDrawing(const Vector3D &mid, const Vector3D &tail);
     void setParameters(SphereParameters &sphPar);
     void setParameters(CylinderParameters &cylPar);
     void setParameters(RotationBodyParameters &rotBodyPar);
-private slots:
 
+private slots:
+    void openDirectory();
     void wheelEvent (QWheelEvent* e);
     void on_toolButtonViewXY_clicked();
     void on_toolButtonViewYX_clicked();
@@ -87,6 +89,7 @@ public slots:
     void recieveProgressRotationBody(const int percentage);
     void recieveProgressRotationCutBody(const int percentage);
     void drawGUI(const QVector<Vorton>& vortons, const QVector<std::shared_ptr<MultiFrame>>& frames);
+    void drawGUI(const QVector<Vorton>& vortons, const QVector<Vorton>& frames);
 signals:
     void setPlaneXY(); ///<Сигнал о переходе к YX отображению
     void setPlaneYX(); ///<Сигнал о переходе к XY отображению

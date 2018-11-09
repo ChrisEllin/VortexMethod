@@ -6,6 +6,8 @@
 #include "framecalculations.h"
 #include <QMessageBox>
 #include "solversettings.h"
+#include "QFileDialog"
+#include <dos.h>
 
 /** \file logger.h
     \brief Заголовочный файл для описания классов и перечистлений для работы с файлами
@@ -42,6 +44,7 @@ public:
     Logger();
     Logger(BodyType _type, SolvType _stype=NOOPTIMIZATION);
     Logger(BodyType _type, QString _path, SolvType _stype=NOOPTIMIZATION);
+    void writeVortons(QVector<std::shared_ptr<MultiFrame>> frames, QVector<Vorton> freevortons, const int stepNum);
     void createFiles();
     void writeCpFile(const QVector<double> cp, const QVector<double> tetas);
     void writeLogs(const int stepNum, const double stepTime, const int freeVortonsSize, const Counters beforeIntegrC, const Counters afterIntegrC, const Timers beforeIntegrT, const Timers afterIntegrT, const Restrictions restr);
@@ -51,6 +54,9 @@ public:
     void writeSolverTime(const double solvTime);
     void closeFiles();
     QString getPath();
+    void openVortonFiles(QString vortonsDir);
+signals:
+    void sendVortons(const QVector<Vorton>&, const QVector<Vorton>&);
 };
 
 #endif // LOGGER_H

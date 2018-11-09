@@ -117,16 +117,73 @@ Logger::Logger(BodyType _type, QString _path, SolvType _stype)
     createFiles();
 }
 
+void Logger::writeVortons(QVector<std::shared_ptr<MultiFrame> > frames, QVector<Vorton> freevortons, const int stepNum)
+{
+    QString currentStepStr=QString::number(stepNum);
+    while(currentStepStr.size()!=5)
+        currentStepStr.push_front(QString::number(0));
+    QString vortonsPath=path+"/VortonFiles/Kadr"+currentStepStr+".txt";
+    QFile vortonFile(vortonsPath);
+    if (vortonFile.open(QIODevice::WriteOnly))
+    {
+        QTextStream vortonsTextStream(&vortonFile);
+        QString vortonString;
+        vortonString=QString::number(freevortons.size())+"\t";
+        int framesSize=0;
+        for (int i=0; i<frames.size(); i++)
+            framesSize+=frames[i]->getAnglesNum();
+        vortonString+=QString::number(framesSize)+"\n\n";
+        vortonsTextStream<<vortonString;
+        vortonsTextStream.flush();
+        for (int i=0; i<freevortons.size();i++)
+        {
+            vortonString.clear();
+            vortonString=QString::number(i)+"\t";
+            vortonString+=QString::number(freevortons[i].getVorticity())+"\t";
+            vortonString+=QString::number(freevortons[i].getMid().x())+"\t";
+            vortonString+=QString::number(freevortons[i].getMid().y())+"\t";
+            vortonString+=QString::number(freevortons[i].getMid().z())+"\t";
+            vortonString+=QString::number(freevortons[i].getTail().x()-freevortons[i].getMid().x())+"\t";
+            vortonString+=QString::number(freevortons[i].getTail().y()-freevortons[i].getMid().y())+"\t";
+            vortonString+=QString::number(freevortons[i].getTail().z()-freevortons[i].getMid().z())+"\t";
+            vortonsTextStream<<vortonString+"\n\n";
+            vortonsTextStream.flush();
+        }
+        int currentVorton=freevortons.size();
+        for (int i=0; i<frames.size();i++)
+        {
+            for (int j=0; j<frames[i]->getAnglesNum();j++)
+            {
+                vortonString.clear();
+                vortonString=QString::number(currentVorton)+"\t";
+                vortonString+=QString::number(frames[i]->at(j).getVorticity())+"\t";
+                vortonString+=QString::number(frames[i]->at(j).getMid().x())+"\t";
+                vortonString+=QString::number(frames[i]->at(j).getMid().y())+"\t";
+                vortonString+=QString::number(frames[i]->at(j).getMid().z())+"\t";
+                vortonString+=QString::number(frames[i]->at(j).getTail().x()-frames[i]->at(j).getMid().x())+"\t";
+                vortonString+=QString::number(frames[i]->at(j).getTail().y()-frames[i]->at(j).getMid().y())+"\t";
+                vortonString+=QString::number(frames[i]->at(j).getTail().z()-frames[i]->at(j).getMid().z())+"\t";
+                vortonsTextStream<<vortonString+"\n\n";
+                vortonsTextStream.flush();
+                currentVorton++;
+            }
+        }
+    }
+    vortonFile.close();
+}
+
 /*!
 Создает необходимые файлы внутри текущего каталога. Функция вызывается автоматически при создании объекта класса.
 */
 
 void Logger::createFiles()
 {
+    QDir folder(path);
+    folder.mkdir("VortonFiles");
     logFile=std::shared_ptr<QFile>(new QFile(path+"/logs.txt"));
     passportFile=std::shared_ptr<QFile>(new QFile(path+"/passport.txt"));
     forcesFile=std::shared_ptr<QFile>(new QFile(path+"/forces.csv"));
-    if (type==SPHERE)
+    if (type==SPHERE||type==CYLINDER)
     {
         cpFile=std::shared_ptr<QFile>(new QFile(path+"/cp.csv"));
         if (cpFile->open(QIODevice::WriteOnly))
@@ -373,7 +430,7 @@ void Logger::closeFiles()
         forcesFile->close();
     if (passportFile->isOpen())
         passportFile->close();
-    if (type==SPHERE)
+    if (type==SPHERE||type==CYLINDER)
     {
         if (cpFile->isOpen())
             cpFile->close();
@@ -388,3 +445,52 @@ QString Logger::getPath()
 {
     return path;
 }
+
+void Logger::openVortonFiles(QString vortonsDir)
+{
+    QDir folder(vortonsDir);
+    QStringList fileList=folder.entryList();
+    for (int i=2; i<fileList.size(); i++)
+    {
+        QString vortonsPath=vortonsDir+"/"+fileList[i];
+        QFile vortonsFile(vortonsPath);
+        if (vortonsFile.open(QIODevice::ReadOnly))
+        {
+            QString line = vortonsFile.readLine();
+            QStringList lineSplitted=line.split("\t", QString::SkipEmptyParts);
+            int vortonsSize=lineSplitted[0].toInt();
+            int framesSize=lineSplitted[1].toInt();
+            QVector<Vorton> freeVortons;
+            QVector<Vorton> frames;
+
+            while(lineSplitted[0].toInt()!=vortonsSize-1)
+            {
+                line=vortonsFile.readLine();
+                if (line!="\n")
+                {
+                lineSplitted=line.split("\t", QString::SkipEmptyParts);
+                freeVortons.push_back(Vorton(Vector3D(lineSplitted[2].toDouble(),lineSplitted[3].toDouble(),lineSplitted[4].toDouble()),
+                        Vector3D(lineSplitted[2].toDouble()+lineSplitted[5].toDouble(),lineSplitted[3].toDouble()+lineSplitted[6].toDouble(),lineSplitted[4].toDouble()+lineSplitted[7].toDouble()),
+                        lineSplitted[1].toDouble(),0.1));
+                 }
+            }
+            while(lineSplitted[0].toInt()!=vortonsSize+framesSize-1)
+            {
+
+                line=vortonsFile.readLine();
+                if (line!="\n")
+                {
+                lineSplitted=line.split("\t", QString::SkipEmptyParts);
+                frames.push_back(Vorton(Vector3D(lineSplitted[2].toDouble(),lineSplitted[3].toDouble(),lineSplitted[4].toDouble()),
+                        Vector3D(lineSplitted[2].toDouble()+lineSplitted[5].toDouble(),lineSplitted[3].toDouble()+lineSplitted[6].toDouble(),lineSplitted[4].toDouble()+lineSplitted[7].toDouble()),
+                        lineSplitted[1].toDouble(),0.1));
+                }
+            }
+            emit sendVortons(freeVortons,frames);
+            QThread::sleep(1);
+        }
+        vortonsFile.close();
+    }
+
+}
+

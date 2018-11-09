@@ -92,7 +92,7 @@ void Solver::sphereSolver(const FragmentationParameters &fragPar)
 
         functions.displacementCalc(freeVortons,newVortons,solvPar.tau,solvPar.streamVel,solvPar.eDelta,solvPar.fiMax,solvPar.maxMove);
         Vector3D force=functions.forceCalc(solvPar.streamVel, solvPar.streamPres,solvPar.density,frames,freeVortons, solvPar.tau, squares, controlPointsRaised, normals);
-        functions.cpSum(i,solvPar.stepsNum, cp, fragPar.sphereFiFragNum, fragPar.sphereRad, fragPar.pointsRaising, tetas,solvPar.streamVel, solvPar.streamPres,solvPar.density,frames, freeVortons, solvPar.tau, center, controlPointsRaised);
+        functions.cpSum(i,solvPar.stepsNum, cp, fragPar.sphereFiFragNum, fragPar.sphereRad, fragPar.pointsRaising, tetas,solvPar.streamVel, solvPar.streamPres,solvPar.density,frames, freeVortons, solvPar.tau, center);
         cAerodynamics[i] = force/(solvPar.density*solvPar.streamVel.lengthSquared()*0.5*M_PI*pow(fragPar.sphereRad,2));
         forces[i]=force;
 
@@ -117,7 +117,7 @@ void Solver::sphereSolver(const FragmentationParameters &fragPar)
         functions.clear();
         logger->writeForces(force,cAerodynamics[i]);
         logger->writeLogs(i,stepTime.elapsed()*0.001, freeVortons.size(), countersBeforeIntegration,countersAfterIntegration, timersBeforeIntegration, timersAfterIntegration, restrictions);
-
+        logger->writeVortons(frames,freeVortons,i);
         emit sendProgressSphere(i);
         emit repaintGUI(freeVortons, frames);
 
@@ -133,6 +133,7 @@ void Solver::sphereSolver(const FragmentationParameters &fragPar)
     logger->writeSolverTime(start.elapsed()*0.001);
     logger->closeFiles();
     delete logger;
+
 }
 
 /*!
@@ -185,7 +186,7 @@ void Solver::sphereFreeMotionSolver(const FragmentationParameters &fragPar)
         forces[i]=force;
         freeVortons.append(newVortons);
 
-        functions.cpSum(i, solvPar.stepsNum,cp, fragPar.sphereFiFragNum, fragPar.sphereRad, fragPar.pointsRaising, tetas,solvPar.streamVel, solvPar.streamPres,solvPar.density,frames, freeVortons, solvPar.tau, center, controlPointsRaised);
+        functions.cpSum(i, solvPar.stepsNum,cp, fragPar.sphereFiFragNum, fragPar.sphereRad, fragPar.pointsRaising, tetas,solvPar.streamVel, solvPar.streamPres,solvPar.density,frames, freeVortons, solvPar.tau, center);
 
         Counters countersBeforeIntegration=functions.getCounters();
         Timers timersBeforeIntegration=functions.getTimers();
@@ -207,7 +208,7 @@ void Solver::sphereFreeMotionSolver(const FragmentationParameters &fragPar)
 
         logger->writeForces(force,cAerodynamics[i]);
         logger->writeLogs(i,stepTime.elapsed()*0.001, freeVortons.size(), countersBeforeIntegration,countersAfterIntegration, timersBeforeIntegration, timersAfterIntegration, restrictions);
-
+        logger->writeVortons(frames,freeVortons,i);
         emit sendProgressSphere(i);
         emit repaintGUI(freeVortons, frames);
 
@@ -238,6 +239,8 @@ void Solver::cylinderSolver(const FragmentationParameters& fragPar)
 
     QVector<Vorton> freeVortons;
     QVector<Vorton> newVortons;
+    QVector<double> cp(fragPar.cylinderFiFragNum);
+
     emit updateCylinderMaximum(solvPar.stepsNum-1);
 
     logger->writePassport(solvPar,fragPar);
@@ -262,7 +265,7 @@ void Solver::cylinderSolver(const FragmentationParameters& fragPar)
         cAerodynamics[i].y(2.0*force.y()/(solvPar.density*solvPar.streamVel.lengthSquared()*fragPar.cylinderDiameter*fragPar.cylinderHeight));
         cAerodynamics[i].z(2.0*force.z()/(solvPar.density*solvPar.streamVel.lengthSquared()*fragPar.cylinderDiameter*fragPar.cylinderHeight));
         forces[i]=force;
-
+        functions.cpSumCylinder(i,solvPar.stepsNum, cp, fragPar.cylinderFiFragNum, fragPar.cylinderDiameter,fragPar.cylinderHeight, fragPar.pointsRaising,solvPar.streamVel, solvPar.streamPres,solvPar.density,frames, freeVortons, solvPar.tau);
         freeVortons.append(newVortons);
 
         Counters countersBeforeIntegration=functions.getCounters();
@@ -283,12 +286,19 @@ void Solver::cylinderSolver(const FragmentationParameters& fragPar)
 
         logger->writeForces(force,Vector3D(0.0,0.0,0.0));
         logger->writeLogs(i,stepTime.elapsed()*0.001,freeVortons.size(), countersBeforeIntegration,countersAfterIntegration, timersBeforeIntegration, timersAfterIntegration, restrictions);
+        logger->writeVortons(frames,freeVortons,i);
 
         emit sendProgressCylinder(i);
         emit repaintGUI(freeVortons, frames);
 
 
     }
+    QVector<double> fis;
+    double fi0=2*M_PI/fragPar.cylinderFiFragNum;
+    for (int i=0; i<fragPar.cylinderFiFragNum;i++)
+        fis.push_back(fi0*(i+0.5));
+    functions.cpAverage(cp,solvPar.stepsNum);
+    logger->writeCpFile(cp,fis);
     logger->writeSolverTime(start.elapsed()*0.001);
     logger->closeFiles();
     delete logger;
@@ -359,6 +369,7 @@ void Solver::rotationBodySolver(const FragmentationParameters &fragPar)
         functions.clear();
         logger->writeForces(force,Vector3D(0.0,0.0,0.0));
         logger->writeLogs(i,stepTime.elapsed()*0.001,freeVortons.size(), countersBeforeIntegration,countersAfterIntegration, timersBeforeIntegration, timersAfterIntegration, restrictions);
+        logger->writeVortons(frames,freeVortons,i);
 
         emit sendProgressRotationBody(i);
         emit repaintGUI(freeVortons, frames);
@@ -436,6 +447,7 @@ void Solver::rotationBodyFreeMotionSolver(const FragmentationParameters &fragPar
         FrameCalculations::translateVortons(translation, freeVortons);
         logger->writeForces(force,Vector3D(0.0,0.0,0.0));
         logger->writeLogs(i,stepTime.elapsed()*0.001, freeVortons.size(), countersBeforeIntegration,countersAfterIntegration, timersBeforeIntegration, timersAfterIntegration, restrictions);
+        logger->writeVortons(frames,freeVortons,i);
 
         emit sendProgressRotationBody(i);
         emit repaintGUI(freeVortons, frames);
@@ -513,6 +525,7 @@ void Solver::rotationCutBodySolver(const FragmentationParameters &fragPar)
 
         logger->writeForces(force,Vector3D(0.0,0.0,0.0));
         logger->writeLogs(i,stepTime.elapsed()*0.001,freeVortons.size(), countersBeforeIntegration,countersAfterIntegration, timersBeforeIntegration, timersAfterIntegration, restrictions);
+        logger->writeVortons(frames,freeVortons,i);
 
         emit sendProgressRotationCutBody(i);
         emit repaintGUI(freeVortons, frames);
@@ -602,6 +615,7 @@ void Solver::rotationCutBodySolverNearScreen(const FragmentationParameters &frag
 
         logger->writeForces(force,Vector3D(0.0,0.0,0.0));
         logger->writeLogs(i,stepTime.elapsed()*0.001,freeVortons.size(),countersBeforeIntegration,countersAfterIntegration, timersBeforeIntegration, timersAfterIntegration, restrictions);
+        logger->writeVortons(frames,freeVortons,i);
 
         emit sendProgressRotationCutBody(i);
         emit repaintGUI(freeVortons, frames);
@@ -680,6 +694,7 @@ void Solver::rotationCutBodyFreeMotionSolver(const FragmentationParameters &frag
 
             logger->writeForces(force,Vector3D(0.0,0.0,0.0));
             logger->writeLogs(i,stepTime.elapsed()*0.001,freeVortons.size(),countersBeforeIntegration,countersAfterIntegration, timersBeforeIntegration, timersAfterIntegration, restrictions);
+            logger->writeVortons(frames,freeVortons,i);
 
             emit sendProgressRotationCutBody(i);
             emit repaintGUI(freeVortons, frames);
@@ -832,6 +847,7 @@ void Solver::rotationCutBodyLaunchSolver(const FragmentationParameters &fragPar)
 
         logger->writeForces(force,Vector3D(0.0,0.0,0.0));
         logger->writeLogs(i,stepTime.elapsed()*0.001,freeVortons.size(),countersBeforeIntegration,countersAfterIntegration, timersBeforeIntegration, timersAfterIntegration, restrictions);
+        logger->writeVortons(frames,freeVortons,i);
 
         emit sendProgressRotationCutBody(i);
         emit repaintGUI(freeVortons/*+symFreeVortons*/, frames/*+symFrames*/);

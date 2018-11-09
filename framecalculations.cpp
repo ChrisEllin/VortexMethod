@@ -130,7 +130,9 @@ void FrameCalculations::unionVortons(QVector<Vorton> &vortons,const double eStar
                     vortons[i]=newVorton;
                     i--;
                     vortons.remove(j);
+                    break;
                 }
+
             }
         }
     }
@@ -462,7 +464,7 @@ Vector3D FrameCalculations::forceCalc(const Vector3D streamVel, double streamPre
 \param[in] tau Величина шага
 \param[in] center Координата центра сферы
 */
-void FrameCalculations::cpSum(const int stepNum, const int stepsQuant, QVector<double> &cp, const int fiFragNum, const double radius, const double pointsRaising, const QVector<double> &tetas, const Vector3D streamVel, const double streamPres, const double density, const QVector<std::shared_ptr<MultiFrame>> frames, QVector<Vorton> freeVortons, double tau, const Vector3D center, const QVector<Vector3D> &controlpoints)
+void FrameCalculations::cpSum(const int stepNum, const int stepsQuant, QVector<double> &cp, const int fiFragNum, const double radius, const double pointsRaising, const QVector<double> &tetas, const Vector3D streamVel, const double streamPres, const double density, const QVector<std::shared_ptr<MultiFrame>> frames, QVector<Vorton> freeVortons, double tau, const Vector3D center)
 {
     int cpQuant;
     if (stepsQuant>200)
@@ -476,7 +478,27 @@ void FrameCalculations::cpSum(const int stepNum, const int stepsQuant, QVector<d
         {
             Vector3D point((radius+pointsRaising)*sin(tetas[i])*cos(fi), (radius+pointsRaising)*sin(tetas[i])*sin(fi),(radius+pointsRaising)*cos(tetas[i]));
             point+=center;
-            double pres=pressureCalc(controlpoints[i]/*point*/, streamVel,streamPres,density,frames,freeVortons,tau);
+            double pres=pressureCalc(point, streamVel,streamPres,density,frames,freeVortons,tau);
+            cp[i]+=(pres-streamPres)/(density*Vector3D::dotProduct(streamVel,streamVel)*0.5);
+        }
+    }
+}
+
+void FrameCalculations::cpSumCylinder(const int stepNum, int stepsQuant, QVector<double> &cp, const int fiFragNum, const double diameter, const double height, const double pointsRaising, const Vector3D streamVel, const double streamPres, const double density, const QVector<std::shared_ptr<MultiFrame> > frames, QVector<Vorton> freeVortons, double tau)
+{
+    int cpQuant;
+    if (stepsQuant>200)
+        cpQuant=200;
+    else
+        cpQuant=stepsQuant;
+    if (stepNum>=stepsQuant-cpQuant)
+    {
+        double fi0=M_PI*2.0/fiFragNum;
+        for (int i=0; i<fiFragNum;i++)
+        {
+            double fi=fi0*(i+0.5);
+            Vector3D point((diameter/2.0+pointsRaising)*cos(fi), height*0.5, (diameter/2.0+pointsRaising)*sin(fi));
+            double pres=pressureCalc(/*controlpoints[i]*/point, streamVel,streamPres,density,frames,freeVortons,tau);
             cp[i]+=(pres-streamPres)/(density*Vector3D::dotProduct(streamVel,streamVel)*0.5);
         }
     }

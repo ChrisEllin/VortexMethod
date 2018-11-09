@@ -97,7 +97,7 @@
            <string>...</string>
           </property>
           <property name="icon">
-           <iconset resource="resources.qrc">
+           <iconset resource="../../../Bugaev V.S/FlashBackup/MyFlash/!ПС/Исходники от 26.07/panelmethod/resources.qrc">
             <normaloff>:/icons/icons/zoom-in-64.jpg</normaloff>:/icons/icons/zoom-in-64.jpg</iconset>
           </property>
          </widget>
@@ -108,7 +108,7 @@
            <string>...</string>
           </property>
           <property name="icon">
-           <iconset resource="resources.qrc">
+           <iconset resource="../../../Bugaev V.S/FlashBackup/MyFlash/!ПС/Исходники от 26.07/panelmethod/resources.qrc">
             <normaloff>:/icons/icons/zoom-out-64.jpg</normaloff>:/icons/icons/zoom-out-64.jpg</iconset>
           </property>
          </widget>
@@ -119,7 +119,7 @@
            <string>...</string>
           </property>
           <property name="icon">
-           <iconset resource="resources.qrc">
+           <iconset resource="../../../Bugaev V.S/FlashBackup/MyFlash/!ПС/Исходники от 26.07/panelmethod/resources.qrc">
             <normaloff>:/icons/icons/cancel-64.jpg</normaloff>:/icons/icons/cancel-64.jpg</iconset>
           </property>
          </widget>
@@ -1159,6 +1159,7 @@
      <string>Открыть</string>
     </property>
     <addaction name="openPassportAction"/>
+    <addaction name="openVortonsDirAction"/>
    </widget>
    <widget class="QMenu" name="settingsMenu">
     <property name="title">
@@ -1212,6 +1213,11 @@
     <string>Обновить экран</string>
    </property>
   </action>
+  <action name="openVortonsDirAction">
+   <property name="text">
+    <string>Открыть папку с вортон-файлами</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
@@ -1221,8 +1227,6 @@
    <header>mainfield.h</header>
   </customwidget>
  </customwidgets>
- <resources>
-  <include location="resources.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>
