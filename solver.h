@@ -45,6 +45,7 @@ public:
     bool checkingForceVariate(double& dispersion, double& oldDispersion,FragmentationParameters &fragPar, FragmentationParameters &resultFrag, SolverParameters& resultSolv);
 signals:
     void finishSolver();
+    void sendNormalsVis(QVector<Vector3D>& controlPoints, QVector<Vector3D>& normals);
     void sendMaxGamma(double maxGamma);
     void repaintGUI(const QVector<Vorton>& vortons, const QVector<std::shared_ptr<MultiFrame>>& frames); ///<Сигнал о перерисовке интерфейса
     void variatingFinished(); ///<Сигнал об окончании  варьирования

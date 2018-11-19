@@ -24,6 +24,11 @@ Boundaries PreprocessorSettings::getBoundaries()
     return boundaries;
 }
 
+bool PreprocessorSettings::normalsDrawing()
+{
+    return ui->normalsDrawingCheckBox->isChecked();
+}
+
 PreprocessorSettings::~PreprocessorSettings()
 {
     delete ui;

@@ -333,9 +333,9 @@ void Logger::writePassport(const SolverParameters& solvPar,const FragmentationPa
         *passportTextStream.get()<<"Количество разбиений по фи: "+QString::number(fragPar.rotationBodyFiFragNum)+"\n";
         *passportTextStream.get()<<"Количество разбиений по частям: "+QString::number(fragPar.rotationBodyPartFragNum)+"\n";
         *passportTextStream.get()<<"Начальная точка по х: "+QString::number(fragPar.rotationBodyXBeg)+"\n";
-        *passportTextStream.get()<<"Конечная точка по х: "+QString::number(fragPar.rotationBodyXEnd)+"\n";
-        *passportTextStream.get()<<"Высота среза: "+QString::number(fragPar.rotationBodySectionDistance)+"\n";
-
+        //*passportTextStream.get()<<"Конечная точка по х: "+QString::number(fragPar.rotationBodyXEnd)+"\n";
+        *passportTextStream.get()<<"Высота среза в начале: "+QString::number(fragPar.rotationBodySectionDistance)+"\n";
+        *passportTextStream.get()<<"Высота среза в конце: "+QString::number(fragPar.rotationBodySectionEndDistance)+"\n";
         break;
     }
     case ROTATIONBOTTOMCUT:
@@ -345,8 +345,9 @@ void Logger::writePassport(const SolverParameters& solvPar,const FragmentationPa
         *passportTextStream.get()<<"Количество разбиений по частям: "+QString::number(fragPar.rotationBodyPartFragNum)+"\n";
         *passportTextStream.get()<<"Количество разбиений по радиусу на срезе: "+QString::number(fragPar.rotationBodyRFragNum)+"\n";
         *passportTextStream.get()<<"Начальная точка по х: "+QString::number(fragPar.rotationBodyXBeg)+"\n";
-        *passportTextStream.get()<<"Конечная точка по х: "+QString::number(fragPar.rotationBodyXEnd)+"\n";
+        //*passportTextStream.get()<<"Конечная точка по х: "+QString::number(fragPar.rotationBodyXEnd)+"\n";
         *passportTextStream.get()<<"Высота среза: "+QString::number(fragPar.rotationBodySectionDistance)+"\n";
+
         break;
     }
     default:
@@ -378,6 +379,50 @@ void Logger::writePassport(const SolverParameters& solvPar,const FragmentationPa
     *passportTextStream.get()<<"Максимальное перемещение: "+QString::number(solvPar.maxMove)+"\n";
     passportTextStream.get()->flush();
 
+}
+
+void Logger::writePassport(const SolverParameters &solvPar, const FragmentationParameters &fragPar, const FormingParameters forming)
+{
+    writePassport(solvPar,fragPar);
+    switch (type)
+    {
+    case ROTATIONBODY:
+    {
+        switch (forming.typeNum)
+        {
+        case 0:
+        {
+        *passportTextStream.get()<<"Диаметр образующей: "+QString::number(forming.diameter)+"\n";
+        *passportTextStream.get()<<"Длина первой секции: "+QString::number(forming.sectorOneLength)+"\n";
+        *passportTextStream.get()<<"Длина второй секции: "+QString::number(forming.sectorTwoLength)+"\n";
+        break;
+        }
+        case 1:
+        {
+        *passportTextStream.get()<<"Диаметр образующей: "+QString::number(forming.diameter)+"\n";
+        *passportTextStream.get()<<"Длина образующей: "+QString::number(forming.sectorOneLength)+"\n";
+        *passportTextStream.get()<<"Угол конуса: "+QString::number(forming.angle)+"\n";
+        break;
+        }
+        case 2:
+        {
+        *passportTextStream.get()<<"Диаметр образующей: "+QString::number(forming.diameter)+"\n";
+        *passportTextStream.get()<<"Длина образующей: "+QString::number(forming.sectorOneLength)+"\n";
+        break;
+        }
+        }
+        break;
+    }
+    case ROTATIONBOTTOMCUT:
+    {
+        *passportTextStream.get()<<"Диаметр образующей: "+QString::number(forming.diameter)+"\n";
+        *passportTextStream.get()<<"Диаметр ''хвоста'': "+QString::number(forming.tailDiameter)+"\n";
+        *passportTextStream.get()<<"Длина первой секции: "+QString::number(forming.sectorOneLength)+"\n";
+        *passportTextStream.get()<<"Длина второй секции: "+QString::number(forming.sectorTwoLength)+"\n";
+        break;
+    }
+    }
+    passportTextStream.get()->flush();
 }
 
 /*!

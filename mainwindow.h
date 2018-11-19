@@ -26,6 +26,8 @@ public:
     ~MainWindow();
     QVector<Vorton> currentVortons;
     QVector<std::shared_ptr<MultiFrame>> currentFrames;
+    QVector<Vector3D> currentControlPoints;
+    QVector<Vector3D> currentNormals;
 private:
     bool solving;
     Ui::MainWindow *ui; ///<Указатель на интерфейс основного окна
@@ -80,6 +82,8 @@ private slots:
 
     void on_rotationBodyFreeMotionSolverPushButton_clicked();
 
+    void on_comboBox_currentIndexChanged(int index);
+
 public slots:
     void showInfo();
     void solverFinished();
@@ -90,6 +94,7 @@ public slots:
     void recieveProgressRotationCutBody(const int percentage);
     void drawGUI(const QVector<Vorton>& vortons, const QVector<std::shared_ptr<MultiFrame>>& frames);
     void drawGUI(const QVector<Vorton>& vortons, const QVector<Vorton>& frames);
+    void setNormalsVis(QVector<Vector3D>& controlPoints, QVector<Vector3D>& normals);
 signals:
     void setPlaneXY(); ///<Сигнал о переходе к YX отображению
     void setPlaneYX(); ///<Сигнал о переходе к XY отображению

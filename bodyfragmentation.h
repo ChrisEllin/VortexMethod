@@ -64,6 +64,8 @@ struct FragmentationParameters
     double rotationBodyXBeg; ///<Координата начала тела по X
     double rotationBodyXEnd; ///<Координата конца тела по Y
     double rotationBodySectionDistance; ///< Величина среза
+    double rotationBodySectionEndDistance;
+    int rotationBodyFormingType;
     ///@}
 
     /*!
@@ -75,6 +77,11 @@ struct FragmentationParameters
     int rotationBodyRFragNum; ///<Количество разбиений по радиусу
     ///@}
 
+    double formingDiameter;
+    double formingLengthSectorOne;
+    double formingLengthSectorTwo;
+    double formingTailDiameter;
+    double formingAngle;
     /*!
         \defgroup commonParameters Общие параметры
         \ingroup fragmentationParameters
@@ -85,6 +92,9 @@ struct FragmentationParameters
     double delta; ///<Подъем рамок над телом
     double pointsRaising; ///<Подъем контрольных точек для подсчета давления
     ///@}
+
+
+
 };
 ///@}
 
@@ -128,6 +138,7 @@ struct RotationBodyParameters
     double xBeg;  ///<Координата начала тела по X
     double xEnd;  ///<Координата конца тела по Y
     double sectionDistance;  ///< Величина среза
+    double sectionEndDistance;
     double delta;  ///<Подъем рамок над телом
     double raise;  ///<Подъем контрольных точек для подсчета давления
     double vortonsRad;  ///<Радиус вортона
@@ -145,10 +156,22 @@ struct RotationCutBodyParameters
     double xBeg;  ///<Координата начала тела по X
     double xEnd;  ///<Координата конца тела по Y
     double sectionDistance;  ///< Величина среза
+    double sectionEndDistance;
     double delta;  ///<Подъем рамок над телом
     double raise;  ///<Подъем контрольных точек для подсчета давления
     double vortonsRad; ///<Радиус вортона
     void setData(const int i, const double value);
+};
+
+struct FormingParameters
+{
+    double diameter;
+    double tailDiameter;
+    double sectorOneLength;
+    double sectorTwoLength;
+    double angle;
+
+    int typeNum;
 };
 
 /*!
@@ -170,6 +193,7 @@ private:
     CylinderParameters cylinder; ///<Параметры разбиения цилиндра
     RotationBodyParameters rotationBody; ///<Параметры разбиения тела вращения
     RotationCutBodyParameters rotationBottomCutBody; ///<Параметры разбиения тела вращения со срезом дна
+    FormingParameters forming;
     //bool launch;
 public:
     BodyFragmentation(BodyType body, const FragmentationParameters& param, bool launch=false);
@@ -180,12 +204,12 @@ public:
     void rotationCutBodyFragmantation();
     void rotationCutBodyLaunchFragmentation(const int i, const Vector3D &bodyVel, const double tau);
     void clearVectors();
-
-    static double presetFunctionF(double x);
-    static double presetDeriveFunctionF(double x);
-    static double presetFunctionG(double x);
-    static double presetFunctionG(double x, double xBeg);
-    static double presetDeriveFunctionG(double x);
+    FormingParameters getForming();
+    static double presetFunctionF(double x, FormingParameters parameters);
+    static double presetDeriveFunctionF(double x, FormingParameters parameters);
+    static double presetFunctionG(double x, FormingParameters parameters);
+    //static double presetFunctionG(double x, double xBeg, FormingParameters parameters);
+    static double presetDeriveFunctionG(double x, FormingParameters parameters);
     QVector<Vector3D> getControlPoints() const;
     QVector<Vector3D> getNormals() const;
     QVector<double> getSquares() const;

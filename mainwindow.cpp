@@ -17,7 +17,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     keyCtrlR = new QShortcut(this);
     keyCtrlR->setKey(Qt::CTRL + Qt::Key_R);
-
     keyCtrlH = new QShortcut(this);
     keyCtrlH->setKey(Qt::CTRL + Qt::Key_H);
     QSurfaceFormat format;
@@ -68,6 +67,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect (solver, SIGNAL(variatingFinished()), this, SLOT(showInfo()));
     connect (solver, SIGNAL(sendMaxGamma(double)), this, SLOT(setMaxGamma(double)));
     connect (ui->updateScreenAction, SIGNAL(triggered(bool)), this, SLOT(updateScreen()));
+    connect (solver, SIGNAL(sendNormalsVis(QVector<Vector3D>&,QVector<Vector3D>&)), this, SLOT(setNormalsVis(QVector<Vector3D>&,QVector<Vector3D>&)), Qt::BlockingQueuedConnection);
     connect (solver, SIGNAL(finishSolver()), this, SLOT(solverFinished()));
     connect (ui->openVortonsDirAction, SIGNAL(triggered()),this, SLOT(openDirectory()));
     connect (waitForOpen, SIGNAL(sendVortons(const QVector<Vorton>&, const QVector<Vorton>&)), this , SLOT(drawGUI(const QVector<Vorton>&, const QVector<Vorton>&)),Qt::BlockingQueuedConnection);
@@ -539,9 +539,34 @@ void MainWindow::on_rotationBodySolverPushButton_clicked()
     fragPar.rotationBodyXBeg=ui->xBegRotationBodyLineEdit->text().toDouble();
     fragPar.rotationBodyXEnd=ui->xEndRotationBodyLineEdit->text().toDouble();
     fragPar.rotationBodySectionDistance=ui->sectionDistanceRotationBodyLineEdit->text().toDouble();
+    fragPar.rotationBodySectionEndDistance=ui->sectionEndDistanceRotationBodyLineEdit->text().toDouble();
     fragPar.vortonsRad=ui->epsilonRotationBodyLineEdit->text().toDouble();
     fragPar.delta=ui->deltaRotationBodyFragmLineEdit->text().toDouble();
     fragPar.pointsRaising=ui->pointsRaisingRotationBodyLineEdit->text().toDouble();
+    fragPar.rotationBodyFormingType=ui->comboBox->currentIndex();
+    switch (fragPar.rotationBodyFormingType)
+    {
+    case 0:
+    {
+        fragPar.formingDiameter=ui->formingRBDiameterLineEdit->text().toDouble();
+        fragPar.formingLengthSectorTwo=ui->formingRBSectorTwoLength->text().toDouble();
+        fragPar.formingLengthSectorOne=ui->formingRBSectorOneLength->text().toDouble();
+        break;
+    }
+    case 1:
+    {
+        fragPar.formingDiameter=ui->formingConeRBDiameterLineEdit->text().toDouble();
+        fragPar.formingAngle=ui->formingConeRBAngleLineEdit->text().toDouble();
+        fragPar.formingLengthSectorOne=ui->formingConeRBLengthLineEdit->text().toDouble();
+        break;
+    }
+    case 2:
+    {
+       fragPar.formingDiameter=ui->formingEllipsoidRBDiameterLineEdit->text().toDouble();
+       fragPar.formingLengthSectorOne=ui->formingEllipsoidRBLengthLineEdit->text().toDouble();
+       break;
+    }
+    }
 
     SolverParameters solvPar=settings->getSolverParameters();
 
@@ -877,6 +902,12 @@ void MainWindow::drawGUI(const QVector<Vorton> &vortons, const QVector<std::shar
         if (checkDrawing(vortons[i].getMid(),vortons[i].getTail()))
             emit drawSegment(2.0*mid-tail, tail);
     }
+
+    if (!currentControlPoints.isEmpty() && !currentNormals.isEmpty() && preprocessor->normalsDrawing())
+    {
+        for (int i=0; i<currentNormals.size();i++)
+            emit drawSegment(Vector3D::toQVector3D(currentControlPoints[i]), Vector3D::toQVector3D(currentControlPoints[i]+currentNormals[i]), SArrow::Grid);
+    }
 }
 
 
@@ -901,6 +932,18 @@ void MainWindow::drawGUI(const QVector<Vorton> &vortons, const QVector<Vorton> &
         if (checkDrawing(vortons[i].getMid(),vortons[i].getTail()))
             emit drawSegment(2.0*mid-tail, tail);
     }
+
+    if (!currentControlPoints.isEmpty() && !currentNormals.isEmpty() && preprocessor->normalsDrawing())
+    {
+        for (int i=0; i<currentNormals.size();i++)
+            emit drawSegment(Vector3D::toQVector3D(currentControlPoints[i]), Vector3D::toQVector3D(currentControlPoints[i]+currentNormals[i]), SArrow::Grid);
+    }
+}
+
+void MainWindow::setNormalsVis(QVector<Vector3D> &controlPoints, QVector<Vector3D> &normals)
+{
+    currentControlPoints=controlPoints;
+    currentNormals=normals;
 }
 
 /*!
@@ -967,10 +1010,14 @@ void MainWindow::on_rotationCutBodySolverPushButton_clicked()
     fragPar.rotationBodyXBeg=ui->xBegRotationCutBodyLineEdit->text().toDouble();
     fragPar.rotationBodyXEnd=ui->xEndRotationCutBodyLineEdit->text().toDouble();
     fragPar.rotationBodySectionDistance=ui->sectionDistanceRotationCutBodyLineEdit->text().toDouble();
+    fragPar.rotationBodySectionEndDistance=ui->sectionEndDistanceRotationBodyLineEdit->text().toDouble();
     fragPar.vortonsRad=ui->epsilonRotationCutBodyLineEdit->text().toDouble();
     fragPar.delta=ui->deltaRotationCutBodyFragmLineEdit->text().toDouble();
     fragPar.pointsRaising=ui->pointsRaisingRotationCutBodyLineEdit->text().toDouble();
-
+    fragPar.formingDiameter=ui->formingRBCDiameterLineEdit->text().toDouble();
+    fragPar.formingLengthSectorOne=ui->formingRBCSectorOneLength->text().toDouble();
+    fragPar.formingLengthSectorTwo=ui->formingRBCSectorTwoLength->text().toDouble();
+    fragPar.formingTailDiameter=ui->formingRBCTailDiameterLineEdit->text().toDouble();
     SolverParameters solvPar=settings->getSolverParameters();
 
     *solver=Solver(solvPar);
@@ -1056,10 +1103,14 @@ void MainWindow::on_rotationCutBodyFreeMotionSolverPushButton_clicked()
     fragPar.rotationBodyXBeg=ui->xBegRotationCutBodyLineEdit->text().toDouble();
     fragPar.rotationBodyXEnd=ui->xEndRotationCutBodyLineEdit->text().toDouble();
     fragPar.rotationBodySectionDistance=ui->sectionDistanceRotationCutBodyLineEdit->text().toDouble();
+    fragPar.rotationBodySectionEndDistance=ui->sectionEndDistanceRotationBodyLineEdit->text().toDouble();
     fragPar.vortonsRad=ui->epsilonRotationCutBodyLineEdit->text().toDouble();
     fragPar.delta=ui->deltaRotationCutBodyFragmLineEdit->text().toDouble();
     fragPar.pointsRaising=ui->pointsRaisingRotationCutBodyLineEdit->text().toDouble();
-
+    fragPar.formingDiameter=ui->formingRBCDiameterLineEdit->text().toDouble();
+    fragPar.formingLengthSectorOne=ui->formingRBCSectorOneLength->text().toDouble();
+    fragPar.formingLengthSectorTwo=ui->formingRBCSectorTwoLength->text().toDouble();
+    fragPar.formingTailDiameter=ui->formingRBCTailDiameterLineEdit->text().toDouble();
     SolverParameters solvPar=settings->getSolverParameters();
     FreeMotionParameters freeMotionPar=settings->getFreeMotionParameters();
     *solver=Solver(solvPar,freeMotionPar);
@@ -1143,10 +1194,14 @@ void MainWindow::on_rotationCutBodyLaunchSolverPushButton_clicked()
     fragPar.rotationBodyXBeg=ui->xBegRotationCutBodyLineEdit->text().toDouble();
     fragPar.rotationBodyXEnd=ui->xEndRotationCutBodyLineEdit->text().toDouble();
     fragPar.rotationBodySectionDistance=ui->sectionDistanceRotationCutBodyLineEdit->text().toDouble();
+    fragPar.rotationBodySectionEndDistance=ui->sectionEndDistanceRotationBodyLineEdit->text().toDouble();
     fragPar.vortonsRad=ui->epsilonRotationCutBodyLineEdit->text().toDouble();
     fragPar.delta=ui->deltaRotationCutBodyFragmLineEdit->text().toDouble();
     fragPar.pointsRaising=ui->pointsRaisingRotationCutBodyLineEdit->text().toDouble();
-
+    fragPar.formingDiameter=ui->formingRBCDiameterLineEdit->text().toDouble();
+    fragPar.formingLengthSectorOne=ui->formingRBCSectorOneLength->text().toDouble();
+    fragPar.formingLengthSectorTwo=ui->formingRBCSectorTwoLength->text().toDouble();
+    fragPar.formingTailDiameter=ui->formingRBCTailDiameterLineEdit->text().toDouble();
     SolverParameters solvPar=settings->getSolverParameters();
     FreeMotionParameters freeMotionPar=settings->getFreeMotionParameters();
     *solver=Solver(solvPar,freeMotionPar);
@@ -1509,10 +1564,14 @@ void MainWindow::on_rotationCutBodyNearScreenPushButton_clicked()
     fragPar.rotationBodyXBeg=ui->xBegRotationCutBodyLineEdit->text().toDouble();
     fragPar.rotationBodyXEnd=ui->xEndRotationCutBodyLineEdit->text().toDouble();
     fragPar.rotationBodySectionDistance=ui->sectionDistanceRotationCutBodyLineEdit->text().toDouble();
+    fragPar.rotationBodySectionEndDistance=ui->sectionEndDistanceRotationBodyLineEdit->text().toDouble();
     fragPar.vortonsRad=ui->epsilonRotationCutBodyLineEdit->text().toDouble();
     fragPar.delta=ui->deltaRotationCutBodyFragmLineEdit->text().toDouble();
     fragPar.pointsRaising=ui->pointsRaisingRotationCutBodyLineEdit->text().toDouble();
-
+    fragPar.formingDiameter=ui->formingRBCDiameterLineEdit->text().toDouble();
+    fragPar.formingLengthSectorOne=ui->formingRBCSectorOneLength->text().toDouble();
+    fragPar.formingLengthSectorTwo=ui->formingRBCSectorTwoLength->text().toDouble();
+    fragPar.formingTailDiameter=ui->formingRBCTailDiameterLineEdit->text().toDouble();
     SolverParameters solvPar=settings->getSolverParameters();
 
     *solver=Solver(solvPar);
@@ -1586,9 +1645,13 @@ void MainWindow::on_rotationBodyFreeMotionSolverPushButton_clicked()
     fragPar.rotationBodyXBeg=ui->xBegRotationBodyLineEdit->text().toDouble();
     fragPar.rotationBodyXEnd=ui->xEndRotationBodyLineEdit->text().toDouble();
     fragPar.rotationBodySectionDistance=ui->sectionDistanceRotationBodyLineEdit->text().toDouble();
+    fragPar.rotationBodySectionEndDistance=ui->sectionEndDistanceRotationBodyLineEdit->text().toDouble();
     fragPar.vortonsRad=ui->epsilonRotationBodyLineEdit->text().toDouble();
     fragPar.delta=ui->deltaRotationBodyFragmLineEdit->text().toDouble();
     fragPar.pointsRaising=ui->pointsRaisingRotationBodyLineEdit->text().toDouble();
+    fragPar.formingDiameter=ui->formingRBDiameterLineEdit->text().toDouble();
+    fragPar.formingLengthSectorOne=ui->formingRBSectorOneLength->text().toDouble();
+    fragPar.formingLengthSectorTwo=ui->formingRBSectorTwoLength->text().toDouble();
 
     SolverParameters solvPar=settings->getSolverParameters();
     FreeMotionParameters freeMotionPar=settings->getFreeMotionParameters();
@@ -1607,4 +1670,9 @@ void MainWindow::on_rotationBodyFreeMotionSolverPushButton_clicked()
     ui->rotationBodySolverPushButton->setDisabled(true);
     ui->rotationBodySolverPushButton->setDisabled(true);
     ui->rotationBodyFreeMotionSolverPushButton->setDisabled(true);
+}
+
+void MainWindow::on_comboBox_currentIndexChanged(int index)
+{
+    ui->stackedWidget->setCurrentIndex(index);
 }

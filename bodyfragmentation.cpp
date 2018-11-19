@@ -119,6 +119,7 @@ void RotationCutBodyParameters::setData(const int i, const double value)
         break;
     case 2:
         rFragNum=static_cast<int>(value+0.5);
+        break;
     case 3:
         xBeg=value;
         break;
@@ -165,7 +166,8 @@ BodyFragmentation::BodyFragmentation(BodyType body, const FragmentationParameter
     }
     case ROTATIONBODY:
     {
-        rotationBody = RotationBodyParameters {param.rotationBodyFiFragNum, param.rotationBodyPartFragNum, param.rotationBodyXBeg, param.rotationBodyXEnd,param.rotationBodySectionDistance,  param.delta, param.pointsRaising, param.vortonsRad};
+        rotationBody = RotationBodyParameters {param.rotationBodyFiFragNum, param.rotationBodyPartFragNum, param.rotationBodyXBeg, param.rotationBodyXEnd,param.rotationBodySectionDistance,  param.delta, param.pointsRaising, param.rotationBodySectionEndDistance,param.vortonsRad};
+        forming=FormingParameters{param.formingDiameter,param.formingTailDiameter, param.formingLengthSectorOne,param.formingLengthSectorTwo,param.formingAngle,param.rotationBodyFormingType};
         rotationBodyFragmantation();
         break;
     }
@@ -173,19 +175,16 @@ BodyFragmentation::BodyFragmentation(BodyType body, const FragmentationParameter
     {
         if (!launch)
         {
-            rotationBottomCutBody = RotationCutBodyParameters {param.rotationBodyFiFragNum, param.rotationBodyPartFragNum,param.rotationBodyRFragNum, param.rotationBodyXBeg, param.rotationBodyXEnd,param.rotationBodySectionDistance,  param.delta, param.pointsRaising, param.vortonsRad};
+            rotationBottomCutBody = RotationCutBodyParameters {param.rotationBodyFiFragNum, param.rotationBodyPartFragNum,param.rotationBodyRFragNum, param.rotationBodyXBeg, param.rotationBodyXEnd,param.rotationBodySectionDistance,param.rotationBodySectionEndDistance,  param.delta, param.pointsRaising, param.vortonsRad};
+            forming=FormingParameters{param.formingDiameter,param.formingTailDiameter,param.formingLengthSectorOne,param.formingLengthSectorTwo,param.formingAngle,0};
             rotationCutBodyFragmantation();
         }
         else
         {
-            rotationBottomCutBody = RotationCutBodyParameters {param.rotationBodyFiFragNum, param.rotationBodyPartFragNum,param.rotationBodyRFragNum, param.rotationBodyXBeg, param.rotationBodyXEnd,param.rotationBodySectionDistance,  param.delta, param.pointsRaising, param.vortonsRad};
+            rotationBottomCutBody = RotationCutBodyParameters {param.rotationBodyFiFragNum, param.rotationBodyPartFragNum,param.rotationBodyRFragNum, param.rotationBodyXBeg, param.rotationBodyXEnd,param.rotationBodySectionDistance,param.rotationBodySectionEndDistance,  param.delta, param.pointsRaising, param.vortonsRad};
+            forming=FormingParameters{param.formingDiameter,param.formingTailDiameter,param.formingLengthSectorOne,param.formingLengthSectorTwo,param.formingAngle,0};
         }
         break;
-    }
-    default:
-    {
-        QMessageBox::critical(new QWidget(), tr("Ошибка"), tr("Попытка разбить несоответствующее тело"));
-        exit(1);
     }
     }
 }
@@ -337,6 +336,24 @@ void BodyFragmentation::cylinderFragmentation()
 void BodyFragmentation::rotationBodyFragmantation()
 {
     clearVectors();
+    switch (forming.typeNum)
+    {
+    case 0:
+    {
+        rotationBody.xEnd=rotationBody.xBeg+forming.diameter*0.5+forming.sectorOneLength+forming.sectorTwoLength;
+        break;
+    }
+    case 1:
+    {
+        rotationBody.xEnd=rotationBody.xBeg+forming.sectorOneLength;
+        break;
+    }
+    case 2:
+    {
+        rotationBody.xEnd=rotationBody.xBeg+forming.sectorOneLength;
+        break;
+    }
+    }
     QVector<Vector2D> part(rotationBody.partFragNum);
     QVector<Vector2D> forNormals(rotationBody.partFragNum);
     QVector<Vector2D> forControlPoint(rotationBody.partFragNum);
@@ -348,17 +365,17 @@ void BodyFragmentation::rotationBodyFragmantation()
     QVector<double> yArr(NFRAG);
 
     double newBeg=rotationBody.xBeg+rotationBody.sectionDistance;
-    double newEnd=rotationBody.xEnd-0.1;
+    double newEnd=rotationBody.xEnd-rotationBody.sectionDistance;
     double fi0 = 2*M_PI/rotationBody.fiFragNum;
     double height=(newEnd-newBeg)/(NFRAG-1);
     s[0]=0.0;
     xArr[0]=newBeg;
-    yArr[0]=BodyFragmentation::presetFunctionF(newBeg);
+    yArr[0]=BodyFragmentation::presetFunctionF(newBeg,forming);
     for (int i=1; i<NFRAG; i++)
     {
         xArr[i]=newBeg+i*height;
-        yArr[i]=BodyFragmentation::presetFunctionF(xArr[i]);
-        double derivative=BodyFragmentation::presetDeriveFunctionF(xArr[i]);
+        yArr[i]=BodyFragmentation::presetFunctionF(xArr[i],forming);
+        double derivative=BodyFragmentation::presetDeriveFunctionF(xArr[i],forming);
         s[i]=s[i-1]+height*sqrt(1+derivative*derivative);
     }
     double length=s[s.size()-1];
@@ -366,14 +383,14 @@ void BodyFragmentation::rotationBodyFragmantation()
     {
         int num=findClosetElementFromArray(s,length/(rotationBody.partFragNum-1)*i);
         part[i]=Vector2D(xArr[num],yArr[num]);
-        forUp[i]=Vector2D(-BodyFragmentation::presetDeriveFunctionF(xArr[num]),1).normalized();
+        forUp[i]=Vector2D(-BodyFragmentation::presetDeriveFunctionF(xArr[num],forming),1).normalized();
     }
 
     for (int i=0; i<rotationBody.partFragNum-1; i++)
     {
         int translNum=findClosetElementFromArray(s,length/(rotationBody.partFragNum-1)*(i+0.5));
         forControlPoint[i]=Vector2D(xArr[translNum],yArr[translNum]);
-        forNormals[i]=Vector2D(-BodyFragmentation::presetDeriveFunctionF(xArr[translNum]),1).normalized();
+        forNormals[i]=Vector2D(-BodyFragmentation::presetDeriveFunctionF(xArr[translNum],forming),1).normalized();
     }
 
     for (int i=0; i<part.size(); i++)
@@ -438,17 +455,18 @@ void BodyFragmentation::rotationCutBodyFragmantation()
     QVector<double> yArr(NFRAG);
 
     double newBeg=rotationBottomCutBody.xBeg+rotationBottomCutBody.sectionDistance;
-    double newEnd=rotationBottomCutBody.xEnd+rotationBottomCutBody.delta;
+    rotationBottomCutBody.xEnd=rotationBottomCutBody.xBeg+forming.sectorOneLength+forming.sectorTwoLength;
+    double newEnd=rotationBottomCutBody.xEnd-rotationBottomCutBody.sectionEndDistance;
     double fi0 = 2*M_PI/rotationBottomCutBody.fiFragNum;
     double height=(newEnd-newBeg)/(NFRAG-1);
     s[0]=0.0;
     xArr[0]=newBeg;
-    yArr[0]=BodyFragmentation::presetFunctionG(newBeg);
+    yArr[0]=BodyFragmentation::presetFunctionG(newBeg,forming);
     for (int i=1; i<NFRAG; i++)
     {
         xArr[i]=newBeg+i*height;
-        yArr[i]=BodyFragmentation::presetFunctionG(xArr[i]);
-        double derivative=BodyFragmentation::presetDeriveFunctionG(xArr[i]);
+        yArr[i]=BodyFragmentation::presetFunctionG(xArr[i],forming);
+        double derivative=BodyFragmentation::presetDeriveFunctionG(xArr[i],forming);
         s[i]=s[i-1]+height*sqrt(1+derivative*derivative);
     }
 
@@ -457,14 +475,14 @@ void BodyFragmentation::rotationCutBodyFragmantation()
     {
         int num=findClosetElementFromArray(s,length/(rotationBottomCutBody.partFragNum-1)*i);
         part[i]=Vector2D(xArr[num],yArr[num]);
-        forUp[i]=Vector2D(-BodyFragmentation::presetDeriveFunctionG(xArr[num]),1).normalized();
+        forUp[i]=Vector2D(-BodyFragmentation::presetDeriveFunctionG(xArr[num],forming),1).normalized();
     }
 
     for (int i=0; i<rotationBottomCutBody.partFragNum-1; i++)
     {
         int translNum=findClosetElementFromArray(s,length/(rotationBottomCutBody.partFragNum-1)*(i+0.5));
         forControlPoint[i]=Vector2D(xArr[translNum],yArr[translNum]);
-        forNormals[i]=Vector2D(-BodyFragmentation::presetDeriveFunctionG(xArr[translNum]),1).normalized();
+        forNormals[i]=Vector2D(-BodyFragmentation::presetDeriveFunctionG(xArr[translNum],forming),1).normalized();
     }
 
     for (int i=0; i<part.size(); i++)
@@ -472,7 +490,7 @@ void BodyFragmentation::rotationCutBodyFragmantation()
 
     for (int i=0; i<part.size(); i++)
     {
-        part[i]-=Vector2D(part[part.size()-1].x()-rotationBottomCutBody.xEnd,0.0);
+        part[i]-=Vector2D(part[0].x()-rotationBottomCutBody.xBeg,0.0);
         if (i!=part.size()-1)
             forControlPoint[i]-=Vector2D(part[part.size()-1].x()-rotationBottomCutBody.xEnd,0.0);
     }
@@ -571,12 +589,12 @@ void BodyFragmentation::rotationCutBodyLaunchFragmentation(const int i, const Ve
         double height=(newEnd-newBeg)/(NFRAG-1);
         s[0]=0.0;
         xArr[0]=newBeg;
-        yArr[0]=BodyFragmentation::presetFunctionG(newBeg);
+        yArr[0]=BodyFragmentation::presetFunctionG(newBeg,forming);
         for (int i=1; i<NFRAG; i++)
         {
             xArr[i]=newBeg+i*height;
-            yArr[i]=BodyFragmentation::presetFunctionG(xArr[i]);
-            double derivative=BodyFragmentation::presetDeriveFunctionG(xArr[i]);
+            yArr[i]=BodyFragmentation::presetFunctionG(xArr[i],forming);
+            double derivative=BodyFragmentation::presetDeriveFunctionG(xArr[i],forming);
             s[i]=s[i-1]+height*sqrt(1+derivative*derivative);
         }
 //        for (int i=0; i<xArr.size();i++)
@@ -587,14 +605,14 @@ void BodyFragmentation::rotationCutBodyLaunchFragmentation(const int i, const Ve
         {
             int num=findClosetElementFromArray(s,length/(rotationBottomCutBody.partFragNum-1)*i);
             part[i]=Vector2D(xArr[num],yArr[num]);
-            forUp[i]=Vector2D(-BodyFragmentation::presetDeriveFunctionG(xArr[num]),1).normalized();
+            forUp[i]=Vector2D(-BodyFragmentation::presetDeriveFunctionG(xArr[num],forming),1).normalized();
         }
 
         for (int i=0; i<rotationBottomCutBody.partFragNum-1; i++)
         {
             int translNum=findClosetElementFromArray(s,length/(rotationBottomCutBody.partFragNum-1)*(i+0.5));
             forControlPoint[i]=Vector2D(xArr[translNum],yArr[translNum]);
-            forNormals[i]=Vector2D(-BodyFragmentation::presetDeriveFunctionG(xArr[translNum]),1).normalized();
+            forNormals[i]=Vector2D(-BodyFragmentation::presetDeriveFunctionG(xArr[translNum],forming),1).normalized();
         }
         int end=rotationBottomCutBody.partFragNum-1;
         double currentEnd=part[end].x();
@@ -613,10 +631,10 @@ void BodyFragmentation::rotationCutBodyLaunchFragmentation(const int i, const Ve
         forNormals.removeLast();
         end--;
 
-        part.push_back(Vector2D(ledge, BodyFragmentation::presetFunctionG(ledge)));
-        forUp.push_back(Vector2D(-BodyFragmentation::presetDeriveFunctionG(ledge),1.0).normalized());
+        part.push_back(Vector2D(ledge, BodyFragmentation::presetFunctionG(ledge,forming)));
+        forUp.push_back(Vector2D(-BodyFragmentation::presetDeriveFunctionG(ledge,forming),1.0).normalized());
         forControlPoint.push_back(Vector2D(0.5*(part[end]+part[end+1])));
-        forNormals.push_back(Vector2D(-BodyFragmentation::presetDeriveFunctionG(forControlPoint.last().x()),1).normalized());
+        forNormals.push_back(Vector2D(-BodyFragmentation::presetDeriveFunctionG(forControlPoint.last().x(),forming),1).normalized());
 
         for (int i=0; i<part.size(); i++)
             part[i]+=forUp[i]*rotationBottomCutBody.delta;
@@ -706,17 +724,70 @@ void BodyFragmentation::clearVectors()
     frames.clear();
 }
 
+FormingParameters BodyFragmentation::getForming()
+{
+    return forming;
+}
+
 /*!
 Высчитывает значение функции f(x)
 \param x Значение х
 \return Возвращаемое значение функции
 */
-double BodyFragmentation::presetFunctionF(double x)
+double BodyFragmentation::presetFunctionF(double x, FormingParameters parameters)
 {
-    if ((x>=0)&&(x<=0.5)) return sqrt(0.5*0.5-(x-0.5)*(x-0.5));
-    if ((x>=0.5)&&(x<=2)) return 0.5;
-    if ((x>=2)&&(x<=2.5)) return 2.5-x;
+    switch (parameters.typeNum)
+    {
+    case 0:
+    {
+        if (x>=0.0&&x<parameters.diameter*0.5)
+            return sqrt(pow(parameters.diameter*0.5,2)-pow(x-parameters.diameter*0.5,2));
+        else
+        {
+            if (x>=parameters.diameter*0.5&&x<parameters.sectorOneLength+parameters.diameter*0.5)
+                return parameters.diameter*0.5;
+            else
+            {
+                if (x>=(parameters.sectorOneLength+parameters.diameter*0.5)&& x<=(parameters.sectorTwoLength+parameters.diameter*0.5+parameters.sectorOneLength))
+                    return parameters.diameter*0.5*(1.0-(x-parameters.sectorOneLength-parameters.diameter*0.5)/parameters.sectorTwoLength);
+                else
+                    break;
+            }
+        }
+    }
+    case 1:
+    {
+        double height=parameters.diameter*0.5/tan(parameters.angle);
+        if (x>=0.0 && x<height)
+            return x*tan(parameters.angle);
+        else
+        {
+            if(x>=height && x<parameters.sectorOneLength-height)
+                return parameters.diameter*0.5;
+            else
+            {
+                if (x>=parameters.sectorOneLength-height && x<parameters.sectorOneLength)
+                    return parameters.diameter*0.5-(x-parameters.sectorOneLength+height)*tan(parameters.angle);
+                else
+                    break;
+            }
+
+        }
+    }
+    case 2:
+    {
+        if (x<parameters.sectorOneLength&&x>=0)
+            return parameters.diameter*0.5*sqrt(1-(4.0*pow(x-parameters.sectorOneLength*0.5,2))/pow(parameters.sectorOneLength,2));
+        else
+            break;
+    }
+    }
     return 0.0;
+
+//    if ((x>=0)&&(x<=0.5)) return sqrt(0.5*0.5-(x-0.5)*(x-0.5));
+//    if ((x>=0.5)&&(x<=2)) return 0.5;
+//    if ((x>=2)&&(x<=2.5)) return 2.5-x;
+//    return 0.0;
 }
 
 /*!
@@ -724,12 +795,60 @@ double BodyFragmentation::presetFunctionF(double x)
 \param x Значение х
 \return Возвращаемое значение производной функции
 */
-double BodyFragmentation::presetDeriveFunctionF(double x)
+double BodyFragmentation::presetDeriveFunctionF(double x, FormingParameters parameters)
 {
-    if ((x>=0) && (x<=0.5)) return -(x-0.5)/sqrt(0.5*0.5-(x-0.5)*(x-0.5));
-    if ((x>=0.5)&&(x<=2)) return 0.0;
-    if ((x>=2)&&(x<=2.5)) return -1.0;
+    switch (parameters.typeNum)
+    {
+    case 0:
+    {
+        if (x>=0.0&&x<parameters.diameter*0.5)
+            return -(x-parameters.diameter*0.5)/BodyFragmentation::presetFunctionF(x,parameters);
+        else
+        {
+            if (x>=parameters.diameter*0.5&&x<parameters.sectorOneLength+parameters.diameter*0.5)
+                return 0.0;
+            else
+            {
+                if (x>=(parameters.sectorOneLength+parameters.diameter*0.5)&& x<=(parameters.sectorTwoLength+parameters.diameter*0.5+parameters.sectorOneLength))
+                    return -parameters.diameter*0.5/parameters.sectorTwoLength;
+                else
+                    break;
+            }
+        }
+    }
+    case 1:
+    {
+        double height=parameters.diameter*0.5/tan(parameters.angle);
+        if (x>=0.0 && x<height)
+            return tan(parameters.angle);
+        else
+        {
+            if(x>=height && x<parameters.sectorOneLength-height)
+                return 0.0;
+            else
+            {
+                if (x>=parameters.sectorOneLength-height && x<parameters.sectorOneLength)
+                    return -tan(parameters.angle);
+                else
+                    break;
+            }
+
+        }
+    }
+    case 2:
+    {
+        if (x<parameters.sectorOneLength&&x>=0)
+            return -(x-parameters.sectorOneLength*0.5)/BodyFragmentation::presetFunctionF(x,parameters)*pow(parameters.diameter/parameters.sectorOneLength,2);
+        else
+            break;
+    }
+    }
     return 0.0;
+
+//    if ((x>=0) && (x<=0.5)) return -(x-0.5)/sqrt(0.5*0.5-(x-0.5)*(x-0.5));
+//    if ((x>=0.5)&&(x<=2)) return 0.0;
+//    if ((x>=2)&&(x<=2.5)) return -1.0;
+//    return 0.0;
 }
 
 /*!
@@ -737,11 +856,29 @@ double BodyFragmentation::presetDeriveFunctionF(double x)
 \param x Значение х
 \return Возвращаемое значение функции
 */
-double BodyFragmentation::presetFunctionG(double x)
+double BodyFragmentation::presetFunctionG(double x, FormingParameters parameters)
 {
-    if ((x>=0)&&(x<=1.4)) return 2*sqrt(1-(x-1.4)*(x-1.4)/(1.4*1.4));
-    if ((x>=1.4)&&(x<=5)) return 2;
-    return 0.0;
+    switch (parameters.typeNum)
+    {
+    case 0:
+    {
+        if (x>=0.0&&x<parameters.sectorOneLength)
+            return parameters.diameter*0.5*sqrt(1-pow(x-parameters.sectorOneLength,2)/pow(parameters.sectorOneLength,2));
+        else
+        {
+            if (x>=parameters.sectorOneLength&&x<=parameters.sectorTwoLength+parameters.sectorOneLength)
+                return parameters.diameter*0.5-(parameters.diameter-parameters.tailDiameter)*0.5/parameters.sectorTwoLength*(x-parameters.sectorOneLength);
+            else
+            {
+                    return 0.0;
+            }
+        }
+    }
+    default:
+        return 0.0;
+    }
+
+
 }
 
 /*!
@@ -750,23 +887,63 @@ double BodyFragmentation::presetFunctionG(double x)
 \param xBeg Нижняя граница функции
 \return Возвращаемое значение функции
 */
-double BodyFragmentation::presetFunctionG(double x, double xBeg)
-{
-    if ((x>=xBeg)&&(x<=1.4+xBeg)) return 2*sqrt(1-(x-xBeg-1.4)*(x-xBeg-1.4)/(1.4*1.4));
-    if ((x>=1.4+xBeg)&&(x<=xBeg+5)) return 2;
-    return 0.0;
-}
+//double BodyFragmentation::presetFunctionG(double x, double xBeg, FormingParameters parameters)
+//{
+//    switch (parameters.typeNum)
+//    {
+//    case 0:
+//    {
+//        if (x>=0.0&&x<parameters.sectorOneLength)
+//            return parameters.diameter*0.5*sqrt(1-pow(x-parameters.sectorOneLength,2)/pow(parameters.sectorOneLength,2));
+//        else
+//        {
+//            if (x>=parameters.sectorOneLength&&x<=parameters.sectorTwoLength+parameters.sectorOneLength)
+//                return parameters.diameter*0.5-(parameters.diameter-parameters.tailDiameter)*0.5/parameters.sectorTwoLength*(x-parameters.sectorOneLength);
+//            else
+//            {
+//                    return 0.0;
+//            }
+//        }
+//    }
+//    default:
+//        return 0.0;
+//    }
+
+////    if ((x>=xBeg)&&(x<=1.4+xBeg)) return 2*sqrt(1-(x-xBeg-1.4)*(x-xBeg-1.4)/(1.4*1.4));
+////    if ((x>=1.4+xBeg)&&(x<=xBeg+5)) return 2;
+////    return 0.0;
+//}
 
 /*!
 Высчитывает значение производной функции g(x)
 \param x Значение х
 \return Возвращаемое значение производной функции
 */
-double BodyFragmentation::presetDeriveFunctionG(double x)
+double BodyFragmentation::presetDeriveFunctionG(double x, FormingParameters parameters)
 {
-    if ((x>=0)&&(x<=1.4)) return -2*(x-1.4)/sqrt(1.4*1.4-(x-1.4)*(x-1.4));
-    if ((x>=1.4)&&(x<=5)) return 0.0;
-    return 0.0;
+    switch (parameters.typeNum)
+    {
+    case 0:
+    {
+        if (x>=0.0&&x<parameters.sectorOneLength)
+            return -parameters.diameter*parameters.diameter*0.25/pow(parameters.sectorOneLength,2)*(x-parameters.sectorOneLength)/presetFunctionG(x,parameters);
+
+        else
+        {
+            if (x>=parameters.sectorOneLength&&x<=parameters.sectorOneLength+parameters.sectorTwoLength)
+                return -(parameters.diameter-parameters.tailDiameter)*0.5/parameters.sectorTwoLength;
+            else
+            {
+                    return 0.0;
+            }
+        }
+    }
+    default:
+        return 0.0;
+    }
+//    if ((x>=0)&&(x<=1.4)) return -2*(x-1.4)/sqrt(1.4*1.4-(x-1.4)*(x-1.4));
+//    if ((x>=1.4)&&(x<=5)) return 0.0;
+//    return 0.0;
 }
 
 /*!

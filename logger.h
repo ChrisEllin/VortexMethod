@@ -49,6 +49,7 @@ public:
     void writeCpFile(const QVector<double> cp, const QVector<double> tetas);
     void writeLogs(const int stepNum, const double stepTime, const int freeVortonsSize, const Counters beforeIntegrC, const Counters afterIntegrC, const Timers beforeIntegrT, const Timers afterIntegrT, const Restrictions restr);
     void writePassport(const SolverParameters& solvPar,const FragmentationParameters& fragPar);
+    void writePassport(const SolverParameters& solvPar,const FragmentationParameters& fragPar, const FormingParameters forming);
     void writePassport(const SolverParameters& solvPar,const FragmentationParameters& fragPar, const FreeMotionParameters& freeMotionPar);
     void writeForces(const Vector3D forces, const Vector3D c);
     void writeSolverTime(const double solvTime);

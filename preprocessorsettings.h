@@ -20,6 +20,7 @@ class PreprocessorSettings : public QDialog
 public:
     explicit PreprocessorSettings(QWidget *parent = nullptr);
     Boundaries getBoundaries();
+    bool normalsDrawing();
     ~PreprocessorSettings();
 
 private:

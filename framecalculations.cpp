@@ -593,19 +593,19 @@ void FrameCalculations::getBackAndRotateCylinder(QVector<Vorton> &vortons, const
 \param[in] controlPoints Вектор, содержащий контрольные точки
 \param[in] normals Вектор, содержащий нормали
 */
-void FrameCalculations::getBackAndRotateRotationBody(QVector<Vorton>& vortons, const Vector3D bodyNose, const double xEnd, const double layerHeight, const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals)
+void FrameCalculations::getBackAndRotateRotationBody(QVector<Vorton>& vortons, const Vector3D bodyNose, const double xEnd, const double layerHeight, const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals, FormingParameters forming)
 {
     QTime start=QTime::currentTime();
     for (int i=0; i<vortons.size(); i++)
     {
-        if (FrameCalculations::insideRotationBody(vortons[i],bodyNose,xEnd))
+        if (FrameCalculations::insideRotationBody(vortons[i],bodyNose,xEnd,forming))
         {
             QPair<double,int> closest=BodyFragmentation::findClosest(vortons[i].getMid(),controlPoints, normals);
             vortons[i].setMid(vortons[i].getMid()+2.0*closest.first*normals[closest.second]);
             vortons[i].setTail(vortons[i].getTail()+2.0*closest.first*normals[closest.second]);
             counters.gotBackNum++;
         }
-        if(FrameCalculations::insideRotationBodyLayer(vortons[i],bodyNose,xEnd,layerHeight))
+        if(FrameCalculations::insideRotationBodyLayer(vortons[i],bodyNose,xEnd,layerHeight, forming))
         {
             QPair<double,int> closest=BodyFragmentation::findClosest(vortons[i].getMid(),controlPoints, normals);
             vortons[i].rotateAroundNormal(normals[closest.second]);
@@ -624,19 +624,19 @@ void FrameCalculations::getBackAndRotateRotationBody(QVector<Vorton>& vortons, c
 \param[in] controlPoints Вектор, содержащий контрольные точки
 \param[in] normals Вектор, содержащий нормали
 */
-void FrameCalculations::getBackAndRotateRotationCutBody(QVector<Vorton> &vortons,const double xEnd, const double layerHeight, const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals, const Vector3D bodyNose)
+void FrameCalculations::getBackAndRotateRotationCutBody(QVector<Vorton> &vortons,const double xEnd, const double layerHeight, const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals, const Vector3D bodyNose, FormingParameters forming)
 {
     QTime start=QTime::currentTime();
     for (int i=vortons.size()-1; i>=0; i--)
     {
-        if (FrameCalculations::insideRotationCutBody(vortons[i],xEnd, bodyNose))
+        if (FrameCalculations::insideRotationCutBody(vortons[i],xEnd, bodyNose,forming))
         {
             QPair<double,int> closest=BodyFragmentation::findClosest(vortons[i].getMid(),controlPoints, normals);
             vortons[i].setMid(vortons[i].getMid()+2.0*closest.first*normals[closest.second]);
             vortons[i].setTail(vortons[i].getTail()+2.0*closest.first*normals[closest.second]);
             counters.gotBackNum++;
         }
-        if(FrameCalculations::insideRotationCutBodyLayer(vortons[i],xEnd,layerHeight,bodyNose))
+        if(FrameCalculations::insideRotationCutBodyLayer(vortons[i],xEnd,layerHeight,bodyNose,forming))
         {
             QPair<double,int> closest=BodyFragmentation::findClosest(vortons[i].getMid(),controlPoints, normals);
             vortons[i].rotateAroundNormal(normals[closest.second]);
@@ -655,19 +655,19 @@ void FrameCalculations::getBackAndRotateRotationCutBody(QVector<Vorton> &vortons
 \param[in] controlPoints Вектор, содержащий контрольные точки
 \param[in] normals Вектор, содержащий нормали
 */
-void FrameCalculations::getBackAndRotateRotationCutLaunchedBody(QVector<Vorton> &vortons, const Vector3D bodyNose, const double xEnd, const double layerHeight, const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals)
+void FrameCalculations::getBackAndRotateRotationCutLaunchedBody(QVector<Vorton> &vortons, const Vector3D bodyNose, const double xEnd, const double layerHeight, const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals, FormingParameters forming)
 {
     QTime start=QTime::currentTime();
     for (int i=vortons.size()-1; i>=0; i--)
     {
-        if (FrameCalculations::insideRotationCutBody(vortons[i],xEnd,bodyNose))
+        if (FrameCalculations::insideRotationCutBody(vortons[i],xEnd,bodyNose,forming))
         {
             QPair<double,int> closest=BodyFragmentation::findClosest(vortons[i].getMid(),controlPoints, normals);
             vortons[i].setMid(vortons[i].getMid()+2.0*closest.first*normals[closest.second]);
             vortons[i].setTail(vortons[i].getTail()+2.0*closest.first*normals[closest.second]);
             counters.gotBackNum++;
         }
-        if(FrameCalculations::insideRotationCutBodyLayer(vortons[i],xEnd,layerHeight,bodyNose))
+        if(FrameCalculations::insideRotationCutBodyLayer(vortons[i],xEnd,layerHeight,bodyNose,forming))
         {
             QPair<double,int> closest=BodyFragmentation::findClosest(vortons[i].getMid(),controlPoints, normals);
             vortons[i].rotateAroundNormal(normals[closest.second]);
@@ -880,9 +880,9 @@ bool FrameCalculations::insideCylinderLayer(const Vorton &vort, const double hei
 \param xEnd Максимальная координата х тела
 \return Определение попадания внутрь тела вращения
 */
-bool FrameCalculations::insideRotationBody(const Vorton &vort, const Vector3D bodyNose, const double xEnd)
+bool FrameCalculations::insideRotationBody(const Vorton &vort, const Vector3D bodyNose, const double xEnd, FormingParameters forming)
 {
-    if((vort.getMid().x()>=bodyNose.x()) && (vort.getMid().x()<=xEnd) && ((pow(vort.getMid().z()-bodyNose.z(),2)+pow(vort.getMid().y()-bodyNose.y(),2))<pow(BodyFragmentation::presetFunctionF(vort.getMid().x()-bodyNose.x()),2)))
+    if((vort.getMid().x()>=bodyNose.x()) && (vort.getMid().x()<=xEnd) && ((pow(vort.getMid().z()-bodyNose.z(),2)+pow(vort.getMid().y()-bodyNose.y(),2))<pow(BodyFragmentation::presetFunctionF(vort.getMid().x()-bodyNose.x(),forming),2)))
         return true;
     return false;
 }
@@ -895,9 +895,9 @@ bool FrameCalculations::insideRotationBody(const Vorton &vort, const Vector3D bo
 \param layerHeight Высота слоя
 \return Определение попадания внутрь слоя вокруг тела вращения
 */
-bool FrameCalculations::insideRotationBodyLayer(const Vorton &vort, const Vector3D bodyNose, const double xEnd, const double layerHeight)
+bool FrameCalculations::insideRotationBodyLayer(const Vorton &vort, const Vector3D bodyNose, const double xEnd, const double layerHeight, FormingParameters forming)
 {
-    if((vort.getMid().x()>=bodyNose.x()-layerHeight) && (vort.getMid().x()<=xEnd+layerHeight) && ((pow(vort.getMid().z()-bodyNose.z(),2)+pow(vort.getMid().y()-bodyNose.y(),2))<pow(BodyFragmentation::presetFunctionF(vort.getMid().x()-bodyNose.x())+layerHeight,2)))
+    if((vort.getMid().x()>=bodyNose.x()-layerHeight) && (vort.getMid().x()<=xEnd+layerHeight) && ((pow(vort.getMid().z()-bodyNose.z(),2)+pow(vort.getMid().y()-bodyNose.y(),2))<pow(BodyFragmentation::presetFunctionF(vort.getMid().x()-bodyNose.x(),forming)+layerHeight,2)))
         return true;
     return false;
 }
@@ -909,16 +909,16 @@ bool FrameCalculations::insideRotationBodyLayer(const Vorton &vort, const Vector
 \param xEnd Максимальная координата х тела
 \return Определение попадания внутрь тела вращения со срезом дна
 */
-bool FrameCalculations::insideRotationCutBody(const Vorton &vort, const double xBeg, const double xEnd)
+bool FrameCalculations::insideRotationCutBody(const Vorton &vort, const double xBeg, const double xEnd, FormingParameters forming)
 {
-    if((vort.getMid().x()>=xBeg) && (vort.getMid().x()<=xEnd) && ((pow(vort.getMid().z(),2)+pow(vort.getMid().y(),2))<pow(BodyFragmentation::presetFunctionG(vort.getMid().x()-xBeg),2)))
+    if((vort.getMid().x()>=xBeg) && (vort.getMid().x()<=xEnd) && ((pow(vort.getMid().z(),2)+pow(vort.getMid().y(),2))<pow(BodyFragmentation::presetFunctionG(vort.getMid().x()-xBeg,forming),2)))
         return true;
     return false;
 }
 
-bool FrameCalculations::insideRotationCutBody(const Vorton &vort,const double xEnd, const Vector3D bodyNose)
+bool FrameCalculations::insideRotationCutBody(const Vorton &vort,const double xEnd, const Vector3D bodyNose, FormingParameters forming)
 {
-    if((vort.getMid().x()>=bodyNose.x()) && (vort.getMid().x()<=xEnd) && ((pow(vort.getMid().z()-bodyNose.z(),2)+pow(vort.getMid().y()-bodyNose.y(),2))<pow(BodyFragmentation::presetFunctionG(vort.getMid().x()-bodyNose.x()),2)))
+    if((vort.getMid().x()>=bodyNose.x()) && (vort.getMid().x()<=xEnd) && ((pow(vort.getMid().z()-bodyNose.z(),2)+pow(vort.getMid().y()-bodyNose.y(),2))<pow(BodyFragmentation::presetFunctionG(vort.getMid().x()-bodyNose.x(),forming),2)))
         return true;
     return false;
 }
@@ -931,9 +931,9 @@ bool FrameCalculations::insideRotationCutBody(const Vorton &vort,const double xE
 \param layerHeight Высота слоя
 \return Определение попадания внутрь слоя вокруг тела вращения со срезом дна
 */
-bool FrameCalculations::insideRotationCutBodyLayer(const Vorton &vort, const double xEnd, const double layerHeight, const Vector3D bodyNose)
+bool FrameCalculations::insideRotationCutBodyLayer(const Vorton &vort, const double xEnd, const double layerHeight, const Vector3D bodyNose, FormingParameters forming)
 {
-    if((vort.getMid().x()>=bodyNose.x()-layerHeight) && (vort.getMid().x()<=xEnd+layerHeight) && ((pow(vort.getMid().z()-bodyNose.z(),2)+pow(vort.getMid().y()-bodyNose.y(),2))<pow(BodyFragmentation::presetFunctionG(vort.getMid().x()-bodyNose.x())+layerHeight,2)))
+    if((vort.getMid().x()>=bodyNose.x()-layerHeight) && (vort.getMid().x()<=xEnd+layerHeight) && ((pow(vort.getMid().z()-bodyNose.z(),2)+pow(vort.getMid().y()-bodyNose.y(),2))<pow(BodyFragmentation::presetFunctionG(vort.getMid().x()-bodyNose.x(),forming)+layerHeight,2)))
         return true;
     return false;
 }
