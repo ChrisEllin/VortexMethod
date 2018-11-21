@@ -11,7 +11,13 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
     qRegisterMetaType<SolverParameters>("SolverParameters");
+
+    acceleratedGroup= new QActionGroup(this);
+    acceleratedGroup->addAction(ui->withoutAccelerateMotionAction);
+    acceleratedGroup->addAction(ui->acceleratedMotionAction);
+
     keyCtrlO = new QShortcut(this);
     keyCtrlO->setKey(Qt::CTRL + Qt::Key_O);
 
@@ -571,6 +577,11 @@ void MainWindow::on_rotationBodySolverPushButton_clicked()
     SolverParameters solvPar=settings->getSolverParameters();
 
     *solver=Solver(solvPar);
+    if (ui->acceleratedMotionAction->isChecked())
+        solver->setMotionType(MotionType::ACCELERATED);
+    else
+        solver->setMotionType(MotionType::NOACCELERATE);
+
     QFuture<void> rotationBodyFuture=QtConcurrent::run(solver,&Solver::rotationBodySolver, fragPar);
     solving=true;
 
@@ -1021,6 +1032,10 @@ void MainWindow::on_rotationCutBodySolverPushButton_clicked()
     SolverParameters solvPar=settings->getSolverParameters();
 
     *solver=Solver(solvPar);
+    if (ui->acceleratedMotionAction->isChecked())
+        solver->setMotionType(MotionType::ACCELERATED);
+    else
+        solver->setMotionType(MotionType::NOACCELERATE);
     QFuture<void> rotationCutBodyFuture=QtConcurrent::run(solver,&Solver::rotationCutBodySolver, fragPar);
     solving=true;
     ui->pointsRaisingRotationCutBodyLineEdit->setDisabled(true);

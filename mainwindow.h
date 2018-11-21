@@ -9,6 +9,7 @@
 #include "variatesettings.h"
 #include "preprocessorsettings.h"
 #include <QProgressDialog>
+#include <QActionGroup>
 
 namespace Ui {
 class MainWindow;
@@ -37,6 +38,7 @@ private:
     QProgressDialog closeBox;
     Logger* waitForOpen;
     PreprocessorSettings *preprocessor;
+    QActionGroup* acceleratedGroup;
     bool displaySphere; ///<Необходимость отображения трехмерной сферы
     QShortcut *keyCtrlO; ///<Указатель на хоткей (Ctrl+O)
     QShortcut *keyCtrlR; ///<Указатель на хоткей (Ctrl+R)

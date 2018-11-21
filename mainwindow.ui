@@ -129,7 +129,7 @@
       <item row="0" column="0">
        <widget class="QTabWidget" name="tabWidget">
         <property name="currentIndex">
-         <number>2</number>
+         <number>3</number>
         </property>
         <widget class="QWidget" name="tab">
          <attribute name="title">
@@ -1696,6 +1696,9 @@
     <addaction name="variationSettingsOpenAction"/>
     <addaction name="preprocessorSettingsOpenAction"/>
     <addaction name="updateScreenAction"/>
+    <addaction name="separator"/>
+    <addaction name="withoutAccelerateMotionAction"/>
+    <addaction name="acceleratedMotionAction"/>
    </widget>
    <addaction name="openMenu"/>
    <addaction name="settingsMenu"/>
@@ -1742,6 +1745,30 @@
   <action name="openVortonsDirAction">
    <property name="text">
     <string>Открыть папку с вортон-файлами</string>
+   </property>
+  </action>
+  <action name="withoutAccelerateMotionAction">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Равномерное движение</string>
+   </property>
+  </action>
+  <action name="acceleratedMotionAction">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Равноускоренное движение</string>
+   </property>
+  </action>
+  <action name="actiongfhfgh">
+   <property name="text">
+    <string>gfhfgh</string>
    </property>
   </action>
  </widget>

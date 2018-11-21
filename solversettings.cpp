@@ -93,7 +93,7 @@ SolverSettings::SolverSettings(QWidget *parent) :
     standartPar.stepsNum=ui->stepsNumLineEdit->text().toDouble();
     standartPar.streamPres=ui->pressureStreamLineEdit->text().toDouble();
     standartPar.streamVel=Vector3D(ui->xVelStreamLineEdit->text().toDouble(),ui->yVelStreamLineEdit->text().toDouble(),ui->zVelStreamLineEdit->text().toDouble());
-
+    standartPar.acceleratedStepsNum=ui->acceleratedStepsNumLineEdit->text().toInt();
     standartFreeMotionPar.bodyVel=Vector3D(ui->xVelBodyLineEdit->text().toDouble(),ui->yVelBodyLineEdit->text().toDouble(),ui->zVelBodyLineEdit->text().toDouble());
     solvPar=standartPar;
     freeMotionPar=standartFreeMotionPar;
@@ -146,7 +146,7 @@ void SolverSettings::setSolverParameters(SolverParameters &newSolvPar)
     ui->xVelStreamLineEdit->setText(QString::number(newSolvPar.streamVel.x()));
     ui->yVelStreamLineEdit->setText(QString::number(newSolvPar.streamVel.y()));
     ui->zVelStreamLineEdit->setText(QString::number(newSolvPar.streamVel.z()));
-
+    ui->acceleratedStepsNumLineEdit->setText(QString::number(newSolvPar.acceleratedStepsNum));
     solvPar=newSolvPar;
 }
 
@@ -243,6 +243,7 @@ void SolverSettings::on_saveSolverSettingsPushButton_clicked()
     solvPar.stepsNum=ui->stepsNumLineEdit->text().toDouble();
     solvPar.streamPres=ui->pressureStreamLineEdit->text().toDouble();
     solvPar.streamVel=Vector3D(ui->xVelStreamLineEdit->text().toDouble(),ui->yVelStreamLineEdit->text().toDouble(),ui->zVelStreamLineEdit->text().toDouble());
+    solvPar.acceleratedStepsNum=ui->acceleratedStepsNumLineEdit->text().toDouble();
     hide();
 }
 

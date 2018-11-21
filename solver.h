@@ -3,6 +3,7 @@
 #include <QObject>
 #include "logger.h"
 
+enum MotionType {NOACCELERATE, ACCELERATED};
 /*!
     \brief Класс, реализующий расчеты для различных типов тел
 
@@ -19,10 +20,12 @@ private:
     QVector<Vector3D> cAerodynamics; ///<Вектор значений С
     QVector<Vector3D> forces; ///<Вектор значений силы
     QString logPath; ///<Путь к каталогу для записи результатов расчета
+    MotionType motion;
     bool checkFinishing();
 public:
     static bool interrupted;
     Solver();
+    void setMotionType(const MotionType type);
     Solver(const SolverParameters& parameters);
     Solver(const SolverParameters& parameters, const FreeMotionParameters& motionParameters);
     void sphereSolver(const FragmentationParameters& fragPar);

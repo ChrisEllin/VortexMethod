@@ -23,6 +23,7 @@ struct SolverParameters
     double deltaUp; ///< Высота подъема вортоно-отрезков с тела
     double farDistance; ///< Максимальная удаленность от тела для учитывания влияния вортон-отрезков
     double maxMove; ///< Максимальное значение перемещения вортон-отрезка за один шаг расчета
+    int acceleratedStepsNum;
     void setData(const int i, const double value);
     void setData(const Vector3D value); ///<
 };

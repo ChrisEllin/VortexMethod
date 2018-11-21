@@ -13,339 +13,566 @@
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="0">
-    <widget class="QGroupBox" name="groupBox_2">
-     <property name="title">
-      <string>Параметры расчета</string>
-     </property>
-     <layout class="QGridLayout" name="gridLayout_2">
-      <item row="5" column="5" colspan="4">
-       <widget class="QLabel" name="label_13">
-        <property name="text">
-         <string>Количество шагов</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="9">
-       <widget class="QLineEdit" name="stepsNumLineEdit">
-        <property name="text">
-         <string>200</string>
-        </property>
-       </widget>
-      </item>
-      <item row="6" column="0" colspan="2">
-       <widget class="QLabel" name="label_14">
-        <property name="text">
-         <string>Максимальное перемещение</string>
-        </property>
-       </widget>
-      </item>
-      <item row="6" column="2" colspan="3">
-       <widget class="QLineEdit" name="maxMoveLineEdit">
-        <property name="text">
-         <string>10</string>
-        </property>
-       </widget>
-      </item>
-      <item row="6" column="5" colspan="4">
-       <widget class="QLabel" name="label_17">
-        <property name="text">
-         <string>Подъем отрезков от рамок</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item row="6" column="9">
-       <widget class="QLineEdit" name="deltaUpLineEdit">
-        <property name="text">
-         <string>0.02</string>
-        </property>
-       </widget>
-      </item>
-      <item row="7" column="0" colspan="3">
-       <widget class="QLabel" name="label_18">
-        <property name="text">
-         <string>Максимальное значение удлинения</string>
-        </property>
-       </widget>
-      </item>
-      <item row="7" column="3" colspan="4">
-       <widget class="QLineEdit" name="elongationMaxLineEdit">
-        <property name="text">
-         <string>0.00155604</string>
-        </property>
-       </widget>
-      </item>
-      <item row="8" column="0" colspan="2">
-       <widget class="QLabel" name="label_20">
-        <property name="text">
-         <string>Максимальная дальность</string>
-        </property>
-       </widget>
-      </item>
-      <item row="8" column="3" colspan="3">
-       <widget class="QLineEdit" name="farDistanceLineEdit">
-        <property name="text">
-         <string>10</string>
-        </property>
-       </widget>
-      </item>
-      <item row="9" column="4">
-       <widget class="QPushButton" name="saveSolverSettingsPushButton">
-        <property name="text">
-         <string>Сохранить</string>
-        </property>
-       </widget>
-      </item>
-      <item row="9" column="5">
-       <widget class="QPushButton" name="resetSettingsPushButton">
-        <property name="text">
-         <string>Сбросить</string>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="6" colspan="3">
-       <widget class="QLabel" name="label_11">
-        <property name="text">
-         <string>Высота слоя</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="2" colspan="3">
-       <widget class="QLineEdit" name="gammaMinLineEdit">
-        <property name="text">
-         <string>0.000001</string>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="2" colspan="3">
-       <widget class="QLineEdit" name="stepLineEdit">
-        <property name="text">
-         <string>0.1</string>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="9">
-       <widget class="QLineEdit" name="layerHeightLineEdit">
-        <property name="text">
-         <string>0.2</string>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="0" colspan="2">
-       <widget class="QLabel" name="label_12">
-        <property name="text">
-         <string>Шаг интегрирования</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="6" colspan="3">
-       <widget class="QLabel" name="label_8">
-        <property name="text">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;ễ &lt;/span&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt;(eDoubleStar)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1" colspan="3">
-       <widget class="QLineEdit" name="pressureStreamLineEdit">
-        <property name="text">
-         <string>1</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="2" colspan="3">
-       <widget class="QLineEdit" name="fiMaxLineEdit">
-        <property name="text">
-         <string>0.261799</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="4" colspan="4">
-       <widget class="QLineEdit" name="yVelStreamLineEdit">
-        <property name="text">
-         <string>0</string>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="0" colspan="2">
-       <widget class="QLabel" name="label_10">
-        <property name="text">
-         <string>Минимальное значение γ </string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="0" colspan="2">
-       <widget class="QLabel" name="label_9">
-        <property name="text">
-         <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+  <widget class="QGroupBox" name="groupBox_2">
+   <property name="geometry">
+    <rect>
+     <x>9</x>
+     <y>9</y>
+     <width>698</width>
+     <height>371</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>Параметры расчета</string>
+   </property>
+   <widget class="QLabel" name="label_13">
+    <property name="geometry">
+     <rect>
+      <x>335</x>
+      <y>171</y>
+      <width>94</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Количество шагов</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="stepsNumLineEdit">
+    <property name="geometry">
+     <rect>
+      <x>512</x>
+      <y>171</y>
+      <width>133</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>200</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_14">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>197</y>
+      <width>145</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Максимальное перемещение</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="maxMoveLineEdit">
+    <property name="geometry">
+     <rect>
+      <x>161</x>
+      <y>197</y>
+      <width>133</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>10</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_17">
+    <property name="geometry">
+     <rect>
+      <x>335</x>
+      <y>197</y>
+      <width>137</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Подъем отрезков от рамок</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="deltaUpLineEdit">
+    <property name="geometry">
+     <rect>
+      <x>512</x>
+      <y>197</y>
+      <width>133</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>0.02</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_18">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>223</y>
+      <width>181</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Максимальное значение удлинения</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="elongationMaxLineEdit">
+    <property name="geometry">
+     <rect>
+      <x>208</x>
+      <y>223</y>
+      <width>133</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>0.00155604</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_20">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>249</y>
+      <width>130</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Максимальная дальность</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="farDistanceLineEdit">
+    <property name="geometry">
+     <rect>
+      <x>208</x>
+      <y>249</y>
+      <width>133</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>10</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="saveSolverSettingsPushButton">
+    <property name="geometry">
+     <rect>
+      <x>254</x>
+      <y>275</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Сохранить</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="resetSettingsPushButton">
+    <property name="geometry">
+     <rect>
+      <x>335</x>
+      <y>275</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Сбросить</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_11">
+    <property name="geometry">
+     <rect>
+      <x>416</x>
+      <y>145</y>
+      <width>63</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Высота слоя</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="gammaMinLineEdit">
+    <property name="geometry">
+     <rect>
+      <x>161</x>
+      <y>145</y>
+      <width>133</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>0.000001</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="stepLineEdit">
+    <property name="geometry">
+     <rect>
+      <x>161</x>
+      <y>171</y>
+      <width>133</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>0.1</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="layerHeightLineEdit">
+    <property name="geometry">
+     <rect>
+      <x>512</x>
+      <y>145</y>
+      <width>133</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>0.2</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_12">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>171</y>
+      <width>107</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Шаг интегрирования</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_8">
+    <property name="geometry">
+     <rect>
+      <x>416</x>
+      <y>96</y>
+      <width>90</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;ễ &lt;/span&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt;(eDoubleStar)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="pressureStreamLineEdit">
+    <property name="geometry">
+     <rect>
+      <x>108</x>
+      <y>67</y>
+      <width>133</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>1</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="fiMaxLineEdit">
+    <property name="geometry">
+     <rect>
+      <x>161</x>
+      <y>119</y>
+      <width>133</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>0.261799</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="yVelStreamLineEdit">
+    <property name="geometry">
+     <rect>
+      <x>254</x>
+      <y>23</y>
+      <width>133</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>0</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_10">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>145</y>
+      <width>130</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Минимальное значение γ </string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_9">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>119</y>
+      <width>137</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Максимальное значение φ &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="9">
-       <widget class="QLineEdit" name="eDoubleStarLineEdit">
-        <property name="text">
-         <string>0.9</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="9">
-       <widget class="QLineEdit" name="densityLineEdit">
-        <property name="text">
-         <string>1.2</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="7" colspan="2">
-       <widget class="QLabel" name="label_19">
-        <property name="text">
-         <string>Плотность</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="8" colspan="2">
-       <widget class="QLineEdit" name="zVelStreamLineEdit">
-        <property name="text">
-         <string>1</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1" colspan="3">
-       <widget class="QLineEdit" name="eStarLineEdit">
-        <property name="text">
-         <string>0.05</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="0">
-       <widget class="QLabel" name="label_6">
-        <property name="text">
-         <string>Скорость потока</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="label_5">
-        <property name="text">
-         <string>Давление потока </string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1" colspan="3">
-       <widget class="QLineEdit" name="xVelStreamLineEdit">
-        <property name="text">
-         <string>0</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="label_7">
-        <property name="text">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;ẽ &lt;/span&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt;(eStar)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item row="1" column="0">
-    <widget class="QGroupBox" name="groupBox">
-     <property name="title">
-      <string>Параметры свободного движения</string>
-     </property>
-     <widget class="QLineEdit" name="yVelBodyLineEdit">
-      <property name="geometry">
-       <rect>
-        <x>216</x>
-        <y>30</y>
-        <width>220</width>
-        <height>20</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>0</string>
-      </property>
-     </widget>
-     <widget class="QLineEdit" name="xVelBodyLineEdit">
-      <property name="geometry">
-       <rect>
-        <x>108</x>
-        <y>30</y>
-        <width>102</width>
-        <height>20</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>-1</string>
-      </property>
-     </widget>
-     <widget class="QLineEdit" name="zVelBodyLineEdit">
-      <property name="geometry">
-       <rect>
-        <x>442</x>
-        <y>30</y>
-        <width>139</width>
-        <height>20</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>0</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_15">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>30</y>
-        <width>92</width>
-        <height>20</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Скорость тела</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="saveFreeMotionSettingsPushButton">
-      <property name="geometry">
-       <rect>
-        <x>249</x>
-        <y>70</y>
-        <width>75</width>
-        <height>23</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Сохранить</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="resetFreeMotionSettingsPushButton">
-      <property name="geometry">
-       <rect>
-        <x>330</x>
-        <y>70</y>
-        <width>75</width>
-        <height>23</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Сбросить</string>
-      </property>
-     </widget>
-    </widget>
-   </item>
-  </layout>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="eDoubleStarLineEdit">
+    <property name="geometry">
+     <rect>
+      <x>512</x>
+      <y>93</y>
+      <width>133</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>0.9</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="densityLineEdit">
+    <property name="geometry">
+     <rect>
+      <x>512</x>
+      <y>67</y>
+      <width>133</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>1.2</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_19">
+    <property name="geometry">
+     <rect>
+      <x>448</x>
+      <y>70</y>
+      <width>54</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Плотность</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="zVelStreamLineEdit">
+    <property name="geometry">
+     <rect>
+      <x>480</x>
+      <y>23</y>
+      <width>133</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>1</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="eStarLineEdit">
+    <property name="geometry">
+     <rect>
+      <x>108</x>
+      <y>93</y>
+      <width>133</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>0.05</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_6">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>23</y>
+      <width>87</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Скорость потока</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_5">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>67</y>
+      <width>92</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Давление потока </string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="xVelStreamLineEdit">
+    <property name="geometry">
+     <rect>
+      <x>108</x>
+      <y>23</y>
+      <width>133</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>0</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_7">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>93</y>
+      <width>52</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;ẽ &lt;/span&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt;(eStar)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>356</x>
+      <y>230</y>
+      <width>151</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Количество шагов 
+равноускоренного движения</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="acceleratedStepsNumLineEdit">
+    <property name="geometry">
+     <rect>
+      <x>520</x>
+      <y>240</y>
+      <width>113</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>12</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QGroupBox" name="groupBox">
+   <property name="geometry">
+    <rect>
+     <x>9</x>
+     <y>393</y>
+     <width>698</width>
+     <height>111</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>Параметры свободного движения</string>
+   </property>
+   <widget class="QLineEdit" name="yVelBodyLineEdit">
+    <property name="geometry">
+     <rect>
+      <x>216</x>
+      <y>30</y>
+      <width>220</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>0</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="xVelBodyLineEdit">
+    <property name="geometry">
+     <rect>
+      <x>108</x>
+      <y>30</y>
+      <width>102</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>-1</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="zVelBodyLineEdit">
+    <property name="geometry">
+     <rect>
+      <x>442</x>
+      <y>30</y>
+      <width>139</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>0</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_15">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>30</y>
+      <width>92</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Скорость тела</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="saveFreeMotionSettingsPushButton">
+    <property name="geometry">
+     <rect>
+      <x>249</x>
+      <y>70</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Сохранить</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="resetFreeMotionSettingsPushButton">
+    <property name="geometry">
+     <rect>
+      <x>330</x>
+      <y>70</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Сбросить</string>
+    </property>
+   </widget>
+  </widget>
  </widget>
  <resources/>
  <connections/>
