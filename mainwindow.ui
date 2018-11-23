@@ -1700,8 +1700,16 @@
     <addaction name="withoutAccelerateMotionAction"/>
     <addaction name="acceleratedMotionAction"/>
    </widget>
+   <widget class="QMenu" name="menu">
+    <property name="title">
+     <string>Управление расчетом</string>
+    </property>
+    <addaction name="stopAction"/>
+    <addaction name="exitAction"/>
+   </widget>
    <addaction name="openMenu"/>
    <addaction name="settingsMenu"/>
+   <addaction name="menu"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -1769,6 +1777,16 @@
   <action name="actiongfhfgh">
    <property name="text">
     <string>gfhfgh</string>
+   </property>
+  </action>
+  <action name="stopAction">
+   <property name="text">
+    <string>Остановить (Ctrl+S)</string>
+   </property>
+  </action>
+  <action name="exitAction">
+   <property name="text">
+    <string>Выход (Ctrl+E)</string>
    </property>
   </action>
  </widget>

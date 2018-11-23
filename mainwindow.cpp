@@ -25,6 +25,12 @@ MainWindow::MainWindow(QWidget *parent) :
     keyCtrlR->setKey(Qt::CTRL + Qt::Key_R);
     keyCtrlH = new QShortcut(this);
     keyCtrlH->setKey(Qt::CTRL + Qt::Key_H);
+    keyCtrlS=new QShortcut(this);
+    keyCtrlS->setKey(Qt::CTRL + Qt::Key_S);
+
+    keyCtrlE = new QShortcut(this);
+    keyCtrlE->setKey(Qt::CTRL + Qt::Key_E);
+
     QSurfaceFormat format;
     format.setMajorVersion(3);
     format.setMinorVersion(3);
@@ -70,6 +76,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect (keyCtrlO, SIGNAL(activated()), this, SLOT(openPassport()));
     connect (keyCtrlR, SIGNAL(activated()), this, SLOT(keyCtrlRActiavated()));
     connect (keyCtrlH, SIGNAL(activated()), this, SLOT(showSphere()));
+    connect (keyCtrlS, SIGNAL(activated()), this, SLOT(stop()));
+    connect (keyCtrlE, SIGNAL(activated()), this, SLOT(close()));
     connect (solver, SIGNAL(variatingFinished()), this, SLOT(showInfo()));
     connect (solver, SIGNAL(sendMaxGamma(double)), this, SLOT(setMaxGamma(double)));
     connect (ui->updateScreenAction, SIGNAL(triggered(bool)), this, SLOT(updateScreen()));
@@ -77,11 +85,13 @@ MainWindow::MainWindow(QWidget *parent) :
     connect (solver, SIGNAL(finishSolver()), this, SLOT(solverFinished()));
     connect (ui->openVortonsDirAction, SIGNAL(triggered()),this, SLOT(openDirectory()));
     connect (waitForOpen, SIGNAL(sendVortons(const QVector<Vorton>&, const QVector<Vorton>&)), this , SLOT(drawGUI(const QVector<Vorton>&, const QVector<Vorton>&)),Qt::BlockingQueuedConnection);
+    connect (ui->exitAction, SIGNAL(triggered()), this, SLOT(close()));
+    connect (ui->stopAction, SIGNAL(triggered()), this, SLOT(stop()));
     displaySphere=true;
     showSphere();
     ui->openGLWidget->backgroundColor = Qt::white;
     QApplication::setStyle(QStyleFactory::create("fusion"));
-
+    exitState=ExitState::None;
     closeBox.setWindowTitle("Завершение работы");
     closeBox.setLabelText("Ожидайте завершения работы программы");
     closeBox.setMaximum(0);
@@ -104,6 +114,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
         closeBox.show();
         event->ignore();
     }
+    exitState=ExitState::Closed;
 }
 
 /*!
@@ -606,11 +617,87 @@ void MainWindow::showInfo()
     QMessageBox::information(this, tr("Информация"),tr("Вариация параметров завершена"));
 }
 
+void MainWindow::stop()
+{
+    Solver::interrupted=true;
+    if (solving)
+    {
+        closeBox.open();
+        closeBox.show();
+    }
+    exitState=ExitState::Stopped;
+}
+
 void MainWindow::solverFinished()
 {
     closeBox.close();
     solving=false;
-    close();
+    if (exitState==ExitState::Closed)
+        close();
+    if (exitState==ExitState::Stopped)
+    {
+        Solver::interrupted=false;
+        if (ui->tabWidget->currentIndex()==0)
+        {
+            ui->pointsRaisingSphereLineEdit->setDisabled(false);
+            ui->epsilonSphereLineEdit->setDisabled(false);
+            ui->deltaSphereFragmLineEdit->setDisabled(false);
+            ui->radSphereLineEdit->setDisabled(false);
+            ui->tetaSphereLineEdit->setDisabled(false);
+            ui->fiSphereLineEdit->setDisabled(false);
+            ui->sphereSolverPushButton->setDisabled(false);
+            ui->variateSphereSolverPushButton->setDisabled(false);
+            ui->sphereFreeMotionSolverPushButton->setDisabled(false);
+        }
+
+        if (ui->tabWidget->currentIndex()==1)
+        {
+            ui->pointsRaisingCylinderLineEdit->setDisabled(false);
+            ui->epsilonCylinderLineEdit->setDisabled(false);
+            ui->deltaCylinderFragmLineEdit->setDisabled(false);
+            ui->radiusCylinderLineEdit->setDisabled(false);
+            ui->heightCylinderLineEdit->setDisabled(false);
+            ui->heightFragmCylinderLineEdit->setDisabled(false);
+            ui->fiCylinderLineEdit->setDisabled(false);
+            ui->diameterCylinderLineEdit->setDisabled(false);
+            ui->cylinderSolverPushButton->setDisabled(false);
+            ui->variateCylinderSolverPushButton->setDisabled(false);
+        }
+
+        if (ui->tabWidget->currentIndex()==2)
+        {
+            ui->pointsRaisingRotationBodyLineEdit->setDisabled(false);
+            ui->epsilonRotationBodyLineEdit->setDisabled(false);
+            ui->deltaRotationBodyFragmLineEdit->setDisabled(false);
+            ui->partRotationBodyLineEdit->setDisabled(false);
+            ui->fiRotationBodyLineEdit->setDisabled(false);
+            ui->sectionDistanceRotationBodyLineEdit->setDisabled(false);
+            ui->xBegRotationBodyLineEdit->setDisabled(false);
+            ui->xEndRotationBodyLineEdit->setDisabled(false);
+            ui->rotationBodySolverPushButton->setDisabled(false);
+            ui->variateRotationBodySolverPushButton->setDisabled(false);
+            ui->rotationBodyFreeMotionSolverPushButton->setDisabled(false);
+        }
+
+        if (ui->tabWidget->currentIndex()==3)
+        {
+            ui->pointsRaisingRotationCutBodyLineEdit->setDisabled(false);
+            ui->epsilonRotationCutBodyLineEdit->setDisabled(false);
+            ui->deltaRotationCutBodyFragmLineEdit->setDisabled(false);
+            ui->partRotationCutBodyLineEdit->setDisabled(false);
+            ui->fiRotationCutBodyLineEdit->setDisabled(false);
+            ui->sectionDistanceRotationCutBodyLineEdit->setDisabled(false);
+            ui->xBegRotationCutBodyLineEdit->setDisabled(false);
+            ui->radRotationCutBodyLineEdit->setDisabled(false);
+            ui->xEndRotationCutBodyLineEdit->setDisabled(false);
+            ui->rotationCutBodySolverPushButton->setDisabled(false);
+            ui->rotationCutBodyFreeMotionSolverPushButton->setDisabled(false);
+            ui->rotationCutBodyLaunchSolverPushButton->setDisabled(false);
+            ui->rotationCutBodyLaunchSolverPushButton->setDisabled(false);
+            ui->rotationCutBodyNearScreenPushButton->setDisabled(false);
+            ui->variateRotationCutBodySolverPushButton->setDisabled(false);
+        }
+    }
 }
 
 void MainWindow::setMaxGamma(double maxGamma)

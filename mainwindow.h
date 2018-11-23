@@ -11,6 +11,7 @@
 #include <QProgressDialog>
 #include <QActionGroup>
 
+enum ExitState {Stopped, Closed, None};
 namespace Ui {
 class MainWindow;
 }
@@ -43,7 +44,9 @@ private:
     QShortcut *keyCtrlO; ///<Указатель на хоткей (Ctrl+O)
     QShortcut *keyCtrlR; ///<Указатель на хоткей (Ctrl+R)
     QShortcut *keyCtrlH; ///<Указатель на хоткей (Ctrl+H)
-
+    QShortcut *keyCtrlS;
+    QShortcut *keyCtrlE;
+    ExitState exitState;
     bool checkDrawing(const Vector3D &mid, const Vector3D &tail);
     void setParameters(SphereParameters &sphPar);
     void setParameters(CylinderParameters &cylPar);
@@ -88,6 +91,7 @@ private slots:
 
 public slots:
     void showInfo();
+    void stop();
     void solverFinished();
     void setMaxGamma(double maxGamma);
     void recieveProgressSphere(const int percentage);
