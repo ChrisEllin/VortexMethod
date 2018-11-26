@@ -166,7 +166,7 @@ BodyFragmentation::BodyFragmentation(BodyType body, const FragmentationParameter
     }
     case ROTATIONBODY:
     {
-        rotationBody = RotationBodyParameters {param.rotationBodyFiFragNum, param.rotationBodyPartFragNum, param.rotationBodyXBeg, param.rotationBodyXEnd,param.rotationBodySectionDistance,  param.delta, param.pointsRaising, param.rotationBodySectionEndDistance,param.vortonsRad};
+        rotationBody = RotationBodyParameters {param.rotationBodyFiFragNum, param.rotationBodyPartFragNum, param.rotationBodyXBeg, param.rotationBodyXEnd,param.rotationBodySectionDistance,param.rotationBodySectionEndDistance,  param.delta, param.pointsRaising, param.vortonsRad};
         forming=FormingParameters{param.formingDiameter,param.formingTailDiameter, param.formingLengthSectorOne,param.formingLengthSectorTwo,param.formingAngle,param.rotationBodyFormingType};
         rotationBodyFragmantation();
         break;
@@ -365,7 +365,7 @@ void BodyFragmentation::rotationBodyFragmantation()
     QVector<double> yArr(NFRAG);
 
     double newBeg=rotationBody.xBeg+rotationBody.sectionDistance;
-    double newEnd=rotationBody.xEnd-rotationBody.sectionDistance;
+    double newEnd=rotationBody.xEnd-rotationBody.sectionEndDistance;
     double fi0 = 2*M_PI/rotationBody.fiFragNum;
     double height=(newEnd-newBeg)/(NFRAG-1);
     s[0]=0.0;
@@ -736,6 +736,7 @@ FormingParameters BodyFragmentation::getForming()
 */
 double BodyFragmentation::presetFunctionF(double x, FormingParameters parameters)
 {
+ //   if ((x>=0)&&(x<=2)) return sqrt(1-(x-1)*(x-1));
     switch (parameters.typeNum)
     {
     case 0:
@@ -784,10 +785,6 @@ double BodyFragmentation::presetFunctionF(double x, FormingParameters parameters
     }
     return 0.0;
 
-//    if ((x>=0)&&(x<=0.5)) return sqrt(0.5*0.5-(x-0.5)*(x-0.5));
-//    if ((x>=0.5)&&(x<=2)) return 0.5;
-//    if ((x>=2)&&(x<=2.5)) return 2.5-x;
-//    return 0.0;
 }
 
 /*!
@@ -797,6 +794,7 @@ double BodyFragmentation::presetFunctionF(double x, FormingParameters parameters
 */
 double BodyFragmentation::presetDeriveFunctionF(double x, FormingParameters parameters)
 {
+//    if ((x>=0)&&(x<=2)) return -(x-1)/presetFunctionF(x,parameters);
     switch (parameters.typeNum)
     {
     case 0:
@@ -845,10 +843,7 @@ double BodyFragmentation::presetDeriveFunctionF(double x, FormingParameters para
     }
     return 0.0;
 
-//    if ((x>=0) && (x<=0.5)) return -(x-0.5)/sqrt(0.5*0.5-(x-0.5)*(x-0.5));
-//    if ((x>=0.5)&&(x<=2)) return 0.0;
-//    if ((x>=2)&&(x<=2.5)) return -1.0;
-//    return 0.0;
+
 }
 
 /*!

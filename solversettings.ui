@@ -106,7 +106,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>0.02</string>
+     <string>0.0</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_18">
@@ -278,7 +278,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>1</string>
+     <string>0</string>
     </property>
    </widget>
    <widget class="QLineEdit" name="fiMaxLineEdit">
@@ -360,7 +360,7 @@ p, li { white-space: pre-wrap; }
      </rect>
     </property>
     <property name="text">
-     <string>1.2</string>
+     <string>1</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_19">
@@ -386,7 +386,7 @@ p, li { white-space: pre-wrap; }
      </rect>
     </property>
     <property name="text">
-     <string>1</string>
+     <string>0</string>
     </property>
    </widget>
    <widget class="QLineEdit" name="eStarLineEdit">
@@ -438,7 +438,7 @@ p, li { white-space: pre-wrap; }
      </rect>
     </property>
     <property name="text">
-     <string>0</string>
+     <string>1</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_7">
