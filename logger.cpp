@@ -392,6 +392,7 @@ void Logger::writePassport(const SolverParameters &solvPar, const FragmentationP
         {
         case 0:
         {
+        *passportTextStream.get()<<QString("Полусфера-цилиндр-конус\n");
         *passportTextStream.get()<<"Диаметр образующей: "+QString::number(forming.diameter)+"\n";
         *passportTextStream.get()<<"Длина первой секции: "+QString::number(forming.sectorOneLength)+"\n";
         *passportTextStream.get()<<"Длина второй секции: "+QString::number(forming.sectorTwoLength)+"\n";
@@ -399,6 +400,7 @@ void Logger::writePassport(const SolverParameters &solvPar, const FragmentationP
         }
         case 1:
         {
+        *passportTextStream.get()<<QString("Конус-цилиндр-конус\n");
         *passportTextStream.get()<<"Диаметр образующей: "+QString::number(forming.diameter)+"\n";
         *passportTextStream.get()<<"Длина образующей: "+QString::number(forming.sectorOneLength)+"\n";
         *passportTextStream.get()<<"Угол конуса: "+QString::number(forming.angle)+"\n";
@@ -406,6 +408,7 @@ void Logger::writePassport(const SolverParameters &solvPar, const FragmentationP
         }
         case 2:
         {
+        *passportTextStream.get()<<QString("Эллипсоид вращения\n");
         *passportTextStream.get()<<"Диаметр образующей: "+QString::number(forming.diameter)+"\n";
         *passportTextStream.get()<<"Длина образующей: "+QString::number(forming.sectorOneLength)+"\n";
         break;
