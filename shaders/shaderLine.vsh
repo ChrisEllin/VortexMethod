@@ -2,7 +2,7 @@
 #extension GL_ARB_separate_shader_objects: enable
 
 /*layout(location = 0) */in vec4 posAttr;
-/*layout(location = 1) */attribute vec3 colAttr;
+/*layout(location = 1) */uniform vec3 colAttr;
 
 out vec3 col;
 
