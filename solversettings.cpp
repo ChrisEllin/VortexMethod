@@ -150,6 +150,24 @@ void SolverSettings::setSolverParameters(SolverParameters &newSolvPar)
     solvPar=newSolvPar;
 }
 
+void SolverSettings::calcAttributes(const QString epsilon)
+{
+    double eps=epsilon.toDouble();
+    ui->eStarLineEdit->setText(QString::number(eps*0.7));
+    on_saveSolverSettingsPushButton_clicked();
+}
+
+void SolverSettings::calcAttributes(double panelLength)
+{
+    ui->stepLineEdit->setText(QString::number(panelLength
+                              /Vector3D(ui->xVelStreamLineEdit->text().toDouble(),ui->yVelStreamLineEdit->text().toDouble(),
+                                        ui->zVelStreamLineEdit->text().toDouble()).length()));
+    ui->elongationMaxLineEdit->setText(QString::number(panelLength*0.05));
+    ui->layerHeightLineEdit->setText(QString::number(panelLength));
+    ui->deltaUpLineEdit->setText(QString::number(panelLength*0.1));
+    on_saveSolverSettingsPushButton_clicked();
+}
+
 /*!
 Сохраняет текущие параметры расчета
 */

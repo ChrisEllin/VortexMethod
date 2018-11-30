@@ -120,6 +120,16 @@ VelBsym MultiFrame::VelAndBsym(const Vector3D& point) const
     return result;
 }
 
+double MultiFrame::length() const
+{
+    double sum=0.0;
+    for (int i=0; i<vortons.size(); i++)
+    {
+        sum+=(vortons[i].getMid()-center).length();
+    }
+    return sum/vortons.size();
+}
+
 /*!
 Возращает три грани рамки
 \return вектор, состоящий из трех концов вортон-отрезков

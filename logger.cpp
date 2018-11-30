@@ -183,6 +183,7 @@ void Logger::createFiles()
     logFile=std::shared_ptr<QFile>(new QFile(path+"/logs.txt"));
     passportFile=std::shared_ptr<QFile>(new QFile(path+"/passport.txt"));
     forcesFile=std::shared_ptr<QFile>(new QFile(path+"/forces.csv"));
+    tableFile=std::shared_ptr<QFile>(new QFile(path+"/tableLog.csv"));
     if (type==SPHERE||type==CYLINDER)
     {
         cpFile=std::shared_ptr<QFile>(new QFile(path+"/cp.csv"));
@@ -239,6 +240,21 @@ void Logger::createFiles()
         QMessageBox::critical(new QWidget(),tr("Ошибка"), tr("Не удалось создать файл для записи сил"));
         exit(1);
     }
+    if (tableFile->open(QIODevice::WriteOnly))
+    {
+        tableTextStream=std::shared_ptr<QTextStream>(new QTextStream(tableFile.get()));
+        *tableTextStream.get()<<QString("Step Number \t");
+        *tableTextStream.get()<<QString("Current Time \t");
+        *tableTextStream.get()<<QString("Generated Number \t");
+        *tableTextStream.get()<<QString("United Number \t");
+        *tableTextStream.get()<<QString("Deleted gamma Number \t");
+        *tableTextStream.get()<<QString("Deleted far Number \t");
+        *tableTextStream.get()<<QString("Remained Number \t");
+        *tableTextStream.get()<<QString("Reguliser \t");
+        *tableTextStream.get()<<QString("Max Gamma \t");
+        *tableTextStream.get()<<QString("Velocity in center \n");
+    }
+
 }
 
 /*!
@@ -381,7 +397,7 @@ void Logger::writePassport(const SolverParameters& solvPar,const FragmentationPa
 
 }
 
-void Logger::writePassport(const SolverParameters &solvPar, const FragmentationParameters &fragPar, const FormingParameters forming)
+void Logger::writePassport(const SolverParameters &solvPar, const FragmentationParameters &fragPar, const FormingParameters forming, const FramesSizes framesSizes)
 {
     writePassport(solvPar,fragPar);
     switch (type)
@@ -425,6 +441,10 @@ void Logger::writePassport(const SolverParameters &solvPar, const FragmentationP
         break;
     }
     }
+    *passportTextStream.get()<<QString("Параметры сетки \n");
+    *passportTextStream.get()<<"Минимальная длина "+QString::number(framesSizes.minFrameSize)+"\n";
+    *passportTextStream.get()<<"Максимальная длина "+QString::number(framesSizes.maxFrameSize)+"\n";
+    *passportTextStream.get()<<"Средняя длина "+QString::number(framesSizes.averFrameSize)+"\n";
     passportTextStream.get()->flush();
 }
 
@@ -467,6 +487,21 @@ void Logger::writeSolverTime(const double solvTime)
     logTextStream.get()->flush();
 }
 
+void Logger::writeTable(const int stepNum, const double stepTime,const double generatedNum, const double maxGamma, const Vector3D velocity, const double reguliser, const int freeVortonsSize, const Counters beforeIntegrC, const Counters afterIntegrC)
+{
+    *tableTextStream.get()<<QString::number(stepNum)+"\t";
+    *tableTextStream.get()<<QString::number(stepTime)+"\t";
+    *tableTextStream.get()<<QString::number(generatedNum)+"\t";
+    *tableTextStream.get()<<QString::number(beforeIntegrC.unitedNum)+"\t";
+    *tableTextStream.get()<<QString::number(beforeIntegrC.vorticityEliminated)+"\t";
+    *tableTextStream.get()<<QString::number(afterIntegrC.tooFarNum)+"\t";
+    *tableTextStream.get()<<QString::number(freeVortonsSize)+"\t";
+    *tableTextStream.get()<<QString::number(reguliser)+"\t";
+    *tableTextStream.get()<<QString::number(maxGamma)+"\t";
+    *tableTextStream.get()<<QString::number(velocity.length())+"\n";
+    tableTextStream.get()->flush();
+}
+
 /*!
 Закрывает все файлы, открытые для записи
 */
@@ -483,6 +518,8 @@ void Logger::closeFiles()
         if (cpFile->isOpen())
             cpFile->close();
     }
+    if (tableFile->isOpen())
+        tableFile->close();
 }
 
 /*!

@@ -38,6 +38,9 @@ private:
     std::shared_ptr<QTextStream> forcesTextStream; ///<Поток для записи рассчитанных силы и аэродинамических характеристик
     std::shared_ptr<QFile> cpFile; ///<Файл содержащий распределение Ср
     std::shared_ptr<QTextStream> cpTextStream; ///<Поток для записи распределения Ср
+    std::shared_ptr<QFile> tableFile;
+    std::shared_ptr<QTextStream> tableTextStream;
+
     QString path; ///<Текущий путь записи каталога; если пуст - каталог сборки
     BodyType type; ///<Вид рассчитываемого тела
 public:
@@ -49,10 +52,11 @@ public:
     void writeCpFile(const QVector<double> cp, const QVector<double> tetas);
     void writeLogs(const int stepNum, const double stepTime, const int freeVortonsSize, const Counters beforeIntegrC, const Counters afterIntegrC, const Timers beforeIntegrT, const Timers afterIntegrT, const Restrictions restr);
     void writePassport(const SolverParameters& solvPar,const FragmentationParameters& fragPar);
-    void writePassport(const SolverParameters& solvPar,const FragmentationParameters& fragPar, const FormingParameters forming);
+    void writePassport(const SolverParameters& solvPar, const FragmentationParameters& fragPar, const FormingParameters forming, const FramesSizes framesSizes);
     void writePassport(const SolverParameters& solvPar,const FragmentationParameters& fragPar, const FreeMotionParameters& freeMotionPar);
     void writeForces(const Vector3D forces, const Vector3D c);
     void writeSolverTime(const double solvTime);
+    void writeTable(const int stepNum, const double stepTime, const double generatedNum, const double maxGamma, const Vector3D velocity, const double reguliser, const int freeVortonsSize, const Counters beforeIntegrC, const Counters afterIntegrC);
     void closeFiles();
     QString getPath();
     void openVortonFiles(QString vortonsDir);

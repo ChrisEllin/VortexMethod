@@ -87,6 +87,16 @@ MainWindow::MainWindow(QWidget *parent) :
     connect (waitForOpen, SIGNAL(sendVortons(const QVector<Vorton>&, const QVector<Vorton>&)), this , SLOT(drawGUI(const QVector<Vorton>&, const QVector<Vorton>&)),Qt::BlockingQueuedConnection);
     connect (ui->exitAction, SIGNAL(triggered()), this, SLOT(close()));
     connect (ui->stopAction, SIGNAL(triggered()), this, SLOT(stop()));
+    connect (solver, SIGNAL(sendReguliser(double)),this, SLOT(setReguliser(double)));
+    connect (ui->epsilonCylinderLineEdit, SIGNAL(textEdited(const QString)),settings,SLOT(calcAttributes(const QString)));
+    connect (ui->epsilonSphereLineEdit, SIGNAL(textEdited(const QString)),settings,SLOT(calcAttributes(const QString)));
+    connect (ui->epsilonRotationBodyLineEdit, SIGNAL(textEdited(const QString)),settings,SLOT(calcAttributes(const QString)));
+    connect (ui->epsilonRotationCutBodyLineEdit, SIGNAL(textEdited(const QString)),settings,SLOT(calcAttributes(const QString)));
+    connect (ui->epsilonCylinderLineEdit, SIGNAL(textEdited(const QString)),this,SLOT(calcAverLength()));
+    connect (ui->epsilonSphereLineEdit, SIGNAL(textEdited(const QString)),this,SLOT(calcAverLength()));
+    connect (ui->epsilonRotationBodyLineEdit, SIGNAL(textEdited(const QString)),this,SLOT(calcAverLength()));
+    connect (ui->epsilonRotationCutBodyLineEdit, SIGNAL(textEdited(const QString)),this,SLOT(calcAverLength()));
+    connect (this, SIGNAL(sendPanelLength(double)),settings,SLOT(calcAttributes(double)));
     displaySphere=true;
     showSphere();
     ui->openGLWidget->backgroundColor = Qt::white;
@@ -1394,6 +1404,61 @@ void MainWindow::updateScreen()
     drawGUI(currentVortons,currentFrames);
 }
 
+void MainWindow::calcAverLength()
+{
+    double panelLength;
+    switch (ui->tabWidget->currentIndex())
+    {
+    case 0:
+        panelLength = (M_PI/ui->fiSphereLineEdit->text().toInt()*ui->radSphereLineEdit->text().toDouble()*2.0)
+                > (M_PI/ui->tetaSphereLineEdit->text().toInt()*ui->radSphereLineEdit->text().toDouble()*2.0) ? M_PI/ui->fiSphereLineEdit->text().toInt()*ui->radSphereLineEdit->text().toDouble()*2.0
+                : M_PI/ui->tetaSphereLineEdit->text().toInt()*ui->radSphereLineEdit->text().toDouble()*2.0;
+        ui->pointsRaisingSphereLineEdit->setText(QString::number(panelLength*0.5));
+        break;
+    case 1:
+        panelLength = (M_PI/ui->fiCylinderLineEdit->text().toInt()*ui->diameterCylinderLineEdit->text().toDouble())
+                > (ui->heightCylinderLineEdit->text().toDouble()/ui->heightFragmCylinderLineEdit->text().toInt())
+                ? (M_PI/ui->fiCylinderLineEdit->text().toInt()*ui->diameterCylinderLineEdit->text().toDouble())
+                : (ui->heightCylinderLineEdit->text().toDouble()/ui->heightFragmCylinderLineEdit->text().toInt());
+        ui->pointsRaisingCylinderLineEdit->setText(QString::number(panelLength*0.5));
+        break;
+    case 2:
+        switch (ui->stackedWidget->currentIndex())
+        {
+        case 0:
+            panelLength = (M_PI/ui->fiRotationBodyLineEdit->text().toInt()*ui->formingRBDiameterLineEdit->text().toDouble())
+                    > ((ui->formingRBDiameterLineEdit->text().toDouble()*0.5*M_PI + ui->formingRBSectorOneLength->text().toDouble()+
+                        ui->formingRBSectorTwoLength->text().toDouble())/ui->partRotationBodyLineEdit->text().toInt())
+                    ? (M_PI/ui->fiRotationBodyLineEdit->text().toInt()*ui->formingRBDiameterLineEdit->text().toDouble())
+                    :((ui->formingRBDiameterLineEdit->text().toDouble()*0.5*M_PI + ui->formingRBSectorOneLength->text().toDouble()+
+                       ui->formingRBSectorTwoLength->text().toDouble())/ui->partRotationBodyLineEdit->text().toInt());
+            break;
+        case 1:
+            panelLength = (M_PI/ui->fiRotationBodyLineEdit->text().toInt()*ui->formingConeRBDiameterLineEdit->text().toDouble())
+                    > ((ui->formingConeRBLengthLineEdit->text().toDouble())/ui->partRotationBodyLineEdit->text().toInt())
+                    ? ((ui->formingConeRBLengthLineEdit->text().toDouble())/ui->partRotationBodyLineEdit->text().toInt())
+                    : ((ui->formingConeRBLengthLineEdit->text().toDouble())/ui->partRotationBodyLineEdit->text().toInt());
+            break;
+        case 2:
+            panelLength = (M_PI/ui->fiRotationBodyLineEdit->text().toInt()*ui->formingEllipsoidRBDiameterLineEdit->text().toDouble())
+                    > ((ui->formingEllipsoidRBLengthLineEdit->text().toDouble())/ui->partRotationBodyLineEdit->text().toInt())
+                    ? (M_PI/ui->fiRotationBodyLineEdit->text().toInt()*ui->formingEllipsoidRBDiameterLineEdit->text().toDouble())
+                    : ((ui->formingEllipsoidRBLengthLineEdit->text().toDouble())/ui->partRotationBodyLineEdit->text().toInt());
+            break;
+        }
+        ui->pointsRaisingRotationBodyLineEdit->setText(QString::number(panelLength*0.5));
+        break;
+    case 3:
+        panelLength = (M_PI/ui->fiRotationCutBodyLineEdit->text().toInt()*ui->formingRBCDiameterLineEdit->text().toDouble())
+                > ((ui->formingRBCSectorOneLength->text().toDouble()+ui->formingRBCSectorTwoLength->text().toDouble())/ui->partRotationCutBodyLineEdit->text().toInt())
+                ? (M_PI/ui->fiRotationCutBodyLineEdit->text().toInt()*ui->formingRBCDiameterLineEdit->text().toDouble())
+                : ((ui->formingRBCSectorOneLength->text().toDouble()+ui->formingRBCSectorTwoLength->text().toDouble())/ui->partRotationCutBodyLineEdit->text().toInt());
+        ui->pointsRaisingRotationCutBodyLineEdit->setText(QString::number(panelLength*0.5));
+        break;
+    }
+    emit sendPanelLength(panelLength);
+}
+
 /*!
 Запускает вариацию параметров цилиндра с начальными параметрами. Проверяет полноту данных для этого.
 */
@@ -1777,4 +1842,9 @@ void MainWindow::on_rotationBodyFreeMotionSolverPushButton_clicked()
 void MainWindow::on_comboBox_currentIndexChanged(int index)
 {
     ui->stackedWidget->setCurrentIndex(index);
+}
+
+void MainWindow::setReguliser(double reguliser)
+{
+    ui->reguliserLineEdit->setText(QString::number(reguliser));
 }

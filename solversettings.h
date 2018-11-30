@@ -56,6 +56,8 @@ public:
 
 public slots:
     void setSolverParameters(SolverParameters& newSolvPar);
+    void calcAttributes(const QString epsilon);
+    void calcAttributes(double panelLength);
 private slots:
     void on_saveSolverSettingsPushButton_clicked();
     void on_resetSettingsPushButton_clicked();

@@ -47,6 +47,7 @@ public:
     bool checkingVariate(double& dispersion, double& oldDispersion,FragmentationParameters &fragPar, FragmentationParameters &resultFrag, SolverParameters& resultSolv);
     bool checkingForceVariate(double& dispersion, double& oldDispersion,FragmentationParameters &fragPar, FragmentationParameters &resultFrag, SolverParameters& resultSolv);
 signals:
+    void sendReguliser(double reguliser);
     void finishSolver();
     void sendNormalsVis(QVector<Vector3D>& controlPoints, QVector<Vector3D>& normals);
     void sendMaxGamma(double maxGamma);

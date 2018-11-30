@@ -358,6 +358,21 @@ void FrameCalculations::setMatrixSize(int size)
     matrixSize=size;
 }
 
+FramesSizes FrameCalculations::calcFrameSizes(QVector<std::shared_ptr<MultiFrame> > frames)
+{
+    QVector<double> frameSizes;
+    for (int i=0; i<frames.size(); i++)
+        frameSizes.push_back(frames[i]->length());
+    FramesSizes sizes;
+    sizes.maxFrameSize=*std::max_element(frameSizes.begin(),frameSizes.end());
+    sizes.minFrameSize=*std::min_element(frameSizes.begin(),frameSizes.end());
+    double aver=0.0;
+    for (int i=0; i<frameSizes.size();i++)
+        aver+=frameSizes[i]/frameSizes.size();
+    sizes.averFrameSize=aver;
+    return sizes;
+}
+
 /*!
 Функция установки завихренностей рамкам
 \param[in,out] frames Вектор, содержащий рамки
@@ -464,7 +479,8 @@ Vector3D FrameCalculations::forceCalc(const Vector3D streamVel, double streamPre
 \param[in] tau Величина шага
 \param[in] center Координата центра сферы
 */
-void FrameCalculations::cpSum(const int stepNum, const int stepsQuant, QVector<double> &cp, const int fiFragNum, const double radius, const double pointsRaising, const QVector<double> &tetas, const Vector3D streamVel, const double streamPres, const double density, const QVector<std::shared_ptr<MultiFrame>> frames, QVector<Vorton> freeVortons, double tau, const Vector3D center)
+void FrameCalculations::
+cpSum(const int stepNum, const int stepsQuant, QVector<double> &cp, const int fiFragNum, const double radius, const double pointsRaising, const QVector<double> &tetas, const Vector3D streamVel, const double streamPres, const double density, const QVector<std::shared_ptr<MultiFrame>> frames, QVector<Vorton> freeVortons, double tau, const Vector3D center)
 {
     int cpQuant;
     if (stepsQuant>200)

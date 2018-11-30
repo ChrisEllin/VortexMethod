@@ -77,6 +77,7 @@ private slots:
     void on_rotationCutBodyLaunchSolverPushButton_clicked();
     void on_sphereFreeMotionSolverPushButton_clicked();
     void updateScreen();
+    void calcAverLength();
     void on_variateCylinderSolverPushButton_clicked();
 
     void on_variateRotationBodySolverPushButton_clicked();
@@ -90,9 +91,11 @@ private slots:
     void on_comboBox_currentIndexChanged(int index);
 
 public slots:
+    void setReguliser(double reguliser);
     void showInfo();
     void stop();
     void solverFinished();
+
     void setMaxGamma(double maxGamma);
     void recieveProgressSphere(const int percentage);
     void recieveProgressCylinder(const int percentage);
@@ -109,6 +112,7 @@ signals:
     void setPlaneYZ(); ///<Сигнал о переходе к YZ отображению
     void setPlaneZY(); ///<Сигнал о переходе к ZY отображению
     void resetPlane(); ///<Сигнал о переходе к начальному отображению
+    void sendPanelLength(double panelLength);
     void sendSolverParameters(SolverParameters& solvPar); ///<Сигнал, отправляющий параметры расчета
     void drawSegment(QVector3D center, QVector3D top, SArrow::vort_type); ///<Сигнал об отрисовке с выбором типа отрисовки
     void drawSegment(QVector3D center, QVector3D top); ///< \overload Сигнал об отрисовке точки

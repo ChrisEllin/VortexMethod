@@ -7,6 +7,12 @@
 
     Создает многоугольную рамку из вортон-отрезков для последующего построения сетки вокруг тела
 */
+struct FramesSizes
+{
+    double minFrameSize;
+    double averFrameSize;
+    double maxFrameSize;
+};
 
 class MultiFrame
 {
@@ -25,6 +31,7 @@ public:
     virtual Vector3D velocity(const Vector3D& point) const;
     virtual void setVorticity(const double _vorticity);
     virtual VelBsym VelAndBsym (const Vector3D& point) const;
+    virtual double length() const;
     virtual QVector<Vector3D> getThreeEdges() const;
     virtual double solidAngleFrame(const Vector3D& point) const;
     static double solidAngle(const Vector3D& v1, const Vector3D& v2, const Vector3D& v3, const Vector3D& point);

@@ -90,9 +90,12 @@ void Solver::sphereSolver(const FragmentationParameters &fragPar)
         Eigen::VectorXd column=functions.columnCalc(solvPar.streamVel,freeVortons,normals,controlPoints);
         Eigen::VectorXd vorticities=functions.vorticitiesCalc(column);
         emit sendMaxGamma(*std::max_element(vorticities.data(),vorticities.data()+vorticities.size(),Vector3D::fabsCompare));
+        emit sendReguliser(vorticities[vorticities.size()-1]);
         FrameCalculations::setVorticity(frames,vorticities);
 
+
         newVortons=FrameCalculations::getLiftedFrameVortons(frames,normals,solvPar.deltaUp);
+        int generatedNum=newVortons.size();
         functions.unionVortons(newVortons,solvPar.eStar,solvPar.eDoubleStar,fragPar.vortonsRad);
         functions.removeSmallVorticity(newVortons,solvPar.minVorticity);
 
@@ -123,16 +126,18 @@ void Solver::sphereSolver(const FragmentationParameters &fragPar)
         functions.clear();
         logger->writeForces(force,cAerodynamics[i]);
         logger->writeLogs(i,stepTime.elapsed()*0.001, freeVortons.size(), countersBeforeIntegration,countersAfterIntegration, timersBeforeIntegration, timersAfterIntegration, restrictions);
+        logger->writeTable(i,stepTime.elapsed()*0.001,generatedNum,*std::max_element(vorticities.data(),vorticities.data()+vorticities.size(),Vector3D::fabsCompare),
+                           FrameCalculations::velocity(center,solvPar.streamVel,freeVortons,frames),vorticities[vorticities.size()-1],freeVortons.size(),countersBeforeIntegration,countersAfterIntegration);
         logger->writeVortons(frames,freeVortons,i);
         emit sendProgressSphere(i);
         emit repaintGUI(freeVortons, frames);
 
-        if (FrameCalculations::exploseSphere(freeVortons))
-        {
-            qDebug()<<"Explose";
-            Solver::explosion=true;
-            return;
-        }
+//        if (FrameCalculations::exploseSphere(freeVortons))
+//        {
+//            qDebug()<<"Explose";
+//            Solver::explosion=true;
+//            return;
+//        }
     }
     functions.cpAverage(cp,solvPar.stepsNum);
     logger->writeCpFile(cp,tetas);
@@ -180,9 +185,11 @@ void Solver::sphereFreeMotionSolver(const FragmentationParameters &fragPar)
         Eigen::VectorXd column=functions.columnCalc(relVel,freeVortons,normals,controlPoints);
         Eigen::VectorXd vorticities=functions.vorticitiesCalc(column);
         emit sendMaxGamma(*std::max_element(vorticities.data(),vorticities.data()+vorticities.size(),Vector3D::fabsCompare));
+        emit sendReguliser(vorticities[vorticities.size()-1]);
         FrameCalculations::setVorticity(frames,vorticities);
 
         newVortons=FrameCalculations::getLiftedFrameVortons(frames,normals,solvPar.deltaUp);
+        int generatedNum=newVortons.size();
         functions.unionVortons(newVortons,solvPar.eStar,solvPar.eDoubleStar,fragPar.vortonsRad);
         functions.removeSmallVorticity(newVortons,solvPar.minVorticity);
 
@@ -215,6 +222,8 @@ void Solver::sphereFreeMotionSolver(const FragmentationParameters &fragPar)
         logger->writeForces(force,cAerodynamics[i]);
         logger->writeLogs(i,stepTime.elapsed()*0.001, freeVortons.size(), countersBeforeIntegration,countersAfterIntegration, timersBeforeIntegration, timersAfterIntegration, restrictions);
         logger->writeVortons(frames,freeVortons,i);
+        logger->writeTable(i,stepTime.elapsed()*0.001,generatedNum,*std::max_element(vorticities.data(),vorticities.data()+vorticities.size(),Vector3D::fabsCompare),
+                           FrameCalculations::velocity(center,solvPar.streamVel,freeVortons,frames),vorticities[vorticities.size()-1],freeVortons.size(),countersBeforeIntegration,countersAfterIntegration);
         emit sendProgressSphere(i);
         emit repaintGUI(freeVortons, frames);
 
@@ -247,6 +256,7 @@ void Solver::cylinderSolver(const FragmentationParameters& fragPar)
     QVector<Vorton> freeVortons;
     QVector<Vorton> newVortons;
     QVector<double> cp(fragPar.cylinderFiFragNum);
+    Vector3D center (0.0,fragPar.cylinderHeight*0.5,0.0);
 
     emit updateCylinderMaximum(solvPar.stepsNum-1);
 
@@ -260,9 +270,11 @@ void Solver::cylinderSolver(const FragmentationParameters& fragPar)
         Eigen::VectorXd column=functions.columnCalc(solvPar.streamVel,freeVortons,normals,controlPoints);
         Eigen::VectorXd vorticities=functions.vorticitiesCalc(column);
         emit sendMaxGamma(*std::max_element(vorticities.data(),vorticities.data()+vorticities.size(),Vector3D::fabsCompare));
+        emit sendReguliser(vorticities[vorticities.size()-1]);
         FrameCalculations::setVorticity(frames,vorticities);
 
         newVortons=FrameCalculations::getLiftedFrameVortons(frames,normals,solvPar.deltaUp);
+        int generatedNum=newVortons.size();
         functions.unionVortons(newVortons,solvPar.eStar,solvPar.eDoubleStar,fragPar.vortonsRad);
         functions.removeSmallVorticity(newVortons,solvPar.minVorticity);
 
@@ -294,6 +306,8 @@ void Solver::cylinderSolver(const FragmentationParameters& fragPar)
         logger->writeForces(force,Vector3D(0.0,0.0,0.0));
         logger->writeLogs(i,stepTime.elapsed()*0.001,freeVortons.size(), countersBeforeIntegration,countersAfterIntegration, timersBeforeIntegration, timersAfterIntegration, restrictions);
         logger->writeVortons(frames,freeVortons,i);
+        logger->writeTable(i,stepTime.elapsed()*0.001,generatedNum,*std::max_element(vorticities.data(),vorticities.data()+vorticities.size(),Vector3D::fabsCompare),
+                           FrameCalculations::velocity(center,solvPar.streamVel,freeVortons,frames),vorticities[vorticities.size()-1],freeVortons.size(),countersBeforeIntegration,countersAfterIntegration);
 
         emit sendProgressCylinder(i);
         emit repaintGUI(freeVortons, frames);
@@ -365,7 +379,7 @@ void Solver::rotationBodySolver(const FragmentationParameters &fragPar)
     QVector<Vorton> newVortons;
     emit updateRotationBodyMaximum(solvPar.stepsNum-1);
 
-    logger->writePassport(solvPar,fragPar,fragmentation.getForming());
+    logger->writePassport(solvPar,fragPar,fragmentation.getForming(),functions.calcFrameSizes(frames));
     for (int i=0; i<solvPar.stepsNum; i++)
     {
         if(checkFinishing())
@@ -375,8 +389,10 @@ void Solver::rotationBodySolver(const FragmentationParameters &fragPar)
         Eigen::VectorXd column=functions.columnCalc(currentSpeed,freeVortons,normals,controlPoints);
         Eigen::VectorXd vorticities=functions.vorticitiesCalc(column);
         emit sendMaxGamma(*std::max_element(vorticities.data(),vorticities.data()+vorticities.size(),Vector3D::fabsCompare));
+        emit sendReguliser(vorticities[vorticities.size()-1]);
         FrameCalculations::setVorticity(frames,vorticities);
         newVortons=FrameCalculations::getLiftedFrameVortons(frames,normals,solvPar.deltaUp);
+        int generatedNum=newVortons.size();
         functions.unionVortons(newVortons,solvPar.eStar,solvPar.eDoubleStar,fragPar.vortonsRad);
         functions.removeSmallVorticity(newVortons,solvPar.minVorticity);
 
@@ -409,7 +425,8 @@ void Solver::rotationBodySolver(const FragmentationParameters &fragPar)
         logger->writeForces(force,cAerodynamics[i]);
         logger->writeLogs(i,stepTime.elapsed()*0.001,freeVortons.size(), countersBeforeIntegration,countersAfterIntegration, timersBeforeIntegration, timersAfterIntegration, restrictions);
         logger->writeVortons(frames,freeVortons,i);
-
+        logger->writeTable(i,stepTime.elapsed()*0.001,generatedNum,*std::max_element(vorticities.data(),vorticities.data()+vorticities.size(),Vector3D::fabsCompare),
+                           FrameCalculations::velocity(center,solvPar.streamVel,freeVortons,frames),vorticities[vorticities.size()-1],freeVortons.size(),countersBeforeIntegration,countersAfterIntegration);
 
         emit sendProgressRotationBody(i);
         emit repaintGUI(freeVortons, frames);
@@ -463,9 +480,11 @@ void Solver::rotationBodyFreeMotionSolver(const FragmentationParameters &fragPar
         Eigen::VectorXd column=functions.columnCalc(relVel,freeVortons,normals,controlPoints);
         Eigen::VectorXd vorticities=functions.vorticitiesCalc(column);
         emit sendMaxGamma(*std::max_element(vorticities.data(),vorticities.data()+vorticities.size(),Vector3D::fabsCompare));
+        emit sendReguliser(vorticities[vorticities.size()-1]);
         FrameCalculations::setVorticity(frames,vorticities);
 
         newVortons=FrameCalculations::getLiftedFrameVortons(frames,normals,solvPar.deltaUp);
+        int generatedNum=newVortons.size();
         functions.unionVortons(newVortons,solvPar.eStar,solvPar.eDoubleStar,fragPar.vortonsRad);
         functions.removeSmallVorticity(newVortons,solvPar.minVorticity);
 
@@ -497,6 +516,8 @@ void Solver::rotationBodyFreeMotionSolver(const FragmentationParameters &fragPar
         logger->writeForces(force,Vector3D(0.0,0.0,0.0));
         logger->writeLogs(i,stepTime.elapsed()*0.001, freeVortons.size(), countersBeforeIntegration,countersAfterIntegration, timersBeforeIntegration, timersAfterIntegration, restrictions);
         logger->writeVortons(frames,freeVortons,i);
+        logger->writeTable(i,stepTime.elapsed()*0.001,generatedNum,*std::max_element(vorticities.data(),vorticities.data()+vorticities.size(),Vector3D::fabsCompare),
+                           FrameCalculations::velocity(center,solvPar.streamVel,freeVortons,frames),vorticities[vorticities.size()-1],freeVortons.size(),countersBeforeIntegration,countersAfterIntegration);
 
         emit sendProgressRotationBody(i);
         emit repaintGUI(freeVortons, frames);
@@ -542,7 +563,7 @@ void Solver::rotationCutBodySolver(const FragmentationParameters &fragPar)
     QVector<Vorton> newVortons;
     emit updateRotationCutBodyMaximum(solvPar.stepsNum-1);
 
-    logger->writePassport(solvPar,fragPar,fragmentation.getForming());
+    logger->writePassport(solvPar,fragPar,fragmentation.getForming(),functions.calcFrameSizes(frames));
     for (int i=0; i<solvPar.stepsNum; i++)
     {
         if(checkFinishing())
@@ -552,9 +573,11 @@ void Solver::rotationCutBodySolver(const FragmentationParameters &fragPar)
         Eigen::VectorXd column=functions.columnCalc(currentSpeed,freeVortons,normals,controlPoints);
         Eigen::VectorXd vorticities=functions.vorticitiesCalc(column);
         emit sendMaxGamma(*std::max_element(vorticities.data(),vorticities.data()+vorticities.size(),Vector3D::fabsCompare));
+        emit sendReguliser(vorticities[vorticities.size()-1]);
         FrameCalculations::setVorticity(frames,vorticities);
 
         newVortons=FrameCalculations::getLiftedFrameVortons(frames,normals,solvPar.deltaUp);
+        int generatedNum=newVortons.size();
         functions.unionVortons(newVortons,solvPar.eStar,solvPar.eDoubleStar,fragPar.vortonsRad);
         functions.removeSmallVorticity(newVortons,solvPar.minVorticity);
 
@@ -584,6 +607,8 @@ void Solver::rotationCutBodySolver(const FragmentationParameters &fragPar)
         logger->writeForces(force,cAerodynamics[i]);
         logger->writeLogs(i,stepTime.elapsed()*0.001,freeVortons.size(), countersBeforeIntegration,countersAfterIntegration, timersBeforeIntegration, timersAfterIntegration, restrictions);
         logger->writeVortons(frames,freeVortons,i);
+        logger->writeTable(i,stepTime.elapsed()*0.001,generatedNum,*std::max_element(vorticities.data(),vorticities.data()+vorticities.size(),Vector3D::fabsCompare),
+                           FrameCalculations::velocity(center,solvPar.streamVel,freeVortons,frames),vorticities[vorticities.size()-1],freeVortons.size(),countersBeforeIntegration,countersAfterIntegration);
 
         emit sendProgressRotationCutBody(i);
         emit repaintGUI(freeVortons, frames);
@@ -642,9 +667,11 @@ void Solver::rotationCutBodySolverNearScreen(const FragmentationParameters &frag
         Eigen::VectorXd column=functions.columnCalc(solvPar.streamVel,freeVortons,normals,controlPoints);
         Eigen::VectorXd vorticities=functions.vorticitiesCalc(column);
         emit sendMaxGamma(*std::max_element(vorticities.data(),vorticities.data()+vorticities.size(),Vector3D::fabsCompare));
+        emit sendReguliser(vorticities[vorticities.size()-1]);
         FrameCalculations::setVorticity(frames,vorticities);
 
         newVortons=FrameCalculations::getLiftedFrameVortons(frames,normals,solvPar.deltaUp);
+        int generatedNum=newVortons.size();
         functions.unionVortons(newVortons,solvPar.eStar,solvPar.eDoubleStar,fragPar.vortonsRad);
         functions.removeSmallVorticity(newVortons,solvPar.minVorticity);
 
@@ -683,6 +710,8 @@ void Solver::rotationCutBodySolverNearScreen(const FragmentationParameters &frag
         logger->writeForces(force,Vector3D(0.0,0.0,0.0));
         logger->writeLogs(i,stepTime.elapsed()*0.001,freeVortons.size(),countersBeforeIntegration,countersAfterIntegration, timersBeforeIntegration, timersAfterIntegration, restrictions);
         logger->writeVortons(frames,freeVortons,i);
+        logger->writeTable(i,stepTime.elapsed()*0.001,generatedNum,*std::max_element(vorticities.data(),vorticities.data()+vorticities.size(),Vector3D::fabsCompare),
+                           FrameCalculations::velocity(center,solvPar.streamVel,freeVortons,frames),vorticities[vorticities.size()-1],freeVortons.size(),countersBeforeIntegration,countersAfterIntegration);
 
         emit sendProgressRotationCutBody(i);
         emit repaintGUI(freeVortons, frames);
@@ -730,9 +759,11 @@ void Solver::rotationCutBodyFreeMotionSolver(const FragmentationParameters &frag
             Eigen::VectorXd column=functions.columnCalc(relVel,freeVortons,normals,controlPoints);
             Eigen::VectorXd vorticities=functions.vorticitiesCalc(column);
             emit sendMaxGamma(*std::max_element(vorticities.data(),vorticities.data()+vorticities.size(),Vector3D::fabsCompare));
+            emit sendReguliser(vorticities[vorticities.size()-1]);
             FrameCalculations::setVorticity(frames,vorticities);
 
             newVortons=FrameCalculations::getLiftedFrameVortons(frames,normals,solvPar.deltaUp);
+            int generatedNum=newVortons.size();
             functions.unionVortons(newVortons,solvPar.eStar,solvPar.eDoubleStar,fragPar.vortonsRad);
             functions.removeSmallVorticity(newVortons,solvPar.minVorticity);
 
@@ -763,6 +794,8 @@ void Solver::rotationCutBodyFreeMotionSolver(const FragmentationParameters &frag
             logger->writeForces(force,Vector3D(0.0,0.0,0.0));
             logger->writeLogs(i,stepTime.elapsed()*0.001,freeVortons.size(),countersBeforeIntegration,countersAfterIntegration, timersBeforeIntegration, timersAfterIntegration, restrictions);
             logger->writeVortons(frames,freeVortons,i);
+            logger->writeTable(i,stepTime.elapsed()*0.001,generatedNum,*std::max_element(vorticities.data(),vorticities.data()+vorticities.size(),Vector3D::fabsCompare),
+                               FrameCalculations::velocity(center,solvPar.streamVel,freeVortons,frames),vorticities[vorticities.size()-1],freeVortons.size(),countersBeforeIntegration,countersAfterIntegration);
 
             emit sendProgressRotationCutBody(i);
             emit repaintGUI(freeVortons, frames);
@@ -840,11 +873,13 @@ void Solver::rotationCutBodyLaunchSolver(const FragmentationParameters &fragPar)
         Eigen::VectorXd column=functions.columnCalc(relVel,freeVortons,normals,controlPoints);
         Eigen::VectorXd vorticities=functions.vorticitiesCalc(column);
         emit sendMaxGamma(*std::max_element(vorticities.data(),vorticities.data()+vorticities.size(),Vector3D::fabsCompare));
+        emit sendReguliser(vorticities[vorticities.size()-1]);
 
         newVortons.clear();
         FrameCalculations::setVorticity(frames,vorticities);
 
         newVortons=FrameCalculations::getLiftedFrameVortons(frames,normals,solvPar.deltaUp);
+        int generatedNum=newVortons.size();
         //FzrameCalculations::translateVortons(translation,newVortons);
         functions.unionVortons(newVortons,solvPar.eStar,solvPar.eDoubleStar,fragPar.vortonsRad);
         functions.removeSmallVorticity(newVortons,solvPar.minVorticity);
@@ -917,6 +952,8 @@ void Solver::rotationCutBodyLaunchSolver(const FragmentationParameters &fragPar)
         logger->writeForces(force,Vector3D(0.0,0.0,0.0));
         logger->writeLogs(i,stepTime.elapsed()*0.001,freeVortons.size(),countersBeforeIntegration,countersAfterIntegration, timersBeforeIntegration, timersAfterIntegration, restrictions);
         logger->writeVortons(frames,freeVortons,i);
+        logger->writeTable(i,stepTime.elapsed()*0.001,generatedNum,*std::max_element(vorticities.data(),vorticities.data()+vorticities.size(),Vector3D::fabsCompare),
+                           FrameCalculations::velocity(center,solvPar.streamVel,freeVortons,frames),vorticities[vorticities.size()-1],freeVortons.size(),countersBeforeIntegration,countersAfterIntegration);
 
         emit sendProgressRotationCutBody(i);
         emit repaintGUI(freeVortons/*+symFreeVortons*/, frames/*+symFrames*/);
