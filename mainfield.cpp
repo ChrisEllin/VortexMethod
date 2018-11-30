@@ -382,9 +382,9 @@ void MainField::drawGrid()
 
 //        blackBorderProgram->bind();
         lineProgram->bind();
-        int colorLocation = lineProgram->attributeLocation("colAttr");
+        int colorLocation = lineProgram->uniformLocation("colAttr");
         QColor color(Qt::darkBlue);
-        lineProgram->setAttributeValue(colorLocation, color.red(), color.green(), color.blue());
+        lineProgram->setUniformValue(colorLocation, color.red(), color.green(), color.blue());
 
         QMatrix4x4 matrix = setMatrix();
         int matrixLocation = lineProgram->uniformLocation ("matrixView");
@@ -428,9 +428,9 @@ void MainField::drawGrid()
 
 //        blackBorderProgram->bind();
         lineProgram->bind();
-        int colorLocation = lineProgram->attributeLocation("colAttr");
+        int colorLocation = lineProgram->uniformLocation("colAttr");
         QColor color(Qt::red);
-        lineProgram->setAttributeValue(colorLocation, color.red(), color.green(), color.blue());
+        lineProgram->setUniformValue(colorLocation, color.red(), color.green(), color.blue());
 
         QMatrix4x4 matrix = setMatrix();
         int matrixLocation = lineProgram->uniformLocation ("matrixView");
@@ -890,14 +890,14 @@ void MainField::drawAxis()
     lineProgram->setUniformValue(matrixLocation, matrix);
 
     int vertexLocation = lineProgram->attributeLocation("posAttr");
-    int colorLocation = lineProgram->attributeLocation("colAttr");
+    int colorLocation = lineProgram->uniformLocation("colAttr");
 
     lineProgram->enableAttributeArray(vertexLocation);
 //    lineProgram->enableAttributeArray(colorLocation);
 
     lineProgram->setAttributeBuffer(vertexLocation, GL_FLOAT, offsetof(Vertex, coord), 3, sizeof(Vertex));
 //    lineProgram->setAttributeBuffer(colorLocation, GL_FLOAT, offsetof(Vertex, color), 3, sizeof(Vertex));
-    lineProgram->setAttributeValue(colorLocation, 1.0f, 0.0f, 0.0f);
+    lineProgram->setUniformValue(colorLocation, 1.0f, 0.0f, 0.0f);
 
     glDrawElements (GL_LINES, 6, GL_UNSIGNED_SHORT, nullptr);
 
@@ -918,7 +918,7 @@ void MainField::drawMarker()
     lineProgram->setUniformValue(matrixLocation, matrix);
 
     int vertexLocation = lineProgram->attributeLocation("posAttr");
-    int colorLocation = lineProgram->attributeLocation("colAttr");
+    int colorLocation = lineProgram->uniformLocation("colAttr");
 
 
     QOpenGLBuffer vertBuffer;
@@ -932,7 +932,7 @@ void MainField::drawMarker()
 
     lineProgram->setAttributeBuffer(vertexLocation, GL_FLOAT, offsetof(Vertex, coord), 3, sizeof(Vertex));
 //    lineProgram->setAttributeBuffer(colorLocation, GL_FLOAT, offsetof(Vertex, color), 3, sizeof(Vertex));
-    lineProgram->setAttributeValue(colorLocation, MARKER_COLOR.redF(), MARKER_COLOR.greenF(), MARKER_COLOR.blueF());
+    lineProgram->setUniformValue(colorLocation, MARKER_COLOR.redF(), MARKER_COLOR.greenF(), MARKER_COLOR.blueF());
 
     glLineWidth(1.0);
     glDrawArrays(GL_LINES, 0, 4);
