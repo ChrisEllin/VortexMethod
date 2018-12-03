@@ -96,6 +96,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect (ui->epsilonSphereLineEdit, SIGNAL(textEdited(const QString)),this,SLOT(calcAverLength()));
     connect (ui->epsilonRotationBodyLineEdit, SIGNAL(textEdited(const QString)),this,SLOT(calcAverLength()));
     connect (ui->epsilonRotationCutBodyLineEdit, SIGNAL(textEdited(const QString)),this,SLOT(calcAverLength()));
+    connect (ui->dirLoadingAction, SIGNAL(triggered()), this, SLOT(loadKadrDir()));
     connect (this, SIGNAL(sendPanelLength(double)),settings,SLOT(calcAttributes(double)));
     displaySphere=true;
     showSphere();
@@ -883,6 +884,18 @@ void MainWindow::openPassport()
         emit sendSolverParameters(solvPar);
     }
     passport.close();
+}
+
+void MainWindow::loadKadrDir()
+{
+    QString vortonsDir=QFileDialog::getExistingDirectory(this, tr("Выберите папку"), "/home", QFileDialog::ShowDirsOnly|QFileDialog::DontResolveSymlinks);
+    QFuture<std::shared_ptr<QPair<QVector<QVector<Vorton>>,QVector<QVector<Vorton>>>>> resultFuture=QtConcurrent::run(waitForOpen, &Logger::loadKadrDir,vortonsDir);
+    resultFuture.waitForFinished();
+    allVortons=std::make_shared<QVector<QVector<Vorton>>>(resultFuture.result().get()->first);
+    allFrames=std::make_shared<QVector<QVector<Vorton>>>(resultFuture.result().get()->second);
+    emit drawGUI(allVortons.get()->at(0),allFrames.get()->at(0));
+    ui->currentNumberLineEdit->setText(QString::number(0));
+    currentNumber=0;
 }
 
 /*!
@@ -1847,4 +1860,24 @@ void MainWindow::on_comboBox_currentIndexChanged(int index)
 void MainWindow::setReguliser(double reguliser)
 {
     ui->reguliserLineEdit->setText(QString::number(reguliser));
+}
+
+void MainWindow::on_nextCommandLinkButton_clicked()
+{
+    if (currentNumber<allVortons.get()->size()-1)
+    {
+    currentNumber=ui->currentNumberLineEdit->text().toInt()+1;
+    ui->currentNumberLineEdit->setText(QString::number(currentNumber));
+    emit drawGUI(allVortons.get()->at(currentNumber),allFrames.get()->at(currentNumber));
+    }
+}
+
+void MainWindow::on_previousCommandLinkButton_clicked()
+{
+    if (currentNumber>0)
+    {
+    currentNumber=ui->currentNumberLineEdit->text().toInt()-1;
+    ui->currentNumberLineEdit->setText(QString::number(currentNumber));
+    emit drawGUI(allVortons.get()->at(currentNumber),allFrames.get()->at(currentNumber));
+    }
 }

@@ -27,9 +27,12 @@ public:
     void closeEvent(QCloseEvent *event);
     ~MainWindow();
     QVector<Vorton> currentVortons;
+    std::shared_ptr<QVector<QVector<Vorton>>> allVortons;
+    std::shared_ptr<QVector<QVector<Vorton>>> allFrames;
     QVector<std::shared_ptr<MultiFrame>> currentFrames;
     QVector<Vector3D> currentControlPoints;
     QVector<Vector3D> currentNormals;
+    int currentNumber;
 private:
     bool solving;
     Ui::MainWindow *ui; ///<Указатель на интерфейс основного окна
@@ -69,6 +72,7 @@ private slots:
     void showPreprocessor();
     void showVariateSettings();
     void openPassport();
+    void loadKadrDir();
     void on_cylinderSolverPushButton_clicked();
     void on_variateSphereSolverPushButton_clicked();    
     void on_rotationBodySolverPushButton_clicked();
@@ -89,6 +93,10 @@ private slots:
     void on_rotationBodyFreeMotionSolverPushButton_clicked();
 
     void on_comboBox_currentIndexChanged(int index);
+
+    void on_nextCommandLinkButton_clicked();
+
+    void on_previousCommandLinkButton_clicked();
 
 public slots:
     void setReguliser(double reguliser);

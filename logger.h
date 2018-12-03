@@ -47,6 +47,7 @@ public:
     Logger();
     Logger(BodyType _type, SolvType _stype=NOOPTIMIZATION);
     Logger(BodyType _type, QString _path, SolvType _stype=NOOPTIMIZATION);
+    std::shared_ptr<QPair<QVector<QVector<Vorton>>, QVector<QVector<Vorton>>>> loadKadrDir(const QString vortonsDir);
     void writeVortons(QVector<std::shared_ptr<MultiFrame>> frames, QVector<Vorton> freevortons, const int stepNum);
     void createFiles();
     void writeCpFile(const QVector<double> cp, const QVector<double> tetas);
@@ -62,6 +63,7 @@ public:
     void openVortonFiles(QString vortonsDir);
 signals:
     void sendVortons(const QVector<Vorton>&, const QVector<Vorton>&);
+
 };
 
 #endif // LOGGER_H

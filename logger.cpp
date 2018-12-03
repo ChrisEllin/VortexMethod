@@ -117,6 +117,60 @@ Logger::Logger(BodyType _type, QString _path, SolvType _stype)
     createFiles();
 }
 
+std::shared_ptr<QPair<QVector<QVector<Vorton>>,QVector<QVector<Vorton>>>> Logger::loadKadrDir(const QString vortonsDir)
+{
+    QVector<QVector<Vorton>> allVortons;
+    QVector<QVector<Vorton>> allFrames;
+    QPair<QVector<QVector<Vorton>>,QVector<QVector<Vorton>>> vortonsAndFrames;
+    QDir folder(vortonsDir);
+    QStringList fileList=folder.entryList();
+    for (int i=2; i<fileList.size(); i++)
+    {
+        QString vortonsPath=vortonsDir+"/"+fileList[i];
+        QFile vortonsFile(vortonsPath);
+        if (vortonsFile.open(QIODevice::ReadOnly))
+        {
+            QString line = vortonsFile.readLine();
+            QStringList lineSplitted=line.split("\t", QString::SkipEmptyParts);
+            int vortonsSize=lineSplitted[0].toInt();
+            int framesSize=lineSplitted[1].toInt();
+            QVector<Vorton> freeVortons;
+            QVector<Vorton> frames;
+
+            while(lineSplitted[0].toInt()!=vortonsSize-1)
+            {
+                line=vortonsFile.readLine();
+                if (line!="\n")
+                {
+                lineSplitted=line.split("\t", QString::SkipEmptyParts);
+                freeVortons.push_back(Vorton(Vector3D(lineSplitted[2].toDouble(),lineSplitted[3].toDouble(),lineSplitted[4].toDouble()),
+                        Vector3D(lineSplitted[2].toDouble()+lineSplitted[5].toDouble(),lineSplitted[3].toDouble()+lineSplitted[6].toDouble(),lineSplitted[4].toDouble()+lineSplitted[7].toDouble()),
+                        lineSplitted[1].toDouble(),0.1));
+                 }
+            }
+            while(lineSplitted[0].toInt()!=vortonsSize+framesSize-1)
+            {
+
+                line=vortonsFile.readLine();
+                if (line!="\n")
+                {
+                lineSplitted=line.split("\t", QString::SkipEmptyParts);
+                frames.push_back(Vorton(Vector3D(lineSplitted[2].toDouble(),lineSplitted[3].toDouble(),lineSplitted[4].toDouble()),
+                        Vector3D(lineSplitted[2].toDouble()+lineSplitted[5].toDouble(),lineSplitted[3].toDouble()+lineSplitted[6].toDouble(),lineSplitted[4].toDouble()+lineSplitted[7].toDouble()),
+                        lineSplitted[1].toDouble(),0.1));
+                }
+            }
+            allVortons.push_back(freeVortons);
+            allFrames.push_back(frames);
+        }
+        vortonsFile.close();
+    }
+    vortonsAndFrames.first=allVortons;
+    vortonsAndFrames.second=allFrames;
+    std::shared_ptr<QPair<QVector<QVector<Vorton>>,QVector<QVector<Vorton>>>> resultedPointer=std::make_shared<QPair<QVector<QVector<Vorton>>,QVector<QVector<Vorton>>>>(vortonsAndFrames);
+    return resultedPointer;
+}
+
 void Logger::writeVortons(QVector<std::shared_ptr<MultiFrame> > frames, QVector<Vorton> freevortons, const int stepNum)
 {
     QString currentStepStr=QString::number(stepNum);
