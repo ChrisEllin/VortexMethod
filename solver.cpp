@@ -377,6 +377,7 @@ void Solver::rotationBodySolver(const FragmentationParameters &fragPar)
 
     QVector<Vorton> freeVortons;
     QVector<Vorton> newVortons;
+    QVector<double> cp(fragPar.rotationBodyPartFragNum);
     emit updateRotationBodyMaximum(solvPar.stepsNum-1);
 
     logger->writePassport(solvPar,fragPar,fragmentation.getForming(),functions.calcFrameSizes(frames));
@@ -400,6 +401,7 @@ void Solver::rotationBodySolver(const FragmentationParameters &fragPar)
         Vector3D force=functions.forceCalc(currentSpeed, solvPar.streamPres,solvPar.density,frames,freeVortons, solvPar.tau, squares, controlPointsRaised, normals);
         forces[i]=force;
         cAerodynamics[i] = force*2.0/(solvPar.density*solvPar.streamVel.lengthSquared()*M_PI*pow(fragmentation.getForming().diameter*0.5,2));
+        functions.cpSumRotationBody(i,solvPar.stepsNum, cp, fragPar.rotationBodyFiFragNum, solvPar.streamVel, solvPar.streamPres,solvPar.density,frames, freeVortons, solvPar.tau, controlPointsRaised);
         freeVortons.append(newVortons);
 
         Counters countersBeforeIntegration=functions.getCounters();
@@ -440,6 +442,11 @@ void Solver::rotationBodySolver(const FragmentationParameters &fragPar)
         }
         qDebug()<<currentSpeed.x()<<" "<<currentSpeed.y()<<" "<<currentSpeed.z()<<"\n";
     }
+    QVector<double> fis;
+    for (int i=0; i<fragPar.rotationBodyPartFragNum;i++)
+        fis.push_back(i);
+    functions.cpAverage(cp,solvPar.stepsNum);
+    logger->writeCpFile(cp,fis);
     logger->writeSolverTime(start.elapsed()*0.001);
     logger->closeFiles();
     delete logger;

@@ -519,6 +519,25 @@ void FrameCalculations::cpSumCylinder(const int stepNum, int stepsQuant, QVector
     }
 }
 
+void FrameCalculations::cpSumRotationBody(const int stepNum, int stepsQuant, QVector<double> &cp, const int fiFragNum,  const Vector3D streamVel, const double streamPres, const double density, const QVector<std::shared_ptr<MultiFrame> > frames, QVector<Vorton> freeVortons, double tau, const QVector<Vector3D>& controlPointsRaised)
+{
+    int cpQuant;
+    if (stepsQuant>200)
+        cpQuant=200;
+    else
+        cpQuant=stepsQuant;
+    if (stepNum>=stepsQuant-cpQuant)
+    {
+        int j=0;
+        for (int i=0; i<controlPointsRaised.size()-2; i=i+fiFragNum)
+        {
+            double pres=pressureCalc(controlPointsRaised[i],streamVel,streamPres,density,frames,freeVortons,tau);
+            cp[j]+=(pres-streamPres)/(density*Vector3D::dotProduct(streamVel,streamVel)*0.5);
+            j++;
+        }
+    }
+}
+
 /*!
 Функция расчета средних значений ср
 \param[in,out] cp Вектор значений ср

@@ -238,7 +238,7 @@ void Logger::createFiles()
     passportFile=std::shared_ptr<QFile>(new QFile(path+"/passport.txt"));
     forcesFile=std::shared_ptr<QFile>(new QFile(path+"/forces.csv"));
     tableFile=std::shared_ptr<QFile>(new QFile(path+"/tableLog.csv"));
-    if (type==SPHERE||type==CYLINDER)
+    if (type==SPHERE||type==CYLINDER||type==ROTATIONBODY)
     {
         cpFile=std::shared_ptr<QFile>(new QFile(path+"/cp.csv"));
         if (cpFile->open(QIODevice::WriteOnly))
@@ -567,7 +567,7 @@ void Logger::closeFiles()
         forcesFile->close();
     if (passportFile->isOpen())
         passportFile->close();
-    if (type==SPHERE||type==CYLINDER)
+    if (type==SPHERE||type==CYLINDER||type==ROTATIONBODY)
     {
         if (cpFile->isOpen())
             cpFile->close();
