@@ -19,6 +19,8 @@
         <file>icons/pause-64.jpg</file>
         <file>icons/play-6-64.jpg</file>
         <file>icons/skip-to-start-64.jpg</file>
+        <file>icons/arrow_full_left_32.ico</file>
+        <file>icons/arrow_full_right_32.ico</file>
     </qresource>
     <qresource prefix="/icons/grid">
         <file>icons/grid_CE.png</file>

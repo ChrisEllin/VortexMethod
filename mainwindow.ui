@@ -1691,12 +1691,15 @@
               <height>41</height>
              </size>
             </property>
+            <property name="autoFillBackground">
+             <bool>true</bool>
+            </property>
             <property name="text">
              <string/>
             </property>
             <property name="icon">
              <iconset resource="resources.qrc">
-              <normaloff>:/icons/icons/media-skip-backward-64.jpg</normaloff>:/icons/icons/media-skip-backward-64.jpg</iconset>
+              <normaloff>:/icons/icons/arrow_full_left_32.ico</normaloff>:/icons/icons/arrow_full_left_32.ico</iconset>
             </property>
             <property name="iconSize">
              <size>
@@ -1706,6 +1709,9 @@
             </property>
             <property name="autoExclusive">
              <bool>false</bool>
+            </property>
+            <property name="default">
+             <bool>true</bool>
             </property>
            </widget>
           </item>
@@ -1732,12 +1738,24 @@
               <height>41</height>
              </size>
             </property>
+            <property name="autoFillBackground">
+             <bool>true</bool>
+            </property>
             <property name="text">
              <string/>
             </property>
             <property name="icon">
              <iconset resource="resources.qrc">
-              <normaloff>:/icons/icons/media-skip-forward-64.jpg</normaloff>:/icons/icons/media-skip-forward-64.jpg</iconset>
+              <normaloff>:/icons/icons/arrow_full_right_32.ico</normaloff>:/icons/icons/arrow_full_right_32.ico</iconset>
+            </property>
+            <property name="checkable">
+             <bool>false</bool>
+            </property>
+            <property name="autoDefault">
+             <bool>false</bool>
+            </property>
+            <property name="default">
+             <bool>true</bool>
             </property>
            </widget>
           </item>

@@ -98,6 +98,8 @@ private slots:
 
     void on_previousCommandLinkButton_clicked();
 
+    void on_currentNumberLineEdit_editingFinished();
+
 public slots:
     void setReguliser(double reguliser);
     void showInfo();

@@ -101,6 +101,7 @@ MainWindow::MainWindow(QWidget *parent) :
     displaySphere=true;
     showSphere();
     ui->openGLWidget->backgroundColor = Qt::white;
+   // ui->nextCommandLinkButton->setFixedSize(ui->nextCommandLinkButton->icon());
     QApplication::setStyle(QStyleFactory::create("fusion"));
     exitState=ExitState::None;
     closeBox.setWindowTitle("Завершение работы");
@@ -1866,9 +1867,9 @@ void MainWindow::on_nextCommandLinkButton_clicked()
 {
     if (currentNumber<allVortons.get()->size()-1)
     {
-    currentNumber=ui->currentNumberLineEdit->text().toInt()+1;
-    ui->currentNumberLineEdit->setText(QString::number(currentNumber));
-    emit drawGUI(allVortons.get()->at(currentNumber),allFrames.get()->at(currentNumber));
+        currentNumber=ui->currentNumberLineEdit->text().toInt()+1;
+        ui->currentNumberLineEdit->setText(QString::number(currentNumber));
+        emit drawGUI(allVortons.get()->at(currentNumber),allFrames.get()->at(currentNumber));
     }
 }
 
@@ -1876,8 +1877,17 @@ void MainWindow::on_previousCommandLinkButton_clicked()
 {
     if (currentNumber>0)
     {
-    currentNumber=ui->currentNumberLineEdit->text().toInt()-1;
-    ui->currentNumberLineEdit->setText(QString::number(currentNumber));
-    emit drawGUI(allVortons.get()->at(currentNumber),allFrames.get()->at(currentNumber));
+        currentNumber=ui->currentNumberLineEdit->text().toInt()-1;
+        ui->currentNumberLineEdit->setText(QString::number(currentNumber));
+        emit drawGUI(allVortons.get()->at(currentNumber),allFrames.get()->at(currentNumber));
+    }
+}
+
+void MainWindow::on_currentNumberLineEdit_editingFinished()
+{
+    if (ui->currentNumberLineEdit->text().toInt()>=0 && ui->currentNumberLineEdit->text().toInt()<=allVortons.get()->size()-1)
+    {
+        currentNumber=ui->currentNumberLineEdit->text().toInt();
+        emit drawGUI(allVortons.get()->at(currentNumber),allFrames.get()->at(currentNumber));
     }
 }
