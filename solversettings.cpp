@@ -161,7 +161,7 @@ void SolverSettings::calcAttributes(double panelLength)
 {
     ui->stepLineEdit->setText(QString::number(panelLength
                               /Vector3D(ui->xVelStreamLineEdit->text().toDouble(),ui->yVelStreamLineEdit->text().toDouble(),
-                                        ui->zVelStreamLineEdit->text().toDouble()).length()));
+                                                                        ui->zVelStreamLineEdit->text().toDouble()).length()));
     ui->elongationMaxLineEdit->setText(QString::number(panelLength*0.05));
     ui->layerHeightLineEdit->setText(QString::number(panelLength));
     ui->deltaUpLineEdit->setText(QString::number(panelLength*0.1));

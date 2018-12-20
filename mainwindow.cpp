@@ -88,14 +88,14 @@ MainWindow::MainWindow(QWidget *parent) :
     connect (ui->exitAction, SIGNAL(triggered()), this, SLOT(close()));
     connect (ui->stopAction, SIGNAL(triggered()), this, SLOT(stop()));
     connect (solver, SIGNAL(sendReguliser(double)),this, SLOT(setReguliser(double)));
-    connect (ui->epsilonCylinderLineEdit, SIGNAL(textEdited(const QString)),settings,SLOT(calcAttributes(const QString)));
-    connect (ui->epsilonSphereLineEdit, SIGNAL(textEdited(const QString)),settings,SLOT(calcAttributes(const QString)));
-    connect (ui->epsilonRotationBodyLineEdit, SIGNAL(textEdited(const QString)),settings,SLOT(calcAttributes(const QString)));
-    connect (ui->epsilonRotationCutBodyLineEdit, SIGNAL(textEdited(const QString)),settings,SLOT(calcAttributes(const QString)));
-    connect (ui->epsilonCylinderLineEdit, SIGNAL(textEdited(const QString)),this,SLOT(calcAverLength()));
-    connect (ui->epsilonSphereLineEdit, SIGNAL(textEdited(const QString)),this,SLOT(calcAverLength()));
-    connect (ui->epsilonRotationBodyLineEdit, SIGNAL(textEdited(const QString)),this,SLOT(calcAverLength()));
-    connect (ui->epsilonRotationCutBodyLineEdit, SIGNAL(textEdited(const QString)),this,SLOT(calcAverLength()));
+    connect (ui->epsilonCylinderLineEdit, SIGNAL(textChanged(const QString)),settings,SLOT(calcAttributes(const QString)));
+    connect (ui->epsilonSphereLineEdit, SIGNAL(textChanged(const QString)),settings,SLOT(calcAttributes(const QString)));
+    connect (ui->epsilonRotationBodyLineEdit, SIGNAL(textChanged(const QString)),settings,SLOT(calcAttributes(const QString)));
+    connect (ui->epsilonRotationCutBodyLineEdit, SIGNAL(textChanged(const QString)),settings,SLOT(calcAttributes(const QString)));
+    connect (ui->epsilonCylinderLineEdit, SIGNAL(textChanged(const QString)),this,SLOT(calcAverLength()));
+    connect (ui->epsilonSphereLineEdit, SIGNAL(textChanged(const QString)),this,SLOT(calcAverLength()));
+    connect (ui->epsilonRotationBodyLineEdit, SIGNAL(textChanged(const QString)),this,SLOT(calcAverLength()));
+    connect (ui->epsilonRotationCutBodyLineEdit, SIGNAL(textChanged(const QString)),this,SLOT(calcAverLength()));
     connect (ui->dirLoadingAction, SIGNAL(triggered()), this, SLOT(loadKadrDir()));
     connect (this, SIGNAL(sendPanelLength(double)),settings,SLOT(calcAttributes(double)));
     displaySphere=true;
@@ -1427,6 +1427,7 @@ void MainWindow::calcAverLength()
         panelLength = (M_PI/ui->fiSphereLineEdit->text().toInt()*ui->radSphereLineEdit->text().toDouble()*2.0)
                 > (M_PI/ui->tetaSphereLineEdit->text().toInt()*ui->radSphereLineEdit->text().toDouble()*2.0) ? M_PI/ui->fiSphereLineEdit->text().toInt()*ui->radSphereLineEdit->text().toDouble()*2.0
                 : M_PI/ui->tetaSphereLineEdit->text().toInt()*ui->radSphereLineEdit->text().toDouble()*2.0;
+
         ui->pointsRaisingSphereLineEdit->setText(QString::number(panelLength*0.5));
         break;
     case 1:
@@ -1440,12 +1441,13 @@ void MainWindow::calcAverLength()
         switch (ui->stackedWidget->currentIndex())
         {
         case 0:
-            panelLength = (M_PI/ui->fiRotationBodyLineEdit->text().toInt()*ui->formingRBDiameterLineEdit->text().toDouble())
-                    > ((ui->formingRBDiameterLineEdit->text().toDouble()*0.5*M_PI + ui->formingRBSectorOneLength->text().toDouble()+
-                        ui->formingRBSectorTwoLength->text().toDouble())/ui->partRotationBodyLineEdit->text().toInt())
-                    ? (M_PI/ui->fiRotationBodyLineEdit->text().toInt()*ui->formingRBDiameterLineEdit->text().toDouble())
-                    :((ui->formingRBDiameterLineEdit->text().toDouble()*0.5*M_PI + ui->formingRBSectorOneLength->text().toDouble()+
-                       ui->formingRBSectorTwoLength->text().toDouble())/ui->partRotationBodyLineEdit->text().toInt());
+//            panelLength = (M_PI/ui->fiRotationBodyLineEdit->text().toInt()*ui->formingRBDiameterLineEdit->text().toDouble())
+//                    > ((ui->formingRBDiameterLineEdit->text().toDouble()*0.5*M_PI + ui->formingRBSectorOneLength->text().toDouble()+
+//                        ui->formingRBSectorTwoLength->text().toDouble())/ui->partRotationBodyLineEdit->text().toInt())
+//                    ? (M_PI/ui->fiRotationBodyLineEdit->text().toInt()*ui->formingRBDiameterLineEdit->text().toDouble())
+//                    :((ui->formingRBDiameterLineEdit->text().toDouble()*0.5*M_PI + ui->formingRBSectorOneLength->text().toDouble()+
+//                       ui->formingRBSectorTwoLength->text().toDouble())/ui->partRotationBodyLineEdit->text().toInt());
+             panelLength = M_PI/ui->fiRotationBodyLineEdit->text().toInt()*ui->formingRBDiameterLineEdit->text().toDouble();
             break;
         case 1:
             panelLength = (M_PI/ui->fiRotationBodyLineEdit->text().toInt()*ui->formingConeRBDiameterLineEdit->text().toDouble())

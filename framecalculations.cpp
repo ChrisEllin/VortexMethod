@@ -69,44 +69,44 @@ void FrameCalculations::matrixCalc(QVector<std::shared_ptr<MultiFrame> > frames,
         matrix(matrixSize-1,i)=matrix(i,matrixSize-1)=1.0; 
     matrix(matrixSize-1,matrixSize-1)=0.0;
 
-    double tqw=matrix.determinant();
-    QVector<double> mat(matrixSize);
-    for (int i=0; i<matrixSize; i++)
-    {
-        mat[i]=0.0;
-        for (int j=0; j<matrixSize; j++)
-        {
-            mat[i]+=matrix(i,j);
-        }
-    }
-    double normA=mat[0];
-    for (int i=1; i<matrixSize; i++)
-    {
-        if (mat[i]>normA)
-            normA=mat[i];
-    }
-    Eigen::MatrixXd oldmatrix;
-    oldmatrix.resize(matrixSize,matrixSize);
-    oldmatrix=matrix;
+//    double tqw=matrix.determinant();
+//    QVector<double> mat(matrixSize);
+//    for (int i=0; i<matrixSize; i++)
+//    {
+//        mat[i]=0.0;
+//        for (int j=0; j<matrixSize; j++)
+//        {
+//            mat[i]+=matrix(i,j);
+//        }
+//    }
+//    double normA=mat[0];
+//    for (int i=1; i<matrixSize; i++)
+//    {
+//        if (mat[i]>normA)
+//            normA=mat[i];
+//    }
+//    Eigen::MatrixXd oldmatrix;
+//    oldmatrix.resize(matrixSize,matrixSize);
+//    oldmatrix=matrix;
 
+//    matrix=matrix.inverse();
+//    QVector<double> mat1(matrixSize);
+//    for (int i=0; i<matrixSize; i++)
+//    {
+//        for (int j=0; j<matrixSize; j++)
+//        {
+//            mat1[i]+=matrix(i,j);
+//        }
+//    }
+//    double normA1=mat1[0];
+//    for (int i=1; i<matrixSize; i++)
+//    {
+//        if (mat1[i]>normA1)
+//            normA1=mat1[i];
+//    }
+//    qDebug()<<"Число обусловленности"<<normA*normA1;
+//    int k=3;
     matrix=matrix.inverse();
-    QVector<double> mat1(matrixSize);
-    for (int i=0; i<matrixSize; i++)
-    {
-        for (int j=0; j<matrixSize; j++)
-        {
-            mat1[i]+=matrix(i,j);
-        }
-    }
-    double normA1=mat1[0];
-    for (int i=1; i<matrixSize; i++)
-    {
-        if (mat1[i]>normA1)
-            normA1=mat1[i];
-    }
-    qDebug()<<"Число обусловленности"<<normA*normA1;
-    int k=3;
-    //matrix=matrix.inverse();
 
 }
 
@@ -665,7 +665,7 @@ void FrameCalculations::getBackAndRotateCylinder(QVector<Vorton> &vortons, const
 \param[in] controlPoints Вектор, содержащий контрольные точки
 \param[in] normals Вектор, содержащий нормали
 */
-void FrameCalculations::getBackAndRotateRotationBody(QVector<Vorton>& vortons, const Vector3D bodyNose, const double xEnd, const double layerHeight, const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals, FormingParameters forming)
+void FrameCalculations:: getBackAndRotateRotationBody(QVector<Vorton>& vortons, const Vector3D bodyNose, const double xEnd, const double layerHeight, const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals, FormingParameters forming)
 {
     QTime start=QTime::currentTime();
     for (int i=0; i<vortons.size(); i++)

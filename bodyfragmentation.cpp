@@ -355,8 +355,8 @@ void BodyFragmentation::rotationBodyFragmantation()
     }
     }
     QVector<Vector2D> part(rotationBody.partFragNum);
-    QVector<Vector2D> forNormals(rotationBody.partFragNum);
-    QVector<Vector2D> forControlPoint(rotationBody.partFragNum);
+    QVector<Vector2D> forNormals(rotationBody.partFragNum-1);
+    QVector<Vector2D> forControlPoint(rotationBody.partFragNum-1);
     QVector<Vector2D> forUp(rotationBody.partFragNum);
     const int NFRAG=400;
 
@@ -741,18 +741,18 @@ double BodyFragmentation::presetFunctionF(double x, FormingParameters parameters
     {
     case 0:
     {
-        if (x>=0.0&&x<parameters.diameter*0.5)
+        if (x>=0.0&&x<=parameters.diameter*0.5)
             return sqrt(pow(parameters.diameter*0.5,2)-pow(x-parameters.diameter*0.5,2));
         else
         {
-            if (x>=parameters.diameter*0.5&&x<parameters.sectorOneLength+parameters.diameter*0.5)
+            if (x>parameters.diameter*0.5&&x<=parameters.sectorOneLength+parameters.diameter*0.5)
                 return parameters.diameter*0.5;
             else
             {
-                if (x>=(parameters.sectorOneLength+parameters.diameter*0.5)&& x<=(parameters.sectorTwoLength+parameters.diameter*0.5+parameters.sectorOneLength))
+                if (x>(parameters.sectorOneLength+parameters.diameter*0.5)&& x<=(parameters.sectorTwoLength+parameters.diameter*0.5+parameters.sectorOneLength))
                     return parameters.diameter*0.5*(1.0-(x-parameters.sectorOneLength-parameters.diameter*0.5)/parameters.sectorTwoLength);
                 else
-                    break;
+                    return 0;
             }
         }
     }
@@ -799,18 +799,18 @@ double BodyFragmentation::presetDeriveFunctionF(double x, FormingParameters para
     {
     case 0:
     {
-        if (x>=0.0&&x<parameters.diameter*0.5)
+        if (x>=0.0&&x<=parameters.diameter*0.5)
             return -(x-parameters.diameter*0.5)/BodyFragmentation::presetFunctionF(x,parameters);
         else
         {
-            if (x>=parameters.diameter*0.5&&x<parameters.sectorOneLength+parameters.diameter*0.5)
+            if (x>parameters.diameter*0.5&&x<=parameters.sectorOneLength+parameters.diameter*0.5)
                 return 0.0;
             else
             {
-                if (x>=(parameters.sectorOneLength+parameters.diameter*0.5)&& x<=(parameters.sectorTwoLength+parameters.diameter*0.5+parameters.sectorOneLength))
+                if (x>(parameters.sectorOneLength+parameters.diameter*0.5)&& x<=(parameters.sectorTwoLength+parameters.diameter*0.5+parameters.sectorOneLength))
                     return -parameters.diameter*0.5/parameters.sectorTwoLength;
                 else
-                    break;
+                    return 0;
             }
         }
     }
@@ -1018,10 +1018,12 @@ int BodyFragmentation::findClosetElementFromArray(const QVector<double> arr, con
     double closest=arr[0]-point;
     int num = 0;
     for (int i=1; i<arr.size(); i++)
+    {
         if ((fabs(arr[i]-point))<(fabs(closest)))
         {
             closest = arr[i]-point;
             num = i;
         }
+    }
     return num;
 }

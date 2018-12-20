@@ -139,6 +139,8 @@ void Solver::sphereSolver(const FragmentationParameters &fragPar)
 //            return;
 //        }
     }
+    for (int i=0; i<tetas.size();i++)
+        tetas[i]=M_PI-tetas[i];
     functions.cpAverage(cp,solvPar.stepsNum);
     logger->writeCpFile(cp,tetas);
     logger->writeSolverTime(start.elapsed()*0.001);
@@ -415,11 +417,11 @@ void Solver::rotationBodySolver(const FragmentationParameters &fragPar)
         functions.removeSmallVorticity(freeVortons,solvPar.minVorticity);
         functions.removeFarRotationBody(freeVortons,solvPar.farDistance,center);
 
-        for (int i=0; i<freeVortons.size(); i++)
-        {
-            if ((freeVortons[i].getMid()-center).length()<0.5)
-                qDebug()<<(freeVortons[i].getMid()-center).length();
-        }
+//        for (int i=0; i<freeVortons.size(); i++)
+//        {
+//            if ((freeVortons[i].getMid()-center).length()<0.5)
+//                qDebug()<<(freeVortons[i].getMid()-center).length();
+//        }
         Counters countersAfterIntegration=functions.getCounters();
         Timers timersAfterIntegration=functions.getTimers();
 
