@@ -92,12 +92,17 @@ MainWindow::MainWindow(QWidget *parent) :
     connect (ui->epsilonSphereLineEdit, SIGNAL(textChanged(const QString)),settings,SLOT(calcAttributes(const QString)));
     connect (ui->epsilonRotationBodyLineEdit, SIGNAL(textChanged(const QString)),settings,SLOT(calcAttributes(const QString)));
     connect (ui->epsilonRotationCutBodyLineEdit, SIGNAL(textChanged(const QString)),settings,SLOT(calcAttributes(const QString)));
+    connect (ui->fiRotationBodyLineEdit, SIGNAL(textChanged(const QString)), this, SLOT(calcAverLength()));
+
     connect (ui->epsilonCylinderLineEdit, SIGNAL(textChanged(const QString)),this,SLOT(calcAverLength()));
     connect (ui->epsilonSphereLineEdit, SIGNAL(textChanged(const QString)),this,SLOT(calcAverLength()));
     connect (ui->epsilonRotationBodyLineEdit, SIGNAL(textChanged(const QString)),this,SLOT(calcAverLength()));
     connect (ui->epsilonRotationCutBodyLineEdit, SIGNAL(textChanged(const QString)),this,SLOT(calcAverLength()));
+
     connect (ui->dirLoadingAction, SIGNAL(triggered()), this, SLOT(loadKadrDir()));
     connect (this, SIGNAL(sendPanelLength(double)),settings,SLOT(calcAttributes(double)));
+
+    connect (this, SIGNAL(sendPanelLength(double)), this, SLOT(calcEpsilonLength(double)));
     displaySphere=true;
     showSphere();
     ui->openGLWidget->backgroundColor = Qt::white;
@@ -1420,6 +1425,7 @@ void MainWindow::updateScreen()
 
 void MainWindow::calcAverLength()
 {
+
     double panelLength;
     switch (ui->tabWidget->currentIndex())
     {
@@ -1447,15 +1453,19 @@ void MainWindow::calcAverLength()
 //                    ? (M_PI/ui->fiRotationBodyLineEdit->text().toInt()*ui->formingRBDiameterLineEdit->text().toDouble())
 //                    :((ui->formingRBDiameterLineEdit->text().toDouble()*0.5*M_PI + ui->formingRBSectorOneLength->text().toDouble()+
 //                       ui->formingRBSectorTwoLength->text().toDouble())/ui->partRotationBodyLineEdit->text().toInt());
+             ui->partRotationBodyLineEdit->setText(QString::number(static_cast<int>((ui->fiRotationBodyLineEdit->text().toInt()*(0.5*M_PI*ui->formingRBDiameterLineEdit->text().toDouble()+
+                                                                                                         ui->formingRBSectorOneLength->text().toDouble()+ui->formingRBSectorTwoLength->text().toDouble()))/M_PI/ui->formingRBDiameterLineEdit->text().toDouble())));
              panelLength = M_PI/ui->fiRotationBodyLineEdit->text().toInt()*ui->formingRBDiameterLineEdit->text().toDouble();
             break;
         case 1:
-            panelLength = (M_PI/ui->fiRotationBodyLineEdit->text().toInt()*ui->formingConeRBDiameterLineEdit->text().toDouble())
+            ui->partRotationBodyLineEdit->setText(QString::number(static_cast<int>(ui->fiRotationBodyLineEdit->text().toInt()*(ui->formingConeRBLengthLineEdit->text().toDouble())/M_PI/ui->formingConeRBDiameterLineEdit->text().toDouble())));
+             panelLength = (M_PI/ui->fiRotationBodyLineEdit->text().toInt()*ui->formingConeRBDiameterLineEdit->text().toDouble())
                     > ((ui->formingConeRBLengthLineEdit->text().toDouble())/ui->partRotationBodyLineEdit->text().toInt())
                     ? ((ui->formingConeRBLengthLineEdit->text().toDouble())/ui->partRotationBodyLineEdit->text().toInt())
                     : ((ui->formingConeRBLengthLineEdit->text().toDouble())/ui->partRotationBodyLineEdit->text().toInt());
             break;
         case 2:
+            ui->partRotationBodyLineEdit->setText(QString::number(static_cast<int>(ui->fiRotationBodyLineEdit->text().toInt()*(ui->formingEllipsoidRBLengthLineEdit->text().toDouble())/M_PI/ui->formingEllipsoidRBDiameterLineEdit->text().toDouble())));
             panelLength = (M_PI/ui->fiRotationBodyLineEdit->text().toInt()*ui->formingEllipsoidRBDiameterLineEdit->text().toDouble())
                     > ((ui->formingEllipsoidRBLengthLineEdit->text().toDouble())/ui->partRotationBodyLineEdit->text().toInt())
                     ? (M_PI/ui->fiRotationBodyLineEdit->text().toInt()*ui->formingEllipsoidRBDiameterLineEdit->text().toDouble())
@@ -1892,4 +1902,11 @@ void MainWindow::on_currentNumberLineEdit_editingFinished()
         currentNumber=ui->currentNumberLineEdit->text().toInt();
         emit drawGUI(allVortons.get()->at(currentNumber),allFrames.get()->at(currentNumber));
     }
+}
+
+void MainWindow::calcEpsilonLength(double panel)
+{
+
+
+    ui->epsilonRotationBodyLineEdit->setText(QString::number(panel*0.75));
 }

@@ -99,7 +99,7 @@ private slots:
     void on_previousCommandLinkButton_clicked();
 
     void on_currentNumberLineEdit_editingFinished();
-
+    void calcEpsilonLength(double panel);
 public slots:
     void setReguliser(double reguliser);
     void showInfo();

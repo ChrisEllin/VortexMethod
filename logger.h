@@ -58,6 +58,8 @@ public:
     void writeForces(const Vector3D forces, const Vector3D c);
     void writeSolverTime(const double solvTime);
     void writeTable(const int stepNum, const double stepTime, const double generatedNum, const double maxGamma, const Vector3D velocity, const double reguliser, const int freeVortonsSize, const Counters beforeIntegrC, const Counters afterIntegrC);
+    void createParaviewFile(QVector<std::shared_ptr<MultiFrame>> &frames, QVector<double> &forces, QVector<Vector3D> &velocities, QVector<double> &tangentialVelocities, QVector<double> &normalVelocities, int currentStep);
+    void createParaviewTraceFile(QVector<Vorton> &vortons, int currentStep);
     void closeFiles();
     QString getPath();
     void openVortonFiles(QString vortonsDir);

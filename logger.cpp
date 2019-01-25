@@ -58,6 +58,9 @@ Logger::Logger(const BodyType _type, const SolvType _stype)
         path+=QDateTime::currentDateTime().toString("dd.MM.yyyy_hh.mm.ss");
         folder.mkdir("Results_"+QDateTime::currentDateTime().toString("dd.MM.yyyy_hh.mm.ss"));
     }
+    QDir dataDir(path);
+    dataDir.mkdir("traces");
+    dataDir.mkdir("mesh");
     createFiles();
 }
 
@@ -73,6 +76,7 @@ Logger::Logger(BodyType _type, QString _path, SolvType _stype)
     type=_type;
     path=_path;
     QDir folder(path);
+
     if (_stype==NOOPTIMIZATION)
     {
 
@@ -114,6 +118,10 @@ Logger::Logger(BodyType _type, QString _path, SolvType _stype)
         path+=QDateTime::currentDateTime().toString("dd.MM.yyyy_hh.mm.ss");
         folder.mkdir("Results_"+QDateTime::currentDateTime().toString("dd.MM.yyyy_hh.mm.ss"));
     }
+
+    QDir dataDir(path);
+    dataDir.mkdir("traces");
+    dataDir.mkdir("mesh");
     createFiles();
 }
 
@@ -556,6 +564,87 @@ void Logger::writeTable(const int stepNum, const double stepTime,const double ge
     tableTextStream.get()->flush();
 }
 
+void Logger::createParaviewFile(QVector<std::shared_ptr<MultiFrame>> &frames, QVector<double>& forces, QVector<Vector3D>& velocities,QVector<double> &tangentialVelocities,QVector<double> &normalVelocities, int currentStep)
+{
+    QFile paraviewFile(path+"/mesh/visual.vtk."+QString::number(currentStep));
+    if (paraviewFile.open(QIODevice::WriteOnly))
+    {
+        QTextStream paraviewTs(&paraviewFile);
+        paraviewTs<<"# vtk DataFile Version 3.0\n";
+        paraviewTs<<"vtk output\n";
+        paraviewTs<<"ASCII\n";
+        paraviewTs<<"DATASET UNSTRUCTURED_GRID\n";
+        int points=0;
+        for (int i=0; i<frames.size();i++)
+            points+=frames[i]->getAnglesNum();
+        paraviewTs<<"POINTS "<<points<<" float\n";
+        paraviewTs.flush();
+        for (int i=0; i<frames.size();i++)
+        {
+            for (int j=0; j<frames[i]->getAnglesNum(); j++)
+                paraviewTs<<frames[i]->at(j).getTail().x()<<" "<<frames[i]->at(j).getTail().y()<<" "<<frames[i]->at(j).getTail().z()<<"\n";
+            paraviewTs.flush();
+        }
+        paraviewTs<<"CELLS "<<frames.size()<<" "<<points+frames.size()<<"\n";
+        int currentPointNumber=0;
+        for (int i=0; i<frames.size(); i++)
+        {
+            paraviewTs<<frames[i]->getAnglesNum();
+            int virtualNumber=currentPointNumber;
+            for (int j=currentPointNumber; j<currentPointNumber+frames[i]->getAnglesNum();j++)
+            {
+                paraviewTs<<" "<<j;
+                virtualNumber++;
+            }
+            currentPointNumber=virtualNumber;
+            paraviewTs<<"\n";
+        }
+        paraviewTs.flush();
+        paraviewTs<<"CELL_TYPES "<<frames.size()<<"\n";
+        for (int i=0;i<frames.size(); i++)
+            frames[i]->getAnglesNum()==4 ? paraviewTs<<"9\n" : paraviewTs<<"7\n";
+        paraviewTs.flush();
+        paraviewTs<<"CELL_DATA "<<frames.size()<<"\n";
+        paraviewTs<<"SCALARS pressure float 1\n";
+        paraviewTs<<"LOOKUP_TABLE default\n";
+        for (int i=0; i<forces.size(); i++)
+            i==0 ? paraviewTs<<forces[i] : paraviewTs<<" "<<forces[i];
+        paraviewTs<<"\n";
+        paraviewTs.flush();
+        paraviewTs<<"SCALARS tangential_speed float 1\n";
+        paraviewTs<<"LOOKUP_TABLE default\n";
+        for (int i=0; i<forces.size(); i++)
+            i==0 ? paraviewTs<<tangentialVelocities[i] : paraviewTs<<" "<<tangentialVelocities[i];
+        paraviewTs<<"\n";
+        paraviewTs.flush();
+        paraviewTs<<"SCALARS normal_speed float 1\n";
+        paraviewTs<<"LOOKUP_TABLE default\n";
+        for (int i=0; i<forces.size(); i++)
+            i==0 ? paraviewTs<<normalVelocities[i] : paraviewTs<<" "<<normalVelocities[i];
+        paraviewTs<<"\n";
+        paraviewTs.flush();
+        paraviewTs<<"VECTORS velocities float\n";
+        for (int i=0; i<velocities.size();i++)
+            paraviewTs<<velocities[i].x()<<" "<<velocities[i].y()<<" "<<velocities[i].z()<<"\n";
+        paraviewTs.flush();
+    }
+    paraviewFile.close();
+}
+
+void Logger::createParaviewTraceFile(QVector<Vorton> &vortons, int currentStep)
+{
+    QFile traceFile(path+"/traces/trace.csv."+QString::number(currentStep));
+    if (traceFile.open(QIODevice::WriteOnly))
+    {
+        QTextStream traceStream(&traceFile);
+        traceStream<<"x coord, y coord, z coord\n";
+        for (int i=0; i<vortons.size();i++)
+            traceStream<<(2.0*vortons[i].getMid()-vortons[i].getTail()).x()<<", "<<(2.0*vortons[i].getMid()-vortons[i].getTail()).y()<<", "<<(2.0*vortons[i].getMid()-vortons[i].getTail()).z()<<"\n";
+        traceStream.flush();
+    }
+    traceFile.close();
+
+}
 /*!
 Закрывает все файлы, открытые для записи
 */
