@@ -38,7 +38,8 @@ SOURCES += \
     logger.cpp \
     vector2d.cpp \
     variatesettings.cpp \
-    preprocessorsettings.cpp
+    preprocessorsettings.cpp \
+    simpsonintegration.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -54,7 +55,8 @@ HEADERS += \
     logger.h \
     vector2d.h \
     variatesettings.h \
-    preprocessorsettings.h
+    preprocessorsettings.h \
+    simpsonintegration.h
 
 FORMS += \
         mainwindow.ui \
@@ -65,4 +67,30 @@ FORMS += \
 RESOURCES += \
     resources.qrc
 
+
+win32 {
+    COPY_FROM_PATH=$$shell_path($$PWD/dll)
+    COPY_TO_PATH=$$shell_path($$DESTDIR)
+}
+copydata.commands = $(COPY_DIR) $$COPY_FROM_PATH $$COPY_TO_PATH
+first.depends = $(first) copydata
+
+export(first.depends)
+export(copydata.commands)
+
+QMAKE_EXTRA_TARGETS += first copydata
+
+
+
+
+
+unix|win32: LIBS += -L$$PWD/dll/ -llibdrawstuff.dll
+
+INCLUDEPATH += $$PWD/dll
+DEPENDPATH += $$PWD/dll
+
+unix|win32: LIBS += -L$$PWD/dll/ -llibode_single.dll
+
+INCLUDEPATH += $$PWD/dll
+DEPENDPATH += $$PWD/dll
 

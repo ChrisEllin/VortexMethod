@@ -19,6 +19,7 @@ private:
     FreeMotionParameters freeMotionPar; ///<Параметры свободного движения
     QVector<Vector3D> cAerodynamics; ///<Вектор значений С
     QVector<Vector3D> forces; ///<Вектор значений силы
+    QVector<Vector3D> torques;
     QString logPath; ///<Путь к каталогу для записи результатов расчета
     MotionType motion;
     bool checkFinishing();

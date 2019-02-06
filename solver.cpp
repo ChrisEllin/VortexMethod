@@ -36,6 +36,7 @@ Solver::Solver(const SolverParameters& parameters)
     solvPar=parameters;
     cAerodynamics.resize(solvPar.stepsNum);
     forces.resize(solvPar.stepsNum);
+    torques.resize(solvPar.stepsNum);
 }
 
 /*!
@@ -49,6 +50,7 @@ Solver::Solver(const SolverParameters &parameters, const FreeMotionParameters &m
     freeMotionPar=motionParameters;
     cAerodynamics.resize(solvPar.stepsNum);
     forces.resize(solvPar.stepsNum);
+    torques.resize(solvPar.stepsNum);
 }
 
 /*!
@@ -375,22 +377,35 @@ void Solver::rotationBodySolver(const FragmentationParameters &fragPar)
     xend=fragPar.rotationBodyXBeg+forming.sectorOneLength;
     break;
     }
-    }
+    };
 
     QVector<Vorton> freeVortons;
     QVector<Vorton> newVortons;
-    QVector<double> cp(fragPar.rotationBodyPartFragNum);
+    QVector<double> cp(fragPar.rotationBodyPartFragNum+1);
+    QVector<double> cp0(fragPar.rotationBodyPartFragNum+1);
+    QVector<double> cp90(fragPar.rotationBodyPartFragNum+1);
+    QVector<double> cp180(fragPar.rotationBodyPartFragNum+1);
+    QVector<double> cp270(fragPar.rotationBodyPartFragNum+1);
     emit updateRotationBodyMaximum(solvPar.stepsNum-1);
     QVector<double> pressures;
     QVector<Vector3D> velocities;
     QVector<double> tangentialVelocities;
     QVector<double> normalVelocities;
-    pressures.resize(controlPointsRaised.size());
-    velocities.resize(controlPoints.size());
-    normalVelocities.resize(controlPoints.size());
-    tangentialVelocities.resize(controlPoints.size());
+
+    QVector<std::shared_ptr<MultiFrame>> framesSection;
+    QVector<Vector3D> centerSection;
+    QVector<Vector3D> sectionNormals;
+
+
+    functions.calcSection(fragmentation.getForming().diameter,center.x(),fragPar.rotationBodyFiFragNum,framesSection,centerSection,sectionNormals);
+
+    pressures.resize(controlPointsRaised.size()+centerSection.size());
+    velocities.resize(controlPoints.size()+centerSection.size());
+    normalVelocities.resize(controlPoints.size()+centerSection.size());
+    tangentialVelocities.resize(controlPoints.size()+centerSection.size());
 
     logger->writePassport(solvPar,fragPar,fragmentation.getForming(),functions.calcFrameSizes(frames));
+    QVector<Vector3D> sectionVelocities(centerSection.size());
     for (int i=0; i<solvPar.stepsNum; i++)
     {
         if(checkFinishing())
@@ -403,6 +418,7 @@ void Solver::rotationBodySolver(const FragmentationParameters &fragPar)
         emit sendReguliser(vorticities[vorticities.size()-1]);
         FrameCalculations::setVorticity(frames,vorticities);
         newVortons=FrameCalculations::getLiftedFrameVortons(frames,normals,solvPar.deltaUp);
+
         int generatedNum=newVortons.size();
         functions.unionVortons(newVortons,solvPar.eStar,solvPar.eDoubleStar,fragPar.vortonsRad);
         functions.removeSmallVorticity(newVortons,solvPar.minVorticity);
@@ -410,22 +426,39 @@ void Solver::rotationBodySolver(const FragmentationParameters &fragPar)
         functions.displacementCalc(freeVortons,newVortons,solvPar.tau,currentSpeed,solvPar.eDelta,solvPar.fiMax,solvPar.maxMove);
         Vector3D force=functions.forceCalc(currentSpeed, solvPar.streamPres,solvPar.density,frames,freeVortons, solvPar.tau, squares, controlPointsRaised, normals);
         forces[i]=force;
+
         cAerodynamics[i] = force*2.0/(solvPar.density*solvPar.streamVel.lengthSquared()*M_PI*pow(fragmentation.getForming().diameter*0.5,2));
 
         for (int i=0; i<controlPointsRaised.size(); i++)
             pressures[i]=(FrameCalculations::pressureCalc(controlPointsRaised[i], solvPar.streamVel, solvPar.streamPres,solvPar.density, frames, freeVortons, solvPar.tau)-solvPar.streamPres)/
                     (solvPar.density*Vector3D::dotProduct(solvPar.streamVel,solvPar.streamVel)*0.5);
+        for (int i=controlPointsRaised.size(); i<controlPointsRaised.size()+centerSection.size(); i++)
+            pressures[i]=(FrameCalculations::pressureCalc(centerSection[i-controlPoints.size()], solvPar.streamVel, solvPar.streamPres,solvPar.density, frames, freeVortons, solvPar.tau)-solvPar.streamPres)/
+                    (solvPar.density*Vector3D::dotProduct(solvPar.streamVel,solvPar.streamVel)*0.5);
 
         for (int i=0; i<controlPoints.size();i++)
             velocities[i]=FrameCalculations::velocity(controlPoints[i],solvPar.streamVel,freeVortons,frames);
+        for (int i=controlPoints.size(); i<controlPoints.size()+centerSection.size();i++)
+            velocities[i]=FrameCalculations::velocity(centerSection[i-controlPoints.size()],solvPar.streamVel,freeVortons,frames);
+
 
         for (int i=0; i<controlPoints.size();i++)
             normalVelocities[i]=Vector3D::dotProduct(FrameCalculations::velocity(controlPoints[i],solvPar.streamVel,freeVortons,frames),normals[i]);
+        for (int i=controlPoints.size(); i<controlPoints.size()+centerSection.size();i++)
+            normalVelocities[i]=Vector3D::dotProduct(FrameCalculations::velocity(centerSection[i-controlPoints.size()],solvPar.streamVel,freeVortons,frames),sectionNormals[i-controlPoints.size()]);
 
         for (int i=0; i<controlPoints.size();i++)
             tangentialVelocities[i]=(velocities[i]-normalVelocities[i]*normals[i]).length();
+        for (int i=controlPoints.size(); i<controlPoints.size()+centerSection.size();i++)
+            tangentialVelocities[i]=(velocities[i]-normalVelocities[i]*sectionNormals[i-controlPoints.size()]).length();
+
+
 
         functions.cpSumRotationBody(i,solvPar.stepsNum, cp, fragPar.rotationBodyFiFragNum, solvPar.streamVel, solvPar.streamPres,solvPar.density,frames, freeVortons, solvPar.tau, controlPointsRaised);
+        functions.cpRotationBodyDegree(i,solvPar.stepsNum, cp0, fragPar.rotationBodyFiFragNum, solvPar.streamVel, solvPar.streamPres,solvPar.density,frames, freeVortons, solvPar.tau, controlPointsRaised,0);
+        functions.cpRotationBodyDegree(i,solvPar.stepsNum, cp90, fragPar.rotationBodyFiFragNum, solvPar.streamVel, solvPar.streamPres,solvPar.density,frames, freeVortons, solvPar.tau, controlPointsRaised,90);
+        functions.cpRotationBodyDegree(i,solvPar.stepsNum, cp180, fragPar.rotationBodyFiFragNum, solvPar.streamVel, solvPar.streamPres,solvPar.density,frames, freeVortons, solvPar.tau, controlPointsRaised,180);
+        functions.cpRotationBodyDegree(i,solvPar.stepsNum, cp270, fragPar.rotationBodyFiFragNum, solvPar.streamVel, solvPar.streamPres,solvPar.density,frames, freeVortons, solvPar.tau, controlPointsRaised,270);
         freeVortons.append(newVortons);
 
         Counters countersBeforeIntegration=functions.getCounters();
@@ -459,7 +492,7 @@ void Solver::rotationBodySolver(const FragmentationParameters &fragPar)
 
 
         logger->createParaviewTraceFile(freeVortons,i);
-        logger->createParaviewFile(frames,pressures,velocities,tangentialVelocities,normalVelocities,i);
+        logger->createParaviewFile(frames,pressures,velocities,tangentialVelocities,normalVelocities,framesSection,i);
         emit sendProgressRotationBody(i);
         emit repaintGUI(freeVortons, frames);
 
@@ -473,11 +506,21 @@ void Solver::rotationBodySolver(const FragmentationParameters &fragPar)
         qDebug()<<currentSpeed.x()<<" "<<currentSpeed.y()<<" "<<currentSpeed.z()<<"\n";
     }
     QVector<double> fis;
-    for (int i=0; i<fragPar.rotationBodyPartFragNum;i++)
-        fis.push_back(i);
+    fis.push_back(controlPoints[controlPoints.size()-2].y()/*BodyFragmentation::presetFunctionF(controlPoints[controlPoints.size()-2].x(),fragmentation.getForming())*/);
+    for (int i=0; i<controlPoints.size()-2;i+=fragPar.rotationBodyFiFragNum)
+        fis.push_back(controlPoints[i].y()/*BodyFragmentation::presetFunctionF(controlPoints[i].x(),fragmentation.getForming())*/);
+    fis.push_back(controlPoints[controlPoints.size()-1].y()/*BodyFragmentation::presetFunctionF(controlPoints[controlPoints.size()-1].x(),fragmentation.getForming())*/);
     functions.cpAverage(cp,solvPar.stepsNum);
+    functions.cpAverage(cp0,solvPar.stepsNum);
+    functions.cpAverage(cp90,solvPar.stepsNum);
+    functions.cpAverage(cp180,solvPar.stepsNum);
+    functions.cpAverage(cp270,solvPar.stepsNum);
     qDebug()<<"File Created";
     logger->writeCpFile(cp,fis);
+    logger->writeCpDegreeFile(cp,fis, 0);
+    logger->writeCpDegreeFile(cp,fis, 90);
+    logger->writeCpDegreeFile(cp,fis, 180);
+    logger->writeCpDegreeFile(cp,fis, 270);
     logger->writeSolverTime(start.elapsed()*0.001);
     logger->closeFiles();
     delete logger;
@@ -494,27 +537,82 @@ void Solver::rotationBodyFreeMotionSolver(const FragmentationParameters &fragPar
     QVector<double> squares=fragmentation.getSquares();
     QVector<Vector3D> controlPointsRaised=fragmentation.getControlPointsRaised();
     QVector<std::shared_ptr<MultiFrame>> frames=fragmentation.getFrames();
-
+    QVector<std::shared_ptr<MultiFrame>> oldFrames=FrameCalculations::copyFrames(frames);
+    QVector<Vector3D> oldControlPoints=controlPoints;
+    QVector<Vector3D> oldNormals=normals;
+    QVector<Vector3D> oldControlPointsRaised=controlPointsRaised;
     FrameCalculations functions;
     functions.matrixCalc(frames,controlPoints,normals);
     Vector3D relVel=solvPar.streamVel-freeMotionPar.bodyVel;
-    Vector3D center((fragPar.rotationBodyXBeg+fragPar.rotationBodyXEnd)*0.5,0.0,0.0);
-    Vector3D translation=freeMotionPar.bodyVel*solvPar.tau;
+    //Vector3D center((fragPar.rotationBodyXBeg+fragPar.rotationBodyXEnd)*0.5,0.0,0.0);
+     Vector3D translation=freeMotionPar.bodyVel*solvPar.tau;
 
-    double xEnd=fragPar.rotationBodyXEnd;
+    //double xEnd=fragPar.rotationBodyXEnd;
+//    Vector3D bodyNose=Vector3D(fragPar.rotationBodyXBeg,0.0,0.0);
+    Vector3D center((fragPar.rotationBodyXBeg+fragmentation.getForming().sectorOneLength+fragmentation.getForming().sectorTwoLength+fragmentation.getForming().diameter*0.5/*fragPar.rotationBodyXEnd*/)*0.5,0.0,0.0);
     Vector3D bodyNose=Vector3D(fragPar.rotationBodyXBeg,0.0,0.0);
-
+    double xend;
+    Vector3D currentSpeed;
+    if (motion==NOACCELERATE)
+        currentSpeed=solvPar.streamVel;
+    else
+        currentSpeed=solvPar.streamVel/(solvPar.acceleratedStepsNum+2);
+    FormingParameters forming=fragmentation.getForming();
+    switch (forming.typeNum)
+    {
+    case 0:
+    {
+    center=Vector3D((fragPar.rotationBodyXBeg+forming.sectorOneLength+forming.sectorTwoLength+forming.diameter*0.5/*fragPar.rotationBodyXEnd*/)*0.5,0.0,0.0);
+    xend=fragPar.rotationBodyXBeg+forming.sectorOneLength+forming.sectorTwoLength+forming.diameter*0.5;
+    break;
+    }
+    case 1:
+    {
+    center=Vector3D((fragPar.rotationBodyXBeg+forming.sectorOneLength)*0.5,0.0,0.0);
+    xend=fragPar.rotationBodyXBeg+forming.sectorOneLength;
+    break;
+    }
+    case 2:
+    {
+    center=Vector3D((fragPar.rotationBodyXBeg+forming.sectorOneLength)*0.5,0.0,0.0);
+    xend=fragPar.rotationBodyXBeg+forming.sectorOneLength;
+    break;
+    }
+    };
     QVector<Vorton> freeVortons;
     QVector<Vorton> newVortons;
+    QVector<double> cp(fragPar.rotationBodyPartFragNum+1);
+    QVector<double> cp0(fragPar.rotationBodyPartFragNum+1);
+    QVector<double> cp90(fragPar.rotationBodyPartFragNum+1);
+    QVector<double> cp180(fragPar.rotationBodyPartFragNum+1);
+    QVector<double> cp270(fragPar.rotationBodyPartFragNum+1);
     emit updateRotationBodyMaximum(solvPar.stepsNum-1);
+    QVector<double> pressures;
+    QVector<Vector3D> velocities;
+    QVector<double> tangentialVelocities;
+    QVector<double> normalVelocities;
+
+    QVector<std::shared_ptr<MultiFrame>> framesSection;
+    QVector<Vector3D> centerSection;
+    QVector<Vector3D> sectionNormals;
 
     logger->writePassport(solvPar,fragPar);
+    pressures.resize(controlPointsRaised.size());
+    velocities.resize(controlPoints.size());
+    normalVelocities.resize(controlPoints.size());
+    tangentialVelocities.resize(controlPoints.size());
+    dMatrix3 R;
+    Eigen::Matrix3d rotation;
+    Vector3D angularVel;
+    IntegrationResults results=functions.integrateParameters(xend-bodyNose.x(), 1700, fragmentation.getForming());
+
     for (int i=0; i<solvPar.stepsNum; i++)
     {
         if(checkFinishing())
             return;
         QTime stepTime=QTime::currentTime();
         newVortons.clear();
+        //Eigen::VectorXd column=functions.columnCalc(relVel,freeVortons,normals,angularVel,controlPoints,center);
         Eigen::VectorXd column=functions.columnCalc(relVel,freeVortons,normals,controlPoints);
         Eigen::VectorXd vorticities=functions.vorticitiesCalc(column);
         emit sendMaxGamma(*std::max_element(vorticities.data(),vorticities.data()+vorticities.size(),Vector3D::fabsCompare));
@@ -527,9 +625,33 @@ void Solver::rotationBodyFreeMotionSolver(const FragmentationParameters &fragPar
         functions.removeSmallVorticity(newVortons,solvPar.minVorticity);
 
         functions.displacementCalc(freeVortons,newVortons,solvPar.tau,relVel,solvPar.eDelta,solvPar.fiMax,solvPar.maxMove);
-        Vector3D force=functions.forceCalc(relVel, solvPar.streamPres,solvPar.density,frames,freeVortons, solvPar.tau, squares, controlPointsRaised, normals);
+        Vector3D force;
+        Vector3D torque;
+        functions.forceAndTorqueCalc(relVel, solvPar.streamPres,solvPar.density,frames,freeVortons, solvPar.tau, squares, controlPointsRaised, normals,center,force,torque);
         forces[i]=force;
+        torques[i]=torque;
         //cAerodynamics[i] = force/(solvPar.density*solvPar.streamVel.lengthSquared()*0.5*M_PI*pow(fragPar.sphereRad,2));
+
+        for (int i=0; i<controlPointsRaised.size(); i++)
+            pressures[i]=(FrameCalculations::pressureCalc(controlPointsRaised[i], solvPar.streamVel, solvPar.streamPres,solvPar.density, frames, freeVortons, solvPar.tau)-solvPar.streamPres)/
+                    (solvPar.density*Vector3D::dotProduct(solvPar.streamVel,solvPar.streamVel)*0.5);
+
+
+        for (int i=0; i<controlPoints.size();i++)
+            velocities[i]=FrameCalculations::velocity(controlPoints[i],solvPar.streamVel,freeVortons,frames);
+
+
+        for (int i=0; i<controlPoints.size();i++)
+            tangentialVelocities[i]=(velocities[i]-normalVelocities[i]*normals[i]).length();
+        for (int i=controlPoints.size(); i<controlPoints.size()+centerSection.size();i++)
+            normalVelocities[i]=(velocities[i]-normalVelocities[i]*sectionNormals[i-controlPoints.size()]).length();
+
+        functions.cpSumRotationBody(i,solvPar.stepsNum, cp, fragPar.rotationBodyFiFragNum, solvPar.streamVel, solvPar.streamPres,solvPar.density,frames, freeVortons, solvPar.tau, controlPointsRaised);
+        functions.cpRotationBodyDegree(i,solvPar.stepsNum, cp0, fragPar.rotationBodyFiFragNum, solvPar.streamVel, solvPar.streamPres,solvPar.density,frames, freeVortons, solvPar.tau, controlPointsRaised,0);
+        functions.cpRotationBodyDegree(i,solvPar.stepsNum, cp90, fragPar.rotationBodyFiFragNum, solvPar.streamVel, solvPar.streamPres,solvPar.density,frames, freeVortons, solvPar.tau, controlPointsRaised,90);
+        functions.cpRotationBodyDegree(i,solvPar.stepsNum, cp180, fragPar.rotationBodyFiFragNum, solvPar.streamVel, solvPar.streamPres,solvPar.density,frames, freeVortons, solvPar.tau, controlPointsRaised,180);
+        functions.cpRotationBodyDegree(i,solvPar.stepsNum, cp270, fragPar.rotationBodyFiFragNum, solvPar.streamVel, solvPar.streamPres,solvPar.density,frames, freeVortons, solvPar.tau, controlPointsRaised,270);
+
 
         freeVortons.append(newVortons);
 
@@ -537,19 +659,31 @@ void Solver::rotationBodyFreeMotionSolver(const FragmentationParameters &fragPar
         Timers timersBeforeIntegration=functions.getTimers();
         Restrictions restrictions=functions.getRestrictions();
         functions.clear();
+        if (i==0)
+        {
+            dRFromEulerAngles(R,M_PI,0.0,0.0);
+            for (int i=0; i<3; i++)
+                for (int j=0; j<3; j++)
+                    rotation(i,j)=R[i*4+j];
+        }
 
         functions.displace(freeVortons);
-        functions.getBackAndRotateRotationBody(freeVortons, bodyNose, fragPar.rotationBodyXEnd, solvPar.layerHeight, controlPoints,normals,fragmentation.getForming());
+        functions.getBackAndRotateMovingRotationBody(freeVortons,center+results.massCenter, bodyNose,xend, solvPar.layerHeight, controlPoints,normals,rotation,fragmentation.getForming());
         functions.unionVortons(freeVortons, solvPar.eStar,solvPar.eDoubleStar,fragPar.vortonsRad);
         functions.removeSmallVorticity(freeVortons,solvPar.minVorticity);
         functions.removeFarRotationBody(freeVortons,solvPar.farDistance,center);
 
         Counters countersAfterIntegration=functions.getCounters();
         Timers timersAfterIntegration=functions.getTimers();
+        Eigen::Matrix3d inertia;
+        inertia<<1,0,0,0,1,0,0,0,1;
 
+
+//        qDebug()<<"Center is "<<center.x()<<" "<< center.y()<<" "<<center.z();
+        functions.translateAndRotate(frames,freeVortons,results.mass,results.inertiaTensor,torque,rotation,force,center,results.massCenter,(i+1)*solvPar.tau,freeMotionPar.bodyVel,controlPoints,normals,controlPointsRaised,oldFrames,oldControlPoints,oldNormals,oldControlPointsRaised, angularVel);
         functions.clear();
-        FrameCalculations::translateBody(translation, frames, controlPoints, controlPointsRaised, center,bodyNose, xEnd, fragPar);
-        FrameCalculations::translateVortons(translation, freeVortons);
+//        FrameCalculations::translateBody(translation, frames, controlPoints, controlPointsRaised, center,bodyNose, xend, fragPar);
+ //       FrameCalculations::translateVortons(translation, freeVortons);
         emit sendNormalsVis(controlPoints,normals);
         logger->writeForces(force,Vector3D(0.0,0.0,0.0));
         logger->writeLogs(i,stepTime.elapsed()*0.001, freeVortons.size(), countersBeforeIntegration,countersAfterIntegration, timersBeforeIntegration, timersAfterIntegration, restrictions);
@@ -557,6 +691,8 @@ void Solver::rotationBodyFreeMotionSolver(const FragmentationParameters &fragPar
         logger->writeTable(i,stepTime.elapsed()*0.001,generatedNum,*std::max_element(vorticities.data(),vorticities.data()+vorticities.size(),Vector3D::fabsCompare),
                            FrameCalculations::velocity(center,solvPar.streamVel,freeVortons,frames),vorticities[vorticities.size()-1],freeVortons.size(),countersBeforeIntegration,countersAfterIntegration);
 
+        logger->createParaviewTraceFile(freeVortons,i);
+        logger->createParaviewFile(frames,pressures,velocities,tangentialVelocities,normalVelocities,framesSection,i);
         emit sendProgressRotationBody(i);
         emit repaintGUI(freeVortons, frames);
 
@@ -585,23 +721,59 @@ void Solver::rotationCutBodySolver(const FragmentationParameters &fragPar)
 
     FrameCalculations functions;
     functions.matrixCalc(frames,controlPoints,normals);
-
-
+    FormingParametersRBC forming=fragmentation.getFormingRBC();
     Vector3D bodyNose=Vector3D(fragPar.rotationBodyXBeg/*-2.5+fragPar.rotationBodyXEnd*/,0.0,0.0);
-    Vector3D center((bodyNose.x()+fragmentation.getForming().sectorOneLength+fragmentation.getForming().sectorTwoLength/*fragPar.rotationBodyXEnd*/)*0.5,0.0,0.0);
-    double xend=fragmentation.getForming().sectorOneLength+fragmentation.getForming().sectorTwoLength+bodyNose.x();
+    Vector3D center;
+    double xend;
+//    Vector3D center((bodyNose.x()+fragmentation.getForming().sectorOneLength+fragmentation.getForming().sectorTwoLength/*fragPar.rotationBodyXEnd*/)*0.5,0.0,0.0);
+//    double xend=fragmentation.getForming().sectorOneLength+fragmentation.getForming().sectorTwoLength+bodyNose.x();
+    switch (forming.type)
+    {
+    case ELLIPSOID_CONE:
+    {
+        center=Vector3D((bodyNose.x()+forming.ellipsoidLength+forming.coneLength)*0.5,0.0,0.0);
+        xend=bodyNose.x()+forming.ellipsoidLength+forming.coneLength;
+        break;
+    }
+    case ELLIPSOID_CYLINDER:
+    {
+        center=Vector3D((bodyNose.x()+forming.fullLength)*0.5,0.0,0.0);
+        xend=bodyNose.x()+forming.fullLength;
+        break;
+    }
+    };
 
     Vector3D currentSpeed;
     if (motion==NOACCELERATE)
         currentSpeed=solvPar.streamVel;
     else
-        currentSpeed==solvPar.streamVel/(solvPar.acceleratedStepsNum+2);
+        currentSpeed=solvPar.streamVel/(solvPar.acceleratedStepsNum+2);
 
     QVector<Vorton> freeVortons;
     QVector<Vorton> newVortons;
     emit updateRotationCutBodyMaximum(solvPar.stepsNum-1);
 
+    QVector<double> cp(fragPar.rotationBodyPartFragNum+1);
+    QVector<double> cp0(fragPar.rotationBodyPartFragNum+1);
+    QVector<double> cp90(fragPar.rotationBodyPartFragNum+1);
+    QVector<double> cp180(fragPar.rotationBodyPartFragNum+1);
+    QVector<double> cp270(fragPar.rotationBodyPartFragNum+1);
+    emit updateRotationBodyMaximum(solvPar.stepsNum-1);
+    QVector<double> pressures;
+    QVector<Vector3D> velocities;
+    QVector<double> tangentialVelocities;
+    QVector<double> normalVelocities;
+
+    QVector<std::shared_ptr<MultiFrame>> framesSection;
+    QVector<Vector3D> centerSection;
+    QVector<Vector3D> sectionNormals;
     logger->writePassport(solvPar,fragPar,fragmentation.getForming(),functions.calcFrameSizes(frames));
+    //functions.calcSection(fragmentation.getForming().diameter,center.x(),fragPar.rotationBodyFiFragNum,framesSection,centerSection,sectionNormals);
+
+    pressures.resize(controlPointsRaised.size()+centerSection.size());
+    velocities.resize(controlPoints.size()+centerSection.size());
+    normalVelocities.resize(controlPoints.size()+centerSection.size());
+    tangentialVelocities.resize(controlPoints.size()+centerSection.size());
     for (int i=0; i<solvPar.stepsNum; i++)
     {
         if(checkFinishing())
@@ -620,9 +792,38 @@ void Solver::rotationCutBodySolver(const FragmentationParameters &fragPar)
         functions.removeSmallVorticity(newVortons,solvPar.minVorticity);
 
         functions.displacementCalc(freeVortons,newVortons,solvPar.tau,currentSpeed,solvPar.eDelta,solvPar.fiMax,solvPar.maxMove);
-        Vector3D force=functions.forceCalc(currentSpeed, solvPar.streamPres,solvPar.density,frames,freeVortons, solvPar.tau, squares, controlPointsRaised, normals);
-        cAerodynamics[i] = force*2.0/(solvPar.density*solvPar.streamVel.lengthSquared()*M_PI*pow(fragmentation.getForming().diameter*0.5,2));
+        Vector3D force;
+        Vector3D torque;
+        functions.forceAndTorqueCalc(solvPar.streamVel, solvPar.streamPres,solvPar.density,frames,freeVortons, solvPar.tau, squares, controlPointsRaised, normals,center,force,torque);
         forces[i]=force;
+        torques[i]=torque;
+        cAerodynamics[i] = 2.0*force/(solvPar.density*solvPar.streamVel.lengthSquared()*M_PI*pow(fragmentation.getFormingRBC().ellipsoidDiameter*0.5,2));
+
+        for (int i=0; i<controlPointsRaised.size(); i++)
+            pressures[i]=(FrameCalculations::pressureCalc(controlPointsRaised[i], solvPar.streamVel, solvPar.streamPres,solvPar.density, frames, freeVortons, solvPar.tau)-solvPar.streamPres)/
+                    (solvPar.density*Vector3D::dotProduct(solvPar.streamVel,solvPar.streamVel)*0.5);
+//        for (int i=controlPointsRaised.size(); i<controlPointsRaised.size()+centerSection.size(); i++)
+//            pressures[i]=(FrameCalculations::pressureCalc(centerSection[i-controlPoints.size()], solvPar.streamVel, solvPar.streamPres,solvPar.density, frames, freeVortons, solvPar.tau)-solvPar.streamPres)/
+//                    (solvPar.density*Vector3D::dotProduct(solvPar.streamVel,solvPar.streamVel)*0.5);
+
+        for (int i=0; i<controlPoints.size();i++)
+            velocities[i]=FrameCalculations::velocity(controlPoints[i],solvPar.streamVel,freeVortons,frames);
+//        for (int i=controlPoints.size(); i<controlPoints.size()+centerSection.size();i++)
+//            velocities[i]=FrameCalculations::velocity(centerSection[i-controlPoints.size()],solvPar.streamVel,freeVortons,frames);
+
+        for (int i=0; i<controlPoints.size();i++)
+            normalVelocities[i]=Vector3D::dotProduct(FrameCalculations::velocity(controlPoints[i],solvPar.streamVel,freeVortons,frames),normals[i]);
+
+        for (int i=0; i<controlPoints.size();i++)
+            tangentialVelocities[i]=(velocities[i]-normalVelocities[i]*normals[i]).length();
+
+
+//        functions.cpSumRotationBody(i,solvPar.stepsNum, cp, fragPar.rotationBodyFiFragNum, solvPar.streamVel, solvPar.streamPres,solvPar.density,frames, freeVortons, solvPar.tau, controlPointsRaised);
+//        functions.cpRotationBodyDegree(i,solvPar.stepsNum, cp0, fragPar.rotationBodyFiFragNum, solvPar.streamVel, solvPar.streamPres,solvPar.density,frames, freeVortons, solvPar.tau, controlPointsRaised,0);
+//        functions.cpRotationBodyDegree(i,solvPar.stepsNum, cp90, fragPar.rotationBodyFiFragNum, solvPar.streamVel, solvPar.streamPres,solvPar.density,frames, freeVortons, solvPar.tau, controlPointsRaised,90);
+//        functions.cpRotationBodyDegree(i,solvPar.stepsNum, cp180, fragPar.rotationBodyFiFragNum, solvPar.streamVel, solvPar.streamPres,solvPar.density,frames, freeVortons, solvPar.tau, controlPointsRaised,180);
+//        functions.cpRotationBodyDegree(i,solvPar.stepsNum, cp270, fragPar.rotationBodyFiFragNum, solvPar.streamVel, solvPar.streamPres,solvPar.density,frames, freeVortons, solvPar.tau, controlPointsRaised,270);
+
 
         freeVortons.append(newVortons);
 
@@ -632,7 +833,7 @@ void Solver::rotationCutBodySolver(const FragmentationParameters &fragPar)
         functions.clear();
 
         functions.displace(freeVortons);
-        functions.getBackAndRotateRotationCutBody(freeVortons, xend, solvPar.layerHeight, controlPoints,normals, bodyNose,fragmentation.getForming());
+        functions.getBackAndRotateRotationCutBody(freeVortons, xend, solvPar.layerHeight, controlPoints,normals, bodyNose,forming);
         functions.unionVortons(freeVortons, solvPar.eStar,solvPar.eDoubleStar,fragPar.vortonsRad);
         functions.removeSmallVorticity(freeVortons,solvPar.minVorticity);
         functions.removeFarRotationCutBody(freeVortons,solvPar.farDistance,center);
@@ -648,6 +849,8 @@ void Solver::rotationCutBodySolver(const FragmentationParameters &fragPar)
         logger->writeTable(i,stepTime.elapsed()*0.001,generatedNum,*std::max_element(vorticities.data(),vorticities.data()+vorticities.size(),Vector3D::fabsCompare),
                            FrameCalculations::velocity(center,solvPar.streamVel,freeVortons,frames),vorticities[vorticities.size()-1],freeVortons.size(),countersBeforeIntegration,countersAfterIntegration);
 
+        logger->createParaviewTraceFile(freeVortons,i);
+        logger->createParaviewFile(frames,pressures,velocities,tangentialVelocities,normalVelocities,/*framesSection,*/i);
         emit sendProgressRotationCutBody(i);
         emit repaintGUI(freeVortons, frames);
 
@@ -686,13 +889,33 @@ void Solver::rotationCutBodySolverNearScreen(const FragmentationParameters &frag
     FrameCalculations functions;
     functions.matrixCalc(frames,controlPoints,normals);
 
-    Vector3D center((fragPar.rotationBodyXEnd+fragPar.rotationBodyXBeg)*0.5,0.0,0.0);
+    FormingParametersRBC forming=fragmentation.getFormingRBC();
+    Vector3D bodyNose=Vector3D(fragPar.rotationBodyXBeg/*-2.5+fragPar.rotationBodyXEnd*/,0.0,0.0);
+    Vector3D center;
+    double xend;
+//    Vector3D center((bodyNose.x()+fragmentation.getForming().sectorOneLength+fragmentation.getForming().sectorTwoLength/*fragPar.rotationBodyXEnd*/)*0.5,0.0,0.0);
+//    double xend=fragmentation.getForming().sectorOneLength+fragmentation.getForming().sectorTwoLength+bodyNose.x();
+    switch (forming.type)
+    {
+    case ELLIPSOID_CONE:
+    {
+        center=Vector3D((bodyNose.x()+forming.ellipsoidLength+forming.coneLength)*0.5,0.0,0.0);
+        xend=bodyNose.x()+forming.ellipsoidLength+forming.coneLength;
+        break;
+    }
+    case ELLIPSOID_CYLINDER:
+    {
+        center=Vector3D((bodyNose.x()+forming.fullLength)*0.5,0.0,0.0);
+        xend=bodyNose.x()+forming.fullLength;
+        break;
+    }
+    };
 
     QVector<Vorton> freeVortons;
     QVector<Vorton> newVortons;
     emit updateRotationCutBodyMaximum(solvPar.stepsNum-1);
 
-    Vector3D bodyNose(-(/*fragPar.rotationBodyXEnd+*/screenDistance),0.0,0.0);
+
     //FrameCalculations::translateBody(Vector3D(-(fragPar.rotationBodyXEnd+screenDistance),0.0,0.0),frames,controlPoints,controlPointsRaised,center);
     //double xEnd=-screenDistance;
     logger->writePassport(solvPar,fragPar);
@@ -735,7 +958,7 @@ void Solver::rotationCutBodySolverNearScreen(const FragmentationParameters &frag
         functions.clear();
 
         functions.displace(freeVortons);
-        functions.getBackAndRotateRotationCutLaunchedBody(freeVortons, bodyNose, -screenDistance, solvPar.layerHeight, controlPoints,normals,fragmentation.getForming());
+        functions.getBackAndRotateRotationCutLaunchedBody(freeVortons, bodyNose, -screenDistance, solvPar.layerHeight, controlPoints,normals,forming);
         functions.unionVortons(freeVortons, solvPar.eStar,solvPar.eDoubleStar,fragPar.vortonsRad);
         functions.removeSmallVorticity(freeVortons,solvPar.minVorticity);
         functions.removeFarRotationCutBody(freeVortons,solvPar.farDistance,center);
@@ -778,15 +1001,33 @@ void Solver::rotationCutBodyFreeMotionSolver(const FragmentationParameters &frag
         FrameCalculations functions;
         functions.matrixCalc(frames,controlPoints,normals);
         Vector3D relVel=solvPar.streamVel-freeMotionPar.bodyVel;
-        Vector3D center((fragPar.rotationBodyXBeg+fragPar.rotationBodyXEnd)*0.5,0.0,0.0);
+//        Vector3D center((fragPar.rotationBodyXBeg+fragPar.rotationBodyXEnd)*0.5,0.0,0.0);
         Vector3D translation=freeMotionPar.bodyVel*solvPar.tau;
         QVector<Vorton> freeVortons;
         QVector<Vorton> newVortons;
         emit updateRotationCutBodyMaximum(solvPar.stepsNum-1);
 
-        double xBeg=fragPar.rotationBodyXBeg;
-        double xEnd=0.0;
-        Vector3D bodyNose=Vector3D(-2.5,0.0,0.0);
+        FormingParametersRBC forming=fragmentation.getFormingRBC();
+        Vector3D bodyNose=Vector3D(fragPar.rotationBodyXBeg/*-2.5+fragPar.rotationBodyXEnd*/,0.0,0.0);
+        Vector3D center;
+        double xend;
+    //    Vector3D center((bodyNose.x()+fragmentation.getForming().sectorOneLength+fragmentation.getForming().sectorTwoLength/*fragPar.rotationBodyXEnd*/)*0.5,0.0,0.0);
+    //    double xend=fragmentation.getForming().sectorOneLength+fragmentation.getForming().sectorTwoLength+bodyNose.x();
+        switch (forming.type)
+        {
+        case ELLIPSOID_CONE:
+        {
+            center=Vector3D((bodyNose.x()+forming.ellipsoidLength+forming.coneLength)*0.5,0.0,0.0);
+            xend=bodyNose.x()+forming.ellipsoidLength+forming.coneLength;
+            break;
+        }
+        case ELLIPSOID_CYLINDER:
+        {
+            center=Vector3D((bodyNose.x()+forming.fullLength)*0.5,0.0,0.0);
+            xend=bodyNose.x()+forming.fullLength;
+            break;
+        }
+        };
         logger->writePassport(solvPar,fragPar);
         for (int i=0; i<solvPar.stepsNum; i++)
         {
@@ -817,7 +1058,7 @@ void Solver::rotationCutBodyFreeMotionSolver(const FragmentationParameters &frag
             functions.clear();
 
             functions.displace(freeVortons);
-            functions.getBackAndRotateRotationCutBody(freeVortons, xEnd, solvPar.layerHeight, controlPoints,normals, bodyNose,fragmentation.getForming());
+            functions.getBackAndRotateRotationCutBody(freeVortons, xend, solvPar.layerHeight, controlPoints,normals, bodyNose,forming);
             functions.unionVortons(freeVortons, solvPar.eStar,solvPar.eDoubleStar,fragPar.vortonsRad);
             functions.removeSmallVorticity(freeVortons,solvPar.minVorticity);
             functions.removeFarRotationCutBody(freeVortons,solvPar.farDistance,center);
@@ -826,7 +1067,7 @@ void Solver::rotationCutBodyFreeMotionSolver(const FragmentationParameters &frag
             Timers timersAfterIntegration=functions.getTimers();
 
             functions.clear();
-            FrameCalculations::translateBody(translation, frames, controlPoints, controlPointsRaised, center,bodyNose, xEnd, fragPar);
+            FrameCalculations::translateBody(translation, frames, controlPoints, controlPointsRaised, center,bodyNose, xend, fragPar);
             FrameCalculations::translateVortons(translation, freeVortons);
             emit sendNormalsVis(controlPoints,normals);
             logger->writeForces(force,Vector3D(0.0,0.0,0.0));
@@ -967,7 +1208,7 @@ void Solver::rotationCutBodyLaunchSolver(const FragmentationParameters &fragPar)
                 qDebug()<<freeVortons[i].getVorticity();
         }
         functions.displace(freeVortons);
-        functions.getBackAndRotateRotationCutLaunchedBody(freeVortons, bodyNose, xEnd, solvPar.layerHeight, controlPoints,normals,fragmentation.getForming());
+        functions.getBackAndRotateRotationCutLaunchedBody(freeVortons, bodyNose, xEnd, solvPar.layerHeight, controlPoints,normals,fragmentation.getFormingRBC());
         functions.unionVortons(freeVortons, solvPar.eStar,solvPar.eDoubleStar,fragPar.vortonsRad);
         functions.removeSmallVorticity(freeVortons,solvPar.minVorticity);
         functions.removeFarRotationCutBody(freeVortons,solvPar.farDistance,center);
@@ -1636,6 +1877,7 @@ void Solver::operator =(const Solver &solver)
     freeMotionPar=solver.freeMotionPar;
     cAerodynamics=solver.cAerodynamics;
     forces=solver.forces;
+    torques=solver.torques;
 }
 
 Logger* Solver::createLog(BodyType type)

@@ -51,6 +51,7 @@ public:
     void writeVortons(QVector<std::shared_ptr<MultiFrame>> frames, QVector<Vorton> freevortons, const int stepNum);
     void createFiles();
     void writeCpFile(const QVector<double> cp, const QVector<double> tetas);
+    void writeCpDegreeFile(const QVector<double> cp, const QVector<double> tetas, const int degree);
     void writeLogs(const int stepNum, const double stepTime, const int freeVortonsSize, const Counters beforeIntegrC, const Counters afterIntegrC, const Timers beforeIntegrT, const Timers afterIntegrT, const Restrictions restr);
     void writePassport(const SolverParameters& solvPar,const FragmentationParameters& fragPar);
     void writePassport(const SolverParameters& solvPar, const FragmentationParameters& fragPar, const FormingParameters forming, const FramesSizes framesSizes);
@@ -58,7 +59,9 @@ public:
     void writeForces(const Vector3D forces, const Vector3D c);
     void writeSolverTime(const double solvTime);
     void writeTable(const int stepNum, const double stepTime, const double generatedNum, const double maxGamma, const Vector3D velocity, const double reguliser, const int freeVortonsSize, const Counters beforeIntegrC, const Counters afterIntegrC);
+    void createParaviewFile(QVector<std::shared_ptr<MultiFrame>> &frames, QVector<double> &forces, QVector<Vector3D> &velocities, QVector<double> &tangentialVelocities, QVector<double> &normalVelocities, QVector<std::shared_ptr<MultiFrame> > &sectionFrames, int currentStep);
     void createParaviewFile(QVector<std::shared_ptr<MultiFrame>> &frames, QVector<double> &forces, QVector<Vector3D> &velocities, QVector<double> &tangentialVelocities, QVector<double> &normalVelocities, int currentStep);
+
     void createParaviewTraceFile(QVector<Vorton> &vortons, int currentStep);
     void closeFiles();
     QString getPath();

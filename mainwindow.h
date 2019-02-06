@@ -100,6 +100,8 @@ private slots:
 
     void on_currentNumberLineEdit_editingFinished();
     void calcEpsilonLength(double panel);
+    void on_formRotationCutBodyComboBox_currentIndexChanged(int index);
+
 public slots:
     void setReguliser(double reguliser);
     void showInfo();

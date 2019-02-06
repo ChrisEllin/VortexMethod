@@ -20,7 +20,7 @@
       <item row="0" column="0">
        <widget class="QTabWidget" name="tabWidget">
         <property name="currentIndex">
-         <number>2</number>
+         <number>3</number>
         </property>
         <widget class="QWidget" name="tab">
          <attribute name="title">
@@ -1024,10 +1024,10 @@
          <widget class="QWidget" name="layoutWidget">
           <property name="geometry">
            <rect>
-            <x>10</x>
+            <x>0</x>
             <y>10</y>
-            <width>611</width>
-            <height>551</height>
+            <width>531</width>
+            <height>531</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout">
@@ -1206,7 +1206,7 @@
                </rect>
               </property>
               <property name="text">
-               <string>0.1</string>
+               <string>0.0001</string>
               </property>
              </widget>
              <widget class="QLabel" name="label_37">
@@ -1293,8 +1293,8 @@
              <widget class="QPushButton" name="rotationCutBodyFreeMotionSolverPushButton">
               <property name="geometry">
                <rect>
-                <x>90</x>
-                <y>400</y>
+                <x>290</x>
+                <y>370</y>
                 <width>191</width>
                 <height>23</height>
                </rect>
@@ -1307,7 +1307,7 @@
               <property name="geometry">
                <rect>
                 <x>90</x>
-                <y>430</y>
+                <y>400</y>
                 <width>191</width>
                 <height>23</height>
                </rect>
@@ -1319,8 +1319,8 @@
              <widget class="QPushButton" name="variateRotationCutBodySolverPushButton">
               <property name="geometry">
                <rect>
-                <x>90</x>
-                <y>460</y>
+                <x>290</x>
+                <y>400</y>
                 <width>191</width>
                 <height>23</height>
                </rect>
@@ -1333,7 +1333,7 @@
               <property name="geometry">
                <rect>
                 <x>90</x>
-                <y>490</y>
+                <y>430</y>
                 <width>191</width>
                 <height>23</height>
                </rect>
@@ -1341,93 +1341,6 @@
               <property name="text">
                <string>Отладка экрана</string>
               </property>
-             </widget>
-             <widget class="QGroupBox" name="groupBox_2">
-              <property name="geometry">
-               <rect>
-                <x>280</x>
-                <y>20</y>
-                <width>251</width>
-                <height>291</height>
-               </rect>
-              </property>
-              <property name="title">
-               <string>Параметры образующей</string>
-              </property>
-              <widget class="QWidget" name="layoutWidget">
-               <property name="geometry">
-                <rect>
-                 <x>10</x>
-                 <y>20</y>
-                 <width>231</width>
-                 <height>201</height>
-                </rect>
-               </property>
-               <layout class="QFormLayout" name="formLayout">
-                <item row="0" column="0">
-                 <widget class="QLabel" name="label_7">
-                  <property name="text">
-                   <string>Диаметр</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="0" column="1">
-                 <widget class="QLineEdit" name="formingRBCDiameterLineEdit">
-                  <property name="text">
-                   <string>3</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="1" column="0">
-                 <widget class="QLabel" name="label_8">
-                  <property name="text">
-                   <string>Диаметр 
-хвостовой 
-части</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="1" column="1">
-                 <widget class="QLineEdit" name="formingRBCTailDiameterLineEdit">
-                  <property name="text">
-                   <string>1</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="2" column="0">
-                 <widget class="QLabel" name="label_9">
-                  <property name="text">
-                   <string>Длина 
-первого 
-участка</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="3" column="0">
-                 <widget class="QLabel" name="label_10">
-                  <property name="text">
-                   <string>Длина 
-второго 
-участка</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="2" column="1">
-                 <widget class="QLineEdit" name="formingRBCSectorOneLength">
-                  <property name="text">
-                   <string>1</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="3" column="1">
-                 <widget class="QLineEdit" name="formingRBCSectorTwoLength">
-                  <property name="text">
-                   <string>2</string>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
-              </widget>
              </widget>
              <widget class="QLineEdit" name="sectionEndDistanceRotationCutBodyLineEdit">
               <property name="geometry">
@@ -1456,6 +1369,163 @@
 в конце</string>
               </property>
              </widget>
+             <widget class="QStackedWidget" name="stackedWidget_2">
+              <property name="geometry">
+               <rect>
+                <x>300</x>
+                <y>60</y>
+                <width>230</width>
+                <height>181</height>
+               </rect>
+              </property>
+              <property name="currentIndex">
+               <number>0</number>
+              </property>
+              <widget class="QWidget" name="page_5">
+               <layout class="QGridLayout" name="gridLayout_5">
+                <item row="1" column="0">
+                 <widget class="QLabel" name="label_50">
+                  <property name="text">
+                   <string>Длина элипсо- 
+идной части</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="0">
+                 <widget class="QLabel" name="label_49">
+                  <property name="text">
+                   <string>Диаметр
+ цилиндра</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="1">
+                 <widget class="QLineEdit" name="ellipsoidLengthRotationCutBodyLineEdit">
+                  <property name="text">
+                   <string>0.25</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="1">
+                 <widget class="QLineEdit" name="lengthRotationCutBodyLineEdit">
+                  <property name="text">
+                   <string>3.3333</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="1">
+                 <widget class="QLineEdit" name="cylDiameterRotationCutBodyLineEdit">
+                  <property name="text">
+                   <string>1</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="0">
+                 <widget class="QLabel" name="label_51">
+                  <property name="text">
+                   <string>Длина тела</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+              <widget class="QWidget" name="page_4">
+               <widget class="QWidget" name="layoutWidget">
+                <property name="geometry">
+                 <rect>
+                  <x>0</x>
+                  <y>20</y>
+                  <width>231</width>
+                  <height>201</height>
+                 </rect>
+                </property>
+                <layout class="QFormLayout" name="formLayout">
+                 <item row="0" column="0">
+                  <widget class="QLabel" name="label_7">
+                   <property name="text">
+                    <string>Диаметр</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="1">
+                  <widget class="QLineEdit" name="formingRBCDiameterLineEdit">
+                   <property name="text">
+                    <string>3</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="0">
+                  <widget class="QLabel" name="label_8">
+                   <property name="text">
+                    <string>Диаметр 
+хвостовой 
+части</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="1">
+                  <widget class="QLineEdit" name="formingRBCTailDiameterLineEdit">
+                   <property name="text">
+                    <string>1</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="0">
+                  <widget class="QLabel" name="label_9">
+                   <property name="text">
+                    <string>Длина 
+первого 
+участка</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="3" column="0">
+                  <widget class="QLabel" name="label_10">
+                   <property name="text">
+                    <string>Длина 
+второго 
+участка</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="1">
+                  <widget class="QLineEdit" name="formingRBCSectorOneLength">
+                   <property name="text">
+                    <string>1</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="3" column="1">
+                  <widget class="QLineEdit" name="formingRBCSectorTwoLength">
+                   <property name="text">
+                    <string>2</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </widget>
+             </widget>
+             <widget class="QComboBox" name="formRotationCutBodyComboBox">
+              <property name="geometry">
+               <rect>
+                <x>310</x>
+                <y>30</y>
+                <width>191</width>
+                <height>22</height>
+               </rect>
+              </property>
+              <item>
+               <property name="text">
+                <string>Эллипсоид-цилиндр</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Эллипсоид-усеченный конус</string>
+               </property>
+              </item>
+             </widget>
             </widget>
            </item>
            <item>
@@ -1474,16 +1544,6 @@
           </layout>
          </widget>
         </widget>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="MainField" name="openGLWidget">
-        <property name="minimumSize">
-         <size>
-          <width>400</width>
-          <height>0</height>
-         </size>
-        </property>
        </widget>
       </item>
       <item row="1" column="1">
@@ -1695,6 +1755,16 @@
         </item>
        </layout>
       </item>
+      <item row="0" column="1">
+       <widget class="MainField" name="openGLWidget">
+        <property name="minimumSize">
+         <size>
+          <width>400</width>
+          <height>0</height>
+         </size>
+        </property>
+       </widget>
+      </item>
      </layout>
     </item>
    </layout>
@@ -1729,6 +1799,8 @@
     <addaction name="separator"/>
     <addaction name="withoutAccelerateMotionAction"/>
     <addaction name="acceleratedMotionAction"/>
+    <addaction name="separator"/>
+    <addaction name="autoParametersAction"/>
    </widget>
    <widget class="QMenu" name="menu">
     <property name="title">
@@ -1822,6 +1894,17 @@
   <action name="dirLoadingAction">
    <property name="text">
     <string>Загрузка папки для покадрового просмотра</string>
+   </property>
+  </action>
+  <action name="autoParametersAction">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Автоматический подбор параметров</string>
    </property>
   </action>
  </widget>

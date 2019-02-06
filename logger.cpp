@@ -335,6 +335,23 @@ void Logger::writeCpFile(const QVector<double> cp, const QVector<double> tetas)
     cpTextStream.get()->flush();
 }
 
+void Logger::writeCpDegreeFile(const QVector<double> cp, const QVector<double> tetas, const int degree)
+{
+    QFile cpDegreeFile(path+"/cp"+QString::number(degree)+".csv");
+    if (cpDegreeFile.open(QIODevice::WriteOnly))
+    {
+        QTextStream cpDegreeTextStream(&cpDegreeFile);
+        cpDegreeTextStream<<"cp, forming\n";
+        for (int i=0; i<tetas.size(); i++)
+        {
+            i<cp.size() ? cpDegreeTextStream<<QString::number(cp[i])+",\t" : cpDegreeTextStream<<" ,\t";
+            cpDegreeTextStream<<QString::number(tetas[i])+",\n";
+        }
+       cpDegreeTextStream.flush();
+    }
+    cpDegreeFile.close();
+}
+
 /*!
 Записывает данные логов в файл
 \param stepNum текущий шаг расчета
@@ -564,7 +581,97 @@ void Logger::writeTable(const int stepNum, const double stepTime,const double ge
     tableTextStream.get()->flush();
 }
 
-void Logger::createParaviewFile(QVector<std::shared_ptr<MultiFrame>> &frames, QVector<double>& forces, QVector<Vector3D>& velocities,QVector<double> &tangentialVelocities,QVector<double> &normalVelocities, int currentStep)
+void Logger::createParaviewFile(QVector<std::shared_ptr<MultiFrame>> &frames, QVector<double>& forces, QVector<Vector3D>& velocities,QVector<double> &tangentialVelocities,QVector<double> &normalVelocities,QVector<std::shared_ptr<MultiFrame>> &sectionFrames, int currentStep)
+{
+    QFile paraviewFile(path+"/mesh/visual.vtk."+QString::number(currentStep));
+    if (paraviewFile.open(QIODevice::WriteOnly))
+    {
+        QTextStream paraviewTs(&paraviewFile);
+        paraviewTs<<"# vtk DataFile Version 3.0\n";
+        paraviewTs<<"vtk output\n";
+        paraviewTs<<"ASCII\n";
+        paraviewTs<<"DATASET UNSTRUCTURED_GRID\n";
+        int points=0;
+        for (int i=0; i<frames.size();i++)
+            points+=frames[i]->getAnglesNum();
+        for (int i=0; i<sectionFrames.size();i++)
+            points+=sectionFrames[i]->getAnglesNum();
+        paraviewTs<<"POINTS "<<points<<" float\n";
+        paraviewTs.flush();
+        for (int i=0; i<frames.size();i++)
+        {
+            for (int j=0; j<frames[i]->getAnglesNum(); j++)
+                paraviewTs<<frames[i]->at(j).getTail().x()<<" "<<frames[i]->at(j).getTail().y()<<" "<<frames[i]->at(j).getTail().z()<<"\n";
+            paraviewTs.flush();
+        }
+        for (int i=0; i<sectionFrames.size(); i++)
+        {
+            for (int j=0; j<sectionFrames[i]->getAnglesNum(); j++)
+                paraviewTs<<sectionFrames[i]->at(j).getTail().x()<<" "<<sectionFrames[i]->at(j).getTail().y()<<" "<<sectionFrames[i]->at(j).getTail().z()<<"\n";
+            paraviewTs.flush();
+        }
+        paraviewTs<<"CELLS "<<frames.size()+sectionFrames.size()<<" "<<points+frames.size()+sectionFrames.size()<<"\n";
+        int currentPointNumber=0;
+        for (int i=0; i<frames.size(); i++)
+        {
+            paraviewTs<<frames[i]->getAnglesNum();
+            int virtualNumber=currentPointNumber;
+            for (int j=currentPointNumber; j<currentPointNumber+frames[i]->getAnglesNum();j++)
+            {
+                paraviewTs<<" "<<j;
+                virtualNumber++;
+            }
+            currentPointNumber=virtualNumber;
+            paraviewTs<<"\n";
+        }
+        for (int i=0; i<sectionFrames.size(); i++)
+        {
+            paraviewTs<<sectionFrames[i]->getAnglesNum();
+            int virtualNumber=currentPointNumber;
+            for (int j=currentPointNumber; j<currentPointNumber+sectionFrames[i]->getAnglesNum();j++)
+            {
+                paraviewTs<<" "<<j;
+                virtualNumber++;
+            }
+            currentPointNumber=virtualNumber;
+            paraviewTs<<"\n";
+        }
+        paraviewTs.flush();
+        paraviewTs<<"CELL_TYPES "<<frames.size()+sectionFrames.size()<<"\n";
+        for (int i=0;i<frames.size(); i++)
+            frames[i]->getAnglesNum()==4 ? paraviewTs<<"9\n" : paraviewTs<<"7\n";
+        paraviewTs.flush();
+        for (int i=0;i<sectionFrames.size(); i++)
+            sectionFrames[i]->getAnglesNum()==4 ? paraviewTs<<"9\n" : paraviewTs<<"7\n";
+        paraviewTs.flush();
+        paraviewTs<<"CELL_DATA "<<frames.size()+sectionFrames.size()<<"\n";
+        paraviewTs<<"SCALARS pressure float 1\n";
+        paraviewTs<<"LOOKUP_TABLE default\n";
+        for (int i=0; i<forces.size(); i++)
+            i==0 ? paraviewTs<<forces[i] : paraviewTs<<" "<<forces[i];
+        paraviewTs<<"\n";
+        paraviewTs.flush();
+        paraviewTs<<"SCALARS tangential_speed float 1\n";
+        paraviewTs<<"LOOKUP_TABLE default\n";
+        for (int i=0; i<forces.size(); i++)
+            i==0 ? paraviewTs<<tangentialVelocities[i] : paraviewTs<<" "<<tangentialVelocities[i];
+        paraviewTs<<"\n";
+        paraviewTs.flush();
+        paraviewTs<<"SCALARS normal_speed float 1\n";
+        paraviewTs<<"LOOKUP_TABLE default\n";
+        for (int i=0; i<forces.size(); i++)
+            i==0 ? paraviewTs<<normalVelocities[i] : paraviewTs<<" "<<normalVelocities[i];
+        paraviewTs<<"\n";
+        paraviewTs.flush();
+        paraviewTs<<"VECTORS velocities float\n";
+        for (int i=0; i<velocities.size();i++)
+            paraviewTs<<velocities[i].x()<<" "<<velocities[i].y()<<" "<<velocities[i].z()<<"\n";
+        paraviewTs.flush();
+    }
+    paraviewFile.close();
+}
+
+void Logger::createParaviewFile(QVector<std::shared_ptr<MultiFrame> > &frames, QVector<double> &forces, QVector<Vector3D> &velocities, QVector<double> &tangentialVelocities, QVector<double> &normalVelocities, int currentStep)
 {
     QFile paraviewFile(path+"/mesh/visual.vtk."+QString::number(currentStep));
     if (paraviewFile.open(QIODevice::WriteOnly))
@@ -585,6 +692,7 @@ void Logger::createParaviewFile(QVector<std::shared_ptr<MultiFrame>> &frames, QV
                 paraviewTs<<frames[i]->at(j).getTail().x()<<" "<<frames[i]->at(j).getTail().y()<<" "<<frames[i]->at(j).getTail().z()<<"\n";
             paraviewTs.flush();
         }
+
         paraviewTs<<"CELLS "<<frames.size()<<" "<<points+frames.size()<<"\n";
         int currentPointNumber=0;
         for (int i=0; i<frames.size(); i++)
@@ -599,11 +707,14 @@ void Logger::createParaviewFile(QVector<std::shared_ptr<MultiFrame>> &frames, QV
             currentPointNumber=virtualNumber;
             paraviewTs<<"\n";
         }
+
         paraviewTs.flush();
         paraviewTs<<"CELL_TYPES "<<frames.size()<<"\n";
         for (int i=0;i<frames.size(); i++)
             frames[i]->getAnglesNum()==4 ? paraviewTs<<"9\n" : paraviewTs<<"7\n";
         paraviewTs.flush();
+
+
         paraviewTs<<"CELL_DATA "<<frames.size()<<"\n";
         paraviewTs<<"SCALARS pressure float 1\n";
         paraviewTs<<"LOOKUP_TABLE default\n";

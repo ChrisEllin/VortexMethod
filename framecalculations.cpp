@@ -109,7 +109,6 @@ void FrameCalculations::matrixCalc(QVector<std::shared_ptr<MultiFrame> > frames,
     matrix=matrix.inverse();
 
 }
-
 /*!
 Рассчитывает значения столбца b для решения СЛАУ вида A*x=b, где А-матрица, х-искомый столбец.
 \param streamVel Скорость потока
@@ -118,11 +117,22 @@ void FrameCalculations::matrixCalc(QVector<std::shared_ptr<MultiFrame> > frames,
 \param controlPoints Вектор контрольных точек
 \return Столбец b
 */
+
 Eigen::VectorXd FrameCalculations::columnCalc(const Vector3D streamVel, const QVector<Vorton> &vortons, const QVector<Vector3D> &normals, const QVector<Vector3D> controlPoints)
+{
+        Eigen::VectorXd column(matrixSize);
+        for (int i=0; i<controlPoints.size(); i++)
+            column(i)=Vector3D::dotProduct(-FrameCalculations::velocity(controlPoints[i], streamVel, vortons), normals[i]);
+        column(controlPoints.size())=0.0;
+        return column;
+}
+
+
+Eigen::VectorXd FrameCalculations::columnCalc(const Vector3D streamVel, const QVector<Vorton> &vortons, const QVector<Vector3D> &normals, const Vector3D angularVel, const QVector<Vector3D> &controlPoints, const Vector3D center)
 {
     Eigen::VectorXd column(matrixSize);
     for (int i=0; i<controlPoints.size(); i++)
-        column(i)=Vector3D::dotProduct(-FrameCalculations::velocity(controlPoints[i], streamVel, vortons), normals[i]);
+        column(i)=Vector3D::dotProduct(-(FrameCalculations::velocity(controlPoints[i], streamVel, vortons)+Vector3D::crossProduct(angularVel, controlPoints[i]-center)), normals[i]);
     column(controlPoints.size())=0.0;
     return column;
 }
@@ -396,6 +406,45 @@ void FrameCalculations::setMatrixSize(int size)
     matrixSize=size;
 }
 
+IntegrationResults FrameCalculations::integrateParameters(double length, double bodyDensity, FormingParameters parameters)
+{
+    SimpsonIntegration integration(length,bodyDensity,parameters);
+    return integration.integralsCalculator();
+}
+
+IntegrationResults FrameCalculations::integrateParameters(double length, double bodyDensity, FormingParametersRBC parameters)
+{
+    SimpsonIntegration integration(length,bodyDensity,parameters);
+    return integration.integralsCalculator();
+}
+
+void FrameCalculations::calcSection(double diameter, double xCenter, int fiFragNum, QVector<std::shared_ptr<MultiFrame>>& sectionFrames, QVector<Vector3D>& centerFrames, QVector<Vector3D>& sectionNormals)
+{
+    double rad0=diameter*0.5/fiFragNum;
+    double fi0 = 2*M_PI/fiFragNum;
+    Vector3D r0 = Vector3D(xCenter, 0.0, 0.0);
+    Vector3D r11 = Vector3D(xCenter, rad0, 0.0);
+    Vector3D r21 = Vector3D(xCenter, rad0*cos(fi0),rad0*sin(fi0));
+    sectionFrames.push_back(std::make_shared<MultiFrame>(fiFragNum,r0,r11,r21,0.1));
+    centerFrames.push_back(Vector3D(xCenter,0.0,0));
+    sectionNormals.push_back(Vector3D(1.0,0.0,0.0));
+    for (int i=1; i<fiFragNum; i++)
+    {
+        for (int j=0; j<fiFragNum; j++)
+        {
+            double fi = fi0*j;
+            double r = rad0*i;
+            Vector3D r11 (xCenter,r*cos(fi),r*sin(fi));
+            Vector3D r01 (xCenter,r*cos(fi+fi0),r*sin(fi+fi0));
+            Vector3D r31 (xCenter,(r+rad0)*cos(fi+fi0),(r+rad0)*sin(fi+fi0));
+            Vector3D r21 (xCenter,(r+rad0)*cos(fi),(r+rad0)*sin(fi));
+            sectionFrames.push_back(std::make_shared <FourFrame>(r01,r11,r21,r31,0.1));
+            centerFrames.push_back(Vector3D(xCenter,(r+0.5*rad0)*cos(fi+0.5*fi0),(r+rad0*0.5)*sin(fi+fi0*0.5)));
+            sectionNormals.push_back(Vector3D(1.0,0.0,0.0));
+        }
+    }
+}
+
 FramesSizes FrameCalculations::calcFrameSizes(QVector<std::shared_ptr<MultiFrame> > frames)
 {
     QVector<double> frameSizes;
@@ -501,6 +550,19 @@ Vector3D FrameCalculations::forceCalc(const Vector3D streamVel, double streamPre
     return force;
 }
 
+void FrameCalculations::forceAndTorqueCalc(const Vector3D streamVel, double streamPres, double density, QVector<std::shared_ptr<MultiFrame> > frames, const QVector<Vorton> &freeVortons, const double tau, const QVector<double> &squares, const QVector<Vector3D> &controlPointsRaised, const QVector<Vector3D> &normals, Vector3D center,Vector3D &force, Vector3D &tongue)
+{
+    QTime start = QTime::currentTime();
+    force=Vector3D();
+    tongue=Vector3D();
+    for (int i=0; i<controlPointsRaised.size(); i++)
+    {
+        double pressure=FrameCalculations::pressureCalc(controlPointsRaised[i], streamVel, streamPres, density, frames, freeVortons, tau);
+        force-=pressure*squares[i]*normals[i];
+        tongue-=pressure*squares[i]*Vector3D::crossProduct(controlPointsRaised[i]-center,normals[i]);
+    }
+    timers.forceTimer=start.elapsed()*0.001;
+}
 /*!
 Функция суммирования соответствующих значений ср
 \param[in] stepNum Номер текущего шага
@@ -566,13 +628,41 @@ void FrameCalculations::cpSumRotationBody(const int stepNum, int stepsQuant, QVe
         cpQuant=stepsQuant;
     if (stepNum>=stepsQuant-cpQuant)
     {
-        int j=0;
+        double pres=pressureCalc(controlPointsRaised[controlPointsRaised.size()-2],streamVel,streamPres,density,frames,freeVortons,tau);
+        cp[0]+=(pres-streamPres)/(density*Vector3D::dotProduct(streamVel,streamVel)*0.5);
+        int j=1;
         for (int i=0; i<controlPointsRaised.size()-2; i=i+fiFragNum)
+        {
+            pres=pressureCalc(controlPointsRaised[i],streamVel,streamPres,density,frames,freeVortons,tau);
+            cp[j]+=(pres-streamPres)/(density*Vector3D::dotProduct(streamVel,streamVel)*0.5);
+            j++;
+        }
+        pres=pressureCalc(controlPointsRaised[controlPointsRaised.size()-1],streamVel,streamPres,density,frames,freeVortons,tau);
+        cp[j]+=(pres-streamPres)/(density*Vector3D::dotProduct(streamVel,streamVel)*0.5);
+    }
+}
+
+void FrameCalculations::cpRotationBodyDegree(const int stepNum, int stepsQuant, QVector<double> &cp, const int fiFragNum, const Vector3D streamVel, const double streamPres, const double density, const QVector<std::shared_ptr<MultiFrame> > frames, QVector<Vorton> freeVortons, double tau, const QVector<Vector3D> &controlPointsRaised, int degree)
+{
+    int cpQuant;
+    if (stepsQuant>200)
+        cpQuant=200;
+    else
+        cpQuant=stepsQuant;
+    if (stepNum>=stepsQuant-cpQuant)
+    {
+        double pres=pressureCalc(controlPointsRaised[controlPointsRaised.size()-2],streamVel,streamPres,density,frames,freeVortons,tau);
+        cp[0]+=(pres-streamPres)/(density*Vector3D::dotProduct(streamVel,streamVel)*0.5);
+        int j=1;
+        int iStart=static_cast<int>(static_cast<double>(degree)/360.0*fiFragNum);
+        for (int i=iStart; i<controlPointsRaised.size()-2; i=i+fiFragNum)
         {
             double pres=pressureCalc(controlPointsRaised[i],streamVel,streamPres,density,frames,freeVortons,tau);
             cp[j]+=(pres-streamPres)/(density*Vector3D::dotProduct(streamVel,streamVel)*0.5);
             j++;
         }
+        pres=pressureCalc(controlPointsRaised[controlPointsRaised.size()-1],streamVel,streamPres,density,frames,freeVortons,tau);
+        cp[j]+=(pres-streamPres)/(density*Vector3D::dotProduct(streamVel,streamVel)*0.5);
     }
 }
 
@@ -687,6 +777,32 @@ void FrameCalculations:: getBackAndRotateRotationBody(QVector<Vorton>& vortons, 
     timers.getBackAndRotateTimer=start.elapsed()*0.001;
 }
 
+void FrameCalculations::getBackAndRotateMovingRotationBody(QVector<Vorton> &vortons,Vector3D centerMassWorld, const Vector3D bodyNose, const double xEnd, const double layerHeight, const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals, Eigen::Matrix3d rotationMatrix, FormingParameters forming)
+{
+    QTime start=QTime::currentTime();
+    Eigen::Matrix3d inverted=rotationMatrix.inverse();
+    for (int i=0; i<vortons.size();i++)
+    {
+        Vorton copyVort=vortons[i];
+        copyVort.setMid(centerMassWorld+fromEigenVector(inverted*toEigenVector(copyVort.getMid()-centerMassWorld)));
+        copyVort.setTail(centerMassWorld+fromEigenVector(inverted*toEigenVector(copyVort.getTail()-centerMassWorld)));
+        if (FrameCalculations::insideRotationBody(copyVort,bodyNose,xEnd,forming))
+        {
+            QPair<double,int> closest=BodyFragmentation::findClosest(vortons[i].getMid(),controlPoints, normals);
+            vortons[i].setMid(vortons[i].getMid()+2.0*closest.first*normals[closest.second]);
+            vortons[i].setTail(vortons[i].getTail()+2.0*closest.first*normals[closest.second]);
+            counters.gotBackNum++;
+        }
+        if(FrameCalculations::insideRotationBodyLayer(copyVort,bodyNose,xEnd,layerHeight, forming))
+        {
+            QPair<double,int> closest=BodyFragmentation::findClosest(vortons[i].getMid(),controlPoints, normals);
+            vortons[i].rotateAroundNormal(normals[closest.second]);
+            counters.rotatedNum++;
+        }
+    }
+     timers.getBackAndRotateTimer=start.elapsed()*0.001;
+}
+
 /*!
 Функция, возвращающая вортоны из тела в поток и разворачивающая вортонов относительно поверхности тела вращения со срезом в слое
 \param[in,out] vortons Вектор, содержащий вортоны для функции
@@ -696,7 +812,7 @@ void FrameCalculations:: getBackAndRotateRotationBody(QVector<Vorton>& vortons, 
 \param[in] controlPoints Вектор, содержащий контрольные точки
 \param[in] normals Вектор, содержащий нормали
 */
-void FrameCalculations::getBackAndRotateRotationCutBody(QVector<Vorton> &vortons,const double xEnd, const double layerHeight, const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals, const Vector3D bodyNose, FormingParameters forming)
+void FrameCalculations::getBackAndRotateRotationCutBody(QVector<Vorton> &vortons, const double xEnd, const double layerHeight, const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals, const Vector3D bodyNose, FormingParametersRBC forming)
 {
     QTime start=QTime::currentTime();
     for (int i=vortons.size()-1; i>=0; i--)
@@ -727,7 +843,7 @@ void FrameCalculations::getBackAndRotateRotationCutBody(QVector<Vorton> &vortons
 \param[in] controlPoints Вектор, содержащий контрольные точки
 \param[in] normals Вектор, содержащий нормали
 */
-void FrameCalculations::getBackAndRotateRotationCutLaunchedBody(QVector<Vorton> &vortons, const Vector3D bodyNose, const double xEnd, const double layerHeight, const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals, FormingParameters forming)
+void FrameCalculations::getBackAndRotateRotationCutLaunchedBody(QVector<Vorton> &vortons, const Vector3D bodyNose, const double xEnd, const double layerHeight, const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals, FormingParametersRBC forming)
 {
     QTime start=QTime::currentTime();
     for (int i=vortons.size()-1; i>=0; i--)
@@ -753,6 +869,101 @@ void FrameCalculations::getBackAndRotateRotationCutLaunchedBody(QVector<Vorton> 
     }
     timers.getBackAndRotateTimer=start.elapsed()*0.001;
 }
+
+void FrameCalculations::translateAndRotate(QVector<std::shared_ptr<MultiFrame>>& frames, QVector<Vorton>& vortons, double mass, Eigen::Matrix3d inertiaTensor, Vector3D tongue, Eigen::Matrix3d &rotationMatrix, Vector3D force, Vector3D &center, Vector3D massCenter, double time, Vector3D linearVel,
+                                           QVector<Vector3D>& controlPoints, QVector<Vector3D>& normals, QVector<Vector3D>& controlPointsRaised, QVector<std::shared_ptr<MultiFrame>>& oldFrames, QVector<Vector3D>& oldControlPoints, QVector<Vector3D>& oldNormals, QVector<Vector3D>& oldControlPointsRaised, Vector3D& angVel)
+{
+
+    dInitODE();
+    dWorldID world = dWorldCreate();
+    dWorldSetGravity(world,0.0,0.0,0.0);
+    dBodyID rocket = dBodyCreate(world);
+    dBodySetPosition(rocket, center.x(),center.y(),center.z());
+
+    dMatrix3 rot;
+    for (int i=0; i<3;i++)
+        for (int j=0; j<3; j++)
+            rot[i*4+j]=rotationMatrix(i,j);
+
+    dBodySetRotation(rocket,rot);
+    dMass rocketMass;
+    dMassSetZero(&rocketMass);
+
+    dMassSetParameters(&rocketMass,mass,massCenter.x(),massCenter.y(),massCenter.z(),inertiaTensor(0,0),inertiaTensor(1,1),inertiaTensor(2,2),inertiaTensor(0,1),inertiaTensor(0,2),inertiaTensor(1,2));
+    dBodySetMass(rocket,&rocketMass);
+    dBodyAddForce(rocket,force.x(),force.y(),force.z());
+//     qDebug()<<"force is "<<force.x()<<" "<< force.y()<<" "<<force.z();
+    dBodyAddTorque(rocket, tongue.x(),tongue.y(),tongue.z());
+//    qDebug()<<"torgue is "<<tongue.x()<<" "<< tongue.y()<<" "<<tongue.z();
+    dBodySetLinearVel(rocket,linearVel.x(),linearVel.y(),linearVel.z());
+    dWorldStep(world,time);
+    const dReal* Pos;
+    const dReal* angle;
+
+    Pos = dBodyGetPosition(rocket);
+
+    float pos[3] = { Pos[0], Pos[1], Pos[2] };
+//    qDebug()<<"Position is "<<pos[0]<<" "<<pos[1]<<" "<<pos[2];
+    Vector3D translation(pos[0]-center.x(),pos[1]-center.y(),pos[2]-center.z());
+//    qDebug()<<"translation is "<<translation.x()<<" "<< translation.y()<<" "<<translation.z();
+    center=Vector3D(pos[0],pos[1],pos[2]);
+
+    angle = dBodyGetRotation(rocket);
+    const dReal* angularVel;
+    angularVel=dBodyGetAngularVel(rocket);
+    angVel=Vector3D(angularVel[0],angularVel[1],angularVel[2]);
+    float vel[3]={angularVel[0],angularVel[1],angularVel[2]};
+    float angles[12] = {angle[0],angle[1],angle[2],angle[3],angle[4],angle[5],angle[6],angle[7],angle[8],angle[9],angle[10],angle[11]};
+    qDebug()<<vel[0]<<" "<<vel[1]<<" "<<vel[2];
+    for (int i=0; i<3; i++)
+        for (int j=0; j<3; j++)
+            rotationMatrix(i,j)=angles[i*4+j];
+    Eigen::Vector3d newTranslate;
+    for (int i=0; i<frames.size();i++)
+        for (int j=0; j<frames[i]->getAnglesNum();j++)
+        {
+//            frames[i]->at(j).setMid(oldFrames[i]->at(j).getMid()+translation);
+//            frames[i]->at(j).setTail(oldFrames[i]->at(j).getTail()+translation);
+
+            newTranslate=Eigen::Vector3d(massCenter.x(),massCenter.y(),massCenter.z())+
+                    rotationMatrix*Eigen::Vector3d(oldFrames[i]->at(j).getMid().x()-massCenter.x(),oldFrames[i]->at(j).getMid().y()-massCenter.y(),oldFrames[i]->at(j).getMid().z()-massCenter.z());
+            frames[i]->at(j).setMid(translation+Vector3D(newTranslate.x(),newTranslate.y(),newTranslate.z()));
+            newTranslate=Eigen::Vector3d(massCenter.x(),massCenter.y(),massCenter.z())+
+                                rotationMatrix*Eigen::Vector3d(oldFrames[i]->at(j).getTail().x()-massCenter.x(),oldFrames[i]->at(j).getTail().y()-massCenter.y(),oldFrames[i]->at(j).getTail().z()-massCenter.z());
+            frames[i]->at(j).setTail(translation+Vector3D(newTranslate.x(),newTranslate.y(),newTranslate.z()));
+            frames[i]->setCenter(oldFrames[i]->getCenter()+translation);
+        }
+    for (int i=0; i<controlPoints.size(); i++)
+    {
+
+
+        newTranslate=Eigen::Vector3d(massCenter.x(),massCenter.y(),massCenter.z())+
+                rotationMatrix*Eigen::Vector3d(oldControlPoints[i].x()-massCenter.x(),oldControlPoints[i].y()-massCenter.y(),oldControlPoints[i].z()-massCenter.z());
+        controlPoints[i]=oldControlPoints[i]+translation+Vector3D(newTranslate.x(),newTranslate.y(),newTranslate.z());
+        newTranslate=Eigen::Vector3d(massCenter.x(),massCenter.y(),massCenter.z())+
+                rotationMatrix*Eigen::Vector3d(oldControlPointsRaised[i].x()-massCenter.x(),oldControlPointsRaised[i].y()-massCenter.y(),oldControlPointsRaised[i].z()-massCenter.z());
+        controlPointsRaised[i]=oldControlPointsRaised[i]+translation+Vector3D(newTranslate.x(),newTranslate.y(),newTranslate.z());
+        newTranslate=Eigen::Vector3d(massCenter.x(),massCenter.y(),massCenter.z())+
+                rotationMatrix*Eigen::Vector3d(oldNormals[i].x()-massCenter.x(),oldNormals[i].y()-massCenter.y(),oldNormals[i].z()-massCenter.z());
+        normals[i]=oldNormals[i]+Vector3D(newTranslate.x(),newTranslate.y(),newTranslate.z());
+
+    }
+//    for (int i=0; i<vortons.size();i++)
+//    {
+//        vortons[i].setMid(vortons[i].getMid()+translation);
+//        vortons[i].setTail(vortons[i].getTail()+translation);
+//        newTranslate=Eigen::Vector3d(center.x(),center.y(),center.z())+
+//                rotationMatrix*Eigen::Vector3d(vortons[i].getMid().x()-center.x(),vortons[i].getMid().y()-center.y(),vortons[i].getMid().z()-center.z());
+//        vortons[i].setMid(Vector3D(newTranslate.x(),newTranslate.y(),newTranslate.z()));
+//        newTranslate=Eigen::Vector3d(center.x(),center.y(),center.z())+
+//                rotationMatrix*Eigen::Vector3d(vortons[i].getTail().x()-center.x(),vortons[i].getTail().y()-center.y(),vortons[i].getTail().z()-center.z());
+//         vortons[i].setTail(Vector3D(newTranslate.x(),newTranslate.y(),newTranslate.z()));
+//    }
+
+    dCloseODE();
+}
+
+
 
 /*!
 Функция, добавляющая вортон в вектор. Создана для совместимости с QtConcurrent
@@ -981,14 +1192,14 @@ bool FrameCalculations::insideRotationBodyLayer(const Vorton &vort, const Vector
 \param xEnd Максимальная координата х тела
 \return Определение попадания внутрь тела вращения со срезом дна
 */
-bool FrameCalculations::insideRotationCutBody(const Vorton &vort, const double xBeg, const double xEnd, FormingParameters forming)
+bool FrameCalculations::insideRotationCutBody(const Vorton &vort, const double xBeg, const double xEnd, FormingParametersRBC forming)
 {
     if((vort.getMid().x()>=xBeg) && (vort.getMid().x()<=xEnd) && ((pow(vort.getMid().z(),2)+pow(vort.getMid().y(),2))<pow(BodyFragmentation::presetFunctionG(vort.getMid().x()-xBeg,forming),2)))
         return true;
     return false;
 }
 
-bool FrameCalculations::insideRotationCutBody(const Vorton &vort,const double xEnd, const Vector3D bodyNose, FormingParameters forming)
+bool FrameCalculations::insideRotationCutBody(const Vorton &vort,const double xEnd, const Vector3D bodyNose, FormingParametersRBC forming)
 {
     if((vort.getMid().x()>=bodyNose.x()) && (vort.getMid().x()<=xEnd) && ((pow(vort.getMid().z()-bodyNose.z(),2)+pow(vort.getMid().y()-bodyNose.y(),2))<pow(BodyFragmentation::presetFunctionG(vort.getMid().x()-bodyNose.x(),forming),2)))
         return true;
@@ -1003,7 +1214,7 @@ bool FrameCalculations::insideRotationCutBody(const Vorton &vort,const double xE
 \param layerHeight Высота слоя
 \return Определение попадания внутрь слоя вокруг тела вращения со срезом дна
 */
-bool FrameCalculations::insideRotationCutBodyLayer(const Vorton &vort, const double xEnd, const double layerHeight, const Vector3D bodyNose, FormingParameters forming)
+bool FrameCalculations::insideRotationCutBodyLayer(const Vorton &vort, const double xEnd, const double layerHeight, const Vector3D bodyNose, FormingParametersRBC forming)
 {
     if((vort.getMid().x()>=bodyNose.x()-layerHeight) && (vort.getMid().x()<=xEnd+layerHeight) && ((pow(vort.getMid().z()-bodyNose.z(),2)+pow(vort.getMid().y()-bodyNose.y(),2))<pow(BodyFragmentation::presetFunctionG(vort.getMid().x()-bodyNose.x(),forming)+layerHeight,2)))
         return true;
@@ -1221,3 +1432,15 @@ void FrameCalculations::clear()
     clearCounters();
 }
 
+
+Eigen::Vector3d toEigenVector(Vector3D vec)
+{
+    Eigen::Vector3d eigenVec(vec.x(),vec.y(),vec.z());
+    return eigenVec;
+}
+
+Vector3D fromEigenVector(Eigen::Vector3d vec)
+{
+    Vector3D vec3d(vec.x(),vec.y(),vec.z());
+    return vec3d;
+}

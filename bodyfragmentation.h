@@ -18,6 +18,9 @@ enum BodyType {
     ROTATIONBOTTOMCUT ///<Тело вращения со срезом дна
 };
 
+
+enum FormingTypeRBC {ELLIPSOID_CYLINDER, ELLIPSOID_CONE};
+
 /*!
     \defgroup fragmentationParameters Параметры разбиения
     \brief Структура, хранящая данные, необходимые для разбиения
@@ -75,6 +78,7 @@ struct FragmentationParameters
     */
     ///@{
     int rotationBodyRFragNum; ///<Количество разбиений по радиусу
+    FormingTypeRBC rotationBodyRBCFormingType;
     ///@}
 
     double formingDiameter;
@@ -82,6 +86,14 @@ struct FragmentationParameters
     double formingLengthSectorTwo;
     double formingTailDiameter;
     double formingAngle;
+
+
+    double formingEllipsoidDiameter;
+
+    double formingEllisoidLength;
+    double formingConeLength;
+    double formingFullLength;
+
     /*!
         \defgroup commonParameters Общие параметры
         \ingroup fragmentationParameters
@@ -174,6 +186,18 @@ struct FormingParameters
     int typeNum;
 };
 
+
+struct FormingParametersRBC
+{
+    double ellipsoidDiameter;
+    double tailDiameter;
+    double ellipsoidLength;
+    double coneLength;
+    double fullLength;
+
+    FormingTypeRBC type;
+};
+
 /*!
     \brief Класс, описывающие разбиение тела
 
@@ -194,6 +218,7 @@ private:
     RotationBodyParameters rotationBody; ///<Параметры разбиения тела вращения
     RotationCutBodyParameters rotationBottomCutBody; ///<Параметры разбиения тела вращения со срезом дна
     FormingParameters forming;
+    FormingParametersRBC formingRBC;
     //bool launch;
 public:
     BodyFragmentation(BodyType body, const FragmentationParameters& param, bool launch=false);
@@ -205,11 +230,12 @@ public:
     void rotationCutBodyLaunchFragmentation(const int i, const Vector3D &bodyVel, const double tau);
     void clearVectors();
     FormingParameters getForming();
+    FormingParametersRBC getFormingRBC();
     static double presetFunctionF(double x, FormingParameters parameters);
     static double presetDeriveFunctionF(double x, FormingParameters parameters);
-    static double presetFunctionG(double x, FormingParameters parameters);
+    static double presetFunctionG(double x, FormingParametersRBC parameters);
     //static double presetFunctionG(double x, double xBeg, FormingParameters parameters);
-    static double presetDeriveFunctionG(double x, FormingParameters parameters);
+    static double presetDeriveFunctionG(double x, FormingParametersRBC parameters);
     QVector<Vector3D> getControlPoints() const;
     QVector<Vector3D> getNormals() const;
     QVector<double> getSquares() const;

@@ -176,13 +176,13 @@ BodyFragmentation::BodyFragmentation(BodyType body, const FragmentationParameter
         if (!launch)
         {
             rotationBottomCutBody = RotationCutBodyParameters {param.rotationBodyFiFragNum, param.rotationBodyPartFragNum,param.rotationBodyRFragNum, param.rotationBodyXBeg, param.rotationBodyXEnd,param.rotationBodySectionDistance,param.rotationBodySectionEndDistance,  param.delta, param.pointsRaising, param.vortonsRad};
-            forming=FormingParameters{param.formingDiameter,param.formingTailDiameter,param.formingLengthSectorOne,param.formingLengthSectorTwo,param.formingAngle,0};
+            formingRBC=FormingParametersRBC{param.formingEllipsoidDiameter,param.formingTailDiameter,param.formingEllisoidLength,param.formingConeLength,param.formingFullLength,param.rotationBodyRBCFormingType};
             rotationCutBodyFragmantation();
         }
         else
         {
             rotationBottomCutBody = RotationCutBodyParameters {param.rotationBodyFiFragNum, param.rotationBodyPartFragNum,param.rotationBodyRFragNum, param.rotationBodyXBeg, param.rotationBodyXEnd,param.rotationBodySectionDistance,param.rotationBodySectionEndDistance,  param.delta, param.pointsRaising, param.vortonsRad};
-            forming=FormingParameters{param.formingDiameter,param.formingTailDiameter,param.formingLengthSectorOne,param.formingLengthSectorTwo,param.formingAngle,0};
+            formingRBC=FormingParametersRBC{param.formingEllipsoidDiameter,param.formingTailDiameter,param.formingEllisoidLength,param.formingConeLength,param.formingFullLength,param.rotationBodyRBCFormingType};
         }
         break;
     }
@@ -444,6 +444,19 @@ void BodyFragmentation::rotationBodyFragmantation()
 void BodyFragmentation::rotationCutBodyFragmantation()
 {
     clearVectors();
+    switch (formingRBC.type)
+    {
+    case ELLIPSOID_CONE:
+    {
+        rotationBottomCutBody.xEnd=rotationBottomCutBody.xBeg+formingRBC.ellipsoidLength+formingRBC.coneLength;
+        break;
+    }
+    case ELLIPSOID_CYLINDER:
+    {
+        rotationBottomCutBody.xEnd=rotationBottomCutBody.xBeg+formingRBC.fullLength;
+        break;
+    }
+    }
     QVector<Vector2D> part(rotationBottomCutBody.partFragNum);
     QVector<Vector2D> forNormals(rotationBottomCutBody.partFragNum);
     QVector<Vector2D> forControlPoint(rotationBottomCutBody.partFragNum);
@@ -455,18 +468,18 @@ void BodyFragmentation::rotationCutBodyFragmantation()
     QVector<double> yArr(NFRAG);
 
     double newBeg=rotationBottomCutBody.xBeg+rotationBottomCutBody.sectionDistance;
-    rotationBottomCutBody.xEnd=rotationBottomCutBody.xBeg+forming.sectorOneLength+forming.sectorTwoLength;
+
     double newEnd=rotationBottomCutBody.xEnd-rotationBottomCutBody.sectionEndDistance;
     double fi0 = 2*M_PI/rotationBottomCutBody.fiFragNum;
     double height=(newEnd-newBeg)/(NFRAG-1);
     s[0]=0.0;
     xArr[0]=newBeg;
-    yArr[0]=BodyFragmentation::presetFunctionG(newBeg,forming);
+    yArr[0]=BodyFragmentation::presetFunctionG(newBeg,formingRBC);
     for (int i=1; i<NFRAG; i++)
     {
         xArr[i]=newBeg+i*height;
-        yArr[i]=BodyFragmentation::presetFunctionG(xArr[i],forming);
-        double derivative=BodyFragmentation::presetDeriveFunctionG(xArr[i],forming);
+        yArr[i]=BodyFragmentation::presetFunctionG(xArr[i],formingRBC);
+        double derivative=BodyFragmentation::presetDeriveFunctionG(xArr[i],formingRBC);
         s[i]=s[i-1]+height*sqrt(1+derivative*derivative);
     }
 
@@ -475,14 +488,14 @@ void BodyFragmentation::rotationCutBodyFragmantation()
     {
         int num=findClosetElementFromArray(s,length/(rotationBottomCutBody.partFragNum-1)*i);
         part[i]=Vector2D(xArr[num],yArr[num]);
-        forUp[i]=Vector2D(-BodyFragmentation::presetDeriveFunctionG(xArr[num],forming),1).normalized();
+        forUp[i]=Vector2D(-BodyFragmentation::presetDeriveFunctionG(xArr[num],formingRBC),1).normalized();
     }
 
     for (int i=0; i<rotationBottomCutBody.partFragNum-1; i++)
     {
         int translNum=findClosetElementFromArray(s,length/(rotationBottomCutBody.partFragNum-1)*(i+0.5));
         forControlPoint[i]=Vector2D(xArr[translNum],yArr[translNum]);
-        forNormals[i]=Vector2D(-BodyFragmentation::presetDeriveFunctionG(xArr[translNum],forming),1).normalized();
+        forNormals[i]=Vector2D(-BodyFragmentation::presetDeriveFunctionG(xArr[translNum],formingRBC),1).normalized();
     }
 
     for (int i=0; i<part.size(); i++)
@@ -589,12 +602,12 @@ void BodyFragmentation::rotationCutBodyLaunchFragmentation(const int i, const Ve
         double height=(newEnd-newBeg)/(NFRAG-1);
         s[0]=0.0;
         xArr[0]=newBeg;
-        yArr[0]=BodyFragmentation::presetFunctionG(newBeg,forming);
+        yArr[0]=BodyFragmentation::presetFunctionG(newBeg,formingRBC);
         for (int i=1; i<NFRAG; i++)
         {
             xArr[i]=newBeg+i*height;
-            yArr[i]=BodyFragmentation::presetFunctionG(xArr[i],forming);
-            double derivative=BodyFragmentation::presetDeriveFunctionG(xArr[i],forming);
+            yArr[i]=BodyFragmentation::presetFunctionG(xArr[i],formingRBC);
+            double derivative=BodyFragmentation::presetDeriveFunctionG(xArr[i],formingRBC);
             s[i]=s[i-1]+height*sqrt(1+derivative*derivative);
         }
 //        for (int i=0; i<xArr.size();i++)
@@ -605,14 +618,14 @@ void BodyFragmentation::rotationCutBodyLaunchFragmentation(const int i, const Ve
         {
             int num=findClosetElementFromArray(s,length/(rotationBottomCutBody.partFragNum-1)*i);
             part[i]=Vector2D(xArr[num],yArr[num]);
-            forUp[i]=Vector2D(-BodyFragmentation::presetDeriveFunctionG(xArr[num],forming),1).normalized();
+            forUp[i]=Vector2D(-BodyFragmentation::presetDeriveFunctionG(xArr[num],formingRBC),1).normalized();
         }
 
         for (int i=0; i<rotationBottomCutBody.partFragNum-1; i++)
         {
             int translNum=findClosetElementFromArray(s,length/(rotationBottomCutBody.partFragNum-1)*(i+0.5));
             forControlPoint[i]=Vector2D(xArr[translNum],yArr[translNum]);
-            forNormals[i]=Vector2D(-BodyFragmentation::presetDeriveFunctionG(xArr[translNum],forming),1).normalized();
+            forNormals[i]=Vector2D(-BodyFragmentation::presetDeriveFunctionG(xArr[translNum],formingRBC),1).normalized();
         }
         int end=rotationBottomCutBody.partFragNum-1;
         double currentEnd=part[end].x();
@@ -631,10 +644,10 @@ void BodyFragmentation::rotationCutBodyLaunchFragmentation(const int i, const Ve
         forNormals.removeLast();
         end--;
 
-        part.push_back(Vector2D(ledge, BodyFragmentation::presetFunctionG(ledge,forming)));
-        forUp.push_back(Vector2D(-BodyFragmentation::presetDeriveFunctionG(ledge,forming),1.0).normalized());
+        part.push_back(Vector2D(ledge, BodyFragmentation::presetFunctionG(ledge,formingRBC)));
+        forUp.push_back(Vector2D(-BodyFragmentation::presetDeriveFunctionG(ledge,formingRBC),1.0).normalized());
         forControlPoint.push_back(Vector2D(0.5*(part[end]+part[end+1])));
-        forNormals.push_back(Vector2D(-BodyFragmentation::presetDeriveFunctionG(forControlPoint.last().x(),forming),1).normalized());
+        forNormals.push_back(Vector2D(-BodyFragmentation::presetDeriveFunctionG(forControlPoint.last().x(),formingRBC),1).normalized());
 
         for (int i=0; i<part.size(); i++)
             part[i]+=forUp[i]*rotationBottomCutBody.delta;
@@ -727,6 +740,11 @@ void BodyFragmentation::clearVectors()
 FormingParameters BodyFragmentation::getForming()
 {
     return forming;
+}
+
+FormingParametersRBC BodyFragmentation::getFormingRBC()
+{
+    return formingRBC;
 }
 
 /*!
@@ -851,29 +869,36 @@ double BodyFragmentation::presetDeriveFunctionF(double x, FormingParameters para
 \param x Значение х
 \return Возвращаемое значение функции
 */
-double BodyFragmentation::presetFunctionG(double x, FormingParameters parameters)
+double BodyFragmentation::presetFunctionG(double x, FormingParametersRBC parameters)
 {
-    switch (parameters.typeNum)
+    switch (parameters.type)
     {
-    case 0:
+    case ELLIPSOID_CONE:
     {
-        if (x>=0.0&&x<parameters.sectorOneLength)
-            return parameters.diameter*0.5*sqrt(1-pow(x-parameters.sectorOneLength,2)/pow(parameters.sectorOneLength,2));
+        if (x>=0.0&&x<parameters.ellipsoidLength)
+            return parameters.ellipsoidDiameter*0.5*sqrt(1-pow(x-parameters.ellipsoidLength,2)/pow(parameters.ellipsoidLength,2));
         else
         {
-            if (x>=parameters.sectorOneLength&&x<=parameters.sectorTwoLength+parameters.sectorOneLength)
-                return parameters.diameter*0.5-(parameters.diameter-parameters.tailDiameter)*0.5/parameters.sectorTwoLength*(x-parameters.sectorOneLength);
+            if (x>=parameters.ellipsoidLength&&x<=parameters.coneLength+parameters.ellipsoidLength)
+                return parameters.ellipsoidDiameter*0.5-(parameters.ellipsoidDiameter-parameters.tailDiameter)*0.5/parameters.coneLength*(x-parameters.ellipsoidLength);
             else
             {
                     return 0.0;
             }
         }
     }
-    default:
-        return 0.0;
+    case ELLIPSOID_CYLINDER:
+    {
+        if (x>=0.0 && x<parameters.ellipsoidLength)
+            return parameters.ellipsoidDiameter*0.5*sqrt(1-pow(x-parameters.ellipsoidLength,2)/pow(parameters.ellipsoidLength,2));
+        else {
+            if (x>=parameters.ellipsoidLength && x<=parameters.fullLength)
+                return parameters.ellipsoidDiameter*0.5;
+            else
+                return 0.0;
+        }
     }
-
-
+    }
 }
 
 /*!
@@ -914,27 +939,33 @@ double BodyFragmentation::presetFunctionG(double x, FormingParameters parameters
 \param x Значение х
 \return Возвращаемое значение производной функции
 */
-double BodyFragmentation::presetDeriveFunctionG(double x, FormingParameters parameters)
+double BodyFragmentation::presetDeriveFunctionG(double x, FormingParametersRBC parameters)
 {
-    switch (parameters.typeNum)
+    switch (parameters.type)
     {
-    case 0:
+    case ELLIPSOID_CONE:
     {
-        if (x>=0.0&&x<parameters.sectorOneLength)
-            return -parameters.diameter*parameters.diameter*0.25/pow(parameters.sectorOneLength,2)*(x-parameters.sectorOneLength)/presetFunctionG(x,parameters);
+        if (x>=0.0&&x<parameters.ellipsoidLength)
+            return -parameters.ellipsoidDiameter*parameters.ellipsoidDiameter*0.25/pow(parameters.ellipsoidLength,2)*(x-parameters.ellipsoidLength)/presetFunctionG(x,parameters);
 
         else
         {
-            if (x>=parameters.sectorOneLength&&x<=parameters.sectorOneLength+parameters.sectorTwoLength)
-                return -(parameters.diameter-parameters.tailDiameter)*0.5/parameters.sectorTwoLength;
+            if (x>=parameters.ellipsoidLength&&x<=parameters.ellipsoidLength+parameters.coneLength)
+                return -(parameters.ellipsoidDiameter-parameters.tailDiameter)*0.5/parameters.coneLength;
             else
             {
                     return 0.0;
             }
         }
+        break;
     }
-    default:
-        return 0.0;
+    case ELLIPSOID_CYLINDER:
+    {
+        if (x>=0.0 && x<parameters.ellipsoidLength)
+            return -pow(parameters.ellipsoidDiameter,2)*0.25/pow(parameters.ellipsoidLength,2)*(x-parameters.ellipsoidLength)/presetFunctionG(x,parameters);
+        else
+            return 0.0;
+    }
     }
 //    if ((x>=0)&&(x<=1.4)) return -2*(x-1.4)/sqrt(1.4*1.4-(x-1.4)*(x-1.4));
 //    if ((x>=1.4)&&(x<=5)) return 0.0;

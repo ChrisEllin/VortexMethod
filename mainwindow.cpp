@@ -1141,10 +1141,29 @@ void MainWindow::on_rotationCutBodySolverPushButton_clicked()
     fragPar.vortonsRad=ui->epsilonRotationCutBodyLineEdit->text().toDouble();
     fragPar.delta=ui->deltaRotationCutBodyFragmLineEdit->text().toDouble();
     fragPar.pointsRaising=ui->pointsRaisingRotationCutBodyLineEdit->text().toDouble();
-    fragPar.formingDiameter=ui->formingRBCDiameterLineEdit->text().toDouble();
+    fragPar.formingEllipsoidDiameter=ui->formingRBCDiameterLineEdit->text().toDouble();
     fragPar.formingLengthSectorOne=ui->formingRBCSectorOneLength->text().toDouble();
     fragPar.formingLengthSectorTwo=ui->formingRBCSectorTwoLength->text().toDouble();
     fragPar.formingTailDiameter=ui->formingRBCTailDiameterLineEdit->text().toDouble();
+    ui->formRotationCutBodyComboBox->currentIndex()==0 ? fragPar.rotationBodyRBCFormingType=ELLIPSOID_CYLINDER : fragPar.rotationBodyRBCFormingType=ELLIPSOID_CONE;
+    switch (fragPar.rotationBodyRBCFormingType) {
+    case ELLIPSOID_CONE:
+    {
+        fragPar.formingEllipsoidDiameter=ui->formingRBCDiameterLineEdit->text().toDouble();
+        fragPar.formingTailDiameter=ui->formingRBCTailDiameterLineEdit->text().toDouble();
+        fragPar.formingEllisoidLength=ui->formingRBCSectorOneLength->text().toDouble();
+        fragPar.formingConeLength=ui->formingRBCSectorTwoLength->text().toDouble();
+        break;
+    }
+    case ELLIPSOID_CYLINDER:
+    {
+        fragPar.formingEllipsoidDiameter=ui->cylDiameterRotationCutBodyLineEdit->text().toDouble();
+        fragPar.formingEllisoidLength=ui->ellipsoidLengthRotationCutBodyLineEdit->text().toDouble();
+        fragPar.formingFullLength=ui->lengthRotationCutBodyLineEdit->text().toDouble();
+        break;
+    }
+    }
+
     SolverParameters solvPar=settings->getSolverParameters();
 
     *solver=Solver(solvPar);
@@ -1425,7 +1444,8 @@ void MainWindow::updateScreen()
 
 void MainWindow::calcAverLength()
 {
-
+    if (ui->autoParametersAction->isChecked())
+    {
     double panelLength;
     switch (ui->tabWidget->currentIndex())
     {
@@ -1483,6 +1503,7 @@ void MainWindow::calcAverLength()
         break;
     }
     emit sendPanelLength(panelLength);
+    }
 }
 
 /*!
@@ -1846,10 +1867,39 @@ void MainWindow::on_rotationBodyFreeMotionSolverPushButton_clicked()
     fragPar.formingLengthSectorOne=ui->formingRBSectorOneLength->text().toDouble();
     fragPar.formingLengthSectorTwo=ui->formingRBSectorTwoLength->text().toDouble();
 
+    fragPar.rotationBodyFormingType=ui->comboBox->currentIndex();
+    switch (fragPar.rotationBodyFormingType)
+    {
+    case 0:
+    {
+        fragPar.formingDiameter=ui->formingRBDiameterLineEdit->text().toDouble();
+        fragPar.formingLengthSectorTwo=ui->formingRBSectorTwoLength->text().toDouble();
+        fragPar.formingLengthSectorOne=ui->formingRBSectorOneLength->text().toDouble();
+        break;
+    }
+    case 1:
+    {
+        fragPar.formingDiameter=ui->formingConeRBDiameterLineEdit->text().toDouble();
+        fragPar.formingAngle=ui->formingConeRBAngleLineEdit->text().toDouble();
+        fragPar.formingLengthSectorOne=ui->formingConeRBLengthLineEdit->text().toDouble();
+        break;
+    }
+    case 2:
+    {
+       fragPar.formingDiameter=ui->formingEllipsoidRBDiameterLineEdit->text().toDouble();
+       fragPar.formingLengthSectorOne=ui->formingEllipsoidRBLengthLineEdit->text().toDouble();
+       break;
+    }
+    }
+
     SolverParameters solvPar=settings->getSolverParameters();
     FreeMotionParameters freeMotionPar=settings->getFreeMotionParameters();
 
     *solver=Solver(solvPar,freeMotionPar);
+    if (ui->acceleratedMotionAction->isChecked())
+        solver->setMotionType(MotionType::ACCELERATED);
+    else
+        solver->setMotionType(MotionType::NOACCELERATE);
     QFuture<void> rotationBodyFuture=QtConcurrent::run(solver,&Solver::rotationBodyFreeMotionSolver, fragPar);
     solving=true;
     ui->pointsRaisingRotationBodyLineEdit->setDisabled(true);
@@ -1907,6 +1957,11 @@ void MainWindow::on_currentNumberLineEdit_editingFinished()
 void MainWindow::calcEpsilonLength(double panel)
 {
 
+    if (ui->autoParametersAction->isChecked())
+        ui->epsilonRotationBodyLineEdit->setText(QString::number(panel*0.75));
+}
 
-    ui->epsilonRotationBodyLineEdit->setText(QString::number(panel*0.75));
+void MainWindow::on_formRotationCutBodyComboBox_currentIndexChanged(int index)
+{
+    ui->stackedWidget_2->setCurrentIndex(index);
 }
