@@ -19,7 +19,7 @@ enum BodyType {
 };
 
 
-enum FormingTypeRBC {ELLIPSOID_CYLINDER, ELLIPSOID_CONE};
+enum FormingTypeRBC {ELLIPSOID_CYLINDER, ELLIPSOID_CONE, ELLIPSOID_CYLINDER_CONE};
 
 /*!
     \defgroup fragmentationParameters Параметры разбиения

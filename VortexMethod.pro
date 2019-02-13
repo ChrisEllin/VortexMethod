@@ -57,6 +57,10 @@ HEADERS += \
     variatesettings.h \
     preprocessorsettings.h \
     simpsonintegration.h
+#win32 {
+#HEADERS += \
+#    memory.h
+#    }
 
 FORMS += \
         mainwindow.ui \

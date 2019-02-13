@@ -2,8 +2,13 @@
 #include <QApplication>
 #include "vector3d.h"
 
+
+
 int main(int argc, char *argv[])
 {
+    QString a="asfasdfasf";
+    const char* aa=a.toStdString().c_str();
+    qDebug()<<*aa;
     QApplication app(argc, argv);
 
     QString locale = QLocale::system().name();

@@ -456,6 +456,11 @@ void BodyFragmentation::rotationCutBodyFragmantation()
         rotationBottomCutBody.xEnd=rotationBottomCutBody.xBeg+formingRBC.fullLength;
         break;
     }
+    case ELLIPSOID_CYLINDER_CONE:
+    {
+        rotationBottomCutBody.xEnd=rotationBottomCutBody.xBeg+formingRBC.fullLength;
+        break;
+    }
     }
     QVector<Vector2D> part(rotationBottomCutBody.partFragNum);
     QVector<Vector2D> forNormals(rotationBottomCutBody.partFragNum);
@@ -469,7 +474,7 @@ void BodyFragmentation::rotationCutBodyFragmantation()
 
     double newBeg=rotationBottomCutBody.xBeg+rotationBottomCutBody.sectionDistance;
 
-    double newEnd=rotationBottomCutBody.xEnd-rotationBottomCutBody.sectionEndDistance;
+    double newEnd=rotationBottomCutBody.xEnd+0.01;
     double fi0 = 2*M_PI/rotationBottomCutBody.fiFragNum;
     double height=(newEnd-newBeg)/(NFRAG-1);
     s[0]=0.0;
@@ -898,6 +903,23 @@ double BodyFragmentation::presetFunctionG(double x, FormingParametersRBC paramet
                 return 0.0;
         }
     }
+    case ELLIPSOID_CYLINDER_CONE:
+    {
+        if (x >=0.0 && x<=parameters.ellipsoidLength)
+            return  parameters.ellipsoidDiameter*0.5*sqrt(1-pow(x-parameters.ellipsoidLength,2)/pow(parameters.ellipsoidLength,2));
+        else
+        {
+            if (x>parameters.ellipsoidLength && x<parameters.fullLength-parameters.coneLength)
+                return parameters.ellipsoidDiameter*0.5;
+            else {
+                if (x>=parameters.fullLength-parameters.coneLength && x<=parameters.fullLength+1)
+                    return parameters.ellipsoidDiameter*0.5 - (parameters.ellipsoidDiameter-parameters.tailDiameter)*0.5/parameters.coneLength*(x-(parameters.fullLength-parameters.coneLength));
+                else {
+                    return 0.0;
+                }
+            }
+        }
+    }
     }
 }
 
@@ -957,7 +979,6 @@ double BodyFragmentation::presetDeriveFunctionG(double x, FormingParametersRBC p
                     return 0.0;
             }
         }
-        break;
     }
     case ELLIPSOID_CYLINDER:
     {
@@ -965,6 +986,23 @@ double BodyFragmentation::presetDeriveFunctionG(double x, FormingParametersRBC p
             return -pow(parameters.ellipsoidDiameter,2)*0.25/pow(parameters.ellipsoidLength,2)*(x-parameters.ellipsoidLength)/presetFunctionG(x,parameters);
         else
             return 0.0;
+    }
+    case ELLIPSOID_CYLINDER_CONE:
+    {
+        if (x >=0.0 && x<=parameters.ellipsoidLength)
+            return  -pow(parameters.ellipsoidDiameter*0.5/parameters.ellipsoidLength,2)*(x-parameters.ellipsoidLength)/BodyFragmentation::presetFunctionG(x,parameters);
+        else
+        {
+            if (x>parameters.ellipsoidLength && x<parameters.fullLength-parameters.coneLength)
+                return 0.0;
+            else {
+                if (x>=parameters.fullLength-parameters.coneLength && x<=parameters.fullLength)
+                    return -(parameters.ellipsoidDiameter-parameters.tailDiameter)*0.5/parameters.coneLength;
+                else {
+                    return 0.0;
+                }
+            }
+        }
     }
     }
 //    if ((x>=0)&&(x<=1.4)) return -2*(x-1.4)/sqrt(1.4*1.4-(x-1.4)*(x-1.4));

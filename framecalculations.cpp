@@ -35,6 +35,11 @@ FrameCalculations::FrameCalculations()
     timers.clear();
 }
 
+double FrameCalculations::getConditionalNum()
+{
+    return conditionalNum;
+}
+
 /*!
 Рассчитывает значения углов тета для сферы
 \param tetaFragNum Количество разбиений тела по тета
@@ -69,44 +74,44 @@ void FrameCalculations::matrixCalc(QVector<std::shared_ptr<MultiFrame> > frames,
         matrix(matrixSize-1,i)=matrix(i,matrixSize-1)=1.0; 
     matrix(matrixSize-1,matrixSize-1)=0.0;
 
-//    double tqw=matrix.determinant();
-//    QVector<double> mat(matrixSize);
-//    for (int i=0; i<matrixSize; i++)
-//    {
-//        mat[i]=0.0;
-//        for (int j=0; j<matrixSize; j++)
-//        {
-//            mat[i]+=matrix(i,j);
-//        }
-//    }
-//    double normA=mat[0];
-//    for (int i=1; i<matrixSize; i++)
-//    {
-//        if (mat[i]>normA)
-//            normA=mat[i];
-//    }
+    double tqw=matrix.determinant();
+    QVector<double> mat(matrixSize);
+    for (int i=0; i<matrixSize; i++)
+    {
+        mat[i]=0.0;
+        for (int j=0; j<matrixSize; j++)
+        {
+            mat[i]+=matrix(i,j);
+        }
+    }
+    double normA=mat[0];
+    for (int i=1; i<matrixSize; i++)
+    {
+        if (mat[i]>normA)
+            normA=mat[i];
+    }
 //    Eigen::MatrixXd oldmatrix;
 //    oldmatrix.resize(matrixSize,matrixSize);
 //    oldmatrix=matrix;
 
-//    matrix=matrix.inverse();
-//    QVector<double> mat1(matrixSize);
-//    for (int i=0; i<matrixSize; i++)
-//    {
-//        for (int j=0; j<matrixSize; j++)
-//        {
-//            mat1[i]+=matrix(i,j);
-//        }
-//    }
-//    double normA1=mat1[0];
-//    for (int i=1; i<matrixSize; i++)
-//    {
-//        if (mat1[i]>normA1)
-//            normA1=mat1[i];
-//    }
-//    qDebug()<<"Число обусловленности"<<normA*normA1;
-//    int k=3;
     matrix=matrix.inverse();
+    QVector<double> mat1(matrixSize);
+    for (int i=0; i<matrixSize; i++)
+    {
+        for (int j=0; j<matrixSize; j++)
+        {
+            mat1[i]+=matrix(i,j);
+        }
+    }
+    double normA1=mat1[0];
+    for (int i=1; i<matrixSize; i++)
+    {
+        if (mat1[i]>normA1)
+            normA1=mat1[i];
+    }
+    conditionalNum=normA*normA1;
+
+//    matrix=matrix.inverse();
 
 }
 /*!
@@ -834,6 +839,104 @@ void FrameCalculations::getBackAndRotateRotationCutBody(QVector<Vorton> &vortons
     timers.getBackAndRotateTimer=start.elapsed()*0.001;
 }
 
+void FrameCalculations::getBackAndRotateRotationCutBodyGA(QVector<Vorton> &vortons,QVector<Vorton> &oldvortons,QVector<std::shared_ptr<MultiFrame>> &frames,const double xEnd, const Vector3D bodyNose, FormingParameters forming,const double layerHeight, const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals)
+{
+    for (int i=vortons.size()-1; i>=0; i--)
+    {
+        if (FrameCalculations::insideRotationBody(vortons[i], bodyNose,xEnd,forming))
+        {
+            bool founded=false;
+            Vector3D tau=oldvortons[i].getMid()-vortons[i].getMid();
+            for (int i=0;i<frames.size();i++)
+            {
+
+                if (frames[i]->getAnglesNum()==4)
+                {
+                    int j=0;
+                    while (j<3)
+                    {
+                        Vector3D r1=frames[i]->at(j).getTail();
+                        Vector3D r2=frames[i]->at(j+1).getTail();
+                        Vector3D r3;
+                        if (j+2==4)
+                            r3=frames[i]->at(0).getTail();
+                        else
+                            r3=frames[i]->at(j+2).getTail();
+                        Vector3D e1=r2-r1;
+                        Vector3D e2=r3-r1;
+                        double mixedProd=Vector3D::mixedProduct(tau,e1,e2);
+                        if (fabs(mixedProd)<0.0000000001)
+                        {
+                            double t=Vector3D::mixedProduct(r1-vortons[i].getMid(),e1,e2)/mixedProd;
+                            if (t>0.0 && t<1.0)
+                            {
+                                Vector3D rtilda=vortons[i].getMid()+t*tau;
+                                Vector3D a=r1-rtilda;
+                                Vector3D b=r2-rtilda;
+                                Vector3D c=r3-rtilda;
+
+
+                                if (coDirectionallyCheck(a,b,c))
+                                {
+                                    vortons[i].setMid(vortons[i].getMid()+2*t*tau);
+                                    vortons[i].setTail(vortons[i].getTail()+2*t*tau);
+                                    founded=true;
+                                    break;
+                                }
+                            }
+                        }
+                        j+=2;
+                    }
+                }
+                else {
+                    int j=0;
+                    while (j<frames[i]->getAnglesNum())
+                    {
+                        Vector3D r2=frames[i]->at(j).getTail();
+                        Vector3D r1=frames[i]->getCenter();
+                        Vector3D r3;
+                        if (j+1==frames[i]->getAnglesNum())
+                            r3=frames[i]->at(0).getTail();
+                        else
+                            r3=frames[i]->at(j+1).getTail();
+                        Vector3D e1=r2-r1;
+                        Vector3D e2=r3-r1;
+                        double mixedProd=Vector3D::mixedProduct(tau,e1,e2);
+                        if (fabs(mixedProd)<0.0000000001)
+                        {
+                            double t=Vector3D::mixedProduct(r1-vortons[i].getMid(),e1,e2)/mixedProd;
+                            if (t>0.0 && t<1.0)
+                            {
+                                Vector3D rtilda=vortons[i].getMid()+t*tau;
+                                Vector3D a=r1-rtilda;
+                                Vector3D b=r2-rtilda;
+                                Vector3D c=r3-rtilda;
+                                if (coDirectionallyCheck(a,b,c))
+                                {
+                                    vortons[i].setMid(vortons[i].getMid()+2*t*tau);
+                                    vortons[i].setTail(vortons[i].getTail()+2*t*tau);
+                                    founded=true;
+                                    break;
+                                }
+                            }
+                        }
+                        j++;
+                    }
+                }
+                if (founded)
+                    break;
+            }
+            counters.gotBackNum++;
+        }
+        if(FrameCalculations::insideRotationBodyLayer(vortons[i],bodyNose,xEnd,layerHeight,forming))
+        {
+            QPair<double,int> closest=BodyFragmentation::findClosest(vortons[i].getMid(),controlPoints, normals);
+            vortons[i].rotateAroundNormal(normals[closest.second]);
+            counters.rotatedNum++;
+        }
+    }
+}
+
 /*!
 Функция, возвращающая вортоны из тела в поток и разворачивающая вортонов относительно поверхности тела вращения со срезом в слое при решении задачи старта
 \param[in,out] vortons Вектор, содержащий вортоны для функции
@@ -961,6 +1064,17 @@ void FrameCalculations::translateAndRotate(QVector<std::shared_ptr<MultiFrame>>&
 //    }
 
     dCloseODE();
+}
+
+bool FrameCalculations::coDirectionallyCheck(const Vector3D a, const Vector3D b, const Vector3D c)
+{
+    Vector3D cross1=Vector3D::crossProduct(a,b);
+    Vector3D cross2=Vector3D::crossProduct(b,c);
+    Vector3D cross3=Vector3D::crossProduct(c,a);
+    if (cross1.length()<0.0000001 &&cross2.length()<0.0000001 && cross3.length()<0.0000001
+            && Vector3D::dotProduct(cross1,cross2)>0.0 && Vector3D::dotProduct(cross2,cross3)>0.0)
+            return true;
+    return false;
 }
 
 

@@ -314,7 +314,8 @@ void Logger::createFiles()
         *tableTextStream.get()<<QString("Remained Number \t");
         *tableTextStream.get()<<QString("Reguliser \t");
         *tableTextStream.get()<<QString("Max Gamma \t");
-        *tableTextStream.get()<<QString("Velocity in center \n");
+        *tableTextStream.get()<<QString("Velocity in center \t");
+        *tableTextStream.get()<<QString("Conditionality number \n");
     }
 
 }
@@ -566,7 +567,7 @@ void Logger::writeSolverTime(const double solvTime)
     logTextStream.get()->flush();
 }
 
-void Logger::writeTable(const int stepNum, const double stepTime,const double generatedNum, const double maxGamma, const Vector3D velocity, const double reguliser, const int freeVortonsSize, const Counters beforeIntegrC, const Counters afterIntegrC)
+void Logger::writeTable(const int stepNum, const double stepTime,const double generatedNum, const double maxGamma, const Vector3D velocity, const double reguliser, const int freeVortonsSize, const Counters beforeIntegrC, const Counters afterIntegrC, const double conditionalNum)
 {
     *tableTextStream.get()<<QString::number(stepNum)+"\t";
     *tableTextStream.get()<<QString::number(stepTime)+"\t";
@@ -577,7 +578,8 @@ void Logger::writeTable(const int stepNum, const double stepTime,const double ge
     *tableTextStream.get()<<QString::number(freeVortonsSize)+"\t";
     *tableTextStream.get()<<QString::number(reguliser)+"\t";
     *tableTextStream.get()<<QString::number(maxGamma)+"\t";
-    *tableTextStream.get()<<QString::number(velocity.length())+"\n";
+    *tableTextStream.get()<<QString::number(velocity.length())+"\t";
+    *tableTextStream.get()<<QString::number(conditionalNum)+"\n";
     tableTextStream.get()->flush();
 }
 
@@ -740,6 +742,166 @@ void Logger::createParaviewFile(QVector<std::shared_ptr<MultiFrame> > &frames, Q
         paraviewTs.flush();
     }
     paraviewFile.close();
+}
+
+void Logger::createParaviewFile(QVector<std::shared_ptr<MultiFrame> > &frames, QVector<double> &forces, QVector<Vector3D> &velocities, QVector<double> &tangentialVelocities, QVector<double> &normalVelocitiesBefore, QVector<double> &normalVelocitiesAfter, QVector<std::shared_ptr<MultiFrame> > &sectionFrames, int currentStep)
+{
+    QFile paraviewFile(path+"/mesh/visual.vtk."+QString::number(currentStep));
+    if (paraviewFile.open(QIODevice::WriteOnly))
+    {
+        QTextStream paraviewTs(&paraviewFile);
+        paraviewTs<<"# vtk DataFile Version 3.0\n";
+        paraviewTs<<"vtk output\n";
+        paraviewTs<<"ASCII\n";
+        paraviewTs<<"DATASET UNSTRUCTURED_GRID\n";
+        int points=0;
+        for (int i=0; i<frames.size();i++)
+            points+=frames[i]->getAnglesNum();
+        for (int i=0; i<sectionFrames.size();i++)
+            points+=sectionFrames[i]->getAnglesNum();
+        paraviewTs<<"POINTS "<<points<<" float\n";
+        paraviewTs.flush();
+        for (int i=0; i<frames.size();i++)
+        {
+            for (int j=0; j<frames[i]->getAnglesNum(); j++)
+                paraviewTs<<frames[i]->at(j).getTail().x()<<" "<<frames[i]->at(j).getTail().y()<<" "<<frames[i]->at(j).getTail().z()<<"\n";
+            paraviewTs.flush();
+        }
+        for (int i=0; i<sectionFrames.size(); i++)
+        {
+            for (int j=0; j<sectionFrames[i]->getAnglesNum(); j++)
+                paraviewTs<<sectionFrames[i]->at(j).getTail().x()<<" "<<sectionFrames[i]->at(j).getTail().y()<<" "<<sectionFrames[i]->at(j).getTail().z()<<"\n";
+            paraviewTs.flush();
+        }
+        paraviewTs<<"CELLS "<<frames.size()+sectionFrames.size()<<" "<<points+frames.size()+sectionFrames.size()<<"\n";
+        int currentPointNumber=0;
+        for (int i=0; i<frames.size(); i++)
+        {
+            paraviewTs<<frames[i]->getAnglesNum();
+            int virtualNumber=currentPointNumber;
+            for (int j=currentPointNumber; j<currentPointNumber+frames[i]->getAnglesNum();j++)
+            {
+                paraviewTs<<" "<<j;
+                virtualNumber++;
+            }
+            currentPointNumber=virtualNumber;
+            paraviewTs<<"\n";
+        }
+        for (int i=0; i<sectionFrames.size(); i++)
+        {
+            paraviewTs<<sectionFrames[i]->getAnglesNum();
+            int virtualNumber=currentPointNumber;
+            for (int j=currentPointNumber; j<currentPointNumber+sectionFrames[i]->getAnglesNum();j++)
+            {
+                paraviewTs<<" "<<j;
+                virtualNumber++;
+            }
+            currentPointNumber=virtualNumber;
+            paraviewTs<<"\n";
+        }
+        paraviewTs.flush();
+        paraviewTs<<"CELL_TYPES "<<frames.size()+sectionFrames.size()<<"\n";
+        for (int i=0;i<frames.size(); i++)
+            frames[i]->getAnglesNum()==4 ? paraviewTs<<"9\n" : paraviewTs<<"7\n";
+        paraviewTs.flush();
+        for (int i=0;i<sectionFrames.size(); i++)
+            sectionFrames[i]->getAnglesNum()==4 ? paraviewTs<<"9\n" : paraviewTs<<"7\n";
+        paraviewTs.flush();
+        paraviewTs<<"CELL_DATA "<<frames.size()+sectionFrames.size()<<"\n";
+        paraviewTs<<"SCALARS pressure float 1\n";
+        paraviewTs<<"LOOKUP_TABLE default\n";
+        for (int i=0; i<forces.size(); i++)
+            i==0 ? paraviewTs<<forces[i] : paraviewTs<<" "<<forces[i];
+        paraviewTs<<"\n";
+        paraviewTs.flush();
+        paraviewTs<<"SCALARS tangential_speed float 1\n";
+        paraviewTs<<"LOOKUP_TABLE default\n";
+        for (int i=0; i<forces.size(); i++)
+            i==0 ? paraviewTs<<tangentialVelocities[i] : paraviewTs<<" "<<tangentialVelocities[i];
+        paraviewTs<<"\n";
+        paraviewTs.flush();
+
+        paraviewTs<<"SCALARS normal_speedB float 1\n";
+        paraviewTs<<"LOOKUP_TABLE default\n";
+        for (int i=0; i<forces.size(); i++)
+            i==0 ? paraviewTs<<normalVelocitiesBefore[i]<<"\n" : paraviewTs<<" "<<normalVelocitiesBefore[i]<<"\n";
+        paraviewTs<<"\n";
+        paraviewTs.flush();
+        paraviewTs<<"SCALARS normal_speedA float 1\n";
+        paraviewTs<<"LOOKUP_TABLE default\n";
+        for (int i=0; i<forces.size(); i++)
+            i==0 ? paraviewTs<<normalVelocitiesAfter[i]<<"\n" : paraviewTs<<" "<<normalVelocitiesAfter[i]<<"\n";
+        paraviewTs<<"\n";
+        paraviewTs.flush();
+        paraviewTs<<"VECTORS velocities float\n";
+        for (int i=0; i<velocities.size();i++)
+            paraviewTs<<velocities[i].x()<<" "<<velocities[i].y()<<" "<<velocities[i].z()<<"\n";
+        paraviewTs.flush();
+    }
+    paraviewFile.close();
+}
+
+void Logger::createParaviewStreamlinesFile(QVector<Vector3D> velocities, int currentStep)
+{
+    QFile streamLinesFile(path+"/streamlines.vtk."+QString::number(currentStep));
+    if (streamLinesFile.open(QIODevice::WriteOnly))
+    {
+        QTextStream streamLinesTextStream(&streamLinesFile);
+        streamLinesTextStream<<"# vtk DataFile Version 3.0\n";
+        streamLinesTextStream<<"vtk output\n";
+        streamLinesTextStream<<"ASCII\n";
+        streamLinesTextStream<<"DATASET RECTLINEAR_GRID\n";
+        int points=101*101*101;
+        streamLinesTextStream<<"DIMENSIONS 101 101 101\n";
+        double step=0.1;
+        streamLinesTextStream<<"X_COORDINATES 101 float\n";
+        for (double i=-5.0; i<5.0000001; i+=step)
+        {
+            streamLinesTextStream<<QString::number(i)+"\t";
+        }
+        streamLinesTextStream<<"\n";
+        streamLinesTextStream<<"Y_COORDINATES 101 float\n";
+        for (double i=-5.0; i<5.0000001; i+=step)
+        {
+            streamLinesTextStream<<QString::number(i)+"\t";
+        }
+        streamLinesTextStream<<"\n";
+        streamLinesTextStream<<"Z_COORDINATES 101 float\n";
+        for (double i=-5.0; i<5.0000001; i+=step)
+        {
+            streamLinesTextStream<<QString::number(i)+"\t";
+        }
+    }
+    streamLinesFile.close();
+}
+
+void Logger::createParaviewTraceVerticesFile(QVector<Vorton> &vortons, int currentStep)
+{
+    QFile traceFile(path+"/traces/trace.vtk."+QString::number(currentStep));
+    if (traceFile.open(QIODevice::WriteOnly))
+    {
+        QTextStream traceStream(&traceFile);
+        traceStream<<"# vtk DataFile Version 3.0\n";
+        traceStream<<"vtk output\n";
+        traceStream<<"ASCII\n";
+        traceStream<<"DATASET POLYDATA\n";
+        traceStream<<"POINTS "+QString::number(vortons.size()*2)+" float\n";
+        for (int i=0; i<vortons.size();i++)
+        {
+            Vector3D mid=vortons[i].getMid();
+            Vector3D tail=vortons[i].getTail();
+            traceStream<<QString::number(mid.x())+" "+QString::number(mid.y())+" "+QString::number(mid.z())+"\n";
+            traceStream<<QString::number(tail.x())+" "+QString::number(tail.y())+" "+QString::number(tail.z())+"\n";
+        }
+        traceStream.flush();
+        traceStream<<"VERTICES "+QString::number(vortons.size())+" "+QString::number(vortons.size()*3)+"\n";
+        for (int i=0; i<vortons.size()*2;i=i+2)
+        {
+            traceStream<<"2 "+QString::number(i)+" "+QString::number(i+1)+"\n";
+        }
+        traceStream.flush();
+    }
+    traceFile.close();
 }
 
 void Logger::createParaviewTraceFile(QVector<Vorton> &vortons, int currentStep)

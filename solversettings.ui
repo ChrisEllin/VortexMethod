@@ -132,7 +132,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>0.00155604</string>
+     <string>0.03</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_20">
@@ -226,7 +226,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>0.1</string>
+     <string>0.015</string>
     </property>
    </widget>
    <widget class="QLineEdit" name="layerHeightLineEdit">
@@ -239,7 +239,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>0.2</string>
+     <string>0.1</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_12">
@@ -399,7 +399,7 @@ p, li { white-space: pre-wrap; }
      </rect>
     </property>
     <property name="text">
-     <string>0.05</string>
+     <string>0.0105</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_6">
