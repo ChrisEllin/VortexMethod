@@ -1898,6 +1898,7 @@
     <addaction name="acceleratedMotionAction"/>
     <addaction name="separator"/>
     <addaction name="autoParametersAction"/>
+    <addaction name="getBackGAAction"/>
    </widget>
    <widget class="QMenu" name="menu">
     <property name="title">
@@ -2002,6 +2003,14 @@
    </property>
    <property name="text">
     <string>Автоматический подбор параметров</string>
+   </property>
+  </action>
+  <action name="getBackGAAction">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Возвращение из тела от ГА</string>
    </property>
   </action>
  </widget>

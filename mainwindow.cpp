@@ -87,6 +87,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect (waitForOpen, SIGNAL(sendVortons(const QVector<Vorton>&, const QVector<Vorton>&)), this , SLOT(drawGUI(const QVector<Vorton>&, const QVector<Vorton>&)),Qt::BlockingQueuedConnection);
     connect (ui->exitAction, SIGNAL(triggered()), this, SLOT(close()));
     connect (ui->stopAction, SIGNAL(triggered()), this, SLOT(stop()));
+    connect (ui->getBackGAAction, SIGNAL(triggered()),this, SLOT(changeGetBack()));
     connect (solver, SIGNAL(sendReguliser(double)),this, SLOT(setReguliser(double)));
     connect (ui->epsilonCylinderLineEdit, SIGNAL(textChanged(const QString)),settings,SLOT(calcAttributes(const QString)));
     connect (ui->epsilonSphereLineEdit, SIGNAL(textChanged(const QString)),settings,SLOT(calcAttributes(const QString)));
@@ -324,6 +325,14 @@ void MainWindow::openDirectory()
 {
     QString vortonsDir=QFileDialog::getExistingDirectory(this, tr("Выберите папку"), "/home", QFileDialog::ShowDirsOnly|QFileDialog::DontResolveSymlinks);
     QFuture<void> sphereFuture=QtConcurrent::run(waitForOpen, &Logger::openVortonFiles,vortonsDir);
+}
+
+void MainWindow::changeGetBack()
+{
+    if (ui->getBackGAAction->isChecked())
+        Solver::getBackGA=true;
+    else
+        Solver::getBackGA=false;
 }
 
 /*!
@@ -1505,12 +1514,25 @@ void MainWindow::calcAverLength()
         ui->pointsRaisingRotationBodyLineEdit->setText(QString::number(panelLength*0.5));
         break;
     case 3:
+        switch(ui->stackedWidget_2->currentIndex())
+        {
+        case 0:
         panelLength = (M_PI/ui->fiRotationCutBodyLineEdit->text().toInt()*ui->formingRBCDiameterLineEdit->text().toDouble())
                 > ((ui->formingRBCSectorOneLength->text().toDouble()+ui->formingRBCSectorTwoLength->text().toDouble())/ui->partRotationCutBodyLineEdit->text().toInt())
                 ? (M_PI/ui->fiRotationCutBodyLineEdit->text().toInt()*ui->formingRBCDiameterLineEdit->text().toDouble())
                 : ((ui->formingRBCSectorOneLength->text().toDouble()+ui->formingRBCSectorTwoLength->text().toDouble())/ui->partRotationCutBodyLineEdit->text().toInt());
         ui->pointsRaisingRotationCutBodyLineEdit->setText(QString::number(panelLength*0.5));
         break;
+        case 1:
+            panelLength=ui->lengthRotationCutBodyLineEdit->text().toDouble()/ ui->partRotationCutBodyLineEdit->text().toInt();
+            ui->pointsRaisingRotationCutBodyLineEdit->setText(QString::number(panelLength*0.5));
+            break;
+        case 2:
+            panelLength=ui->formingRBC3FormSectorThreeLength->text().toDouble()+ui->formingRBC3FormSectorOneLength->text().toDouble()+ui->formingRBC3FormSectorTwoLength->text().toDouble()/
+                    ui->partRotationCutBodyLineEdit->text().toInt();
+            ui->pointsRaisingRotationCutBodyLineEdit->setText(QString::number(panelLength*0.5));
+            break;
+        }
     }
     emit sendPanelLength(panelLength);
     }
@@ -1968,7 +1990,7 @@ void MainWindow::calcEpsilonLength(double panel)
 {
 
     if (ui->autoParametersAction->isChecked())
-        ui->epsilonRotationBodyLineEdit->setText(QString::number(panel*0.7));
+        ui->epsilonRotationBodyLineEdit->setText(QString::number(panel*0.5));
 }
 
 void MainWindow::on_formRotationCutBodyComboBox_currentIndexChanged(int index)

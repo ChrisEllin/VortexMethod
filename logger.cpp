@@ -744,7 +744,7 @@ void Logger::createParaviewFile(QVector<std::shared_ptr<MultiFrame> > &frames, Q
     paraviewFile.close();
 }
 
-void Logger::createParaviewFile(QVector<std::shared_ptr<MultiFrame> > &frames, QVector<double> &forces, QVector<Vector3D> &velocities, QVector<double> &tangentialVelocities, QVector<double> &normalVelocitiesBefore, QVector<double> &normalVelocitiesAfter, QVector<std::shared_ptr<MultiFrame> > &sectionFrames, int currentStep)
+void Logger::createParaviewFile(QVector<std::shared_ptr<MultiFrame> > &frames, QVector<double> &forces, QVector<Vector3D> &velocities, QVector<double> &tangentialVelocities, QVector<double> &normalVelocitiesBefore, QVector<double> &normalVelocitiesAfter, QVector<double> &normalVelocitiesEnd,QVector<std::shared_ptr<MultiFrame> > &sectionFrames, int currentStep)
 {
     QFile paraviewFile(path+"/mesh/visual.vtk."+QString::number(currentStep));
     if (paraviewFile.open(QIODevice::WriteOnly))
@@ -833,6 +833,15 @@ void Logger::createParaviewFile(QVector<std::shared_ptr<MultiFrame> > &frames, Q
             i==0 ? paraviewTs<<normalVelocitiesAfter[i]<<"\n" : paraviewTs<<" "<<normalVelocitiesAfter[i]<<"\n";
         paraviewTs<<"\n";
         paraviewTs.flush();
+
+
+        paraviewTs<<"SCALARS normal_speedC float 1\n";
+        paraviewTs<<"LOOKUP_TABLE default\n";
+        for (int i=0; i<forces.size(); i++)
+            i==0 ? paraviewTs<<normalVelocitiesEnd[i]<<"\n" : paraviewTs<<" "<<normalVelocitiesEnd[i]<<"\n";
+        paraviewTs<<"\n";
+        paraviewTs.flush();
+
         paraviewTs<<"VECTORS velocities float\n";
         for (int i=0; i<velocities.size();i++)
             paraviewTs<<velocities[i].x()<<" "<<velocities[i].y()<<" "<<velocities[i].z()<<"\n";
@@ -894,7 +903,7 @@ void Logger::createParaviewTraceVerticesFile(QVector<Vorton> &vortons, int curre
             traceStream<<QString::number(tail.x())+" "+QString::number(tail.y())+" "+QString::number(tail.z())+"\n";
         }
         traceStream.flush();
-        traceStream<<"VERTICES "+QString::number(vortons.size())+" "+QString::number(vortons.size()*3)+"\n";
+        traceStream<<"LINES "+QString::number(vortons.size())+" "+QString::number(vortons.size()*3)+"\n";
         for (int i=0; i<vortons.size()*2;i=i+2)
         {
             traceStream<<"2 "+QString::number(i)+" "+QString::number(i+1)+"\n";

@@ -57,6 +57,7 @@ private:
 
 private slots:
     void openDirectory();
+    void changeGetBack();
     void wheelEvent (QWheelEvent* e);
     void on_toolButtonViewXY_clicked();
     void on_toolButtonViewYX_clicked();

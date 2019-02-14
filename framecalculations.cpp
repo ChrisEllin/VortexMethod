@@ -68,6 +68,7 @@ void FrameCalculations::matrixCalc(QVector<std::shared_ptr<MultiFrame> > frames,
     for (int i=0; i<matrixSize-1; i++)
     {
         for (int j=0; j<matrixSize-1; j++)
+            //matrix(i,j)=Vector3D::dotProduct(frames[j]->qHelp(controlPoints[i]), normals[i]);
             matrix(i,j)=Vector3D::dotProduct(frames[j]->qHelp(controlPoints[i]), normals[i]);
     }
     for (int i=0; i<matrixSize-1; i++)
@@ -411,6 +412,30 @@ void FrameCalculations::setMatrixSize(int size)
     matrixSize=size;
 }
 
+void FrameCalculations::getBackAndRotate(bool getBackGA,QVector<Vorton> &vortons, const Vector3D bodyNose, const double xEnd, const double layerHeight, const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals, QVector<Vorton> &oldvortons, QVector<std::shared_ptr<MultiFrame>> &frames, FormingParameters forming)
+{
+    if (!getBackGA)
+        getBackAndRotateRotationBody(vortons, bodyNose, xEnd,layerHeight,controlPoints, normals, forming);
+    else
+        getBackAndRotateRotationBodyGA(vortons, oldvortons,frames, xEnd,bodyNose,forming,layerHeight,controlPoints, normals);
+}
+
+void FrameCalculations::getBackAndRotate(bool getBackGA, QVector<Vorton> &vortons, const Vector3D center, const double radius, const double layerHeight, const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals, QVector<Vorton> &oldvortons, QVector<std::shared_ptr<MultiFrame> > &frames)
+{
+    if (!getBackGA)
+        getBackAndRotateSphere(vortons,center,radius,layerHeight,controlPoints,normals);
+    else
+        getBackAndRotateSphereGA(vortons,center,radius,layerHeight,controlPoints,normals,oldvortons,frames);
+}
+
+void FrameCalculations::getBackAndRotate(bool getBackGA, QVector<Vorton> &vortons, QVector<Vorton> &oldvortons, QVector<std::shared_ptr<MultiFrame> > &frames, const double xEnd, const double layerHeight, const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals, const Vector3D bodyNose, FormingParametersRBC forming)
+{
+    if (!getBackGA)
+        getBackAndRotateRotationCutBody(vortons, xEnd,layerHeight,controlPoints, normals, bodyNose, forming);
+    else
+        getBackAndRotateRotationCutBodyGA(vortons, oldvortons,frames, xEnd,layerHeight,controlPoints, normals,bodyNose,forming);
+}
+
 IntegrationResults FrameCalculations::integrateParameters(double length, double bodyDensity, FormingParameters parameters)
 {
     SimpsonIntegration integration(length,bodyDensity,parameters);
@@ -718,6 +743,106 @@ void FrameCalculations::getBackAndRotateSphere(QVector<Vorton> &vortons, const V
         }
     }
     timers.getBackAndRotateTimer=start.elapsed()*0.001;
+    qDebug()<<"getBack";
+}
+
+void FrameCalculations::getBackAndRotateSphereGA(QVector<Vorton> &vortons, const Vector3D center, const double radius, const double layerHeight, const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals, QVector<Vorton> &oldvortons, QVector<std::shared_ptr<MultiFrame> > &frames)
+{
+    for (int i=vortons.size()-1; i>=0; i--)
+    {
+        if (FrameCalculations::insideSphere(vortons[i],center,radius))
+        {
+            bool founded=false;
+            Vector3D tau=oldvortons[i].getMid()-vortons[i].getMid();
+            for (int i=0;i<frames.size();i++)
+            {
+
+                if (frames[i]->getAnglesNum()==4)
+                {
+                    int j=0;
+                    while (j<3)
+                    {
+                        Vector3D r1=frames[i]->at(j).getTail();
+                        Vector3D r2=frames[i]->at(j+1).getTail();
+                        Vector3D r3;
+                        if (j+2==4)
+                            r3=frames[i]->at(0).getTail();
+                        else
+                            r3=frames[i]->at(j+2).getTail();
+                        Vector3D e1=r2-r1;
+                        Vector3D e2=r3-r1;
+                        double mixedProd=Vector3D::mixedProduct(tau,e1,e2);
+                        if (fabs(mixedProd)<0.0000000001)
+                        {
+                            double t=Vector3D::mixedProduct(r1-vortons[i].getMid(),e1,e2)/mixedProd;
+                            if (t>0.0 && t<1.0)
+                            {
+                                Vector3D rtilda=vortons[i].getMid()+t*tau;
+                                Vector3D a=r1-rtilda;
+                                Vector3D b=r2-rtilda;
+                                Vector3D c=r3-rtilda;
+
+
+                                if (coDirectionallyCheck(a,b,c))
+                                {
+                                    vortons[i].setMid(vortons[i].getMid()+2*t*tau);
+                                    vortons[i].setTail(vortons[i].getTail()+2*t*tau);
+                                    founded=true;
+                                    break;
+                                }
+                            }
+                        }
+                        j+=2;
+                    }
+                }
+                else {
+                    int j=0;
+                    while (j<frames[i]->getAnglesNum())
+                    {
+                        Vector3D r2=frames[i]->at(j).getTail();
+                        Vector3D r1=frames[i]->getCenter();
+                        Vector3D r3;
+                        if (j+1==frames[i]->getAnglesNum())
+                            r3=frames[i]->at(0).getTail();
+                        else
+                            r3=frames[i]->at(j+1).getTail();
+                        Vector3D e1=r2-r1;
+                        Vector3D e2=r3-r1;
+                        double mixedProd=Vector3D::mixedProduct(tau,e1,e2);
+                        if (fabs(mixedProd)<0.0000000001)
+                        {
+                            double t=Vector3D::mixedProduct(r1-vortons[i].getMid(),e1,e2)/mixedProd;
+                            if (t>0.0 && t<1.0)
+                            {
+                                Vector3D rtilda=vortons[i].getMid()+t*tau;
+                                Vector3D a=r1-rtilda;
+                                Vector3D b=r2-rtilda;
+                                Vector3D c=r3-rtilda;
+                                if (coDirectionallyCheck(a,b,c))
+                                {
+                                    vortons[i].setMid(vortons[i].getMid()+2*t*tau);
+                                    vortons[i].setTail(vortons[i].getTail()+2*t*tau);
+                                    founded=true;
+                                    break;
+                                }
+                            }
+                        }
+                        j++;
+                    }
+                }
+                if (founded)
+                    break;
+            }
+            counters.gotBackNum++;
+        }
+        if(FrameCalculations::insideSphereLayer(vortons[i],center,radius,layerHeight))
+        {
+            QPair<double,int> closest=BodyFragmentation::findClosest(vortons[i].getMid(),controlPoints, normals);
+            vortons[i].rotateAroundNormal(normals[closest.second]);
+            counters.rotatedNum++;
+        }
+    }
+    qDebug()<<"getBackGA";
 }
 
 /*!
@@ -780,6 +905,7 @@ void FrameCalculations:: getBackAndRotateRotationBody(QVector<Vorton>& vortons, 
         }
     }
     timers.getBackAndRotateTimer=start.elapsed()*0.001;
+    qDebug()<<"getBack";
 }
 
 void FrameCalculations::getBackAndRotateMovingRotationBody(QVector<Vorton> &vortons,Vector3D centerMassWorld, const Vector3D bodyNose, const double xEnd, const double layerHeight, const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals, Eigen::Matrix3d rotationMatrix, FormingParameters forming)
@@ -837,9 +963,109 @@ void FrameCalculations::getBackAndRotateRotationCutBody(QVector<Vorton> &vortons
         }
     }
     timers.getBackAndRotateTimer=start.elapsed()*0.001;
+    qDebug()<<"getBack";
 }
 
-void FrameCalculations::getBackAndRotateRotationCutBodyGA(QVector<Vorton> &vortons,QVector<Vorton> &oldvortons,QVector<std::shared_ptr<MultiFrame>> &frames,const double xEnd, const Vector3D bodyNose, FormingParameters forming,const double layerHeight, const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals)
+void FrameCalculations::getBackAndRotateRotationCutBodyGA(QVector<Vorton> &vortons, QVector<Vorton> &oldvortons, QVector<std::shared_ptr<MultiFrame> > &frames, const double xEnd, const double layerHeight, const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals, const Vector3D bodyNose, FormingParametersRBC forming)
+{
+    for (int i=vortons.size()-1; i>=0; i--)
+    {
+        if (FrameCalculations::insideRotationCutBody(vortons[i],xEnd, bodyNose,forming))
+        {
+            bool founded=false;
+            Vector3D tau=oldvortons[i].getMid()-vortons[i].getMid();
+            for (int i=0;i<frames.size();i++)
+            {
+
+                if (frames[i]->getAnglesNum()==4)
+                {
+                    int j=0;
+                    while (j<3)
+                    {
+                        Vector3D r1=frames[i]->at(j).getTail();
+                        Vector3D r2=frames[i]->at(j+1).getTail();
+                        Vector3D r3;
+                        if (j+2==4)
+                            r3=frames[i]->at(0).getTail();
+                        else
+                            r3=frames[i]->at(j+2).getTail();
+                        Vector3D e1=r2-r1;
+                        Vector3D e2=r3-r1;
+                        double mixedProd=Vector3D::mixedProduct(tau,e1,e2);
+                        if (fabs(mixedProd)<0.0000000001)
+                        {
+                            double t=Vector3D::mixedProduct(r1-vortons[i].getMid(),e1,e2)/mixedProd;
+                            if (t>0.0 && t<1.0)
+                            {
+                                Vector3D rtilda=vortons[i].getMid()+t*tau;
+                                Vector3D a=r1-rtilda;
+                                Vector3D b=r2-rtilda;
+                                Vector3D c=r3-rtilda;
+
+
+                                if (coDirectionallyCheck(a,b,c))
+                                {
+                                    vortons[i].setMid(vortons[i].getMid()+2*t*tau);
+                                    vortons[i].setTail(vortons[i].getTail()+2*t*tau);
+                                    founded=true;
+                                    break;
+                                }
+                            }
+                        }
+                        j+=2;
+                    }
+                }
+                else {
+                    int j=0;
+                    while (j<frames[i]->getAnglesNum())
+                    {
+                        Vector3D r2=frames[i]->at(j).getTail();
+                        Vector3D r1=frames[i]->getCenter();
+                        Vector3D r3;
+                        if (j+1==frames[i]->getAnglesNum())
+                            r3=frames[i]->at(0).getTail();
+                        else
+                            r3=frames[i]->at(j+1).getTail();
+                        Vector3D e1=r2-r1;
+                        Vector3D e2=r3-r1;
+                        double mixedProd=Vector3D::mixedProduct(tau,e1,e2);
+                        if (fabs(mixedProd)<0.0000000001)
+                        {
+                            double t=Vector3D::mixedProduct(r1-vortons[i].getMid(),e1,e2)/mixedProd;
+                            if (t>0.0 && t<1.0)
+                            {
+                                Vector3D rtilda=vortons[i].getMid()+t*tau;
+                                Vector3D a=r1-rtilda;
+                                Vector3D b=r2-rtilda;
+                                Vector3D c=r3-rtilda;
+                                if (coDirectionallyCheck(a,b,c))
+                                {
+                                    vortons[i].setMid(vortons[i].getMid()+2*t*tau);
+                                    vortons[i].setTail(vortons[i].getTail()+2*t*tau);
+                                    founded=true;
+                                    break;
+                                }
+                            }
+                        }
+                        j++;
+                    }
+                }
+                if (founded)
+                    break;
+            }
+            counters.gotBackNum++;
+        }
+        if(FrameCalculations::insideRotationCutBodyLayer(vortons[i],xEnd,layerHeight,bodyNose,forming))
+        {
+            QPair<double,int> closest=BodyFragmentation::findClosest(vortons[i].getMid(),controlPoints, normals);
+            vortons[i].rotateAroundNormal(normals[closest.second]);
+            counters.rotatedNum++;
+        }
+    }
+    qDebug()<<"getBackGA";
+}
+
+void FrameCalculations::getBackAndRotateRotationBodyGA(QVector<Vorton> &vortons,QVector<Vorton> &oldvortons,QVector<std::shared_ptr<MultiFrame>> &frames,const double xEnd, const Vector3D bodyNose, FormingParameters forming,const double layerHeight, const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals)
 {
     for (int i=vortons.size()-1; i>=0; i--)
     {
@@ -935,6 +1161,7 @@ void FrameCalculations::getBackAndRotateRotationCutBodyGA(QVector<Vorton> &vorto
             counters.rotatedNum++;
         }
     }
+    qDebug()<<"getBackGA";
 }
 
 /*!

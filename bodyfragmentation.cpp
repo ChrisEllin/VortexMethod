@@ -474,7 +474,7 @@ void BodyFragmentation::rotationCutBodyFragmantation()
 
     double newBeg=rotationBottomCutBody.xBeg+rotationBottomCutBody.sectionDistance;
 
-    double newEnd=rotationBottomCutBody.xEnd+0.01;
+    double newEnd=rotationBottomCutBody.xEnd+rotationBottomCutBody.delta;
     double fi0 = 2*M_PI/rotationBottomCutBody.fiFragNum;
     double height=(newEnd-newBeg)/(NFRAG-1);
     s[0]=0.0;

@@ -25,6 +25,7 @@ private:
     bool checkFinishing();
 public:
     static bool interrupted;
+    static bool getBackGA;
     Solver();
     void setMotionType(const MotionType type);
     Solver(const SolverParameters& parameters);
