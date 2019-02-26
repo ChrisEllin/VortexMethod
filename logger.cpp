@@ -61,6 +61,7 @@ Logger::Logger(const BodyType _type, const SolvType _stype)
     QDir dataDir(path);
     dataDir.mkdir("traces");
     dataDir.mkdir("mesh");
+    dataDir.mkdir("streamlines");
     createFiles();
 }
 
@@ -122,6 +123,7 @@ Logger::Logger(BodyType _type, QString _path, SolvType _stype)
     QDir dataDir(path);
     dataDir.mkdir("traces");
     dataDir.mkdir("mesh");
+    dataDir.mkdir("streamlines");
     createFiles();
 }
 
@@ -850,36 +852,31 @@ void Logger::createParaviewFile(QVector<std::shared_ptr<MultiFrame> > &frames, Q
     paraviewFile.close();
 }
 
-void Logger::createParaviewStreamlinesFile(QVector<Vector3D> velocities, int currentStep)
+void Logger::createParaviewStreamlinesFile(QVector<Vector3D> velocities,QPair<int,int> boundary,double step, int currentStep)
 {
-    QFile streamLinesFile(path+"/streamlines.vtk."+QString::number(currentStep));
+    QFile streamLinesFile(path+"/streamlines/streamlines.vtk."+QString::number(currentStep));
     if (streamLinesFile.open(QIODevice::WriteOnly))
     {
+        qDebug()<<boundary.first;
+        qDebug()<<boundary.second;
         QTextStream streamLinesTextStream(&streamLinesFile);
         streamLinesTextStream<<"# vtk DataFile Version 3.0\n";
         streamLinesTextStream<<"vtk output\n";
         streamLinesTextStream<<"ASCII\n";
-        streamLinesTextStream<<"DATASET RECTLINEAR_GRID\n";
-        int points=101*101*101;
-        streamLinesTextStream<<"DIMENSIONS 101 101 101\n";
-        double step=0.1;
-        streamLinesTextStream<<"X_COORDINATES 101 float\n";
-        for (double i=-5.0; i<5.0000001; i+=step)
-        {
-            streamLinesTextStream<<QString::number(i)+"\t";
-        }
-        streamLinesTextStream<<"\n";
-        streamLinesTextStream<<"Y_COORDINATES 101 float\n";
-        for (double i=-5.0; i<5.0000001; i+=step)
-        {
-            streamLinesTextStream<<QString::number(i)+"\t";
-        }
-        streamLinesTextStream<<"\n";
-        streamLinesTextStream<<"Z_COORDINATES 101 float\n";
-        for (double i=-5.0; i<5.0000001; i+=step)
-        {
-            streamLinesTextStream<<QString::number(i)+"\t";
-        }
+        streamLinesTextStream<<"DATASET STRUCTURED_POINTS\n";
+        int xDimension=static_cast<int>(ceil(static_cast<double>(boundary.first+2)/step))+1;
+        int yDimension=static_cast<int>(ceil(static_cast<double>(boundary.second*2+2)/step))+1;
+        streamLinesTextStream<<"DIMENSIONS "+QString::number(xDimension)+" "+QString::number(yDimension)+" "+QString::number(yDimension)+"\n";
+        int pointsQuant=xDimension*yDimension*yDimension;
+        streamLinesTextStream<<"ASPECT_RATIO "+QString::number(step)+" "+QString::number(step)+" "+QString::number(step)+"\n";
+        streamLinesTextStream<<"ORIGIN -1 "+QString::number(-1*static_cast<int>(ceil(boundary.second+1)))+" "+QString::number(-1*static_cast<int>(ceil(boundary.second+1)))+"\n";
+        streamLinesTextStream<<"POINT_DATA "+QString::number(pointsQuant)+" \n";
+        streamLinesTextStream<<"VECTORS velocities float\n";
+        if (pointsQuant!=velocities.size())
+            qDebug()<<"Error!";
+        for (int i=0; i<velocities.size();i++)
+            streamLinesTextStream<<QString::number(velocities[i].x())+" "+QString::number(velocities[i].y())+" "+QString::number(velocities[i].z())+"\n";
+        streamLinesTextStream.flush();
     }
     streamLinesFile.close();
 }

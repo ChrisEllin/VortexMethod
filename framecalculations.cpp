@@ -554,6 +554,20 @@ double FrameCalculations::pressureCalc(const Vector3D point, const Vector3D stre
     return streamPres+density*(velAdd+scal/tau-framesAdd/tau);
 }
 
+double FrameCalculations::pressureSetuha(const Vector3D point, const Vector3D streamVel, const double streamPres, const double density, QVector<std::shared_ptr<MultiFrame> > frames,QVector<double> oldGammas, QVector<Vorton> freeVortons, double tau)
+{
+    double velAdd=0.5*(Vector3D::dotProduct(streamVel, streamVel)-pow((FrameCalculations::velocity(point, streamVel, freeVortons, frames).length()),2));
+    double scal = 0.0;
+    double framesAdd = 0.0;
+    for (int i=0; i<freeVortons.size(); i++)
+        scal+=Vector3D::dotProduct(freeVortons[i].getMove(), freeVortons[i].velocity(point));
+    for (int i=0; i<frames.size(); i++)
+    {
+        framesAdd+=(frames[i]->getVorticity()-oldGammas[i])*frames[i]->fi(point);
+    }
+    return streamPres+density*(velAdd-scal/tau-framesAdd/tau);
+}
+
 /*!
 Функция расчета силы, действующей на тело
 \param streamVel Скорость потока
@@ -574,6 +588,19 @@ Vector3D FrameCalculations::forceCalc(const Vector3D streamVel, double streamPre
     for (int i=0; i<controlPointsRaised.size(); i++)
     {
         double pressure=FrameCalculations::pressureCalc(controlPointsRaised[i], streamVel, streamPres, density, frames, freeVortons, tau);
+        force-=pressure*squares[i]*normals[i];
+    }
+    timers.forceTimer=start.elapsed()*0.001;
+    return force;
+}
+
+Vector3D FrameCalculations::forceSetuha(const Vector3D streamVel, double streamPres, double density, QVector<std::shared_ptr<MultiFrame> > frames, const QVector<Vorton> &freeVortons, const double tau, const QVector<double> &squares, const QVector<Vector3D> &controlPointsRaised, const QVector<Vector3D> &normals, QVector<double> &gammas)
+{
+    QTime start = QTime::currentTime();
+    Vector3D force;
+    for (int i=0; i<controlPointsRaised.size(); i++)
+    {
+        double pressure=FrameCalculations::pressureSetuha(controlPointsRaised[i], streamVel, streamPres, density, frames, gammas,freeVortons, tau);
         force-=pressure*squares[i]*normals[i];
     }
     timers.forceTimer=start.elapsed()*0.001;
@@ -686,6 +713,53 @@ void FrameCalculations::cpRotationBodyDegree(const int stepNum, int stepsQuant, 
         int j=1;
         int iStart=static_cast<int>(static_cast<double>(degree)/360.0*fiFragNum);
         for (int i=iStart; i<controlPointsRaised.size()-2; i=i+fiFragNum)
+        {
+            double pres=pressureCalc(controlPointsRaised[i],streamVel,streamPres,density,frames,freeVortons,tau);
+            cp[j]+=(pres-streamPres)/(density*Vector3D::dotProduct(streamVel,streamVel)*0.5);
+            j++;
+        }
+        pres=pressureCalc(controlPointsRaised[controlPointsRaised.size()-1],streamVel,streamPres,density,frames,freeVortons,tau);
+        cp[j]+=(pres-streamPres)/(density*Vector3D::dotProduct(streamVel,streamVel)*0.5);
+    }
+}
+
+void FrameCalculations::cpSumRotationCutBody(const int stepNum, int stepsQuant, QVector<double> &cp, const int fiFragNum, const int rFragNum, const Vector3D streamVel, const double streamPres, const double density, const QVector<std::shared_ptr<MultiFrame> > frames, QVector<Vorton> freeVortons, double tau, const QVector<Vector3D> &controlPointsRaised)
+{
+    int cpQuant;
+    if (stepsQuant>200)
+        cpQuant=200;
+    else
+        cpQuant=stepsQuant;
+    if (stepNum>=stepsQuant-cpQuant)
+    {
+        double pres=pressureCalc(controlPointsRaised[controlPointsRaised.size()-2],streamVel,streamPres,density,frames,freeVortons,tau);
+        cp[0]+=(pres-streamPres)/(density*Vector3D::dotProduct(streamVel,streamVel)*0.5);
+        int j=1;
+        for (int i=0; i<controlPointsRaised.size()-rFragNum*fiFragNum-1; i=i+fiFragNum)
+        {
+            pres=pressureCalc(controlPointsRaised[i],streamVel,streamPres,density,frames,freeVortons,tau);
+            cp[j]+=(pres-streamPres)/(density*Vector3D::dotProduct(streamVel,streamVel)*0.5);
+            j++;
+        }
+        pres=pressureCalc(controlPointsRaised[controlPointsRaised.size()-1],streamVel,streamPres,density,frames,freeVortons,tau);
+        cp[j]+=(pres-streamPres)/(density*Vector3D::dotProduct(streamVel,streamVel)*0.5);
+    }
+}
+
+void FrameCalculations::cpRotationCutBodyDegree(const int stepNum, int stepsQuant, QVector<double> &cp, const int fiFragNum, const int rFragNum, const Vector3D streamVel, const double streamPres, const double density, const QVector<std::shared_ptr<MultiFrame> > frames, QVector<Vorton> freeVortons, double tau, const QVector<Vector3D> &controlPointsRaised, int degree)
+{
+    int cpQuant;
+    if (stepsQuant>200)
+        cpQuant=200;
+    else
+        cpQuant=stepsQuant;
+    if (stepNum>=stepsQuant-cpQuant)
+    {
+        double pres=pressureCalc(controlPointsRaised[controlPointsRaised.size()-2],streamVel,streamPres,density,frames,freeVortons,tau);
+        cp[0]+=(pres-streamPres)/(density*Vector3D::dotProduct(streamVel,streamVel)*0.5);
+        int j=1;
+        int iStart=static_cast<int>(static_cast<double>(degree)/360.0*fiFragNum);
+        for (int i=iStart; i<controlPointsRaised.size()-rFragNum*fiFragNum-1; i=i+fiFragNum)
         {
             double pres=pressureCalc(controlPointsRaised[i],streamVel,streamPres,density,frames,freeVortons,tau);
             cp[j]+=(pres-streamPres)/(density*Vector3D::dotProduct(streamVel,streamVel)*0.5);
@@ -895,6 +969,7 @@ void FrameCalculations:: getBackAndRotateRotationBody(QVector<Vorton>& vortons, 
             QPair<double,int> closest=BodyFragmentation::findClosest(vortons[i].getMid(),controlPoints, normals);
             vortons[i].setMid(vortons[i].getMid()+2.0*closest.first*normals[closest.second]);
             vortons[i].setTail(vortons[i].getTail()+2.0*closest.first*normals[closest.second]);
+            vortons[i].setMove(vortons[i].getMove()+2.0*closest.first*normals[closest.second]);
             counters.gotBackNum++;
         }
         if(FrameCalculations::insideRotationBodyLayer(vortons[i],bodyNose,xEnd,layerHeight, forming))
@@ -953,6 +1028,7 @@ void FrameCalculations::getBackAndRotateRotationCutBody(QVector<Vorton> &vortons
             QPair<double,int> closest=BodyFragmentation::findClosest(vortons[i].getMid(),controlPoints, normals);
             vortons[i].setMid(vortons[i].getMid()+2.0*closest.first*normals[closest.second]);
             vortons[i].setTail(vortons[i].getTail()+2.0*closest.first*normals[closest.second]);
+            vortons[i].setMove(vortons[i].getMove()+2.0*closest.first*normals[closest.second]);
             counters.gotBackNum++;
         }
         if(FrameCalculations::insideRotationCutBodyLayer(vortons[i],xEnd,layerHeight,bodyNose,forming))
@@ -1291,6 +1367,15 @@ void FrameCalculations::translateAndRotate(QVector<std::shared_ptr<MultiFrame>>&
 //    }
 
     dCloseODE();
+}
+
+void FrameCalculations::velForStreamLines(QVector<Vector3D> &velocities, Vector3D streamVel,double step, QVector<Vorton> &freeVortons, QVector<std::shared_ptr<MultiFrame> > &frames, QPair<int,int> boundaries)
+{
+    velocities.clear();
+     for (double i1=-1*(boundaries.second+1); i1<=boundaries.second+1.0000001;i1=i1+step)
+    for (double j1=-1*(boundaries.second+1);j1<=boundaries.second+1.0000001;j1=j1+step)
+        for (double k1=-1.0;k1<=boundaries.first+1.0000001;k1=k1+step)
+            velocities.push_back(FrameCalculations::velocity(Vector3D(k1,j1,i1),streamVel,freeVortons,frames));
 }
 
 bool FrameCalculations::coDirectionallyCheck(const Vector3D a, const Vector3D b, const Vector3D c)
@@ -1747,6 +1832,11 @@ void FrameCalculations::clearCounters()
     counters.clear();
 }
 
+int FrameCalculations::getMatrixSize()
+{
+    return matrixSize;
+}
+
 /*!
 Функция обнуляющая значения сработавших ограничений
 */
@@ -1785,3 +1875,4 @@ Vector3D fromEigenVector(Eigen::Vector3d vec)
     Vector3D vec3d(vec.x(),vec.y(),vec.z());
     return vec3d;
 }
+

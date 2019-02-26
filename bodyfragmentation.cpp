@@ -155,6 +155,7 @@ BodyFragmentation::BodyFragmentation(BodyType body, const FragmentationParameter
     case SPHERE:
     {
         sphere = SphereParameters {param.sphereFiFragNum, param.sphereTetaFragNum, param.sphereRad, param.delta, param.pointsRaising,param.vortonsRad};
+        streamLinesSize=QPair<int,int>(static_cast<int>(ceil(param.sphereRad*2)),static_cast<int>(ceil(param.sphereRad)));
         sphereFragmentation();
         break;
     }
@@ -168,6 +169,7 @@ BodyFragmentation::BodyFragmentation(BodyType body, const FragmentationParameter
     {
         rotationBody = RotationBodyParameters {param.rotationBodyFiFragNum, param.rotationBodyPartFragNum, param.rotationBodyXBeg, param.rotationBodyXEnd,param.rotationBodySectionDistance,param.rotationBodySectionEndDistance,  param.delta, param.pointsRaising, param.vortonsRad};
         forming=FormingParameters{param.formingDiameter,param.formingTailDiameter, param.formingLengthSectorOne,param.formingLengthSectorTwo,param.formingAngle,param.rotationBodyFormingType};
+        streamLinesSize=QPair<int,int>(static_cast<int>(ceil(param.formingDiameter*0.5+param.formingLengthSectorOne+param.formingLengthSectorTwo)),static_cast<int>(ceil(param.formingDiameter*0.5)));
         rotationBodyFragmantation();
         break;
     }
@@ -177,12 +179,14 @@ BodyFragmentation::BodyFragmentation(BodyType body, const FragmentationParameter
         {
             rotationBottomCutBody = RotationCutBodyParameters {param.rotationBodyFiFragNum, param.rotationBodyPartFragNum,param.rotationBodyRFragNum, param.rotationBodyXBeg, param.rotationBodyXEnd,param.rotationBodySectionDistance,param.rotationBodySectionEndDistance,  param.delta, param.pointsRaising, param.vortonsRad};
             formingRBC=FormingParametersRBC{param.formingEllipsoidDiameter,param.formingTailDiameter,param.formingEllisoidLength,param.formingConeLength,param.formingFullLength,param.rotationBodyRBCFormingType};
+            streamLinesSize=QPair<int,int>(static_cast<int>(ceil(param.formingFullLength)),static_cast<int>(ceil(param.formingEllipsoidDiameter*0.5)));
             rotationCutBodyFragmantation();
         }
         else
         {
             rotationBottomCutBody = RotationCutBodyParameters {param.rotationBodyFiFragNum, param.rotationBodyPartFragNum,param.rotationBodyRFragNum, param.rotationBodyXBeg, param.rotationBodyXEnd,param.rotationBodySectionDistance,param.rotationBodySectionEndDistance,  param.delta, param.pointsRaising, param.vortonsRad};
             formingRBC=FormingParametersRBC{param.formingEllipsoidDiameter,param.formingTailDiameter,param.formingEllisoidLength,param.formingConeLength,param.formingFullLength,param.rotationBodyRBCFormingType};
+            streamLinesSize=QPair<int,int>(static_cast<int>(ceil(param.formingFullLength)),static_cast<int>(ceil(param.formingEllipsoidDiameter*0.5)));
         }
         break;
     }
@@ -328,6 +332,11 @@ void BodyFragmentation::cylinderFragmentation()
 
         }
     }
+}
+
+QPair<int, int> BodyFragmentation::getStreamLinesSizes()
+{
+    return streamLinesSize;
 }
 
 /*!

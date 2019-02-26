@@ -384,6 +384,10 @@ void MainWindow::on_sphereSolverPushButton_clicked()
     SolverParameters solvPar=settings->getSolverParameters();
 
     *solver=Solver(solvPar);
+    if (ui->acceleratedMotionAction->isChecked())
+        solver->setMotionType(MotionType::ACCELERATED);
+    else
+        solver->setMotionType(MotionType::NOACCELERATE);
     QFuture<void> sphereFuture=QtConcurrent::run(solver,&Solver::sphereSolver, fragPar);
     solving=true;
     ui->pointsRaisingSphereLineEdit->setDisabled(true);
@@ -1163,6 +1167,7 @@ void MainWindow::on_rotationCutBodySolverPushButton_clicked()
         fragPar.formingTailDiameter=ui->formingRBCTailDiameterLineEdit->text().toDouble();
         fragPar.formingEllisoidLength=ui->formingRBCSectorOneLength->text().toDouble();
         fragPar.formingConeLength=ui->formingRBCSectorTwoLength->text().toDouble();
+        fragPar.formingFullLength=fragPar.formingEllisoidLength+fragPar.formingConeLength;
         break;
     }
     case ELLIPSOID_CYLINDER:
@@ -1186,6 +1191,7 @@ void MainWindow::on_rotationCutBodySolverPushButton_clicked()
     SolverParameters solvPar=settings->getSolverParameters();
 
     *solver=Solver(solvPar);
+
     if (ui->acceleratedMotionAction->isChecked())
         solver->setMotionType(MotionType::ACCELERATED);
     else

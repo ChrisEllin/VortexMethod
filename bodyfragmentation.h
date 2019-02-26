@@ -218,6 +218,7 @@ private:
     RotationBodyParameters rotationBody; ///<Параметры разбиения тела вращения
     RotationCutBodyParameters rotationBottomCutBody; ///<Параметры разбиения тела вращения со срезом дна
     FormingParameters forming;
+    QPair<int,int> streamLinesSize;
     FormingParametersRBC formingRBC;
     //bool launch;
 public:
@@ -225,6 +226,7 @@ public:
 //    BodyFragmentation(const FragmentationParameters& param, const int i, const Vector3D &bodyVel, const double tau);
     void sphereFragmentation();
     void cylinderFragmentation();
+    QPair<int,int> getStreamLinesSizes();
     void rotationBodyFragmantation();
     void rotationCutBodyFragmantation();
     void rotationCutBodyLaunchFragmentation(const int i, const Vector3D &bodyVel, const double tau);

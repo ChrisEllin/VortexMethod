@@ -26,6 +26,8 @@ enum SolvType {
 
     Создает файлы для записи начальных параметров расчета(паспорт-файл), логов, сил и распределения Ср
 */
+
+
 class Logger:public QObject
 {
     Q_OBJECT
@@ -62,9 +64,10 @@ public:
     void createParaviewFile(QVector<std::shared_ptr<MultiFrame>> &frames, QVector<double> &forces, QVector<Vector3D> &velocities, QVector<double> &tangentialVelocities, QVector<double> &normalVelocities, QVector<std::shared_ptr<MultiFrame> > &sectionFrames, int currentStep);
     void createParaviewFile(QVector<std::shared_ptr<MultiFrame>> &frames, QVector<double> &forces, QVector<Vector3D> &velocities, QVector<double> &tangentialVelocities, QVector<double> &normalVelocities, int currentStep);
     void createParaviewFile(QVector<std::shared_ptr<MultiFrame>> &frames, QVector<double> &forces, QVector<Vector3D> &velocities, QVector<double> &tangentialVelocities, QVector<double> &normalVelocitiesBefore, QVector<double> &normalVelocitiesAfter, QVector<double> &normalVelocitiesEnd, QVector<std::shared_ptr<MultiFrame> > &sectionFrames, int currentStep);
-    void createParaviewStreamlinesFile(QVector<Vector3D> velocities, int currentStep);
+    void createParaviewStreamlinesFile(QVector<Vector3D> velocities, QPair<int, int> boundary, double step, int currentStep);
     void createParaviewTraceVerticesFile(QVector<Vorton> &vortons, int currentStep);
     void createParaviewTraceFile(QVector<Vorton> &vortons, int currentStep);
+
     void closeFiles();
     QString getPath();
     void openVortonFiles(QString vortonsDir);
