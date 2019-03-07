@@ -83,6 +83,7 @@ private slots:
     void on_sphereFreeMotionSolverPushButton_clicked();
     void updateScreen();
     void calcAverLength();
+
     void on_variateCylinderSolverPushButton_clicked();
 
     void on_variateRotationBodySolverPushButton_clicked();

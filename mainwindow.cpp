@@ -94,7 +94,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect (ui->epsilonRotationBodyLineEdit, SIGNAL(textChanged(const QString)),settings,SLOT(calcAttributes(const QString)));
     connect (ui->epsilonRotationCutBodyLineEdit, SIGNAL(textChanged(const QString)),settings,SLOT(calcAttributes(const QString)));
     connect (ui->fiRotationBodyLineEdit, SIGNAL(textChanged(const QString)), this, SLOT(calcAverLength()));
-
+    connect (ui->fiRotationCutBodyLineEdit, SIGNAL(textChanged(const QString)), this, SLOT(calcAverLength()));
     connect (ui->epsilonCylinderLineEdit, SIGNAL(textChanged(const QString)),this,SLOT(calcAverLength()));
     connect (ui->epsilonSphereLineEdit, SIGNAL(textChanged(const QString)),this,SLOT(calcAverLength()));
     connect (ui->epsilonRotationBodyLineEdit, SIGNAL(textChanged(const QString)),this,SLOT(calcAverLength()));
@@ -1522,20 +1522,34 @@ void MainWindow::calcAverLength()
     case 3:
         switch(ui->stackedWidget_2->currentIndex())
         {
-        case 0:
+        case 1:
+        ui->partRotationCutBodyLineEdit->setText(QString::number(static_cast<int>(ui->fiRotationCutBodyLineEdit->text().toInt()*(ui->formingRBCSectorOneLength->text().toDouble()+ui->formingRBCSectorTwoLength->text().toDouble())/M_PI/ui->formingRBCDiameterLineEdit->text().toDouble())));
+
         panelLength = (M_PI/ui->fiRotationCutBodyLineEdit->text().toInt()*ui->formingRBCDiameterLineEdit->text().toDouble())
                 > ((ui->formingRBCSectorOneLength->text().toDouble()+ui->formingRBCSectorTwoLength->text().toDouble())/ui->partRotationCutBodyLineEdit->text().toInt())
                 ? (M_PI/ui->fiRotationCutBodyLineEdit->text().toInt()*ui->formingRBCDiameterLineEdit->text().toDouble())
                 : ((ui->formingRBCSectorOneLength->text().toDouble()+ui->formingRBCSectorTwoLength->text().toDouble())/ui->partRotationCutBodyLineEdit->text().toInt());
+        ui->radRotationCutBodyLineEdit->setText(QString::number(static_cast<int>(ui->formingRBCTailDiameterLineEdit->text().toDouble()/panelLength)));
+        if (ui->radRotationCutBodyLineEdit->text().toInt()==0)
+            ui->radRotationCutBodyLineEdit->setText("1");
         ui->pointsRaisingRotationCutBodyLineEdit->setText(QString::number(panelLength*0.5));
         break;
-        case 1:
+        case 0:
+            ui->partRotationCutBodyLineEdit->setText(QString::number(static_cast<int>(ui->fiRotationCutBodyLineEdit->text().toInt()*ui->lengthRotationCutBodyLineEdit->text().toDouble()/M_PI/ui->cylDiameterRotationCutBodyLineEdit->text().toDouble())));
             panelLength=ui->lengthRotationCutBodyLineEdit->text().toDouble()/ ui->partRotationCutBodyLineEdit->text().toInt();
+            ui->radRotationCutBodyLineEdit->setText(QString::number(static_cast<int>(ui->cylDiameterRotationCutBodyLineEdit->text().toDouble()/panelLength)));
+            if (ui->radRotationCutBodyLineEdit->text().toInt()==0)
+                ui->radRotationCutBodyLineEdit->setText("1");
             ui->pointsRaisingRotationCutBodyLineEdit->setText(QString::number(panelLength*0.5));
             break;
         case 2:
-            panelLength=ui->formingRBC3FormSectorThreeLength->text().toDouble()+ui->formingRBC3FormSectorOneLength->text().toDouble()+ui->formingRBC3FormSectorTwoLength->text().toDouble()/
+            ui->partRotationCutBodyLineEdit->setText(QString::number(static_cast<int>(ui->fiRotationCutBodyLineEdit->text().toInt()*(ui->formingRBC3FormSectorOneLength->text().toDouble()+ui->formingRBC3FormSectorTwoLength->text().toDouble()+ui->formingRBC3FormSectorThreeLength->text().toDouble())/M_PI/ui->formingRBC3FormDiameterLineEdit->text().toDouble())));
+            panelLength=(ui->formingRBC3FormSectorThreeLength->text().toDouble()+ui->formingRBC3FormSectorOneLength->text().toDouble()+ui->formingRBC3FormSectorTwoLength->text().toDouble())/
                     ui->partRotationCutBodyLineEdit->text().toInt();
+            qDebug()<<panelLength;
+            ui->radRotationCutBodyLineEdit->setText(QString::number(static_cast<int>(ui->formingRBC3FormTailDiameterLineEdit->text().toDouble()/panelLength)));
+            if (ui->radRotationCutBodyLineEdit->text().toInt()==0)
+                ui->radRotationCutBodyLineEdit->setText("1");
             ui->pointsRaisingRotationCutBodyLineEdit->setText(QString::number(panelLength*0.5));
             break;
         }
@@ -1996,7 +2010,10 @@ void MainWindow::calcEpsilonLength(double panel)
 {
 
     if (ui->autoParametersAction->isChecked())
+    {
         ui->epsilonRotationBodyLineEdit->setText(QString::number(panel*0.5));
+        ui->epsilonRotationCutBodyLineEdit->setText(QString::number(panel*0.5));
+    }
 }
 
 void MainWindow::on_formRotationCutBodyComboBox_currentIndexChanged(int index)

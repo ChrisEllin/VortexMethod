@@ -844,6 +844,13 @@ void Logger::createParaviewFile(QVector<std::shared_ptr<MultiFrame> > &frames, Q
         paraviewTs<<"\n";
         paraviewTs.flush();
 
+        paraviewTs<<"SCALARS gamma float 1\n";
+        paraviewTs<<"LOOKUP_TABLE default\n";
+        for (int i=0; i<forces.size(); i++)
+            i==0 ? paraviewTs<<frames[i]->getVorticity()<<"\n" : paraviewTs<<" "<<frames[i]->getVorticity()<<"\n";
+        paraviewTs<<"\n";
+        paraviewTs.flush();
+
         paraviewTs<<"VECTORS velocities float\n";
         for (int i=0; i<velocities.size();i++)
             paraviewTs<<velocities[i].x()<<" "<<velocities[i].y()<<" "<<velocities[i].z()<<"\n";
@@ -857,8 +864,8 @@ void Logger::createParaviewStreamlinesFile(QVector<Vector3D> velocities,QPair<in
     QFile streamLinesFile(path+"/streamlines/streamlines.vtk."+QString::number(currentStep));
     if (streamLinesFile.open(QIODevice::WriteOnly))
     {
-        qDebug()<<boundary.first;
-        qDebug()<<boundary.second;
+        qDebug()<<boundary.first<<"bf";
+        qDebug()<<boundary.second<<"bs";
         QTextStream streamLinesTextStream(&streamLinesFile);
         streamLinesTextStream<<"# vtk DataFile Version 3.0\n";
         streamLinesTextStream<<"vtk output\n";
@@ -906,6 +913,16 @@ void Logger::createParaviewTraceVerticesFile(QVector<Vorton> &vortons, int curre
             traceStream<<"2 "+QString::number(i)+" "+QString::number(i+1)+"\n";
         }
         traceStream.flush();
+        traceStream<<"POINT_DATA "+QString::number(vortons.size()*2)+"\n";
+        traceStream<<"SCALARS gamma double 1\n";
+        traceStream<<"LOOKUP_TABLE default\n";
+        for (int i=0; i<vortons.size();i++)
+        {
+            traceStream<<QString::number(vortons[i].getVorticity())+"\n";
+            traceStream<<QString::number(vortons[i].getVorticity())+"\n";
+        }
+        traceStream.flush();
+
     }
     traceFile.close();
 }

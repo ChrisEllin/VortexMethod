@@ -55,6 +55,24 @@ QVector<double> FrameCalculations::calcTetas(const int tetaFragNum)
     return tetas;
 }
 
+void FrameCalculations::epsZero(QVector<std::shared_ptr<MultiFrame>> &frames)
+{
+    for (int i=0; i<frames.size();i++)
+        frames[i]->setRadius(0.0);
+}
+
+void FrameCalculations::epsNormal(QVector<Vorton> &newVortons, double eps)
+{
+    for (int i=0; i<newVortons.size();i++)
+        newVortons[i].setRadius(eps);
+}
+
+void FrameCalculations::epsNormal(QVector<std::shared_ptr<MultiFrame> > &frames, double eps)
+{
+    for (int i=0; i<frames.size();i++)
+        frames[i]->setRadius(eps);
+}
+
 /*!
 Рассчитывает значения элементов матрицы, составленной из произведения единичных интенсивностей от каждой из рамок на соответствующую нормаль и вычисляет обратную к ней
 \param frames Вектор рамок
@@ -1369,13 +1387,13 @@ void FrameCalculations::translateAndRotate(QVector<std::shared_ptr<MultiFrame>>&
     dCloseODE();
 }
 
-void FrameCalculations::velForStreamLines(QVector<Vector3D> &velocities, Vector3D streamVel,double step, QVector<Vorton> &freeVortons, QVector<std::shared_ptr<MultiFrame> > &frames, QPair<int,int> boundaries)
+void FrameCalculations::velForStreamLines(QVector<Vector3D> &velocities, Vector3D streamVel,double step, QVector<Vorton> &freeVortons,  QPair<int,int> boundaries)
 {
     velocities.clear();
      for (double i1=-1*(boundaries.second+1); i1<=boundaries.second+1.0000001;i1=i1+step)
     for (double j1=-1*(boundaries.second+1);j1<=boundaries.second+1.0000001;j1=j1+step)
         for (double k1=-1.0;k1<=boundaries.first+1.0000001;k1=k1+step)
-            velocities.push_back(FrameCalculations::velocity(Vector3D(k1,j1,i1),streamVel,freeVortons,frames));
+            velocities.push_back(FrameCalculations::velocity(Vector3D(k1,j1,i1),streamVel,freeVortons));
 }
 
 bool FrameCalculations::coDirectionallyCheck(const Vector3D a, const Vector3D b, const Vector3D c)

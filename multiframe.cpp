@@ -243,6 +243,17 @@ int MultiFrame::getAnglesNum() const
     return anglesNum;
 }
 
+void MultiFrame::setRadius(double radius)
+{
+    for (int i=0;i<vortons.size();i++)
+        vortons[i].setRadius(radius);
+}
+
+double MultiFrame::getRadius() const
+{
+    return vortons[0].getRadius();
+}
+
 /*!
 Устанавливает значение центра рамки
 \param _center новая координата центра
