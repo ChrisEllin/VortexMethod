@@ -104,6 +104,10 @@ private slots:
     void calcEpsilonLength(double panel);
     void on_formRotationCutBodyComboBox_currentIndexChanged(int index);
 
+    void on_ovalPushButton_clicked();
+
+    void on_ringsPushButton_clicked();
+
 public slots:
     void setReguliser(double reguliser);
     void showInfo();

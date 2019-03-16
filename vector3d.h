@@ -40,7 +40,7 @@ public:
     static QVector3D toQVector3D(const Vector3D& vec);
     void operator = (const Vector3D &vec1);
     Vector3D operator -();
-    double& operator[](const double i);
+    double& operator[](const int i);
     static bool fabsCompare(double a, double b);
     static int sign(int val);
     static int sign(double val);

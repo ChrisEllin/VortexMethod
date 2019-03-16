@@ -248,9 +248,7 @@ void Logger::createFiles()
     passportFile=std::shared_ptr<QFile>(new QFile(path+"/passport.txt"));
     forcesFile=std::shared_ptr<QFile>(new QFile(path+"/forces.csv"));
     tableFile=std::shared_ptr<QFile>(new QFile(path+"/tableLog.csv"));
-    if (type==SPHERE||type==CYLINDER||type==ROTATIONBODY)
-    {
-        cpFile=std::shared_ptr<QFile>(new QFile(path+"/cp.csv"));
+   cpFile=std::shared_ptr<QFile>(new QFile(path+"/cp.csv"));
         if (cpFile->open(QIODevice::WriteOnly))
         {
             cpTextStream=std::shared_ptr<QTextStream>(new QTextStream(cpFile.get()));
@@ -258,12 +256,6 @@ void Logger::createFiles()
             *cpTextStream.get()<<QString("Cp \t");
             *cpTextStream.get()<<QString("teta \n");
         }
-        else
-        {
-            QMessageBox::critical(new QWidget(),tr("Ошибка"), tr("Не удалось создать файл для записи сил"));
-            exit(1);
-        }
-    }
 
     if (logFile->open(QIODevice::WriteOnly))
     {
@@ -838,6 +830,136 @@ void Logger::createParaviewFile(QVector<std::shared_ptr<MultiFrame> > &frames, Q
 
 
         paraviewTs<<"SCALARS normal_speedC float 1\n";
+        paraviewTs<<"LOOKUP_TABLE default\n";
+        for (int i=0; i<forces.size(); i++)
+            i==0 ? paraviewTs<<normalVelocitiesEnd[i]<<"\n" : paraviewTs<<" "<<normalVelocitiesEnd[i]<<"\n";
+        paraviewTs<<"\n";
+        paraviewTs.flush();
+
+        paraviewTs<<"SCALARS gamma float 1\n";
+        paraviewTs<<"LOOKUP_TABLE default\n";
+        for (int i=0; i<forces.size(); i++)
+            i==0 ? paraviewTs<<frames[i]->getVorticity()<<"\n" : paraviewTs<<" "<<frames[i]->getVorticity()<<"\n";
+        paraviewTs<<"\n";
+        paraviewTs.flush();
+
+        paraviewTs<<"VECTORS velocities float\n";
+        for (int i=0; i<velocities.size();i++)
+            paraviewTs<<velocities[i].x()<<" "<<velocities[i].y()<<" "<<velocities[i].z()<<"\n";
+        paraviewTs.flush();
+    }
+    paraviewFile.close();
+}
+
+void Logger::createParaviewFile(QVector<std::shared_ptr<MultiFrame> > &frames, QVector<double> &forces, QVector<Vector3D> &velocities, QVector<double> &tangentialVelocities, QVector<double> &normalVelocitiesAfter, QVector<double> &normalVelocitiesBefore, QVector<double> &normalVelocitiesCenter, QVector<double> &normalVelocitiesDelta, QVector<double> &normalVelocitiesEnd, QVector<std::shared_ptr<MultiFrame> > &sectionFrames, int currentStep)
+{
+    QFile paraviewFile(path+"/mesh/visual.vtk."+QString::number(currentStep));
+    if (paraviewFile.open(QIODevice::WriteOnly))
+    {
+        QTextStream paraviewTs(&paraviewFile);
+        paraviewTs<<"# vtk DataFile Version 3.0\n";
+        paraviewTs<<"vtk output\n";
+        paraviewTs<<"ASCII\n";
+        paraviewTs<<"DATASET UNSTRUCTURED_GRID\n";
+        int points=0;
+        for (int i=0; i<frames.size();i++)
+            points+=frames[i]->getAnglesNum();
+        for (int i=0; i<sectionFrames.size();i++)
+            points+=sectionFrames[i]->getAnglesNum();
+        paraviewTs<<"POINTS "<<points<<" float\n";
+        paraviewTs.flush();
+        for (int i=0; i<frames.size();i++)
+        {
+            for (int j=0; j<frames[i]->getAnglesNum(); j++)
+                paraviewTs<<frames[i]->at(j).getTail().x()<<" "<<frames[i]->at(j).getTail().y()<<" "<<frames[i]->at(j).getTail().z()<<"\n";
+            paraviewTs.flush();
+        }
+        for (int i=0; i<sectionFrames.size(); i++)
+        {
+            for (int j=0; j<sectionFrames[i]->getAnglesNum(); j++)
+                paraviewTs<<sectionFrames[i]->at(j).getTail().x()<<" "<<sectionFrames[i]->at(j).getTail().y()<<" "<<sectionFrames[i]->at(j).getTail().z()<<"\n";
+            paraviewTs.flush();
+        }
+        paraviewTs<<"CELLS "<<frames.size()+sectionFrames.size()<<" "<<points+frames.size()+sectionFrames.size()<<"\n";
+        int currentPointNumber=0;
+        for (int i=0; i<frames.size(); i++)
+        {
+            paraviewTs<<frames[i]->getAnglesNum();
+            int virtualNumber=currentPointNumber;
+            for (int j=currentPointNumber; j<currentPointNumber+frames[i]->getAnglesNum();j++)
+            {
+                paraviewTs<<" "<<j;
+                virtualNumber++;
+            }
+            currentPointNumber=virtualNumber;
+            paraviewTs<<"\n";
+        }
+        for (int i=0; i<sectionFrames.size(); i++)
+        {
+            paraviewTs<<sectionFrames[i]->getAnglesNum();
+            int virtualNumber=currentPointNumber;
+            for (int j=currentPointNumber; j<currentPointNumber+sectionFrames[i]->getAnglesNum();j++)
+            {
+                paraviewTs<<" "<<j;
+                virtualNumber++;
+            }
+            currentPointNumber=virtualNumber;
+            paraviewTs<<"\n";
+        }
+        paraviewTs.flush();
+        paraviewTs<<"CELL_TYPES "<<frames.size()+sectionFrames.size()<<"\n";
+        for (int i=0;i<frames.size(); i++)
+            frames[i]->getAnglesNum()==4 ? paraviewTs<<"9\n" : paraviewTs<<"7\n";
+        paraviewTs.flush();
+        for (int i=0;i<sectionFrames.size(); i++)
+            sectionFrames[i]->getAnglesNum()==4 ? paraviewTs<<"9\n" : paraviewTs<<"7\n";
+        paraviewTs.flush();
+        paraviewTs<<"CELL_DATA "<<frames.size()+sectionFrames.size()<<"\n";
+        paraviewTs<<"SCALARS pressure float 1\n";
+        paraviewTs<<"LOOKUP_TABLE default\n";
+        for (int i=0; i<forces.size(); i++)
+            i==0 ? paraviewTs<<forces[i] : paraviewTs<<" "<<forces[i];
+        paraviewTs<<"\n";
+        paraviewTs.flush();
+        paraviewTs<<"SCALARS tangential_speed float 1\n";
+        paraviewTs<<"LOOKUP_TABLE default\n";
+        for (int i=0; i<forces.size(); i++)
+            i==0 ? paraviewTs<<tangentialVelocities[i] : paraviewTs<<" "<<tangentialVelocities[i];
+        paraviewTs<<"\n";
+        paraviewTs.flush();
+
+        paraviewTs<<"SCALARS normal_speedA(after_SLAU) float 1\n";
+        paraviewTs<<"LOOKUP_TABLE default\n";
+        for (int i=0; i<forces.size(); i++)
+            i==0 ? paraviewTs<<normalVelocitiesAfter[i]<<"\n" : paraviewTs<<" "<<normalVelocitiesAfter[i]<<"\n";
+        paraviewTs<<"\n";
+        paraviewTs.flush();
+
+
+        paraviewTs<<"SCALARS normal_speedB(after_setting_epsilon) float 1\n";
+        paraviewTs<<"LOOKUP_TABLE default\n";
+        for (int i=0; i<forces.size(); i++)
+            i==0 ? paraviewTs<<normalVelocitiesBefore[i]<<"\n" : paraviewTs<<" "<<normalVelocitiesBefore[i]<<"\n";
+        paraviewTs<<"\n";
+        paraviewTs.flush();
+
+
+
+        paraviewTs<<"SCALARS normal_speedC(after_movement) float 1\n";
+        paraviewTs<<"LOOKUP_TABLE default\n";
+        for (int i=0; i<forces.size(); i++)
+            i==0 ? paraviewTs<<normalVelocitiesCenter[i]<<"\n" : paraviewTs<<" "<<normalVelocitiesCenter[i]<<"\n";
+        paraviewTs<<"\n";
+        paraviewTs.flush();
+
+        paraviewTs<<"SCALARS normal_speedD(after_get_back_and_rotate) float 1\n";
+        paraviewTs<<"LOOKUP_TABLE default\n";
+        for (int i=0; i<forces.size(); i++)
+            i==0 ? paraviewTs<<normalVelocitiesDelta[i]<<"\n" : paraviewTs<<" "<<normalVelocitiesDelta[i]<<"\n";
+        paraviewTs<<"\n";
+        paraviewTs.flush();
+
+        paraviewTs<<"SCALARS normal_speedE(after_all_operations) float 1\n";
         paraviewTs<<"LOOKUP_TABLE default\n";
         for (int i=0; i<forces.size(); i++)
             i==0 ? paraviewTs<<normalVelocitiesEnd[i]<<"\n" : paraviewTs<<" "<<normalVelocitiesEnd[i]<<"\n";

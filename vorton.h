@@ -39,6 +39,7 @@ public:
     Vector3D qHelp(const Vector3D& point) const;
     Vector3D velocity(const Vector3D& point) const;
     VelBsym velAndBsym(const Vector3D& point) const;
+    VelBsym velAndBsymGauss3(const Vector3D& point, const Vector3D &deltar) const;
     void turn();
     void translate(const Vector3D& translation);
     Vorton operator =(const Vorton &vort2);

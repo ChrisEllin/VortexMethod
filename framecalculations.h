@@ -109,6 +109,7 @@ public:
     void removeFarRotationBody(QVector<Vorton>& vortons, const double farDistance, const Vector3D bodyCenter);
     void removeFarRotationCutBody(QVector<Vorton>& vortons, const double farDistance, const Vector3D bodyCenter);
     void displacementCalc(QVector<Vorton> &freeVortons, QVector<Vorton> &newVortons, double step, Vector3D streamVel, double eDelta, double fiMax, double maxMove);
+    void displacementCalcGauss3(QVector<Vorton> &freeVortons, QVector<Vorton> &newVortons, double step, Vector3D streamVel, double eDelta, double fiMax, double maxMove);
     void displacementLaunchCalc(QVector<Vorton> &freeVortons, QVector<Vorton> &newVortons,QVector<Vorton> &symFreeVortons, QVector<Vorton> &symNewVortons, double step, Vector3D streamVel, double eDelta, double fiMax, double maxMove);
     void setMatrixSize(int size);
     void getBackAndRotate(bool getBackGA, QVector<Vorton> &vortons, const Vector3D bodyNose, const double xEnd, const double layerHeight, const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals, QVector<Vorton> &oldvortons, QVector<std::shared_ptr<MultiFrame> > &frames, FormingParameters forming);
@@ -157,9 +158,11 @@ public:
     static double pressureSetuha(const Vector3D point, const Vector3D streamVel, const double streamPres, const double density, QVector<std::shared_ptr<MultiFrame>> frames, QVector<double> oldGammas, QVector<Vorton> freeVortons, double tau);
     static void addToVortonsVec(QVector<Vorton> &vortons, const Vorton vort);
     static VelBsym velocityAndBsymm(const Vector3D point,const Vector3D streamVel, const QVector<Vorton>& vortons);
+    static VelBsym velocityAndBsymmGauss3(const Vector3D point,const Vector3D deltar, const Vector3D streamVel, const QVector<Vorton>& vortons);
     static Vector3D velocity(const Vector3D point ,const Vector3D streamVel, const QVector<Vorton>& vortons, const QVector<std::shared_ptr<MultiFrame>> frames);
     static Vector3D velocity(const Vector3D point, const Vector3D streamVel, const QVector<Vorton> &vortons);
     static Vorton parallelDisplacement(const Parallel el);
+    static Vorton parallelDisplacementGauss(const Parallel el);
     //static Lengths lengthsCalc(QVector<std::shared_ptr<MultiFrame>> frames);
     static void displace(QVector<Vorton> &vortons);
     static void reflect(QVector<Vorton>& symFreeVortons, QVector<Vorton>& symNewVortons, QVector<std::shared_ptr<MultiFrame>> symFrames);
@@ -190,6 +193,7 @@ public:
     void clearRestrictions();
     void clearTimers();
     void clear();
+
 };
 
 Eigen::Vector3d toEigenVector(Vector3D vec);

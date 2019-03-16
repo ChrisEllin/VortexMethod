@@ -518,6 +518,7 @@ void MainWindow::on_cylinderSolverPushButton_clicked()
 
     *solver=Solver(solvPar);
     QFuture<void> cylinderFuture=QtConcurrent::run(solver,&Solver::cylinderSolver, fragPar);
+
     solving=true;
     ui->pointsRaisingCylinderLineEdit->setDisabled(true);
     ui->epsilonCylinderLineEdit->setDisabled(true);
@@ -1035,12 +1036,25 @@ void MainWindow::drawGUI(const QVector<Vorton> &vortons, const QVector<std::shar
     }
     ui->freeVortonsQuantityLineEdit->setText(QString::number(vortons.size()));
 
-    for (int i=0; i<vortons.size(); i++)
+    if(!frames.isEmpty())
+    {
+        for (int i=0; i<vortons.size(); i++)
     {
         QVector3D mid=Vector3D::toQVector3D(vortons[i].getMid());
         QVector3D tail=Vector3D::toQVector3D(vortons[i].getTail());
         if (checkDrawing(vortons[i].getMid(),vortons[i].getTail()))
             emit drawSegment(2.0*mid-tail, tail);
+    }
+    }
+    else
+    {
+        for (int i=0; i<vortons.size(); i++)
+    {
+        QVector3D mid=Vector3D::toQVector3D(vortons[i].getMid());
+        QVector3D tail=Vector3D::toQVector3D(vortons[i].getTail());
+        if (checkDrawing(vortons[i].getMid(),vortons[i].getTail()))
+            emit drawSegment(2.0*mid-tail, tail,SArrow::Grid);
+    }
     }
 
     if (!currentControlPoints.isEmpty() && !currentNormals.isEmpty() && preprocessor->normalsDrawing())
@@ -2019,4 +2033,14 @@ void MainWindow::calcEpsilonLength(double panel)
 void MainWindow::on_formRotationCutBodyComboBox_currentIndexChanged(int index)
 {
     ui->stackedWidget_2->setCurrentIndex(index);
+}
+
+void MainWindow::on_ovalPushButton_clicked()
+{
+    QFuture<void> oval=QtConcurrent::run(solver,&Solver::ovalSolver);
+}
+
+void MainWindow::on_ringsPushButton_clicked()
+{
+    QFuture<void> ring=QtConcurrent::run(solver,&Solver::ringsSolver);
 }

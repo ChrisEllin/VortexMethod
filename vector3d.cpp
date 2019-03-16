@@ -220,7 +220,7 @@ Vector3D Vector3D::operator -()
 \param i Номер компоненты вектора
 \return Значение компоненты вектора
 */
-double& Vector3D::operator[](const double i)
+double& Vector3D::operator[](const int i)
 {
     if (i==0)
         return X;

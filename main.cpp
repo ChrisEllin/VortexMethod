@@ -14,6 +14,7 @@ int main(int argc, char *argv[])
     if (qtTranslator.load("qt_" + locale, QLibraryInfo::location(QLibraryInfo::TranslationsPath)))
          app.installTranslator(&qtTranslator);
 
+
     MainWindow w;
     w.show();
     w.setWindowTitle(QObject::tr("Подводный старт v.2.0"));

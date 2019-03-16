@@ -354,6 +354,58 @@ void FrameCalculations::displacementCalc(QVector<Vorton> &freeVortons, QVector<V
     timers.integrationTimer=start.elapsed()*0.01;
 }
 
+void FrameCalculations::displacementCalcGauss3(QVector<Vorton> &freeVortons, QVector<Vorton> &newVortons, double step, Vector3D streamVel, double eDelta, double fiMax, double maxMove)
+{
+    QTime start = QTime::currentTime();
+    QVector<Vorton> vortons;
+    vortons.append(freeVortons);
+    vortons.append(newVortons);
+    QVector<Parallel> paralVec;
+    for (int i=0; i<vortons.size(); i++)
+    {
+        Parallel element {&vortons,nullptr, nullptr, i, streamVel, step};
+        paralVec.push_back(element);
+    }
+    QVector<Vorton> resultedVec=QtConcurrent::blockingMappedReduced(paralVec, parallelDisplacementGauss, addToVortonsVec, QtConcurrent::OrderedReduce);
+
+    for (int i=0; i<resultedVec.size(); i++)
+    {
+        Vector3D selfLenBef=resultedVec[i].getTail()-resultedVec[i].getMid();
+        Vector3D selfLenAft=resultedVec[i].getElongation()+selfLenBef;
+        double turnAngle=acos(Vector3D::dotProduct(selfLenBef.normalized(), selfLenAft.normalized()));
+        double lengthChange=fabs(selfLenBef.length()-selfLenAft.length());
+        if (turnAngle>fiMax)
+        {
+            resultedVec[i].setElongation(Vector3D());
+            restrictions.turnRestr++;
+        }
+        if (lengthChange>eDelta)
+        {
+            resultedVec[i].setElongation(Vector3D());
+            restrictions.elongationRestr++;
+        }
+        if (resultedVec[i].getMove().length()>maxMove)
+        {
+            resultedVec[i].setMove(Vector3D());
+            restrictions.moveRestr++;
+        }
+
+    }
+
+    for (int i=0; i<freeVortons.size(); i++)
+    {
+        freeVortons[i].setMove(resultedVec[i].getMove());
+        freeVortons[i].setElongation(resultedVec[i].getElongation());
+    }
+
+    for (int i=0; i<newVortons.size(); i++)
+    {
+        newVortons[i].setMove(resultedVec[i+freeVortons.size()].getMove());
+        newVortons[i].setElongation(resultedVec[i+freeVortons.size()].getElongation());
+    }
+    timers.integrationTimer=start.elapsed()*0.01;
+}
+
 /*!
 Функция расчета перемещений и удалений для вортонов с рамок и вортонов в потоке при решении задачи старта
 \param[in,out] freeVortons Вектор, содержащий вортоны в потоке
@@ -1434,6 +1486,14 @@ VelBsym FrameCalculations::velocityAndBsymm(const Vector3D point,const  Vector3D
     return res;
 }
 
+VelBsym FrameCalculations::velocityAndBsymmGauss3(const Vector3D point, const Vector3D deltar, const Vector3D streamVel, const QVector<Vorton> &vortons)
+{
+    VelBsym res = VelBsym (streamVel);
+    for (int i=0; i<vortons.size(); i++)
+        res+=vortons[i].velAndBsymGauss3(point,deltar);
+    return res;
+}
+
 /*!
 Функция расчета скорости от вектора вортонов и вектора рамок в точке.
 \param point Точка расчета
@@ -1476,8 +1536,23 @@ Vector3D FrameCalculations::velocity(const Vector3D point, const Vector3D stream
 Vorton FrameCalculations::parallelDisplacement(const Parallel el)
 {
     Vorton res=el.Vortons->at(el.num);
-    VelBsym vb=FrameCalculations::velocityAndBsymm(el.Vortons->at(el.num).getMid(), el.streamVel, *el.Vortons);
+
+    VelBsym vb=FrameCalculations::velocityAndBsymm(el.Vortons->at(el.num).getMid(),el.streamVel, *el.Vortons);
+     Vector3D selfLen=el.Vortons->at(el.num).getTail()-el.Vortons->at(el.num).getMid();
+    double xElong=vb.B[0][0]*selfLen[0]+vb.B[0][1]*selfLen[1]+vb.B[0][2]*selfLen[2];
+    double yElong=vb.B[1][0]*selfLen[0]+vb.B[1][1]*selfLen[1]+vb.B[1][2]*selfLen[2];
+    double zElong=vb.B[2][0]*selfLen[0]+vb.B[2][1]*selfLen[1]+vb.B[2][2]*selfLen[2];
+    res.setElongation(Vector3D(xElong, yElong, zElong)*el.tau);
+    res.setMove(vb.Vel*el.tau);
+    return res;
+}
+
+Vorton FrameCalculations::parallelDisplacementGauss(const Parallel el)
+{
+    Vorton res=el.Vortons->at(el.num);
     Vector3D selfLen=el.Vortons->at(el.num).getTail()-el.Vortons->at(el.num).getMid();
+    VelBsym vb=FrameCalculations::velocityAndBsymmGauss3(el.Vortons->at(el.num).getMid(), selfLen, el.streamVel, *el.Vortons);
+
     double xElong=vb.B[0][0]*selfLen[0]+vb.B[0][1]*selfLen[1]+vb.B[0][2]*selfLen[2];
     double yElong=vb.B[1][0]*selfLen[0]+vb.B[1][1]*selfLen[1]+vb.B[1][2]*selfLen[2];
     double zElong=vb.B[2][0]*selfLen[0]+vb.B[2][1]*selfLen[1]+vb.B[2][2]*selfLen[2];
@@ -1880,6 +1955,8 @@ void FrameCalculations::clear()
     clearRestrictions();
     clearCounters();
 }
+
+
 
 
 Eigen::Vector3d toEigenVector(Vector3D vec)

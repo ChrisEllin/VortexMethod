@@ -269,6 +269,21 @@ VelBsym Vorton::velAndBsym(const Vector3D& point) const
     }
 }
 
+VelBsym Vorton::velAndBsymGauss3(const Vector3D &point, const Vector3D &deltar) const
+{
+    VelBsym ans;
+    VelBsym ans1;
+    VelBsym ans2;
+    ans=velAndBsym(point);
+    ans1=velAndBsym(point+sqrt(0.6)*deltar);
+    ans2=velAndBsym(point-sqrt(0.6)*deltar);
+
+    for (int i=0; i<3; i++)
+        for (int j=0; j<3; j++)
+            ans.B[i][j]=0.5*(8.0/9.0*ans.B[i][j]+5.0/9.0*(ans1.B[i][j]+ans2.B[i][j]));
+    return ans;
+}
+
 /*!
 Рассчитывает значение тензора Леви-Чивитты
 \param firstComponent Значение первой компоненты тензора Леви-Чивитты
@@ -289,9 +304,9 @@ double Vorton::levi(int firstComponent, int secondComponent, int thirdComponent)
     if ((firstComponent==1)&&(secondComponent==0)&&(thirdComponent==2))
         return -1.0;
     if ((firstComponent==2)&&(secondComponent==1)&&(thirdComponent==0))
-        return 1.0;
-    if ((firstComponent==2)&&(secondComponent==0)&&(thirdComponent==1))
         return -1.0;
+    if ((firstComponent==2)&&(secondComponent==0)&&(thirdComponent==1))
+        return 1.0;
     QMessageBox::critical(new QWidget(), "Ошибка", "Неверные параметры для тензора Леви-Чивитты");
     exit(1);
 }

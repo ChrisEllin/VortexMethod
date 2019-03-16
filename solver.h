@@ -34,6 +34,8 @@ public:
     void sphereFreeMotionSolver(const FragmentationParameters& fragPar);
     void cylinderSolver(const FragmentationParameters& fragPar);
     void rotationBodySolver(const FragmentationParameters& fragPar);
+    void ovalSolver();
+    void ringsSolver();
     void rotationBodyFreeMotionSolver(const FragmentationParameters &fragPar);
     void rotationCutBodySolver(const FragmentationParameters& fragPar);
     void rotationCutBodySolverNearScreen(const FragmentationParameters& fragPar, const double screenDistance);
