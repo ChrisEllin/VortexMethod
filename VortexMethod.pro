@@ -40,6 +40,7 @@ SOURCES += \
     vector2d.cpp \
     variatesettings.cpp \
     preprocessorsettings.cpp \
+    qcustomplot.cpp \
     simpsonintegration.cpp
 
 HEADERS += \
@@ -54,6 +55,7 @@ HEADERS += \
     solver.h \
     solversettings.h \
     logger.h \
+    qcustomplot.h \
     vector2d.h \
     variatesettings.h \
     preprocessorsettings.h \

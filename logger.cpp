@@ -62,6 +62,7 @@ Logger::Logger(const BodyType _type, const SolvType _stype)
     dataDir.mkdir("traces");
     dataDir.mkdir("mesh");
     dataDir.mkdir("streamlines");
+    dataDir.mkdir("graphs");
     createFiles();
 }
 
@@ -124,6 +125,7 @@ Logger::Logger(BodyType _type, QString _path, SolvType _stype)
     dataDir.mkdir("traces");
     dataDir.mkdir("mesh");
     dataDir.mkdir("streamlines");
+    dataDir.mkdir("graphs");
     createFiles();
 }
 
@@ -1025,6 +1027,8 @@ void Logger::createParaviewTraceVerticesFile(QVector<Vorton> &vortons, int curre
         {
             Vector3D mid=vortons[i].getMid();
             Vector3D tail=vortons[i].getTail();
+           // Vector3D begin=2.0*mid-tail;
+            //traceStream<<QString::number(begin.x())+" "+QString::number(begin.y())+" "+QString::number(begin.z())+"\n";
             traceStream<<QString::number(mid.x())+" "+QString::number(mid.y())+" "+QString::number(mid.z())+"\n";
             traceStream<<QString::number(tail.x())+" "+QString::number(tail.y())+" "+QString::number(tail.z())+"\n";
         }
@@ -1062,6 +1066,55 @@ void Logger::createParaviewTraceFile(QVector<Vorton> &vortons, int currentStep)
     }
     traceFile.close();
 
+}
+
+void Logger::createCenterGraphs(FormingParameters pars, double step,int currentStep)
+{
+    QFile xFile(path+"/graphs/xGraph.vtk"+QString::number(currentStep));
+    if (xFile.open(QIODevice::WriteOnly))
+    {
+        QTextStream xStream(&xFile);
+        QVector<QPair<double,double>> data;
+        switch (pars.typeNum) {
+        case 0:
+            break;
+        case 1:
+            break;
+        case 2:
+            qDebug()<<"start_writing";
+        for (double i=0.0; i<pars.sectorOneLength;i=i+step)
+        {
+            double j=0.0;
+            while (j<BodyFragmentation::presetFunctionF(i,pars))
+            {
+                data.push_back(QPair<double,double>(i,j));
+                    j+=step;
+                }
+            data.push_back(QPair<double,double>(i,BodyFragmentation::presetFunctionF(i,pars)));
+            }
+
+         qDebug()<<"start_writing_loop_2";
+         qDebug()<<data.size();
+        QVector<QPair<double,double>> newData;
+        for (int i=0;i<data.size();i++)
+        {
+
+            if (!qFuzzyIsNull(data[i].second))
+            {
+                newData.append(QPair<double,double>(data[i].first,-data[i].second));
+            }
+        }
+        data.append(newData);
+         qDebug()<<"start_writing_text";
+        for (int i=0; i<data.size();i++)
+            xStream<<QString::number(data[i].first)+" "+QString::number(data[i].second)+"\n";
+        qDebug()<<"written";
+        xStream.flush();
+        break;
+        }
+
+    }
+    xFile.close();
 }
 /*!
 Закрывает все файлы, открытые для записи

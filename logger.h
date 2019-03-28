@@ -68,7 +68,7 @@ public:
     void createParaviewStreamlinesFile(QVector<Vector3D> velocities, QPair<int, int> boundary, double step, int currentStep);
     void createParaviewTraceVerticesFile(QVector<Vorton> &vortons, int currentStep);
     void createParaviewTraceFile(QVector<Vorton> &vortons, int currentStep);
-
+    void createCenterGraphs(FormingParameters pars, double step, int currentStep);
     void closeFiles();
     QString getPath();
     void openVortonFiles(QString vortonsDir);

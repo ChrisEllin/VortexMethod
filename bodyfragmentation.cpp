@@ -1,5 +1,6 @@
 #include "bodyfragmentation.h"
-
+#include <QFile>
+#include <QTextStream>
 /*!
 Установка соотвествующего значения в объект структуры параметров разбиения сферы
 \param i Номер поля структуры
@@ -387,6 +388,17 @@ void BodyFragmentation::rotationBodyFragmantation()
         double derivative=BodyFragmentation::presetDeriveFunctionF(xArr[i],forming);
         s[i]=s[i-1]+height*sqrt(1+derivative*derivative);
     }
+//    QFile curving("curving.csv");
+//    if (curving.open(QIODevice::WriteOnly))
+//    {
+//        QTextStream ts(&curving);
+//        for (int i=0; i<NFRAG;i++)
+//        {
+//            ts<<QString::number(xArr[i])+"\t"+QString::number(yArr[i])+"\n";
+//        }
+//    }
+//    curving.close();
+
     double length=s[s.size()-1];
     for (int i=0; i<rotationBody.partFragNum; i++)
     {
