@@ -1081,7 +1081,38 @@ void FrameCalculations::getBackAndRotateMovingRotationBody(QVector<Vorton> &vort
             counters.rotatedNum++;
         }
     }
-     timers.getBackAndRotateTimer=start.elapsed()*0.001;
+    timers.getBackAndRotateTimer=start.elapsed()*0.001;
+}
+
+void FrameCalculations::getBackAndRotateMovingRotationCutBody(QVector<Vorton> &vortons, Vector3D centerMassWorld, Vector3D oldCenterWorld, const Vector3D bodyNose, const double xEnd, const double layerHeight, const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals, Eigen::Matrix3d rotationMatrix, FormingParametersRBC forming)
+{
+    QTime start=QTime::currentTime();
+    Eigen::Matrix3d inverted=rotationMatrix.inverse();
+    for (int i=0; i<vortons.size();i++)
+    {
+        //qDebug()<<oldCenterWorld.x()-centerMassWorld.x()<<" "<<oldCenterWorld.y()-centerMassWorld.y()<<" "<<oldCenterWorld.z()-centerMassWorld.z();
+        Vorton copyVort=vortons[i];
+        copyVort.setMid(centerMassWorld+fromEigenVector(inverted*toEigenVector(copyVort.getMid()-centerMassWorld)));
+        copyVort.setTail(centerMassWorld+fromEigenVector(inverted*toEigenVector(copyVort.getTail()-centerMassWorld)));
+        //qDebug()<<(oldCenterWorld-centerMassWorld).x()<<" "<<(oldCenterWorld-centerMassWorld).y()<<" "<<(oldCenterWorld-centerMassWorld).z();
+        copyVort.setTail(copyVort.getTail()+oldCenterWorld-centerMassWorld);
+
+        copyVort.setMid(copyVort.getMid()+oldCenterWorld-centerMassWorld);
+        if (FrameCalculations::insideRotationCutBody(copyVort,xEnd,bodyNose,forming))
+        {
+            QPair<double,int> closest=BodyFragmentation::findClosest(vortons[i].getMid(),controlPoints, normals);
+            vortons[i].setMid(vortons[i].getMid()+2.0*closest.first*normals[closest.second]);
+            vortons[i].setTail(vortons[i].getTail()+2.0*closest.first*normals[closest.second]);
+            counters.gotBackNum++;
+        }
+        if(FrameCalculations::insideRotationCutBodyLayer(copyVort,xEnd,layerHeight, bodyNose,forming))
+        {
+            QPair<double,int> closest=BodyFragmentation::findClosest(vortons[i].getMid(),controlPoints, normals);
+            vortons[i].rotateAroundNormal(normals[closest.second]);
+            counters.rotatedNum++;
+        }
+    }
+    timers.getBackAndRotateTimer=start.elapsed()*0.001;
 }
 
 /*!

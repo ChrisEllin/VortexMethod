@@ -20,7 +20,7 @@
       <item row="0" column="0">
        <widget class="QTabWidget" name="tabWidget">
         <property name="currentIndex">
-         <number>2</number>
+         <number>0</number>
         </property>
         <widget class="QWidget" name="tab">
          <attribute name="title">
@@ -132,6 +132,9 @@
                </item>
                <item row="7" column="0" colspan="2">
                 <widget class="QPushButton" name="sphereFreeMotionSolverPushButton">
+                 <property name="enabled">
+                  <bool>false</bool>
+                 </property>
                  <property name="text">
                   <string>Рассчитать свободное движение</string>
                  </property>
@@ -139,6 +142,9 @@
                </item>
                <item row="8" column="0" colspan="2">
                 <widget class="QPushButton" name="variateSphereSolverPushButton">
+                 <property name="enabled">
+                  <bool>false</bool>
+                 </property>
                  <property name="text">
                   <string>Варьировать параметры</string>
                  </property>
@@ -400,6 +406,9 @@
              </property>
             </widget>
             <widget class="QPushButton" name="variateCylinderSolverPushButton">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
              <property name="geometry">
               <rect>
                <x>70</x>
@@ -731,6 +740,9 @@
            </property>
           </widget>
           <widget class="QPushButton" name="variateRotationBodySolverPushButton">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="geometry">
             <rect>
              <x>10</x>
@@ -741,6 +753,18 @@
            </property>
            <property name="text">
             <string>Варьировать параметры</string>
+           </property>
+           <property name="checkable">
+            <bool>false</bool>
+           </property>
+           <property name="autoDefault">
+            <bool>false</bool>
+           </property>
+           <property name="default">
+            <bool>false</bool>
+           </property>
+           <property name="flat">
+            <bool>false</bool>
            </property>
           </widget>
           <widget class="QLineEdit" name="sectionEndDistanceRotationBodyLineEdit">
@@ -1343,6 +1367,9 @@
               </property>
              </widget>
              <widget class="QPushButton" name="variateRotationCutBodySolverPushButton">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
               <property name="geometry">
                <rect>
                 <x>290</x>
@@ -1356,6 +1383,9 @@
               </property>
              </widget>
              <widget class="QPushButton" name="rotationCutBodyNearScreenPushButton">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
               <property name="geometry">
                <rect>
                 <x>90</x>

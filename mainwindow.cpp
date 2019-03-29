@@ -1300,6 +1300,35 @@ void MainWindow::on_rotationCutBodyFreeMotionSolverPushButton_clicked()
     fragPar.formingLengthSectorOne=ui->formingRBCSectorOneLength->text().toDouble();
     fragPar.formingLengthSectorTwo=ui->formingRBCSectorTwoLength->text().toDouble();
     fragPar.formingTailDiameter=ui->formingRBCTailDiameterLineEdit->text().toDouble();
+    ui->formRotationCutBodyComboBox->currentIndex()==0 ? fragPar.rotationBodyRBCFormingType=ELLIPSOID_CYLINDER :
+            (ui->formRotationCutBodyComboBox->currentIndex()==1 ? fragPar.rotationBodyRBCFormingType=ELLIPSOID_CONE :fragPar.rotationBodyRBCFormingType=ELLIPSOID_CYLINDER_CONE);
+    switch (fragPar.rotationBodyRBCFormingType) {
+    case ELLIPSOID_CONE:
+    {
+        fragPar.formingEllipsoidDiameter=ui->formingRBCDiameterLineEdit->text().toDouble();
+        fragPar.formingTailDiameter=ui->formingRBCTailDiameterLineEdit->text().toDouble();
+        fragPar.formingEllisoidLength=ui->formingRBCSectorOneLength->text().toDouble();
+        fragPar.formingConeLength=ui->formingRBCSectorTwoLength->text().toDouble();
+        fragPar.formingFullLength=fragPar.formingEllisoidLength+fragPar.formingConeLength;
+        break;
+    }
+    case ELLIPSOID_CYLINDER:
+    {
+        fragPar.formingEllipsoidDiameter=ui->cylDiameterRotationCutBodyLineEdit->text().toDouble();
+        fragPar.formingEllisoidLength=ui->ellipsoidLengthRotationCutBodyLineEdit->text().toDouble();
+        fragPar.formingFullLength=ui->lengthRotationCutBodyLineEdit->text().toDouble();
+        break;
+    }
+    case ELLIPSOID_CYLINDER_CONE:
+    {
+        fragPar.formingEllipsoidDiameter=ui->formingRBC3FormDiameterLineEdit->text().toDouble();
+        fragPar.formingEllisoidLength=ui->formingRBC3FormSectorOneLength->text().toDouble();
+        fragPar.formingConeLength=ui->formingRBC3FormSectorThreeLength->text().toDouble();
+        fragPar.formingFullLength=ui->formingRBC3FormSectorTwoLength->text().toDouble()+fragPar.formingConeLength+fragPar.formingEllisoidLength;
+        fragPar.formingTailDiameter=ui->formingRBC3FormTailDiameterLineEdit->text().toDouble();
+        break;
+    }
+    }
     SolverParameters solvPar=settings->getSolverParameters();
     FreeMotionParameters freeMotionPar=settings->getFreeMotionParameters();
     *solver=Solver(solvPar,freeMotionPar);
@@ -1391,6 +1420,35 @@ void MainWindow::on_rotationCutBodyLaunchSolverPushButton_clicked()
     fragPar.formingLengthSectorOne=ui->formingRBCSectorOneLength->text().toDouble();
     fragPar.formingLengthSectorTwo=ui->formingRBCSectorTwoLength->text().toDouble();
     fragPar.formingTailDiameter=ui->formingRBCTailDiameterLineEdit->text().toDouble();
+    ui->formRotationCutBodyComboBox->currentIndex()==0 ? fragPar.rotationBodyRBCFormingType=ELLIPSOID_CYLINDER :
+            (ui->formRotationCutBodyComboBox->currentIndex()==1 ? fragPar.rotationBodyRBCFormingType=ELLIPSOID_CONE :fragPar.rotationBodyRBCFormingType=ELLIPSOID_CYLINDER_CONE);
+    switch (fragPar.rotationBodyRBCFormingType) {
+    case ELLIPSOID_CONE:
+    {
+        fragPar.formingEllipsoidDiameter=ui->formingRBCDiameterLineEdit->text().toDouble();
+        fragPar.formingTailDiameter=ui->formingRBCTailDiameterLineEdit->text().toDouble();
+        fragPar.formingEllisoidLength=ui->formingRBCSectorOneLength->text().toDouble();
+        fragPar.formingConeLength=ui->formingRBCSectorTwoLength->text().toDouble();
+        fragPar.formingFullLength=fragPar.formingEllisoidLength+fragPar.formingConeLength;
+        break;
+    }
+    case ELLIPSOID_CYLINDER:
+    {
+        fragPar.formingEllipsoidDiameter=ui->cylDiameterRotationCutBodyLineEdit->text().toDouble();
+        fragPar.formingEllisoidLength=ui->ellipsoidLengthRotationCutBodyLineEdit->text().toDouble();
+        fragPar.formingFullLength=ui->lengthRotationCutBodyLineEdit->text().toDouble();
+        break;
+    }
+    case ELLIPSOID_CYLINDER_CONE:
+    {
+        fragPar.formingEllipsoidDiameter=ui->formingRBC3FormDiameterLineEdit->text().toDouble();
+        fragPar.formingEllisoidLength=ui->formingRBC3FormSectorOneLength->text().toDouble();
+        fragPar.formingConeLength=ui->formingRBC3FormSectorThreeLength->text().toDouble();
+        fragPar.formingFullLength=ui->formingRBC3FormSectorTwoLength->text().toDouble()+fragPar.formingConeLength+fragPar.formingEllisoidLength;
+        fragPar.formingTailDiameter=ui->formingRBC3FormTailDiameterLineEdit->text().toDouble();
+        break;
+    }
+    }
     SolverParameters solvPar=settings->getSolverParameters();
     FreeMotionParameters freeMotionPar=settings->getFreeMotionParameters();
     *solver=Solver(solvPar,freeMotionPar);
