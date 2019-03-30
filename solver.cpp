@@ -1210,7 +1210,7 @@ void Solver::rotationBodyFreeMotionSolver(const FragmentationParameters &fragPar
 
 //        qDebug()<<"Center is "<<center.x()<<" "<< center.y()<<" "<<center.z();
 
-        functions.translateAndRotate(frames,freeVortons,results.mass,results.inertiaTensor,torque,rotation,force,center,nullCenter, results.massCenter,(i+1)*solvPar.tau,freeMotionPar.bodyVel,controlPoints,normals,controlPointsRaised,oldFrames,oldControlPoints,oldNormals,oldControlPointsRaised, angularVel);
+        functions.translateAndRotatev2(frames,freeVortons,results.mass,results.inertiaTensor,torque,rotation,force,center,nullCenter, results.massCenter,/*(i+1)**/solvPar.tau,freeMotionPar.bodyVel,controlPoints,normals,controlPointsRaised,oldFrames,oldControlPoints,oldNormals,oldControlPointsRaised, angularVel,bodyNose,xend);
         functions.clear();
 //        FrameCalculations::translateBody(translation, frames, controlPoints, controlPointsRaised, center,bodyNose, xend, fragPar);
  //       FrameCalculations::translateVortons(translation, freeVortons);
@@ -1713,9 +1713,9 @@ void Solver::rotationCutBodyFreeMotionSolver(const FragmentationParameters &frag
             Timers timersAfterIntegration=functions.getTimers();
 
             functions.clear();
-
-            functions.translateAndRotate(frames,freeVortons,results.mass,results.inertiaTensor,torque,rotation,force,center,nullCenter, results.massCenter,(i+1)*solvPar.tau,freeMotionPar.bodyVel,controlPoints,normals,controlPointsRaised,oldFrames,oldControlPoints,oldNormals,oldControlPointsRaised, angularVel);
-
+            Vector3D oldCenter=center;
+            functions.translateAndRotatev2(frames,freeVortons,results.mass,results.inertiaTensor,torque,rotation,force,center,nullCenter, results.massCenter,/*(i+1)**/solvPar.tau,freeMotionPar.bodyVel,controlPoints,normals,controlPointsRaised,oldFrames,oldControlPoints,oldNormals,oldControlPointsRaised, angularVel,bodyNose,xend);
+//            bodyNose+=center-oldCenter;
 
 //            FrameCalculations::translateBody(translation, frames, controlPoints, controlPointsRaised, center,bodyNose, xend, fragPar);
 //            FrameCalculations::translateVortons(translation, freeVortons);
@@ -1765,20 +1765,57 @@ void Solver::rotationCutBodyLaunchSolver(const FragmentationParameters &fragPar)
 //    double xBeg=0.0;
     Vector3D bodyNose=freeMotionPar.bodyVel*solvPar.tau;
     Vector3D center=bodyNose/2;
+
+    Vector3D nullCenter=center;
     double xEnd=0.0;
     logger->writePassport(solvPar,fragPar);
     BodyFragmentation fragmentation(BodyType::ROTATIONBOTTOMCUT, fragPar, true);
+    int exitStep=0;
+    FormingParametersRBC form= fragmentation.getFormingRBC();
+    double fullLength;
+        switch (form.type)
+        {
+        case ELLIPSOID_CONE:
+        {
+            nullCenter=Vector3D((bodyNose.x()+form.ellipsoidLength+form.coneLength)*0.5,0.0,0.0);
+            fullLength=form.ellipsoidLength+form.coneLength;
+            break;
+        }
+        case ELLIPSOID_CYLINDER:
+        {
+            nullCenter=Vector3D((bodyNose.x()+form.fullLength)*0.5,0.0,0.0);
+            fullLength=form.fullLength;
+            break;
+        }
+        case ELLIPSOID_CYLINDER_CONE:
+        {
+            nullCenter=Vector3D((bodyNose.x()+form.fullLength)*0.5,0.0,0.0);
+            fullLength=form.fullLength;
+            break;
+        }
+        }
+         FrameCalculations functions;
     for (int i=0; i<solvPar.stepsNum; i++)
     {
         if(checkFinishing())
             return;
-        fragmentation.rotationCutBodyLaunchFragmentation(i,freeMotionPar.bodyVel,solvPar.tau);
+
+
+        fragmentation.rotationCutBodyLaunchFragmentation(i,freeMotionPar.bodyVel,solvPar.tau,fullLength);
+
+
         QVector<Vector3D> controlPoints=fragmentation.getControlPoints();
         QVector<Vector3D> normals=fragmentation.getNormals();
 
         QVector<double> squares=fragmentation.getSquares();
         QVector<Vector3D> controlPointsRaised=fragmentation.getControlPointsRaised();
         QVector<std::shared_ptr<MultiFrame>> frames=fragmentation.getFrames();
+
+        QVector<std::shared_ptr<MultiFrame>> oldFrames=FrameCalculations::copyFrames(frames);
+        QVector<Vector3D> oldControlPoints=controlPoints;
+        QVector<Vector3D> oldNormals=normals;
+        QVector<Vector3D> oldControlPointsRaised=controlPointsRaised;
+
         double ledge=freeMotionPar.bodyVel.length()*solvPar.tau*(i+1);
         Vector3D translation;
 
@@ -1797,12 +1834,25 @@ void Solver::rotationCutBodyLaunchSolver(const FragmentationParameters &fragPar)
 //        }
         translation=freeMotionPar.bodyVel*solvPar.tau;
 //        FrameCalculations::translateBody(translation, frames, controlPoints, controlPointsRaised, center, bodyNose, xEnd, fragPar);
-        //center=bodyNose/2;
+        center=bodyNose/2;
 
         Vector3D relVel=solvPar.streamVel-freeMotionPar.bodyVel;
 
-        FrameCalculations functions;
-        functions.matrixCalc(frames,controlPoints,normals);
+
+
+        dMatrix3 R;
+        Eigen::Matrix3d rotation;
+        Vector3D angularVel;
+        double xend;
+
+        if (form.fullLength+bodyNose.x()>=0.0)
+            xend=0.0;
+        else
+            xend=form.fullLength+bodyNose.x();
+
+        IntegrationResults results=functions.integrateParameters(xend-bodyNose.x(), 1700, fragmentation.getFormingRBC());
+        if (fabs(ledge)<fullLength)
+            functions.matrixCalc(frames,controlPoints,normals);
 
 
         QTime stepTime=QTime::currentTime();
@@ -1846,11 +1896,21 @@ void Solver::rotationCutBodyLaunchSolver(const FragmentationParameters &fragPar)
 //        }
 
 //        qDebug()<<sumVel.x()<<" "<<sumVel.y()<<" "<<sumVel.z();
+        if (i==0)
+        {
+            dRFromEulerAngles(R,0.0,0.0,0.0);
+            for (int i=0; i<3; i++)
+                for (int j=0; j<3; j++)
+                    rotation(i,j)=R[i*4+j];
+
+        }
         functions.displacementLaunchCalc(freeVortons,newVortons,symFreeVortons, symNewVortons, solvPar.tau,relVel,solvPar.eDelta,solvPar.fiMax,solvPar.maxMove);
         FrameCalculations::reflectMove(symFreeVortons,freeVortons);
-        Vector3D force=functions.forceCalc(relVel, solvPar.streamPres,solvPar.density,frames+symFrames,freeVortons+symFreeVortons, solvPar.tau, squares, controlPointsRaised, normals);
+        Vector3D torque;
+        Vector3D force;
+        functions.forceAndTorqueCalc(relVel, solvPar.streamPres,solvPar.density,frames+symFrames,freeVortons+symFreeVortons, solvPar.tau, squares, controlPointsRaised, normals,center,force,torque);
         forces[i]=force;
-
+        torques[i]=torque;
         //cAerodynamics[i] = force/(solvPar.density*solvPar.streamVel.lengthSquared()*0.5*M_PI*pow(fragPar.sphereRad,2));
 
         freeVortons.append(newVortons);
@@ -1866,7 +1926,7 @@ void Solver::rotationCutBodyLaunchSolver(const FragmentationParameters &fragPar)
                 qDebug()<<freeVortons[i].getVorticity();
         }
         functions.displace(freeVortons);
-        functions.getBackAndRotateRotationCutLaunchedBody(freeVortons, bodyNose, xEnd, solvPar.layerHeight, controlPoints,normals,fragmentation.getFormingRBC());
+        functions.getBackAndRotateMovingLaunchedRotationCutBody(freeVortons,center,nullCenter, bodyNose, xend, solvPar.layerHeight, controlPoints,normals,rotation,fragmentation.getFormingRBC());
         functions.unionVortons(freeVortons, solvPar.eStar,solvPar.eDoubleStar,fragPar.vortonsRad);
         functions.removeSmallVorticity(freeVortons,solvPar.minVorticity);
         functions.removeFarRotationCutBody(freeVortons,solvPar.farDistance,center);
@@ -1877,13 +1937,24 @@ void Solver::rotationCutBodyLaunchSolver(const FragmentationParameters &fragPar)
 
         functions.clear();
 
-        if (ledge<fragPar.rotationBodyXEnd-fragPar.rotationBodyXBeg)
+        if (fabs(ledge)<fullLength)
+        {
+            qDebug()<<fullLength;
+            qDebug()<<fabs(ledge);
             FrameCalculations::updateBoundaries(bodyNose,translation,center);
-        else
-            FrameCalculations::translateBody(translation,frames,controlPoints,controlPointsRaised,center,bodyNose,xEnd,fragPar);
+            nullCenter=center;
+            exitStep++;
+        }
+        else {
+            qDebug()<<exitStep;
+            Vector3D oldCenter=center;
+            functions.translateAndRotatev2(frames,freeVortons,results.mass,results.inertiaTensor,torque,rotation,force,center,nullCenter, results.massCenter,solvPar.tau,freeMotionPar.bodyVel,controlPoints,normals,controlPointsRaised,oldFrames,oldControlPoints,oldNormals,oldControlPointsRaised, angularVel,bodyNose,xend);
+//            bodyNose+=center-oldCenter;
+        }
+            //FrameCalculations::translateBody(translation,frames,controlPoints,controlPointsRaised,center,bodyNose,xEnd,fragPar);
 
 //        FrameCalculations::translateBody(translation, frames, controlPoints, controlPointsRaised, center, xBeg, xEnd, fragPar);
-        FrameCalculations::translateVortons(translation,freeVortons);
+//        FrameCalculations::translateVortons(translation,freeVortons);
 //        bodyNose+=translation;
         emit sendNormalsVis(controlPoints,normals);
         logger->writeForces(force,Vector3D(0.0,0.0,0.0));

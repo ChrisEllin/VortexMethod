@@ -229,7 +229,7 @@ public:
     QPair<int,int> getStreamLinesSizes();
     void rotationBodyFragmantation();
     void rotationCutBodyFragmantation();
-    void rotationCutBodyLaunchFragmentation(const int i, const Vector3D &bodyVel, const double tau);
+    void rotationCutBodyLaunchFragmentation(const int i, const Vector3D &bodyVel, const double tau, const double fullLength);
     void clearVectors();
     FormingParameters getForming();
     FormingParametersRBC getFormingRBC();

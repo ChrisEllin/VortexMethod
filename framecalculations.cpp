@@ -1115,6 +1115,42 @@ void FrameCalculations::getBackAndRotateMovingRotationCutBody(QVector<Vorton> &v
     timers.getBackAndRotateTimer=start.elapsed()*0.001;
 }
 
+void FrameCalculations::getBackAndRotateMovingLaunchedRotationCutBody(QVector<Vorton> &vortons, Vector3D centerMassWorld, Vector3D oldCenterWorld, const Vector3D bodyNose, const double xEnd, const double layerHeight, const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals, Eigen::Matrix3d rotationMatrix, FormingParametersRBC forming)
+{
+    QTime start=QTime::currentTime();
+    Eigen::Matrix3d inverted=rotationMatrix.inverse();
+    for (int i=vortons.size()-1; i>=0;i--)
+    {
+        //qDebug()<<oldCenterWorld.x()-centerMassWorld.x()<<" "<<oldCenterWorld.y()-centerMassWorld.y()<<" "<<oldCenterWorld.z()-centerMassWorld.z();
+        Vorton copyVort=vortons[i];
+        copyVort.setMid(centerMassWorld+fromEigenVector(inverted*toEigenVector(copyVort.getMid()-centerMassWorld)));
+        copyVort.setTail(centerMassWorld+fromEigenVector(inverted*toEigenVector(copyVort.getTail()-centerMassWorld)));
+        //qDebug()<<(oldCenterWorld-centerMassWorld).x()<<" "<<(oldCenterWorld-centerMassWorld).y()<<" "<<(oldCenterWorld-centerMassWorld).z();
+        copyVort.setTail(copyVort.getTail()+oldCenterWorld-centerMassWorld);
+
+        copyVort.setMid(copyVort.getMid()+oldCenterWorld-centerMassWorld);
+        if (FrameCalculations::insideRotationCutBody(copyVort,xEnd,bodyNose,forming))
+        {
+            QPair<double,int> closest=BodyFragmentation::findClosest(vortons[i].getMid(),controlPoints, normals);
+            vortons[i].setMid(vortons[i].getMid()+2.0*closest.first*normals[closest.second]);
+            vortons[i].setTail(vortons[i].getTail()+2.0*closest.first*normals[closest.second]);
+            counters.gotBackNum++;
+        }
+        if(FrameCalculations::insideRotationCutBodyLayer(copyVort,xEnd,layerHeight, bodyNose,forming))
+        {
+            QPair<double,int> closest=BodyFragmentation::findClosest(vortons[i].getMid(),controlPoints, normals);
+            vortons[i].rotateAroundNormal(normals[closest.second]);
+            counters.rotatedNum++;
+        }
+        if (FrameCalculations::insideScreen(vortons[i]))
+        {
+            vortons.remove(i);
+            counters.underScreenNum++;
+        }
+    }
+    timers.getBackAndRotateTimer=start.elapsed()*0.001;
+}
+
 /*!
 Функция, возвращающая вортоны из тела в поток и разворачивающая вортонов относительно поверхности тела вращения со срезом в слое
 \param[in,out] vortons Вектор, содержащий вортоны для функции
@@ -1459,6 +1495,100 @@ void FrameCalculations::translateAndRotate(QVector<std::shared_ptr<MultiFrame>>&
         controlPointsRaised[i]=/*oldControlPointsRaised[i]+*/translation+Vector3D(newTranslate.x(),newTranslate.y(),newTranslate.z());
         newTranslate=Eigen::Vector3d(massCenter.x(),massCenter.y(),massCenter.z())+
                 rotationMatrix*Eigen::Vector3d(oldNormals[i].x()-massCenter.x(),oldNormals[i].y()-massCenter.y(),oldNormals[i].z()-massCenter.z());
+        normals[i]=/*oldNormals[i]+*/Vector3D(newTranslate.x(),newTranslate.y(),newTranslate.z());
+
+    }
+//    for (int i=0; i<vortons.size();i++)
+//    {
+//        vortons[i].setMid(vortons[i].getMid()+translation);
+//        vortons[i].setTail(vortons[i].getTail()+translation);
+//        newTranslate=Eigen::Vector3d(center.x(),center.y(),center.z())+
+//                rotationMatrix*Eigen::Vector3d(vortons[i].getMid().x()-center.x(),vortons[i].getMid().y()-center.y(),vortons[i].getMid().z()-center.z());
+//        vortons[i].setMid(Vector3D(newTranslate.x(),newTranslate.y(),newTranslate.z()));
+//        newTranslate=Eigen::Vector3d(center.x(),center.y(),center.z())+
+//                rotationMatrix*Eigen::Vector3d(vortons[i].getTail().x()-center.x(),vortons[i].getTail().y()-center.y(),vortons[i].getTail().z()-center.z());
+//         vortons[i].setTail(Vector3D(newTranslate.x(),newTranslate.y(),newTranslate.z()));
+//    }
+
+    dCloseODE();
+}
+
+void FrameCalculations::translateAndRotatev2(QVector<std::shared_ptr<MultiFrame> > &frames, QVector<Vorton> &vortons, double mass, Eigen::Matrix3d inertiaTensor, Vector3D tongue, Eigen::Matrix3d &rotationMatrix, Vector3D force, Vector3D &center, Vector3D nullCenter, Vector3D massCenter, double time, Vector3D linearVel, QVector<Vector3D> &controlPoints, QVector<Vector3D> &normals, QVector<Vector3D> &controlPointsRaised, QVector<std::shared_ptr<MultiFrame> > &oldFrames, QVector<Vector3D> &oldControlPoints, QVector<Vector3D> &oldNormals, QVector<Vector3D> &oldControlPointsRaised, Vector3D &angVel, Vector3D& bodyNose, double& xend)
+{
+    dInitODE();
+    dWorldID world = dWorldCreate();
+    dWorldSetGravity(world,0.0,0.0,0.0);
+    dBodyID rocket = dBodyCreate(world);
+    dBodySetPosition(rocket, center.x(),center.y(),center.z());
+    //nullCenter=center;
+    dMatrix3 rot;
+    for (int i=0; i<3;i++)
+        for (int j=0; j<3; j++)
+            rot[i*4+j]=rotationMatrix(i,j);
+
+    dBodySetRotation(rocket,rot);
+    dMass rocketMass;
+    dMassSetZero(&rocketMass);
+
+    dMassSetParameters(&rocketMass,mass,massCenter.x(),massCenter.y(),massCenter.z(),inertiaTensor(0,0),inertiaTensor(1,1),inertiaTensor(2,2),inertiaTensor(0,1),inertiaTensor(0,2),inertiaTensor(1,2));
+    dBodySetMass(rocket,&rocketMass);
+    dBodyAddForce(rocket,force.x(),force.y(),force.z());
+//     qDebug()<<"force is "<<force.x()<<" "<< force.y()<<" "<<force.z();
+    dBodyAddTorque(rocket, tongue.x(),tongue.y(),tongue.z());
+//    qDebug()<<"torgue is "<<tongue.x()<<" "<< tongue.y()<<" "<<tongue.z();
+    dBodySetLinearVel(rocket,linearVel.x(),linearVel.y(),linearVel.z());
+    dWorldStep(world,time);
+    const dReal* Pos;
+    const dReal* angle;
+
+    Pos = dBodyGetPosition(rocket);
+
+    float pos[3] = { Pos[0], Pos[1], Pos[2] };
+//    qDebug()<<"Position is "<<pos[0]<<" "<<pos[1]<<" "<<pos[2];
+    Vector3D translation(pos[0]-center.x(),pos[1]-center.y(),pos[2]-center.z());
+//    qDebug()<<translation.x()<<" "<<translation.y()<<" "<<translation.z();
+//    qDebug()<<"translation is "<<translation.x()<<" "<< translation.y()<<" "<<translation.z();
+    center=Vector3D(pos[0],pos[1],pos[2]);
+    bodyNose+=translation;
+    xend+=translation.x();
+    angle = dBodyGetRotation(rocket);
+    const dReal* angularVel;
+    angularVel=dBodyGetAngularVel(rocket);
+    angVel=Vector3D(angularVel[0],angularVel[1],angularVel[2]);
+    float vel[3]={angularVel[0],angularVel[1],angularVel[2]};
+    float angles[12] = {angle[0],angle[1],angle[2],angle[3],angle[4],angle[5],angle[6],angle[7],angle[8],angle[9],angle[10],angle[11]};
+    //qDebug()<<vel[0]<<" "<<vel[1]<<" "<<vel[2];
+    for (int i=0; i<3; i++)
+        for (int j=0; j<3; j++)
+            rotationMatrix(i,j)=angles[i*4+j];
+    Eigen::Vector3d newTranslate;
+    for (int i=0; i<frames.size();i++)
+        for (int j=0; j<frames[i]->getAnglesNum();j++)
+        {
+//            frames[i]->at(j).setMid(oldFrames[i]->at(j).getMid()+translation);
+//            frames[i]->at(j).setTail(oldFrames[i]->at(j).getTail()+translation);
+
+            newTranslate=Eigen::Vector3d(massCenter.x(),massCenter.y(),massCenter.z())+
+                    rotationMatrix*Eigen::Vector3d(frames[i]->at(j).getMid().x()-massCenter.x(),frames[i]->at(j).getMid().y()-massCenter.y(),frames[i]->at(j).getMid().z()-massCenter.z());
+            frames[i]->at(j).setMid(translation+Vector3D(newTranslate.x(),newTranslate.y(),newTranslate.z()));
+            newTranslate=Eigen::Vector3d(massCenter.x(),massCenter.y(),massCenter.z())+
+                                rotationMatrix*Eigen::Vector3d(frames[i]->at(j).getTail().x()-massCenter.x(),frames[i]->at(j).getTail().y()-massCenter.y(),frames[i]->at(j).getTail().z()-massCenter.z());
+            frames[i]->at(j).setTail(translation+Vector3D(newTranslate.x(),newTranslate.y(),newTranslate.z()));
+            frames[i]->setCenter(frames[i]->getCenter()+translation);
+        }
+
+    for (int i=0; i<controlPoints.size(); i++)
+    {
+
+
+        newTranslate=Eigen::Vector3d(massCenter.x(),massCenter.y(),massCenter.z())+
+                rotationMatrix*Eigen::Vector3d(controlPoints[i].x()-massCenter.x(),controlPoints[i].y()-massCenter.y(),controlPoints[i].z()-massCenter.z());
+        controlPoints[i]=/*oldControlPoints[i]+*/translation+Vector3D(newTranslate.x(),newTranslate.y(),newTranslate.z());
+        newTranslate=Eigen::Vector3d(massCenter.x(),massCenter.y(),massCenter.z())+
+                rotationMatrix*Eigen::Vector3d(controlPointsRaised[i].x()-massCenter.x(),controlPointsRaised[i].y()-massCenter.y(),controlPointsRaised[i].z()-massCenter.z());
+        controlPointsRaised[i]=/*oldControlPointsRaised[i]+*/translation+Vector3D(newTranslate.x(),newTranslate.y(),newTranslate.z());
+        newTranslate=Eigen::Vector3d(massCenter.x(),massCenter.y(),massCenter.z())+
+                rotationMatrix*Eigen::Vector3d(normals[i].x()-massCenter.x(),normals[i].y()-massCenter.y(),normals[i].z()-massCenter.z());
         normals[i]=/*oldNormals[i]+*/Vector3D(newTranslate.x(),newTranslate.y(),newTranslate.z());
 
     }

@@ -1,6 +1,7 @@
 #include "bodyfragmentation.h"
 #include <QFile>
 #include <QTextStream>
+#include <QDebug>
 /*!
 Установка соотвествующего значения в объект структуры параметров разбиения сферы
 \param i Номер поля структуры
@@ -604,14 +605,33 @@ void BodyFragmentation::rotationCutBodyFragmantation()
 \param bodyVel Скорость тела
 \param tau Размер шага
 */
-void BodyFragmentation::rotationCutBodyLaunchFragmentation(const int i, const Vector3D& bodyVel, const double tau)
+void BodyFragmentation::rotationCutBodyLaunchFragmentation(const int i, const Vector3D& bodyVel, const double tau,const double fullLength)
 {
 
     double ledge=bodyVel.length()*tau*(i+1);
 
-    if (ledge<rotationBottomCutBody.xEnd-rotationBottomCutBody.xBeg)
+    if (fabs(ledge)<fullLength)
     {
         clearVectors();
+        switch (formingRBC.type)
+        {
+        case ELLIPSOID_CONE:
+        {
+            rotationBottomCutBody.xEnd=rotationBottomCutBody.xBeg+formingRBC.ellipsoidLength+formingRBC.coneLength;
+            break;
+        }
+        case ELLIPSOID_CYLINDER:
+        {
+            rotationBottomCutBody.xEnd=rotationBottomCutBody.xBeg+formingRBC.fullLength;
+            break;
+        }
+        case ELLIPSOID_CYLINDER_CONE:
+        {
+            rotationBottomCutBody.xEnd=rotationBottomCutBody.xBeg+formingRBC.fullLength;
+            break;
+        }
+        }
+        qDebug()<<rotationBottomCutBody.xEnd;
         QVector<Vector2D> part(rotationBottomCutBody.partFragNum);
         QVector<Vector2D> forNormals(rotationBottomCutBody.partFragNum-1);
         QVector<Vector2D> forControlPoint(rotationBottomCutBody.partFragNum-1);
@@ -623,7 +643,7 @@ void BodyFragmentation::rotationCutBodyLaunchFragmentation(const int i, const Ve
         QVector<double> yArr(NFRAG);
 
         double newBeg=rotationBottomCutBody.xBeg+rotationBottomCutBody.sectionDistance;
-        double newEnd=rotationBottomCutBody.xEnd+rotationBottomCutBody.delta;
+        double newEnd=rotationBottomCutBody.xEnd-rotationBottomCutBody.delta;
         double fi0 = 2*M_PI/rotationBottomCutBody.fiFragNum;
         double height=(newEnd-newBeg)/(NFRAG-1);
         s[0]=0.0;
@@ -664,16 +684,17 @@ void BodyFragmentation::rotationCutBodyLaunchFragmentation(const int i, const Ve
             end--;
             currentEnd=part[end].x();
         }
-        part.removeLast();
-        forUp.removeLast();
-        forControlPoint.removeLast();
-        forNormals.removeLast();
-        end--;
+//        part.removeLast();
+//        forUp.removeLast();
+//        forControlPoint.removeLast();
+//        forNormals.removeLast();
+//        end--;
 
         part.push_back(Vector2D(ledge, BodyFragmentation::presetFunctionG(ledge,formingRBC)));
         forUp.push_back(Vector2D(-BodyFragmentation::presetDeriveFunctionG(ledge,formingRBC),1.0).normalized());
         forControlPoint.push_back(Vector2D(0.5*(part[end]+part[end+1])));
         forNormals.push_back(Vector2D(-BodyFragmentation::presetDeriveFunctionG(forControlPoint.last().x(),formingRBC),1).normalized());
+
 
         for (int i=0; i<part.size(); i++)
             part[i]+=forUp[i]*rotationBottomCutBody.delta;
@@ -685,7 +706,7 @@ void BodyFragmentation::rotationCutBodyLaunchFragmentation(const int i, const Ve
                 forControlPoint[i]-=Vector2D(part[part.size()-1].x(),0.0);
         }
         int newPartFragmNum = part.size()-1;
-
+                qDebug()<<"ya zhiv1";
         for (int j=0; j<newPartFragmNum; j++)
         {
             for (int i=0; i<rotationBottomCutBody.fiFragNum; i++)
@@ -704,7 +725,7 @@ void BodyFragmentation::rotationCutBodyLaunchFragmentation(const int i, const Ve
                 controlPointsRaised.push_back(controlPoint+rotationBottomCutBody.raise*normal);
             }
         }
-
+        qDebug()<<"ya zhiv2";
         Vector3D r0 = Vector3D(part[0].x(),0,0);
         Vector3D r11 = Vector3D(part[0].x(),part[0].y()*cos(fi0),part[0].y()*sin(fi0));
         Vector3D r21 = Vector3D(part[0].x(),part[0].y(),0.0);
@@ -728,7 +749,7 @@ void BodyFragmentation::rotationCutBodyLaunchFragmentation(const int i, const Ve
         normals.push_back(normal);
         controlPointsRaised.push_back(controlPoint+normal*rotationBottomCutBody.raise);
         squares.push_back(0.5*(r11-r00).lengthSquared()*rotationBottomCutBody.fiFragNum*sin(2*M_PI/rotationBottomCutBody.fiFragNum));
-
+                qDebug()<<"ya zhiv";
         for (int i=1; i<rotationBottomCutBody.rFragNum; i++)
         {
             for (int j=0; j<rotationBottomCutBody.fiFragNum; j++)
