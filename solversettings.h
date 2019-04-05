@@ -64,6 +64,8 @@ private slots:
     void on_saveFreeMotionSettingsPushButton_clicked();
     void on_resetFreeMotionSettingsPushButton_clicked();
 
+    void on_xVelBodyLineEdit_editingFinished();
+
 private:
     Ui::SolverSettings *ui; ///< Указатель на объект формы
     //bool entirety;

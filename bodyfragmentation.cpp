@@ -389,16 +389,16 @@ void BodyFragmentation::rotationBodyFragmantation()
         double derivative=BodyFragmentation::presetDeriveFunctionF(xArr[i],forming);
         s[i]=s[i-1]+height*sqrt(1+derivative*derivative);
     }
-//    QFile curving("curving.csv");
-//    if (curving.open(QIODevice::WriteOnly))
-//    {
-//        QTextStream ts(&curving);
-//        for (int i=0; i<NFRAG;i++)
-//        {
-//            ts<<QString::number(xArr[i])+"\t"+QString::number(yArr[i])+"\n";
-//        }
-//    }
-//    curving.close();
+    //    QFile curving("curving.csv");
+    //    if (curving.open(QIODevice::WriteOnly))
+    //    {
+    //        QTextStream ts(&curving);
+    //        for (int i=0; i<NFRAG;i++)
+    //        {
+    //            ts<<QString::number(xArr[i])+"\t"+QString::number(yArr[i])+"\n";
+    //        }
+    //    }
+    //    curving.close();
 
     double length=s[s.size()-1];
     for (int i=0; i<rotationBody.partFragNum; i++)
@@ -631,7 +631,7 @@ void BodyFragmentation::rotationCutBodyLaunchFragmentation(const int i, const Ve
             break;
         }
         }
-        qDebug()<<rotationBottomCutBody.xEnd;
+        //qDebug()<<rotationBottomCutBody.xEnd;
         QVector<Vector2D> part(rotationBottomCutBody.partFragNum);
         QVector<Vector2D> forNormals(rotationBottomCutBody.partFragNum-1);
         QVector<Vector2D> forControlPoint(rotationBottomCutBody.partFragNum-1);
@@ -656,8 +656,8 @@ void BodyFragmentation::rotationCutBodyLaunchFragmentation(const int i, const Ve
             double derivative=BodyFragmentation::presetDeriveFunctionG(xArr[i],formingRBC);
             s[i]=s[i-1]+height*sqrt(1+derivative*derivative);
         }
-//        for (int i=0; i<xArr.size();i++)
-//            xArr[i]-=xArr[xArr.size()-1];
+        //        for (int i=0; i<xArr.size();i++)
+        //            xArr[i]-=xArr[xArr.size()-1];
 
         double length=s[s.size()-2];
         for (int i=0; i<rotationBottomCutBody.partFragNum; i++)
@@ -684,11 +684,11 @@ void BodyFragmentation::rotationCutBodyLaunchFragmentation(const int i, const Ve
             end--;
             currentEnd=part[end].x();
         }
-//        part.removeLast();
-//        forUp.removeLast();
-//        forControlPoint.removeLast();
-//        forNormals.removeLast();
-//        end--;
+        //        part.removeLast();
+        //        forUp.removeLast();
+        //        forControlPoint.removeLast();
+        //        forNormals.removeLast();
+        //        end--;
 
         part.push_back(Vector2D(ledge, BodyFragmentation::presetFunctionG(ledge,formingRBC)));
         forUp.push_back(Vector2D(-BodyFragmentation::presetDeriveFunctionG(ledge,formingRBC),1.0).normalized());
@@ -706,7 +706,7 @@ void BodyFragmentation::rotationCutBodyLaunchFragmentation(const int i, const Ve
                 forControlPoint[i]-=Vector2D(part[part.size()-1].x(),0.0);
         }
         int newPartFragmNum = part.size()-1;
-                qDebug()<<"ya zhiv1";
+        // qDebug()<<"ya zhiv1";
         for (int j=0; j<newPartFragmNum; j++)
         {
             for (int i=0; i<rotationBottomCutBody.fiFragNum; i++)
@@ -725,7 +725,7 @@ void BodyFragmentation::rotationCutBodyLaunchFragmentation(const int i, const Ve
                 controlPointsRaised.push_back(controlPoint+rotationBottomCutBody.raise*normal);
             }
         }
-        qDebug()<<"ya zhiv2";
+        // qDebug()<<"ya zhiv2";
         Vector3D r0 = Vector3D(part[0].x(),0,0);
         Vector3D r11 = Vector3D(part[0].x(),part[0].y()*cos(fi0),part[0].y()*sin(fi0));
         Vector3D r21 = Vector3D(part[0].x(),part[0].y(),0.0);
@@ -749,7 +749,7 @@ void BodyFragmentation::rotationCutBodyLaunchFragmentation(const int i, const Ve
         normals.push_back(normal);
         controlPointsRaised.push_back(controlPoint+normal*rotationBottomCutBody.raise);
         squares.push_back(0.5*(r11-r00).lengthSquared()*rotationBottomCutBody.fiFragNum*sin(2*M_PI/rotationBottomCutBody.fiFragNum));
-                qDebug()<<"ya zhiv";
+        //     qDebug()<<"ya zhiv";
         for (int i=1; i<rotationBottomCutBody.rFragNum; i++)
         {
             for (int j=0; j<rotationBottomCutBody.fiFragNum; j++)
@@ -784,6 +784,195 @@ void BodyFragmentation::clearVectors()
     frames.clear();
 }
 
+void BodyFragmentation::prepareGraphsX0(QVector<std::shared_ptr<MultiFrame> > &xFrames, FormingParameters pars)
+{
+    double center;
+    switch(pars.typeNum)
+    {
+    case 0:
+    {
+        center=(pars.sectorOneLength+pars.sectorTwoLength+pars.diameter*0.5)*0.5;
+        break;
+    }
+    case 1:
+    {
+        center=pars.sectorOneLength*0.5;
+        break;
+    }
+    case 2:
+    {
+
+        center=pars.sectorOneLength*0.5;
+        break;
+    }
+    }
+
+    QVector<Vector2D> part(rotationBody.partFragNum);
+    QVector<Vector2D> forNormals(rotationBody.partFragNum-1);
+    QVector<Vector2D> forControlPoint(rotationBody.partFragNum-1);
+    QVector<Vector2D> forUp(rotationBody.partFragNum);
+    const int NFRAG=400;
+
+    QVector<double> s(NFRAG);
+    QVector<double> xArr(NFRAG);
+    QVector<double> yArr(NFRAG);
+
+    double newBeg=rotationBody.xBeg+rotationBody.sectionDistance;
+    double newEnd=rotationBody.xEnd-rotationBody.sectionEndDistance;
+    double fi0 = 2*M_PI/rotationBody.fiFragNum;
+    double height=(newEnd-newBeg)/(NFRAG-1);
+    s[0]=0.0;
+    xArr[0]=newBeg;
+    yArr[0]=BodyFragmentation::presetFunctionF(newBeg,forming);
+    for (int i=1; i<NFRAG; i++)
+    {
+        xArr[i]=newBeg+i*height;
+        yArr[i]=BodyFragmentation::presetFunctionF(xArr[i],forming);
+        double derivative=BodyFragmentation::presetDeriveFunctionF(xArr[i],forming);
+        s[i]=s[i-1]+height*sqrt(1+derivative*derivative);
+    }
+
+
+    double length=s[s.size()-1];
+    for (int i=0; i<rotationBody.partFragNum; i++)
+    {
+        int num=findClosetElementFromArray(s,length/(rotationBody.partFragNum-1)*i);
+        part[i]=Vector2D(xArr[num],yArr[num]);
+        forUp[i]=Vector2D(-BodyFragmentation::presetDeriveFunctionF(xArr[num],forming),1).normalized();
+    }
+    for (int i=0; i<part.size(); i++)
+        part[i]+=forUp[i]*rotationBody.delta;
+    for (int j=0; j<rotationBody.partFragNum-1; j++)
+    {
+        for (int i=0; i<rotationBody.fiFragNum; i++)
+        {
+            double fi=fi0*i;
+            Vector3D r01=Vector3D(part[j].x(),0.0,part[j].y()*sin(fi));
+            Vector3D r11=Vector3D(part[j].x(),0.0,part[j].y()*sin(fi+fi0));
+            Vector3D r21=Vector3D(part[j+1].x(),0.0,part[j+1].y()*sin(fi+fi0));
+            Vector3D r31=Vector3D(part[j+1].x(),0.0,part[j+1].y()*sin(fi));
+            xFrames.push_back(std::make_shared <FourFrame>(r01,r11,r21,r31,0.0));
+        }
+    }
+}
+
+void BodyFragmentation::prepareGraphsY0(QVector<std::shared_ptr<MultiFrame> > &yFrames, FormingParameters pars)
+{
+    double center;
+    switch(pars.typeNum)
+    {
+    case 0:
+    {
+        center=(pars.sectorOneLength+pars.sectorTwoLength+pars.diameter*0.5)*0.5;
+        break;
+    }
+    case 1:
+    {
+        center=pars.sectorOneLength*0.5;
+        break;
+    }
+    case 2:
+    {
+
+        center=pars.sectorOneLength*0.5;
+        break;
+    }
+    }
+
+    QVector<Vector2D> part(rotationBody.partFragNum);
+    QVector<Vector2D> forNormals(rotationBody.partFragNum-1);
+    QVector<Vector2D> forControlPoint(rotationBody.partFragNum-1);
+    QVector<Vector2D> forUp(rotationBody.partFragNum);
+    const int NFRAG=400;
+
+    QVector<double> s(NFRAG);
+    QVector<double> xArr(NFRAG);
+    QVector<double> yArr(NFRAG);
+
+    double newBeg=rotationBody.xBeg+rotationBody.sectionDistance;
+    double newEnd=rotationBody.xEnd-rotationBody.sectionEndDistance;
+    double fi0 = 2*M_PI/rotationBody.fiFragNum;
+    double height=(newEnd-newBeg)/(NFRAG-1);
+    s[0]=0.0;
+    xArr[0]=newBeg;
+    yArr[0]=BodyFragmentation::presetFunctionF(newBeg,forming);
+    for (int i=1; i<NFRAG; i++)
+    {
+        xArr[i]=newBeg+i*height;
+        yArr[i]=BodyFragmentation::presetFunctionF(xArr[i],forming);
+        double derivative=BodyFragmentation::presetDeriveFunctionF(xArr[i],forming);
+        s[i]=s[i-1]+height*sqrt(1+derivative*derivative);
+    }
+
+
+    double length=s[s.size()-1];
+    for (int i=0; i<rotationBody.partFragNum; i++)
+    {
+        int num=findClosetElementFromArray(s,length/(rotationBody.partFragNum-1)*i);
+        part[i]=Vector2D(xArr[num],yArr[num]);
+        forUp[i]=Vector2D(-BodyFragmentation::presetDeriveFunctionF(xArr[num],forming),1).normalized();
+    }
+    for (int i=0; i<part.size(); i++)
+        part[i]+=forUp[i]*rotationBody.delta;
+    for (int j=0; j<rotationBody.partFragNum-1; j++)
+    {
+        for (int i=0; i<rotationBody.fiFragNum; i++)
+        {
+            double fi=fi0*i;
+            Vector3D r01=Vector3D(part[j].x(),part[j].y()*cos(fi),0.0);
+            Vector3D r11=Vector3D(part[j].x(),part[j].y()*cos(fi+fi0),0.0);
+            Vector3D r21=Vector3D(part[j+1].x(),part[j+1].y()*cos(fi+fi0),0.0);
+            Vector3D r31=Vector3D(part[j+1].x(),part[j+1].y()*cos(fi),0.0);
+            yFrames.push_back(std::make_shared <FourFrame>(r01,r11,r21,r31,0.0));
+        }
+    }
+}
+
+void BodyFragmentation::prepareGraphsZ0(QVector<std::shared_ptr<MultiFrame> > &zFrames, FormingParameters pars)
+{
+    double center;
+    switch(pars.typeNum)
+    {
+    case 0:
+    {
+        center=(pars.sectorOneLength+pars.sectorTwoLength+pars.diameter*0.5)*0.5;
+        break;
+    }
+    case 1:
+    {
+        center=pars.sectorOneLength*0.5;
+        break;
+    }
+    case 2:
+    {
+
+        center=pars.sectorOneLength*0.5;
+        break;
+    }
+    }
+    double rad0=BodyFragmentation::presetFunctionF(center,pars)/4;
+    qDebug()<<rad0;
+    double fi0 = 2*M_PI/rotationBody.fiFragNum;
+    Vector3D r0=Vector3D(center,0.0,0.0);
+    Vector3D r1 = Vector3D(center, rad0, 0.0);
+    Vector3D r2 = Vector3D(center, rad0*cos(fi0),rad0*sin(fi0));
+    zFrames.push_back(std::make_shared<MultiFrame>(rotationBody.fiFragNum,r0,r1,r2,0));
+
+    for (int i=1; i<4; i++)
+    {
+        for (int j=0; j<rotationBody.fiFragNum; j++)
+        {
+            double fi = fi0*j;
+            double r = rad0*i;
+            Vector3D r11 (center,r*cos(fi),r*sin(fi));
+            Vector3D r01 (center,r*cos(fi+fi0),r*sin(fi+fi0));
+            Vector3D r31 (center,(r+rad0)*cos(fi+fi0),(r+rad0)*sin(fi+fi0));
+            Vector3D r21 (center,(r+rad0)*cos(fi),(r+rad0)*sin(fi));
+            zFrames.push_back(std::make_shared <FourFrame>(r01,r11,r21,r31,0));
+        }
+    }
+}
+
 FormingParameters BodyFragmentation::getForming()
 {
     return forming;
@@ -801,7 +990,7 @@ FormingParametersRBC BodyFragmentation::getFormingRBC()
 */
 double BodyFragmentation::presetFunctionF(double x, FormingParameters parameters)
 {
- //   if ((x>=0)&&(x<=2)) return sqrt(1-(x-1)*(x-1));
+    //   if ((x>=0)&&(x<=2)) return sqrt(1-(x-1)*(x-1));
     switch (parameters.typeNum)
     {
     case 0:
@@ -859,7 +1048,7 @@ double BodyFragmentation::presetFunctionF(double x, FormingParameters parameters
 */
 double BodyFragmentation::presetDeriveFunctionF(double x, FormingParameters parameters)
 {
-//    if ((x>=0)&&(x<=2)) return -(x-1)/presetFunctionF(x,parameters);
+    //    if ((x>=0)&&(x<=2)) return -(x-1)/presetFunctionF(x,parameters);
     switch (parameters.typeNum)
     {
     case 0:
@@ -930,7 +1119,7 @@ double BodyFragmentation::presetFunctionG(double x, FormingParametersRBC paramet
                 return parameters.ellipsoidDiameter*0.5-(parameters.ellipsoidDiameter-parameters.tailDiameter)*0.5/parameters.coneLength*(x-parameters.ellipsoidLength);
             else
             {
-                    return 0.0;
+                return 0.0;
             }
         }
     }
@@ -1018,7 +1207,7 @@ double BodyFragmentation::presetDeriveFunctionG(double x, FormingParametersRBC p
                 return -(parameters.ellipsoidDiameter-parameters.tailDiameter)*0.5/parameters.coneLength;
             else
             {
-                    return 0.0;
+                return 0.0;
             }
         }
     }
@@ -1047,9 +1236,9 @@ double BodyFragmentation::presetDeriveFunctionG(double x, FormingParametersRBC p
         }
     }
     }
-//    if ((x>=0)&&(x<=1.4)) return -2*(x-1.4)/sqrt(1.4*1.4-(x-1.4)*(x-1.4));
-//    if ((x>=1.4)&&(x<=5)) return 0.0;
-//    return 0.0;
+    //    if ((x>=0)&&(x<=1.4)) return -2*(x-1.4)/sqrt(1.4*1.4-(x-1.4)*(x-1.4));
+    //    if ((x>=1.4)&&(x<=5)) return 0.0;
+    //    return 0.0;
 }
 
 /*!

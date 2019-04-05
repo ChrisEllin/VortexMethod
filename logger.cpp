@@ -1068,53 +1068,166 @@ void Logger::createParaviewTraceFile(QVector<Vorton> &vortons, int currentStep)
 
 }
 
-void Logger::createCenterGraphs(FormingParameters pars, double step,int currentStep)
+void Logger::createCenterGraphs(FormingParameters pars, double step, int currentStep, QVector<Vorton>& freeVortons, Vector3D velInf, QVector<std::shared_ptr<MultiFrame>>& xFrames, QVector<std::shared_ptr<MultiFrame> > &yFrames, QVector<std::shared_ptr<MultiFrame> > &zFrames)
 {
-    QFile xFile(path+"/graphs/xGraph.vtk"+QString::number(currentStep));
+    QFile xFile(path+"/graphs/x0Graph.vtk."+QString::number(currentStep));
     if (xFile.open(QIODevice::WriteOnly))
     {
-        QTextStream xStream(&xFile);
-        QVector<QPair<double,double>> data;
-        switch (pars.typeNum) {
-        case 0:
-            break;
-        case 1:
-            break;
-        case 2:
-            qDebug()<<"start_writing";
-        for (double i=0.0; i<pars.sectorOneLength;i=i+step)
+        QTextStream yTextStream(&xFile);
+        yTextStream<<"# vtk DataFile Version 3.0\n";
+        yTextStream<<"vtk output\n";
+        yTextStream<<"ASCII\n";
+        yTextStream<<"DATASET UNSTRUCTURED_GRID\n";
+        int points=0;
+        for (int i=0; i<xFrames.size();i++)
+            points+=xFrames[i]->getAnglesNum();
+        yTextStream<<"POINTS "<<points<<" float\n";
+        yTextStream.flush();
+        for (int i=0; i<xFrames.size();i++)
         {
-            double j=0.0;
-            while (j<BodyFragmentation::presetFunctionF(i,pars))
-            {
-                data.push_back(QPair<double,double>(i,j));
-                    j+=step;
-                }
-            data.push_back(QPair<double,double>(i,BodyFragmentation::presetFunctionF(i,pars)));
-            }
-
-         qDebug()<<"start_writing_loop_2";
-         qDebug()<<data.size();
-        QVector<QPair<double,double>> newData;
-        for (int i=0;i<data.size();i++)
-        {
-
-            if (!qFuzzyIsNull(data[i].second))
-            {
-                newData.append(QPair<double,double>(data[i].first,-data[i].second));
-            }
-        }
-        data.append(newData);
-         qDebug()<<"start_writing_text";
-        for (int i=0; i<data.size();i++)
-            xStream<<QString::number(data[i].first)+" "+QString::number(data[i].second)+"\n";
-        qDebug()<<"written";
-        xStream.flush();
-        break;
+            for (int j=0; j<xFrames[i]->getAnglesNum(); j++)
+                yTextStream<<xFrames[i]->at(j).getTail().x()<<" "<<xFrames[i]->at(j).getTail().y()<<" "<<xFrames[i]->at(j).getTail().z()<<"\n";
+            yTextStream.flush();
         }
 
+        yTextStream<<"CELLS "<<xFrames.size()<<" "<<points+xFrames.size()<<"\n";
+        int currentPointNumber=0;
+        for (int i=0; i<xFrames.size(); i++)
+        {
+            yTextStream<<xFrames[i]->getAnglesNum();
+            int virtualNumber=currentPointNumber;
+            for (int j=currentPointNumber; j<currentPointNumber+xFrames[i]->getAnglesNum();j++)
+            {
+                yTextStream<<" "<<j;
+                virtualNumber++;
+            }
+            currentPointNumber=virtualNumber;
+            yTextStream<<"\n";
+        }
+
+        yTextStream.flush();
+        yTextStream<<"CELL_TYPES "<<xFrames.size()<<"\n";
+        for (int i=0;i<xFrames.size(); i++)
+            xFrames[i]->getAnglesNum()==4 ? yTextStream<<"9\n" : yTextStream<<"7\n";
+        yTextStream.flush();
+
+
+        yTextStream<<"CELL_DATA "<<xFrames.size()<<"\n";
+        QVector<Vector3D> velocities;
+        for (int i=0; i<xFrames.size();i++)
+            velocities.push_back(FrameCalculations::velocity(xFrames[i]->getCenter(),velInf,freeVortons));
+        yTextStream<<"VECTORS velocities float\n";
+        for (int i=0; i<velocities.size();i++)
+            yTextStream<<velocities[i].x()<<" "<<velocities[i].y()<<" "<<velocities[i].z()<<"\n";
+        yTextStream.flush();
     }
     xFile.close();
+
+    QFile yFile(path+"/graphs/y0Graph.vtk."+QString::number(currentStep));
+    if (yFile.open(QIODevice::WriteOnly))
+    {
+        QTextStream yTextStream(&yFile);
+        yTextStream<<"# vtk DataFile Version 3.0\n";
+        yTextStream<<"vtk output\n";
+        yTextStream<<"ASCII\n";
+        yTextStream<<"DATASET UNSTRUCTURED_GRID\n";
+        int points=0;
+        for (int i=0; i<yFrames.size();i++)
+            points+=yFrames[i]->getAnglesNum();
+        yTextStream<<"POINTS "<<points<<" float\n";
+        yTextStream.flush();
+        for (int i=0; i<yFrames.size();i++)
+        {
+            for (int j=0; j<yFrames[i]->getAnglesNum(); j++)
+                yTextStream<<yFrames[i]->at(j).getTail().x()<<" "<<yFrames[i]->at(j).getTail().y()<<" "<<yFrames[i]->at(j).getTail().z()<<"\n";
+            yTextStream.flush();
+        }
+
+        yTextStream<<"CELLS "<<yFrames.size()<<" "<<points+yFrames.size()<<"\n";
+        int currentPointNumber=0;
+        for (int i=0; i<yFrames.size(); i++)
+        {
+            yTextStream<<yFrames[i]->getAnglesNum();
+            int virtualNumber=currentPointNumber;
+            for (int j=currentPointNumber; j<currentPointNumber+yFrames[i]->getAnglesNum();j++)
+            {
+                yTextStream<<" "<<j;
+                virtualNumber++;
+            }
+            currentPointNumber=virtualNumber;
+            yTextStream<<"\n";
+        }
+
+        yTextStream.flush();
+        yTextStream<<"CELL_TYPES "<<yFrames.size()<<"\n";
+        for (int i=0;i<yFrames.size(); i++)
+            yFrames[i]->getAnglesNum()==4 ? yTextStream<<"9\n" : yTextStream<<"7\n";
+        yTextStream.flush();
+
+
+        yTextStream<<"CELL_DATA "<<yFrames.size()<<"\n";
+        QVector<Vector3D> velocities;
+        for (int i=0; i<yFrames.size();i++)
+            velocities.push_back(FrameCalculations::velocity(yFrames[i]->getCenter(),velInf,freeVortons));
+        yTextStream<<"VECTORS velocities float\n";
+        for (int i=0; i<velocities.size();i++)
+            yTextStream<<velocities[i].x()<<" "<<velocities[i].y()<<" "<<velocities[i].z()<<"\n";
+        yTextStream.flush();
+    }
+    yFile.close();
+
+    QFile zFile(path+"/graphs/z0Graph.vtk."+QString::number(currentStep));
+    if (zFile.open(QIODevice::WriteOnly))
+    {
+        QTextStream yTextStream(&zFile);
+        yTextStream<<"# vtk DataFile Version 3.0\n";
+        yTextStream<<"vtk output\n";
+        yTextStream<<"ASCII\n";
+        yTextStream<<"DATASET UNSTRUCTURED_GRID\n";
+        int points=0;
+        for (int i=0; i<zFrames.size();i++)
+            points+=zFrames[i]->getAnglesNum();
+        yTextStream<<"POINTS "<<points<<" float\n";
+        yTextStream.flush();
+        for (int i=0; i<zFrames.size();i++)
+        {
+            for (int j=0; j<zFrames[i]->getAnglesNum(); j++)
+                yTextStream<<zFrames[i]->at(j).getTail().x()<<" "<<zFrames[i]->at(j).getTail().y()<<" "<<zFrames[i]->at(j).getTail().z()<<"\n";
+            yTextStream.flush();
+        }
+
+        yTextStream<<"CELLS "<<zFrames.size()<<" "<<points+zFrames.size()<<"\n";
+        int currentPointNumber=0;
+        for (int i=0; i<zFrames.size(); i++)
+        {
+            yTextStream<<zFrames[i]->getAnglesNum();
+            int virtualNumber=currentPointNumber;
+            for (int j=currentPointNumber; j<currentPointNumber+zFrames[i]->getAnglesNum();j++)
+            {
+                yTextStream<<" "<<j;
+                virtualNumber++;
+            }
+            currentPointNumber=virtualNumber;
+            yTextStream<<"\n";
+        }
+
+        yTextStream.flush();
+        yTextStream<<"CELL_TYPES "<<zFrames.size()<<"\n";
+        for (int i=0;i<zFrames.size(); i++)
+            zFrames[i]->getAnglesNum()==4 ? yTextStream<<"9\n" : yTextStream<<"7\n";
+        yTextStream.flush();
+
+
+        yTextStream<<"CELL_DATA "<<zFrames.size()<<"\n";
+        QVector<Vector3D> velocities;
+        for (int i=0; i<zFrames.size();i++)
+            velocities.push_back(FrameCalculations::velocity(zFrames[i]->getCenter(),velInf,freeVortons));
+        yTextStream<<"VECTORS velocities float\n";
+        for (int i=0; i<velocities.size();i++)
+            yTextStream<<velocities[i].x()<<" "<<velocities[i].y()<<" "<<velocities[i].z()<<"\n";
+        yTextStream.flush();
+    }
+    zFile.close();
 }
 /*!
 Закрывает все файлы, открытые для записи

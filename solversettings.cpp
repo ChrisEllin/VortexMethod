@@ -1,6 +1,6 @@
 #include "solversettings.h"
 #include "ui_solversettings.h"
-
+#include <QIntValidator>
 /*!
 Установка соотвествующего значения в объект структуры
 \param i Номер поля структуры
@@ -79,6 +79,7 @@ SolverSettings::SolverSettings(QWidget *parent) :
 {
     ui->setupUi(this);
     setWindowTitle(tr("Настройки расчета"));
+    //ui->xVelStreamLineEdit->setValidator(new QIntValidator( -10, -5, ui->xVelStreamLineEdit));
     standartPar.maxMove=ui->maxMoveLineEdit->text().toDouble();
     standartPar.minVorticity=ui->gammaMinLineEdit->text().toDouble();
     standartPar.density=ui->densityLineEdit->text().toDouble();
@@ -93,6 +94,7 @@ SolverSettings::SolverSettings(QWidget *parent) :
     standartPar.stepsNum=ui->stepsNumLineEdit->text().toDouble();
     standartPar.streamPres=ui->pressureStreamLineEdit->text().toDouble();
     standartPar.streamVel=Vector3D(ui->xVelStreamLineEdit->text().toDouble(),ui->yVelStreamLineEdit->text().toDouble(),ui->zVelStreamLineEdit->text().toDouble());
+
     standartPar.acceleratedStepsNum=ui->acceleratedStepsNumLineEdit->text().toInt();
     standartFreeMotionPar.bodyVel=Vector3D(ui->xVelBodyLineEdit->text().toDouble(),ui->yVelBodyLineEdit->text().toDouble(),ui->zVelBodyLineEdit->text().toDouble());
     solvPar=standartPar;
@@ -314,4 +316,10 @@ void SolverSettings::on_resetFreeMotionSettingsPushButton_clicked()
     ui->xVelBodyLineEdit->setText(QString::number(freeMotionPar.bodyVel.x()));
     ui->yVelBodyLineEdit->setText(QString::number(freeMotionPar.bodyVel.y()));
     ui->zVelBodyLineEdit->setText(QString::number(freeMotionPar.bodyVel.z()));
+}
+
+void SolverSettings::on_xVelBodyLineEdit_editingFinished()
+{
+    if (ui->xVelBodyLineEdit->text().toInt()>-5)
+        ui->xVelBodyLineEdit->setText(QString::number(-5));
 }

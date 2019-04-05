@@ -231,6 +231,9 @@ public:
     void rotationCutBodyFragmantation();
     void rotationCutBodyLaunchFragmentation(const int i, const Vector3D &bodyVel, const double tau, const double fullLength);
     void clearVectors();
+    void prepareGraphsX0(QVector<std::shared_ptr<MultiFrame>>& xFrames,  FormingParameters pars);
+    void prepareGraphsY0(QVector<std::shared_ptr<MultiFrame>>& yFrames,  FormingParameters pars);
+    void prepareGraphsZ0(QVector<std::shared_ptr<MultiFrame>>& zFrames, FormingParameters pars);
     FormingParameters getForming();
     FormingParametersRBC getFormingRBC();
     static double presetFunctionF(double x, FormingParameters parameters);
