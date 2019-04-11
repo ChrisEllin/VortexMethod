@@ -142,6 +142,7 @@ public:
     void getBackAndRotateSphereGA(QVector<Vorton>& vortons, const Vector3D center, const double radius, const double layerHeight, const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals, QVector<Vorton> &oldvortons, QVector<std::shared_ptr<MultiFrame> > &frames);
     void getBackAndRotateCylinder(QVector<Vorton>& vortons, const double height, const double diameter, const double layerHeight, const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals);
     void getBackAndRotateRotationBody(QVector<Vorton> &vortons, const Vector3D bodyNose, const double xEnd, const double layerHeight, const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals, FormingParameters forming);
+    void getBackAndRotateRotationBodyv2(QVector<Vorton> &vortons, const Vector3D bodyNose, const double xEnd, const double layerHeight, const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals, FormingParameters forming);
     void getBackAndRotateMovingRotationBody(QVector<Vorton> &vortons, Vector3D centerMassWorld,Vector3D oldCenterWorld, const Vector3D bodyNose, const double xEnd, const double layerHeight, const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals, Eigen::Matrix3d rotationMatrix, FormingParameters forming);
     void getBackAndRotateMovingRotationCutBody(QVector<Vorton> &vortons, Vector3D centerMassWorld,Vector3D oldCenterWorld, const Vector3D bodyNose, const double xEnd, const double layerHeight, const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals, Eigen::Matrix3d rotationMatrix, FormingParametersRBC forming);
     void getBackAndRotateMovingLaunchedRotationCutBody(QVector<Vorton> &vortons, Vector3D centerMassWorld, Vector3D oldCenterWorld, const Vector3D bodyNose, const double xEnd, const double layerHeight, const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals, Eigen::Matrix3d rotationMatrix, Eigen::Matrix3d rotationNullMatrix, FormingParametersRBC forming);
@@ -155,7 +156,8 @@ public:
                             QVector<Vector3D>& controlPoints, QVector<Vector3D>& normals, QVector<Vector3D>& controlPointsRaised, QVector<std::shared_ptr<MultiFrame>>& oldFrames, QVector<Vector3D>& oldControlPoints, QVector<Vector3D>& oldNormals, QVector<Vector3D>& oldControlPointsRaised , Vector3D &angVel, Vector3D &bodyNose, double &xend);
     void translateAndRotatev3(QVector<std::shared_ptr<MultiFrame>>& frames, QVector<Vorton>& vortons, double mass, Eigen::Matrix3d inertiaTensor, Vector3D tongue, Eigen::Matrix3d &rotationMatrix, Eigen::Matrix3d &rotationNullMatrix,Vector3D force, Vector3D &center, Vector3D nullCenter, Vector3D massCenter, double time, Vector3D linearVel,
                             QVector<Vector3D>& controlPoints, QVector<Vector3D>& normals, QVector<Vector3D>& controlPointsRaised, QVector<std::shared_ptr<MultiFrame>>& oldFrames, QVector<Vector3D>& oldControlPoints, QVector<Vector3D>& oldNormals, QVector<Vector3D>& oldControlPointsRaised , Vector3D &angVel, Vector3D &bodyNose, double &xend);
-
+    void getBackRotationBody(QVector<Vorton> &vortons, const Vector3D bodyNose, const double xEnd, const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals, FormingParameters forming);
+    void rotateRotationBody(QVector<Vorton> &vortons, const Vector3D bodyNose, const double xEnd,const double layerHeight, const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals, FormingParameters forming);
     void velForStreamLines(QVector<Vector3D>& velocities, Vector3D streamVel, double step, QVector<Vorton>& freeVortons, QPair<int, int> boundaries);
     bool coDirectionallyCheck(const Vector3D a, const Vector3D b, const Vector3D c);
     static void setVorticity(QVector<std::shared_ptr<MultiFrame>> frames, const Eigen::VectorXd vorticities);
@@ -180,6 +182,8 @@ public:
     static bool insideCylinderLayer(const Vorton& vort, const double height, const double diameter, const double layerHeight);
     static bool insideRotationBody(const Vorton& vort, const Vector3D bodyNose, const double xEnd, FormingParameters forming);
     static bool insideRotationBodyLayer(const Vorton& vort, const Vector3D bodyNose, const double xEnd, const double layerHeight, FormingParameters forming);
+    static int insideRotationBodyv2(const Vorton& vort, const Vector3D bodyNose, const double xEnd, FormingParameters forming);
+    static int insideRotationBodyLayerv2(const Vorton& vort, const Vector3D bodyNose, const double xEnd, const double layerHeight, FormingParameters forming);
     static bool insideRotationCutBody(const Vorton& vort, const double xBeg, const double xEnd, FormingParametersRBC forming);
     static bool insideRotationCutBody(const Vorton& vort, const double xEnd, const Vector3D bodyNose, FormingParametersRBC forming);
     static bool insideRotationCutBodyLayer(const Vorton& vort, const double xEnd, const double layerHeight, const Vector3D bodyNose, FormingParametersRBC forming);

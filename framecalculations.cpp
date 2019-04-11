@@ -380,11 +380,11 @@ void FrameCalculations::displacementCalcGauss3(QVector<Vorton> &freeVortons, QVe
             resultedVec[i].setElongation(Vector3D());
             restrictions.turnRestr++;
         }
-        if ((selfLenBef-selfLenAft).length()>dlmax)
-        {
-            resultedVec[i].setElongation((resultedVec[i].getTail()-resultedVec[i].getMid())*(dlmax/resultedVec[i].getElongation().length()-1));
-            restrictions.elongationRestr++;
-        }
+//        if (fabs(selfLenBef.length()-selfLenAft.length())>dlmax)
+//        {
+//            resultedVec[i].setElongation((resultedVec[i].getTail()-resultedVec[i].getMid())*(dlmax/resultedVec[i].getElongation().length()-1));
+//            restrictions.elongationRestr++;
+//        }
 
         if (resultedVec[i].getElongation().length()>eDelta)
         {
@@ -493,7 +493,8 @@ void FrameCalculations::setMatrixSize(int size)
 void FrameCalculations::getBackAndRotate(bool getBackGA,QVector<Vorton> &vortons, const Vector3D bodyNose, const double xEnd, const double layerHeight, const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals, QVector<Vorton> &oldvortons, QVector<std::shared_ptr<MultiFrame>> &frames, FormingParameters forming)
 {
     if (!getBackGA)
-        getBackAndRotateRotationBody(vortons, bodyNose, xEnd,layerHeight,controlPoints, normals, forming);
+        //getBackAndRotateRotationBody(vortons, bodyNose, xEnd,layerHeight,controlPoints, normals, forming);
+        getBackAndRotateRotationBodyv2(vortons, bodyNose, xEnd,layerHeight,controlPoints, normals, forming);
     else
         getBackAndRotateRotationBodyGA(vortons, oldvortons,frames, xEnd,bodyNose,forming,layerHeight,controlPoints, normals);
 }
@@ -1053,6 +1054,42 @@ void FrameCalculations:: getBackAndRotateRotationBody(QVector<Vorton>& vortons, 
         if(FrameCalculations::insideRotationBodyLayer(vortons[i],bodyNose,xEnd,layerHeight, forming))
         {
             QPair<double,int> closest=BodyFragmentation::findClosest(vortons[i].getMid(),controlPoints, normals);
+            vortons[i].rotateAroundNormal(normals[closest.second]);
+            counters.rotatedNum++;
+        }
+    }
+    timers.getBackAndRotateTimer=start.elapsed()*0.001;
+    qDebug()<<"getBack";
+}
+
+void FrameCalculations::getBackAndRotateRotationBodyv2(QVector<Vorton> &vortons, const Vector3D bodyNose, const double xEnd, const double layerHeight, const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals, FormingParameters forming)
+{
+    QTime start=QTime::currentTime();
+    for (int i=0; i<vortons.size(); i++)
+    {
+        int inside=FrameCalculations::insideRotationBodyv2(vortons[i],bodyNose,xEnd,forming);
+        if (inside!=-1)
+        {
+            QPair<double,int> closest;
+            if (inside==1)
+                closest=BodyFragmentation::findClosest(vortons[i].getTail(),controlPoints, normals);
+            else {
+                closest=BodyFragmentation::findClosest(2.0*vortons[i].getMid()-vortons[i].getTail(),controlPoints, normals);
+            }
+            vortons[i].setMid(vortons[i].getMid()+2.0*closest.first*normals[closest.second]);
+            vortons[i].setTail(vortons[i].getTail()+2.0*closest.first*normals[closest.second]);
+            vortons[i].setMove(vortons[i].getMove()+2.0*closest.first*normals[closest.second]);
+            counters.gotBackNum++;
+        }
+        int insideLayer=FrameCalculations::insideRotationBodyLayer(vortons[i],bodyNose,xEnd,layerHeight, forming);
+        if(insideLayer!=-1)
+        {
+            QPair<double,int> closest;
+            if (insideLayer==1)
+                    closest=BodyFragmentation::findClosest(vortons[i].getTail(),controlPoints, normals);
+            else {
+                closest=BodyFragmentation::findClosest(2.0*vortons[i].getMid()-vortons[i].getTail(),controlPoints, normals);
+            }
             vortons[i].rotateAroundNormal(normals[closest.second]);
             counters.rotatedNum++;
         }
@@ -1714,6 +1751,49 @@ void FrameCalculations::translateAndRotatev3(QVector<std::shared_ptr<MultiFrame>
     dCloseODE();
 }
 
+void FrameCalculations::getBackRotationBody(QVector<Vorton> &vortons, const Vector3D bodyNose, const double xEnd, const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals, FormingParameters forming)
+{
+    QTime start=QTime::currentTime();
+    for (int i=0; i<vortons.size(); i++)
+    {
+        int inside=FrameCalculations::insideRotationBodyv2(vortons[i],bodyNose,xEnd,forming);
+        if (inside!=-1)
+        {
+            QPair<double,int> closest;
+            if (inside==1)
+                closest=BodyFragmentation::findClosest(vortons[i].getTail(),controlPoints, normals);
+            else {
+                closest=BodyFragmentation::findClosest(2.0*vortons[i].getMid()-vortons[i].getTail(),controlPoints, normals);
+            }
+            vortons[i].setMid(vortons[i].getMid()+2.0*closest.first*normals[closest.second]);
+            vortons[i].setTail(vortons[i].getTail()+2.0*closest.first*normals[closest.second]);
+            vortons[i].setMove(vortons[i].getMove()+2.0*closest.first*normals[closest.second]);
+            counters.gotBackNum++;
+        }
+    }
+    timers.getBackAndRotateTimer=start.elapsed()*0.001;
+    qDebug()<<"getBack";
+}
+
+void FrameCalculations::rotateRotationBody(QVector<Vorton> &vortons, const Vector3D bodyNose, const double xEnd, const double layerHeight, const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals, FormingParameters forming)
+{
+    for (int i=0; i<vortons.size(); i++)
+    {
+        int insideLayer=FrameCalculations::insideRotationBodyLayer(vortons[i],bodyNose,xEnd,layerHeight, forming);
+        if(insideLayer!=-1)
+        {
+            QPair<double,int> closest;
+            if (insideLayer==1)
+                closest=BodyFragmentation::findClosest(vortons[i].getTail(),controlPoints, normals);
+            else {
+                closest=BodyFragmentation::findClosest(2.0*vortons[i].getMid()-vortons[i].getTail(),controlPoints, normals);
+            }
+            vortons[i].rotateAroundNormal(normals[closest.second]);
+            counters.rotatedNum++;
+        }
+    }
+}
+
 void FrameCalculations::velForStreamLines(QVector<Vector3D> &velocities, Vector3D streamVel,double step, QVector<Vorton> &freeVortons,  QPair<int,int> boundaries)
 {
     velocities.clear();
@@ -1826,8 +1906,8 @@ Vorton FrameCalculations::parallelDisplacementGauss(const Parallel el)
 {
     Vorton res=el.Vortons->at(el.num);
     Vector3D selfLen=el.Vortons->at(el.num).getTail()-el.Vortons->at(el.num).getMid();
-    VelBsym vb=FrameCalculations::velocityAndBsymmGauss3(el.Vortons->at(el.num).getMid(), selfLen, el.streamVel, *el.Vortons);
-    //VelBsym vb=FrameCalculations::velocityAndBsymm(el.Vortons->at(el.num).getMid(),  el.streamVel, *el.Vortons);
+    //VelBsym vb=FrameCalculations::velocityAndBsymmGauss3(el.Vortons->at(el.num).getMid(), selfLen, el.streamVel, *el.Vortons);
+    VelBsym vb=FrameCalculations::velocityAndBsymm(el.Vortons->at(el.num).getMid(),  el.streamVel, *el.Vortons);
     double xElong=vb.B[0][0]*selfLen[0]+vb.B[0][1]*selfLen[1]+vb.B[0][2]*selfLen[2];
     double yElong=vb.B[1][0]*selfLen[0]+vb.B[1][1]*selfLen[1]+vb.B[1][2]*selfLen[2];
     double zElong=vb.B[2][0]*selfLen[0]+vb.B[2][1]*selfLen[1]+vb.B[2][2]*selfLen[2];
@@ -1961,6 +2041,10 @@ bool FrameCalculations::insideRotationBody(const Vorton &vort, const Vector3D bo
 {
     if((vort.getMid().x()>=bodyNose.x()) && (vort.getMid().x()<=xEnd) && ((pow(vort.getMid().z()-bodyNose.z(),2)+pow(vort.getMid().y()-bodyNose.y(),2))<pow(BodyFragmentation::presetFunctionF(vort.getMid().x()-bodyNose.x(),forming),2)))
         return true;
+//    if((vort.getTail().x()>=bodyNose.x()) && (vort.getTail().x()<=xEnd) && ((pow(vort.getTail().z()-bodyNose.z(),2)+pow(vort.getTail().y()-bodyNose.y(),2))<pow(BodyFragmentation::presetFunctionF(vort.getTail().x()-bodyNose.x(),forming),2)))
+//        return true;
+//    if(((2.0*vort.getMid()-vort.getTail()).x()>=bodyNose.x()) && ((2.0*vort.getMid()-vort.getTail()).x()<=xEnd) && ((pow((2.0*vort.getMid()-vort.getTail()).z()-bodyNose.z(),2)+pow((2.0*vort.getMid()-vort.getTail()).y()-bodyNose.y(),2))<pow(BodyFragmentation::presetFunctionF((2.0*vort.getMid()-vort.getTail()).x()-bodyNose.x(),forming),2)))
+//        return true;
     return false;
 }
 
@@ -1976,7 +2060,30 @@ bool FrameCalculations::insideRotationBodyLayer(const Vorton &vort, const Vector
 {
     if((vort.getMid().x()>=bodyNose.x()-layerHeight) && (vort.getMid().x()<=xEnd+layerHeight) && ((pow(vort.getMid().z()-bodyNose.z(),2)+pow(vort.getMid().y()-bodyNose.y(),2))<pow(BodyFragmentation::presetFunctionF(vort.getMid().x()-bodyNose.x(),forming)+layerHeight,2)))
         return true;
+//    if((vort.getTail().x()>=bodyNose.x()-layerHeight) && (vort.getTail().x()<=xEnd+layerHeight) && ((pow(vort.getTail().z()-bodyNose.z(),2)+pow(vort.getTail().y()-bodyNose.y(),2))<pow(BodyFragmentation::presetFunctionF(vort.getTail().x()-bodyNose.x(),forming)+layerHeight,2)))
+//        return true;
+//    if(((2.0*vort.getMid()-vort.getTail()).x()>=bodyNose.x()-layerHeight) && ((2.0*vort.getMid()-vort.getTail()).x()<=xEnd+layerHeight) && ((pow((2.0*vort.getMid()-vort.getTail()).z()-bodyNose.z(),2)+pow((2.0*vort.getMid()-vort.getTail()).y()-bodyNose.y(),2))<pow(BodyFragmentation::presetFunctionF((2.0*vort.getMid()-vort.getTail()).x()-bodyNose.x(),forming)+layerHeight,2)))
+//        return true;
     return false;
+}
+
+int FrameCalculations::insideRotationBodyv2(const Vorton &vort, const Vector3D bodyNose, const double xEnd, FormingParameters forming)
+{
+    if((vort.getTail().x()>=bodyNose.x()) && (vort.getTail().x()<=xEnd) && ((pow(vort.getTail().z()-bodyNose.z(),2)+pow(vort.getTail().y()-bodyNose.y(),2))<pow(BodyFragmentation::presetFunctionF(vort.getTail().x()-bodyNose.x(),forming),2)))
+        return 1;
+    if(((2.0*vort.getMid()-vort.getTail()).x()>=bodyNose.x()) && ((2.0*vort.getMid()-vort.getTail()).x()<=xEnd) && ((pow((2.0*vort.getMid()-vort.getTail()).z()-bodyNose.z(),2)+pow((2.0*vort.getMid()-vort.getTail()).y()-bodyNose.y(),2))<pow(BodyFragmentation::presetFunctionF((2.0*vort.getMid()-vort.getTail()).x()-bodyNose.x(),forming),2)))
+        return 0;
+    return -1;
+}
+
+int FrameCalculations::insideRotationBodyLayerv2(const Vorton &vort, const Vector3D bodyNose, const double xEnd, const double layerHeight, FormingParameters forming)
+{
+
+    if((vort.getTail().x()>=bodyNose.x()-layerHeight) && (vort.getTail().x()<=xEnd+layerHeight) && ((pow(vort.getTail().z()-bodyNose.z(),2)+pow(vort.getTail().y()-bodyNose.y(),2))<pow(BodyFragmentation::presetFunctionF(vort.getTail().x()-bodyNose.x(),forming)+layerHeight,2)))
+        return 1;
+    if(((2.0*vort.getMid()-vort.getTail()).x()>=bodyNose.x()-layerHeight) && ((2.0*vort.getMid()-vort.getTail()).x()<=xEnd+layerHeight) && ((pow((2.0*vort.getMid()-vort.getTail()).z()-bodyNose.z(),2)+pow((2.0*vort.getMid()-vort.getTail()).y()-bodyNose.y(),2))<pow(BodyFragmentation::presetFunctionF((2.0*vort.getMid()-vort.getTail()).x()-bodyNose.x(),forming)+layerHeight,2)))
+        return 0;
+    return -1;
 }
 
 /*!

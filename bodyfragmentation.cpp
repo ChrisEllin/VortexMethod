@@ -895,7 +895,7 @@ void BodyFragmentation::prepareGraphsY0(QVector<std::shared_ptr<MultiFrame> > &y
     double height=(newEnd-newBeg)/(NFRAG-1);
     s[0]=0.0;
     xArr[0]=newBeg;
-    yArr[0]=BodyFragmentation::presetFunctionF(newBeg,forming);
+    yArr[0]=BodyFragmentation::presetFunctionF(newBeg,forming)+rotationBody.delta;
     for (int i=1; i<NFRAG; i++)
     {
         xArr[i]=newBeg+i*height;
@@ -950,7 +950,7 @@ void BodyFragmentation::prepareGraphsZ0(QVector<std::shared_ptr<MultiFrame> > &z
         break;
     }
     }
-    double rad0=BodyFragmentation::presetFunctionF(center,pars)/4;
+    double rad0=(BodyFragmentation::presetFunctionF(center,pars)+rotationBody.delta)/4;
     qDebug()<<rad0;
     double fi0 = 2*M_PI/rotationBody.fiFragNum;
     Vector3D r0=Vector3D(center,0.0,0.0);

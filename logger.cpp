@@ -1070,7 +1070,7 @@ void Logger::createParaviewTraceFile(QVector<Vorton> &vortons, int currentStep)
 
 void Logger::createCenterGraphs(FormingParameters pars, double step, int currentStep, QVector<Vorton>& freeVortons, Vector3D velInf, QVector<std::shared_ptr<MultiFrame>>& xFrames, QVector<std::shared_ptr<MultiFrame> > &yFrames, QVector<std::shared_ptr<MultiFrame> > &zFrames)
 {
-    QFile xFile(path+"/graphs/x0Graph.vtk."+QString::number(currentStep));
+    QFile xFile(path+"/graphs/y0Graph.vtk."+QString::number(currentStep));
     if (xFile.open(QIODevice::WriteOnly))
     {
         QTextStream yTextStream(&xFile);
@@ -1123,7 +1123,7 @@ void Logger::createCenterGraphs(FormingParameters pars, double step, int current
     }
     xFile.close();
 
-    QFile yFile(path+"/graphs/y0Graph.vtk."+QString::number(currentStep));
+    QFile yFile(path+"/graphs/z0Graph.vtk."+QString::number(currentStep));
     if (yFile.open(QIODevice::WriteOnly))
     {
         QTextStream yTextStream(&yFile);
@@ -1176,7 +1176,7 @@ void Logger::createCenterGraphs(FormingParameters pars, double step, int current
     }
     yFile.close();
 
-    QFile zFile(path+"/graphs/z0Graph.vtk."+QString::number(currentStep));
+    QFile zFile(path+"/graphs/x0Graph.vtk."+QString::number(currentStep));
     if (zFile.open(QIODevice::WriteOnly))
     {
         QTextStream yTextStream(&zFile);

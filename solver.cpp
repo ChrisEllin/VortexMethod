@@ -550,8 +550,46 @@ void Solver::rotationBodySolver(const FragmentationParameters &fragPar)
 
 
         functions.removeSmallVorticity(newVortons,solvPar.minVorticity);
+//        QVector<Vorton> tempV1;
+//        QVector<Vorton> tempV2;
+//        tempV1=freeVortons;
+//        tempV2=newVortons;
 
+        //ЭЙЛЕР
         functions.displacementCalc(freeVortons,newVortons,solvPar.tau,currentSpeed,solvPar.eDelta,solvPar.fiMax,solvPar.maxMove);
+
+        //ЭЙЛЕР 2-го порядка
+//        functions.displacementCalcGauss3(tempV1,tempV2,solvPar.tau,currentSpeed,solvPar.eDelta,solvPar.fiMax,solvPar.maxMove);
+//        for (int i=0; i<freeVortons.size(); i++) {
+//            freeVortons[i].setMove(tempV1[i].getMove());
+//            freeVortons[i].setElongation(tempV1[i].getElongation());
+//        }
+//        for (int i=0; i<newVortons.size(); i++) {
+//            newVortons[i].setMove(tempV2[i].getMove());
+//            newVortons[i].setElongation(tempV2[i].getElongation());
+//        }
+//        functions.displace(tempV1);
+//        functions.displace(tempV2);
+
+//        functions.displacementCalcGauss3(tempV1,tempV2,solvPar.tau,currentSpeed,solvPar.eDelta,solvPar.fiMax,solvPar.maxMove);
+//        for (int i=0; i<freeVortons.size(); i++) {
+//            freeVortons[i].setMove(tempV1[i].getMove());
+//            freeVortons[i].setElongation(tempV1[i].getElongation());
+//        }
+//        for (int i=0; i<newVortons.size(); i++) {
+//            newVortons[i].setMove(tempV2[i].getMove());
+//            newVortons[i].setElongation(tempV2[i].getElongation());
+//        }
+        //
+
+        QVector<Vorton> copyVort=freeVortons;
+        functions.displace(copyVort);
+        functions.displace(newVortons);
+        functions.getBackRotationBody(copyVort,bodyNose,xend,controlPoints,normals,forming);
+        functions.getBackRotationBody(newVortons,bodyNose,xend,controlPoints,normals,forming);
+        for (int i=0; i<freeVortons.size();i++)
+            freeVortons[i].setMove(copyVort[i].getMid()-freeVortons[i].getMid());
+
         Vector3D force=functions.forceCalc(currentSpeed, solvPar.streamPres,solvPar.density,frames,freeVortons, solvPar.tau, squares, controlPointsRaised, normals);
         forces[i]=force;
         cAerodynamics[i] = force*2.0/(solvPar.density*solvPar.streamVel.lengthSquared()*M_PI*pow(fragmentation.getForming().diameter*0.5,2));
@@ -592,7 +630,7 @@ void Solver::rotationBodySolver(const FragmentationParameters &fragPar)
         functions.cpRotationBodyDegree(i,solvPar.stepsNum, cp270, fragPar.rotationBodyFiFragNum, solvPar.streamVel, solvPar.streamPres,solvPar.density,frames, freeVortons, solvPar.tau, controlPointsRaised,270);
         functions.epsNormal(newVortons,fragPar.vortonsRad);
         //functions.epsNormal(frames,fragPar.vortonsRad);
-        freeVortons.append(newVortons);
+        freeVortons=copyVort+newVortons;
 
         for (int i=0; i<controlPoints.size();i++)
             normalVelocitiesBeforeIntegr[i]=Vector3D::dotProduct(FrameCalculations::velocity(controlPoints[i],solvPar.streamVel,freeVortons),normals[i]);
@@ -605,12 +643,13 @@ void Solver::rotationBodySolver(const FragmentationParameters &fragPar)
         functions.clear();
 
 
-        functions.displace(freeVortons);
+        //functions.displace(freeVortons);
 
         for (int i=0; i<controlPoints.size();i++)
             normalVelocitiesCenterIntegr[i]=Vector3D::dotProduct(FrameCalculations::velocity(controlPoints[i],solvPar.streamVel,freeVortons),normals[i]);
 
-        functions.getBackAndRotate(Solver::getBackGA,freeVortons,bodyNose,xend,solvPar.layerHeight,controlPoints,normals,oldVortons,frames,forming);
+        //functions.getBackAndRotate(Solver::getBackGA,freeVortons,bodyNose,xend,solvPar.layerHeight,controlPoints,normals,oldVortons,frames,forming);
+        functions.rotateRotationBody(freeVortons,bodyNose,xend,solvPar.layerHeight,controlPoints,normals,forming);
         //functions.getBackAndRotateRotationBody(freeVortons, bodyNose, xend, solvPar.layerHeight, controlPoints,normals,fragmentation.getForming());
         //functions.getBackAndRotateRotationBodyGA(freeVortons,oldVortons,frames,xend,bodyNose,forming,solvPar.layerHeight,controlPoints,normals);
 
@@ -749,7 +788,7 @@ void Solver::ovalSolver()
     qDebug()<<(L+D)/D;
 
     const int N_steps = 10000;
-    const double eDelta = 0.1*dh;
+    const double eDelta = 2*dh;
     const double fi_max = M_PI/12;
 
     QVector <Vorton> V1;
@@ -868,7 +907,7 @@ void Solver::ovalSolver()
         }
         traceFile.close();
 
-         // эйлер с пересчетом
+         // эйлер с перес;четом
         functions.displacementCalcGauss3(tempV1,tempV2,tau,Vinf,eDelta,fi_max,MaxMove);
         for (int i=0; i<V1.size(); i++) {
             V1[i].setMove(tempV1[i].getMove());
