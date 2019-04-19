@@ -732,10 +732,10 @@ void Solver::rotationBodySolver(const FragmentationParameters &fragPar)
 void Solver::ovalSolver()
 {
     QTime start = QTime::currentTime();
-    const double gamma0 = 1;
+    const double gamma0 = 1.0;
     const double epsilon = 0.15;
     QVector <Vorton> V;
-    QFile sourceGA("Kadr00000.txt");
+    QFile sourceGA("Kadr02500.txt");
     if (sourceGA.open(QIODevice::ReadOnly))
     {
         QString sizeStr=sourceGA.readLine();
@@ -759,11 +759,19 @@ void Solver::ovalSolver()
     }
     sourceGA.close();
     qDebug()<<V.size();
+    QVector <Vorton> V1;
+    QVector <Vorton> V2;
+
+    for (int i=0; i<V.size()*0.5; i++)
+        V1.append(V[i]);
+    for (int i=V.size()*0.5; i<V.size(); i++)
+        V2.append(V[i]);
 
     QString path = QCoreApplication::applicationDirPath();
     QDir folder(path);
     folder.cdUp();
     path=folder.absolutePath();
+    QString kadrPath=path+"/KADR";
     path.append("/Oval_");
     path+=QDateTime::currentDateTime().toString("dd.MM.yyyy_hh.mm.ss");
     folder.mkdir(path);
@@ -782,17 +790,16 @@ void Solver::ovalSolver()
     const int Nl = (N - Nfi)*0.5; //по вертикальной части
 
     double dfi = 2*M_PI/Nfi;
-    double L = Nl*M_PI*D/Nfi;
+    //double L = Nl*M_PI*D/Nfi;
 
-    double dh = L/Nl;
-    qDebug()<<(L+D)/D;
+    double dh = (V[1].getTail()-V[1].getMid()).length();
+    //qDebug()<<(L+D)/D;
 
     const int N_steps = 10000;
     const double eDelta = 2*dh;
     const double fi_max = M_PI/12;
 
-    QVector <Vorton> V1;
-    QVector <Vorton> V2;
+
 
 
     double R = D*0.5;
@@ -832,10 +839,7 @@ void Solver::ovalSolver()
 //        V.append(Vort);
 //    }
 
-    for (int i=0; i<V.size()*0.5; i++)
-        V1.append(V[i]);
-    for (int i=V.size()*0.5; i<V.size(); i++)
-        V2.append(V[i]);
+
 
     int TurnRestr = 0, ElongationRestr = 0, MoveRestr = 0;
     double MaxMove = 100000;
@@ -846,7 +850,24 @@ void Solver::ovalSolver()
     QVector<Vorton> tempV1;
 
     QVector<Vorton> tempV2;
-    for (int ii=0; ii<N_steps; ii++)
+    QVector<Vorton> gaVortons;
+
+    long double Re = 0.5;
+    long double L  = 7.0;  // 7 - "длинное" кольцо,  3 - "короткое" кольцо
+
+    // long double gam = 1.0;
+    // long double dfi = dpi/(2.0*NR);
+
+    int NR = 20;  //Число вортонов на полуокружности
+    long double dpi = 2*M_PI;
+    long double DLa = 0.5 * dpi * Re / NR;
+    int NL = (int)((L - 2.0*Re)/DLa) + 1;
+    long double DL = (L - 2.0*Re)/NL;
+    long double dl_max_etalon = 2.0*(0.5*DL);
+    long double dl_min_etalon = (0.5*DL)*0;
+
+
+    for (int ii=2500; ii<N_steps; ii++)
     {
         //qDebug()<< "Step number: "<<i;
         //MoveElongationCalcStrictForTwo(V1,V2, tau, Vinf,eDelta,fi_max, MaxMove,MoveTime, TurnRestr, ElongationRestr, MoveRestr);
@@ -854,6 +875,7 @@ void Solver::ovalSolver()
 
         tempV1=V1;
         tempV2=V2;
+        Logger log;
         QFile traceFile(path+"/traces/trace.vtk."+QString::number(ii));
         if (traceFile.open(QIODevice::WriteOnly))
         {
@@ -908,27 +930,20 @@ void Solver::ovalSolver()
         traceFile.close();
 
          // эйлер с перес;четом
-        functions.displacementCalcGauss3(tempV1,tempV2,tau,Vinf,eDelta,fi_max,MaxMove);
-        for (int i=0; i<V1.size(); i++) {
-            V1[i].setMove(tempV1[i].getMove());
-            V1[i].setElongation(tempV1[i].getElongation());
-        }
-        for (int i=0; i<V2.size(); i++) {
-            V2[i].setMove(tempV2[i].getMove());
-            V2[i].setElongation(tempV2[i].getElongation());
-        }
+        functions.displacementCalcGauss3(tempV1,tempV2,0.5*tau,Vinf,eDelta,fi_max,MaxMove,dl_max_etalon,dl_min_etalon);
+
         functions.displace(tempV1);
         functions.displace(tempV2);
 
-        functions.displacementCalcGauss3(tempV1,tempV2,tau,Vinf,eDelta,fi_max,MaxMove);
+        functions.displacementCalcGauss3(tempV1,tempV2,0.5*tau,Vinf,eDelta,fi_max,MaxMove,dl_max_etalon,dl_min_etalon);
 
         for (int i=0; i<V1.size(); i++) {
-            V1[i].setMove((tempV1[i].getMove()+V1[i].getMove())*0.5);
-            V1[i].setElongation((tempV1[i].getElongation()+V1[i].getElongation())*0.5);
+            V1[i].setMove(tempV1[i].getMove()*2.0);
+            V1[i].setElongation(tempV1[i].getElongation()*2.0);
         }
         for (int i=0; i<V2.size(); i++) {
-            V2[i].setMove((tempV2[i].getMove()+V2[i].getMove())*0.5);
-            V2[i].setElongation((tempV2[i].getElongation()+V2[i].getElongation())*0.5);
+            V2[i].setMove(tempV2[i].getMove()*2.0);
+            V2[i].setElongation(tempV2[i].getElongation()*2.0);
         }
 
 
@@ -940,14 +955,20 @@ void Solver::ovalSolver()
         functions.displace(V1);
         functions.displace(V2);
 
-        if (ii%100==0) {
+
         qDebug()<< "Step number: "<<ii;
         qDebug()<<"Time: "<<tau*ii;
 
-
         qDebug()<<"Turn restrictions: "<<TurnRestr;
         qDebug()<<"Length change restrictions: "<<ElongationRestr;
-        emit repaintGUI(V1+V2,frams);
+
+
+        if (ii%10==0)
+        {
+            gaVortons=log.gaVortons(kadrPath,ii/10);
+
+        emit repaintGUI(V1+V2+gaVortons,frams);
+        }
 
 
 //        QFile traceFile(path+"/traces/trace.vtk."+QString::number(ii));
@@ -1002,12 +1023,10 @@ void Solver::ovalSolver()
 //        traceFile.close();
 
         }
-        //qDebug()<<(V1[0].r1-V[0].r0).length();
-    }
     qDebug()<<"Time is: " <<N_steps*tau;
     qDebug()<<"Vortons quantity: "<<V.size();
     qDebug()<<"Dlina otrezka ravna: "<<dh;
-    qDebug()<<"Udlinenie: "<<(L+D)/D;
+    //qDebug()<<"Udlinenie: "<<(L+D)/D;
     qDebug()<<"Program time is: "<<start.elapsed()*0.001<<" s";
 }
 
@@ -1086,13 +1105,29 @@ void Solver::ringsSolver()
     QVector<Vorton> tempV1;
 
     QVector<Vorton> tempV2;
+
+    double Re = 0.5;
+    //long double L  = 7.0;  // 7 - "длинное" кольцо,  3 - "короткое" кольцо
+
+    // long double gam = 1.0;
+    // long double dfi = dpi/(2.0*NR);
+
+    int NR = 20;  //Число вортонов на полуокружности
+    double dpi = 2*M_PI;
+    double DLa = 0.5 * dpi * Re / NR;
+    int NL = static_cast<int>((L - 2.0*Re)/DLa) + 1;
+    double DL = (L - 2.0*Re)/NL;
+    double dl_max_etalon = 2.0*(0.5*DL);
+    double dl_min_etalon = (0.5*DL)*0;
+
+
     for (int ii=0; ii<N_steps; ii++)
     {
         //MoveElongationCalcStrictForTwo(V1,V2, tau, Vinf,eDelta,fi_max, MaxMove,MoveTime, TurnRestr, ElongationRestr, MoveRestr);
         //MoveElongationCalcStrictForTwoParallel(V1,V2, tau, Vinf,eDelta,fi_max, MaxMove,MoveTime, TurnRestr, ElongationRestr, MoveRestr);
         tempV1=V1;
         tempV2=V2;
-        functions.displacementCalcGauss3(tempV1,tempV2,tau,Vinf,eDelta,fi_max,MaxMove);
+        functions.displacementCalcGauss3(tempV1,tempV2,tau,Vinf,eDelta,fi_max,MaxMove,dl_max_etalon,dl_min_etalon);
         for (int i=0; i<V1.size(); i++) {
             V1[i].setMove(tempV1[i].getMove());
             V1[i].setElongation(tempV1[i].getElongation());
@@ -1104,7 +1139,7 @@ void Solver::ringsSolver()
         functions.displace(tempV1);
         functions.displace(tempV2);
 
-        functions.displacementCalcGauss3(tempV1,tempV2,tau,Vinf,eDelta,fi_max,MaxMove);
+        functions.displacementCalcGauss3(tempV1,tempV2,tau,Vinf,eDelta,fi_max,MaxMove,dl_max_etalon,dl_min_etalon);
 
         for (int i=0; i<V1.size(); i++) {
             V1[i].setMove((tempV1[i].getMove()+V1[i].getMove())*0.5);

@@ -323,7 +323,9 @@ void MainWindow::setParameters(RotationBodyParameters &rotBodyPar)
 
 void MainWindow::openDirectory()
 {
-    QString vortonsDir=QFileDialog::getExistingDirectory(this, tr("Выберите папку"), "/home", QFileDialog::ShowDirsOnly|QFileDialog::DontResolveSymlinks);
+    QString vortonsDir;
+    vortonsDir=QFileDialog::getExistingDirectory(this, tr("openDir"), "/home", QFileDialog::ShowDirsOnly|QFileDialog::DontUseNativeDialog/*this, tr("Open Directory"), " C:\ ", QFileDialog::ShowDirsOnly/*|QFileDialog::DontResolveSymlinks*/);
+    qDebug()<<"LOL";
     QFuture<void> sphereFuture=QtConcurrent::run(waitForOpen, &Logger::openVortonFiles,vortonsDir);
 }
 

@@ -69,6 +69,7 @@ public:
     void createParaviewTraceVerticesFile(QVector<Vorton> &vortons, int currentStep);
     void createParaviewTraceFile(QVector<Vorton> &vortons, int currentStep);
     void createCenterGraphs(FormingParameters pars, double step, int currentStep, QVector<Vorton> &freeVortons, Vector3D velInf, QVector<std::shared_ptr<MultiFrame> > &xFrames,QVector<std::shared_ptr<MultiFrame> > &yFrames,QVector<std::shared_ptr<MultiFrame> > &zFrames);
+    QVector<Vorton> gaVortons(const QString vortonsDir, int currentFileNum);
     void closeFiles();
     QString getPath();
     void openVortonFiles(QString vortonsDir);

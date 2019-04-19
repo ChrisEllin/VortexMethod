@@ -354,7 +354,7 @@ void FrameCalculations::displacementCalc(QVector<Vorton> &freeVortons, QVector<V
     timers.integrationTimer=start.elapsed()*0.01;
 }
 
-void FrameCalculations::displacementCalcGauss3(QVector<Vorton> &freeVortons, QVector<Vorton> &newVortons, double step, Vector3D streamVel, double eDelta, double fiMax, double maxMove)
+void FrameCalculations::displacementCalcGauss3(QVector<Vorton> &freeVortons, QVector<Vorton> &newVortons, double step, Vector3D streamVel, double eDelta, double fiMax, double maxMove, double dlMax, double dlMin)
 {
     QTime start = QTime::currentTime();
     QVector<Vorton> vortons;
@@ -372,32 +372,38 @@ void FrameCalculations::displacementCalcGauss3(QVector<Vorton> &freeVortons, QVe
     {
         Vector3D selfLenBef=resultedVec[i].getTail()-resultedVec[i].getMid();
         Vector3D selfLenAft=resultedVec[i].getElongation()+selfLenBef;
-        const double dlmax=0.5*2.0*M_PI/36.0*2.0;
+        //const double dlmax=0.5*2.0*M_PI/36.0*2.0;
         double turnAngle=acos(Vector3D::dotProduct(selfLenBef.normalized(), selfLenAft.normalized()));
-        double lengthChange=selfLenBef.length()- selfLenAft.length();
-        if (turnAngle>fiMax)
-        {
-            resultedVec[i].setElongation(Vector3D());
-            restrictions.turnRestr++;
-        }
-//        if (fabs(selfLenBef.length()-selfLenAft.length())>dlmax)
+        double lengthChange=(resultedVec[i].getTail()-resultedVec[i].getMid()+resultedVec[i].getElongation()).length();
+//        if (turnAngle>fiMax)
 //        {
-//            resultedVec[i].setElongation((resultedVec[i].getTail()-resultedVec[i].getMid())*(dlmax/resultedVec[i].getElongation().length()-1));
-//            restrictions.elongationRestr++;
+//            resultedVec[i].setElongation(Vector3D());
+//            restrictions.turnRestr++;
 //        }
-
-        if (resultedVec[i].getElongation().length()>eDelta)
+        if ((lengthChange)>dlMax)
         {
-            resultedVec[i].setElongation(Vector3D());
+            resultedVec[i].setElongation((resultedVec[i].getTail()-resultedVec[i].getMid())*(dlMax/(lengthChange)-1));
+            restrictions.elongationRestr++;
+        }
+        else if ((lengthChange)<dlMin)
+        {
+            resultedVec[i].setElongation((resultedVec[i].getTail()-resultedVec[i].getMid())*(dlMin/(lengthChange)-1));
             restrictions.elongationRestr++;
         }
 
 
-        if (resultedVec[i].getMove().length()>maxMove)
-        {
-            resultedVec[i].setMove(Vector3D());
-            restrictions.moveRestr++;
-        }
+//        if (resultedVec[i].getElongation().length()>eDelta)
+//        {
+//            resultedVec[i].setElongation(Vector3D());
+//            restrictions.elongationRestr++;
+//        }
+
+
+//        if (resultedVec[i].getMove().length()>maxMove)
+//        {
+//            resultedVec[i].setMove(Vector3D());
+//            restrictions.moveRestr++;
+//        }
 
     }
 
@@ -1906,8 +1912,9 @@ Vorton FrameCalculations::parallelDisplacementGauss(const Parallel el)
 {
     Vorton res=el.Vortons->at(el.num);
     Vector3D selfLen=el.Vortons->at(el.num).getTail()-el.Vortons->at(el.num).getMid();
-    //VelBsym vb=FrameCalculations::velocityAndBsymmGauss3(el.Vortons->at(el.num).getMid(), selfLen, el.streamVel, *el.Vortons);
-    VelBsym vb=FrameCalculations::velocityAndBsymm(el.Vortons->at(el.num).getMid(),  el.streamVel, *el.Vortons);
+    VelBsym vb=FrameCalculations::velocityAndBsymmGauss3(el.Vortons->at(el.num).getMid(), selfLen, el.streamVel, *el.Vortons);
+    selfLen=el.Vortons->at(el.num).getTail()-el.Vortons->at(el.num).getMid();
+    //VelBsym vb=FrameCalculations::velocityAndBsymm(el.Vortons->at(el.num).getMid(),  el.streamVel, *el.Vortons);
     double xElong=vb.B[0][0]*selfLen[0]+vb.B[0][1]*selfLen[1]+vb.B[0][2]*selfLen[2];
     double yElong=vb.B[1][0]*selfLen[0]+vb.B[1][1]*selfLen[1]+vb.B[1][2]*selfLen[2];
     double zElong=vb.B[2][0]*selfLen[0]+vb.B[2][1]*selfLen[1]+vb.B[2][2]*selfLen[2];

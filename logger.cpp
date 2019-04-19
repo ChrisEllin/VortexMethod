@@ -1229,6 +1229,42 @@ void Logger::createCenterGraphs(FormingParameters pars, double step, int current
     }
     zFile.close();
 }
+
+QVector<Vorton> Logger::gaVortons(const QString vortonsDir, int currentFileNum)
+{
+    QVector<Vorton> gaVortonsVec;
+    QDir folder(vortonsDir);
+    QStringList files=folder.entryList();
+    if (currentFileNum+2<files.size())
+    {
+        QString vortonsPath=vortonsDir+"/"+files[currentFileNum+2];
+        qDebug()<<vortonsPath;
+        QFile vortonFile(vortonsPath);
+        if (vortonFile.open(QIODevice::ReadOnly))
+        {
+            QString vortonsNum=vortonFile.readLine();
+            int size=vortonsNum.toInt();
+            for (int i=0; i<size; i++)
+            {
+                vortonFile.readLine();
+                QString gammaStr=vortonFile.readLine();
+                double gamma=gammaStr.toDouble();
+                QString r0Str=vortonFile.readLine();
+                QStringList r0StrL=r0Str.split(" ",QString::SkipEmptyParts);
+                Vorton newVort;
+                newVort.setVorticity(gamma);
+                newVort.setRadius(0.15);
+                newVort.setMid(Vector3D(r0StrL[0].toDouble(),r0StrL[1].toDouble(),r0StrL[2].toDouble()));
+                QString r1Str=vortonFile.readLine();
+                QStringList r1StrL=r1Str.split(" ",QString::SkipEmptyParts);
+                newVort.setTail(newVort.getMid()+Vector3D(r1StrL[0].toDouble(),r1StrL[1].toDouble(),r1StrL[2].toDouble()));
+                gaVortonsVec.append(newVort);
+            }
+        }
+        vortonFile.close();
+    }
+    return gaVortonsVec;
+}
 /*!
 Закрывает все файлы, открытые для записи
 */
@@ -1261,7 +1297,9 @@ QString Logger::getPath()
 void Logger::openVortonFiles(QString vortonsDir)
 {
     QDir folder(vortonsDir);
+    qDebug()<<"kek";
     QStringList fileList=folder.entryList();
+     qDebug()<<"kek1";
     for (int i=2; i<fileList.size(); i++)
     {
         QString vortonsPath=vortonsDir+"/"+fileList[i];
@@ -1271,7 +1309,10 @@ void Logger::openVortonFiles(QString vortonsDir)
             QString line = vortonsFile.readLine();
             QStringList lineSplitted=line.split("\t", QString::SkipEmptyParts);
             int vortonsSize=lineSplitted[0].toInt();
-            int framesSize=lineSplitted[1].toInt();
+
+            int framesSize=0;
+            if (lineSplitted.size()!=1)
+            framesSize= lineSplitted[1].toInt();
             QVector<Vorton> freeVortons;
             QVector<Vorton> frames;
 

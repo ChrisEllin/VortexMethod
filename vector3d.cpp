@@ -86,7 +86,7 @@ void Vector3D::rotated(const Vector3D &axis, const double theta)
     double ab = a*b;
     double bd = b*d;
     double cd = c*d;
-    *this=Vector3D((aa+bb-cc-dd)*X+2*(bc+ad)*Y+2*(bd-ac)*Z,2*(bc-ad)*X+(aa+cc-bb-dd)*Y+2*(cd+ab)*Z, 2*(bd+ac)*X+2*(cd-ab)*Y+(aa+dd-bb-cc)*Z);
+    *this=Vector3D((aa+bb-cc-dd)*X+2.0*(bc+ad)*Y+2.0*(bd-ac)*Z,2.0*(bc-ad)*X+(aa+cc-bb-dd)*Y+2.0*(cd+ab)*Z, 2.0*(bd+ac)*X+2.0*(cd-ab)*Y+(aa+dd-bb-cc)*Z);
 }
 
 /*!

@@ -226,14 +226,17 @@ VelBsym Vorton::velAndBsym(const Vector3D& point) const
         Vector3D s2 = s0+h0;
         Vector3D av = Vector3D::crossProduct(h0,s0);
         double cv = Vector3D::dotProduct((s2.normalized()-s1.normalized()),h0)/av.lengthSquared();
-        ans.Vel = (vorticity/(4*M_PI))*cv*av;
+        ans.Vel = (vorticity/(4.0*M_PI))*cv*av;
         for (int m=0; m<3; m++)
+        {
             for (int n=0; n<3; n++)
             {
                 double apn = levi(m,0,n)*h0.x()+levi(m,1,n)*h0.y()+levi(m,2,n)*h0.z();
-                double cpn=((1/s2.length()-1/s1.length()+2*cv*Vector3D::dotProduct(s0,h0))*h0[n]-(Vector3D::dotProduct((s2[n]*s2/pow(s2.length(),3)-s1[n]*s1/pow(s1.length(),3)+2*cv*s0[n]*h0),h0)))/av.lengthSquared();
+                double cpn=((1.0/s2.length()-1.0/s1.length()+2.0*cv*Vector3D::dotProduct(s0,h0))*h0[n]
+                            -(Vector3D::dotProduct((s2[n]*s2/pow(s2.length(),3)-s1[n]*s1/pow(s1.length(),3)+2*cv*s0[n]*h0),h0)))/av.lengthSquared();
                 ans.B[m][n]=(vorticity/(4*M_PI))*(cpn*av[m]+cv*apn);
             }
+        }
         double q = 0.5*(ans.B[0][1]+ans.B[1][0]);
         double w = 0.5*(ans.B[0][2]+ans.B[2][0]);
         double z  = 0.5*(ans.B[1][2]+ans.B[2][1]);
@@ -245,19 +248,20 @@ VelBsym Vorton::velAndBsym(const Vector3D& point) const
     else
     {
         VelBsym ans;
-        Vector3D re = point-(radius/R-1)*(h0*Vector3D::dotProduct(s0,h0)/h0.lengthSquared()-s0);
-        Vector3D s0 = re-mid;
-        Vector3D  s1 = s0-h0;
-        Vector3D s2 = s0+h0;
-        Vector3D ae = Vector3D::crossProduct(h0,(re-mid));
-        double ce = Vector3D::dotProduct(((re-mid+h0).normalized()-(re-mid-h0).normalized()),h0)/ae.lengthSquared();
+        Vector3D re = point-(radius/R-1.0)*(h0*Vector3D::dotProduct(s0,h0)/h0.lengthSquared()-s0);
+        Vector3D s0e = re-mid;
+        Vector3D  s1e = s0e-h0;
+        Vector3D s2e = s0e+h0;
+        Vector3D ae = Vector3D::crossProduct(h0,s0e);
+        double ce = Vector3D::dotProduct((s2e.normalized()-s1e.normalized()),h0)/ae.lengthSquared();
         ans.Vel=vorticity/(4*M_PI)*(R/radius)*ce*ae;
         for (int m=0; m<3; m++)
             for (int n=0; n<3; n++)
             {
                 double apn = levi(m,0,n)*h0.x()+levi(m,1,n)*h0.y()+levi(m,2,n)*h0.z();
-                double cpn=((1/s2.length()-1/s1.length()+2*ce*Vector3D::dotProduct(s0,h0))*h0[n]-(Vector3D::dotProduct((s2[n]*s2/pow(s2.length(),3)-s1[n]*s1/pow(s1.length(),3)+2*ce*s0[n]*h0),h0)))/Vector3D::dotProduct(ae,ae);
-                ans.B[m][n]=(R/radius*(vorticity/(4*M_PI))*(cpn*ae[m]+ce*apn));
+                double cpn=((1.0/s2e.length()-1.0/s1e.length()+2*ce*Vector3D::dotProduct(s0e,h0))*h0[n]
+                            -(Vector3D::dotProduct((s2e[n]*s2e/pow(s2e.length(),3)-s1e[n]*s1e/pow(s1e.length(),3)+2.0*ce*s0e[n]*h0),h0)))/Vector3D::dotProduct(ae,ae);
+                ans.B[m][n]=(R/radius*(vorticity/(4.0*M_PI))*(cpn*ae[m]+ce*apn));
             }
         double q = 0.5*(ans.B[0][1]+ans.B[1][0]);
         double w = 0.5*(ans.B[0][2]+ans.B[2][0]);
@@ -277,10 +281,14 @@ VelBsym Vorton::velAndBsymGauss3(const Vector3D &point, const Vector3D &deltar) 
     ans=velAndBsym(point);
     ans1=velAndBsym(point+sqrt(0.6)*deltar);
     ans2=velAndBsym(point-sqrt(0.6)*deltar);
-
+    ans.Vel=0.5*(8.0/9.0*ans.Vel+5.0/9.0*(ans1.Vel+ans2.Vel));
     for (int i=0; i<3; i++)
+    {
         for (int j=0; j<3; j++)
-            ans.B[i][j]=0.5*(8.0/9.0*ans.B[i][j]+5.0/9.0*(ans1.B[i][j]+ans2.B[i][j]));
+        {
+            ans.B[i][j]=0.5*(8.0/9.0*ans.B[i][j]+5.0/9.0*(ans1.B[i][j]+ans2.B[i][j])); 
+        }
+    }
     return ans;
 }
 
