@@ -55,7 +55,8 @@ signals:
     void finishSolver();
     void sendNormalsVis(QVector<Vector3D>& controlPoints, QVector<Vector3D>& normals);
     void sendMaxGamma(double maxGamma);
-    void repaintGUI(const QVector<Vorton>& vortons, const QVector<std::shared_ptr<MultiFrame>>& frames); ///<Сигнал о перерисовке интерфейса
+    void repaintGUI(const QVector<Vorton>& vortons, const QVector<std::shared_ptr<MultiFrame>>& frames);
+    void repaintGUI(const QVector<Vorton>& vortons, const QVector<Vorton>& gaVortons);///<Сигнал о перерисовке интерфейса
     void variatingFinished(); ///<Сигнал об окончании  варьирования
     void sendProgressSphere(const int percent); ///< Сигнал об текущем прогрессе расчета сферы
     void updateSphereMaximum(const int max); ///<Сигнал о количестве шагов расчета сферы

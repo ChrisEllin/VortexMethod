@@ -454,6 +454,95 @@ void MainField::drawGrid()
     vao.release();
 }
 
+void MainField::drawGridGA()
+{
+    vao.bind();
+    if (drawGridType == Arrow)
+    {
+        QVector<QVector3D> lineData;
+        QVector<QVector3D> arrowheadData;
+        for (int i = 0; i < gridGA.size(); i++)
+        {
+            lineData.append(gridGA[i].botCenter);
+            lineData.append(gridGA[i].topCenter);
+            arrowheadData.append(gridGA[i].topCenter);
+            arrowheadData.append (gridGA[i].arrowHead);
+        }
+
+//        blackBorderProgram->bind();
+        lineProgram->bind();
+        int colorLocation = lineProgram->uniformLocation("colAttr");
+        QColor color(Qt::magenta);
+        lineProgram->setUniformValue(colorLocation, color.red(), color.green(), color.blue());
+
+        QMatrix4x4 matrix = setMatrix();
+        int matrixLocation = lineProgram->uniformLocation ("matrixView");
+        lineProgram->setUniformValue(matrixLocation, matrix);
+
+        int vertexLocation = lineProgram->attributeLocation("posAttr");
+
+        QOpenGLBuffer vertBufferLines;
+        QOpenGLBuffer vertBufferArrowheads;
+
+        vertBufferArrowheads.create();
+        vertBufferArrowheads.bind();
+        vertBufferArrowheads.allocate(arrowheadData.data(), arrowheadData.size()*sizeof(QVector3D));
+
+        vertBufferLines.create();
+        vertBufferLines.bind();
+        vertBufferLines.allocate(lineData.data(), lineData.size()*sizeof(QVector3D));
+
+//        blackBorderProgram->enableAttributeArray(vertexLocation);
+//        blackBorderProgram->setAttributeBuffer(vertexLocation, GL_FLOAT, 0, 3);
+        lineProgram->enableAttributeArray(vertexLocation);
+        lineProgram->setAttributeBuffer(vertexLocation, GL_FLOAT, 0, 3);
+    //    lineCylinderProgram->setAttributeValue (1, QColor(Qt::green));
+
+        glDrawArrays(GL_LINES, 0, lineData.size());
+
+        vertBufferArrowheads.bind();
+        lineProgram->setAttributeBuffer(vertexLocation, GL_FLOAT, 0, 3);
+
+        for (int i = 0; i < gridGA.size(); i++)
+        {
+            glDrawArrays(GL_TRIANGLE_FAN, i*61, 61);
+        }
+    } else if (drawGridType == Points)
+    {
+        QVector<QVector3D> lineData;
+        for (int i = 0; i < gridGA.size(); i++)
+        {
+            lineData.append((gridGA[i].botCenter + gridGA[i].topCenter)/2);
+        }
+
+//        blackBorderProgram->bind();
+        lineProgram->bind();
+        int colorLocation = lineProgram->uniformLocation("colAttr");
+        QColor color(Qt::red);
+        lineProgram->setUniformValue(colorLocation, color.red(), color.green(), color.blue());
+
+        QMatrix4x4 matrix = setMatrix();
+        int matrixLocation = lineProgram->uniformLocation ("matrixView");
+        lineProgram->setUniformValue(matrixLocation, matrix);
+
+        int vertexLocation = lineProgram->attributeLocation("posAttr");
+
+        QOpenGLBuffer vertBufferLines;
+
+        vertBufferLines.create();
+        vertBufferLines.bind();
+        vertBufferLines.allocate(lineData.data(), lineData.size()*sizeof(QVector3D));
+
+        lineProgram->enableAttributeArray(vertexLocation);
+        lineProgram->setAttributeBuffer(vertexLocation, GL_FLOAT, 0, 3);
+    //    lineCylinderProgram->setAttributeValue (1, QColor(Qt::green));
+
+        glDrawArrays(GL_POINTS, 0, lineData.size());
+    }
+//    lineProgram->release();
+    vao.release();
+}
+
 
 void MainField::drawFreeVortons()
 {
@@ -990,6 +1079,7 @@ void MainField::paintGL()
     default: break;
     }
     drawGrid();
+    drawGridGA();
     drawFreeVortons();
     drawAxis();
     if (moving || turning)
@@ -1289,14 +1379,104 @@ void MainField::addVorton(QVector3D botCenter, QVector3D topCenter)
     addVorton (botCenter, topCenter, SArrow::Free);
 }
 
+void MainField::addVortonGA(QVector3D botCenter, QVector3D topCenter, SArrow::vort_type drawType)
+{
+    const double MINIMAL_LENGTH = 0.05;
+    SArrow cylinder;
+    updateBoundaries(botCenter);
+    updateBoundaries(topCenter);
+    cylinder.topCenter = topCenter;
+    cylinder.botCenter = botCenter;
+    cylinder.vortonType = drawType;
+    if (drawType == SArrow::Grid)
+    {
+        QMatrix4x4 translation;
+        QVector4D axis(botCenter - topCenter, 1.0f);
+        double r = axis.toVector3D().length();
+//        translation.scale(0.05*axis.length(), 0.1*axis.length(), 0.05*axis.length());
+
+        if (r > MINIMAL_LENGTH)
+            translation.translate(topCenter + 0.1*axis.toVector3D()/*.normalized()*/);
+        else
+            translation.translate(topCenter + 0.3*axis.toVector3D()/*.normalized()*/);
+
+        axis.normalize();
+        translation.rotate (2*qRadiansToDegrees(atan(axis.x())), 0, 0, 1);
+        translation.rotate (2*qRadiansToDegrees(atan2(axis.y(), 1)), 0, 1, 0);
+        translation.rotate (2*qRadiansToDegrees(atan2(axis.z(), 1)), 1, 0, 0);
+        QVector4D temp;
+        for (int i = 0; i < 60; i++)
+        {
+            if (r > MINIMAL_LENGTH)
+                temp = QVector4D(0.02*r*qSin(qDegreesToRadians(i*6.0f)),
+                             0.0f,
+                             0.02*r*qCos(qDegreesToRadians(i*6.0f)),
+                             1.0f
+                             );
+            else
+                temp = QVector4D(0.15*r*qSin(qDegreesToRadians(i*6.0f)),
+                             0.0f,
+                             0.15*r*qCos(qDegreesToRadians(i*6.0f)),
+                             1.0f
+                             );
+            temp = translation*temp;
+            cylinder.arrowHead.append(temp.toVector3D());
+        }
+        gridGA.append(cylinder);
+    } else if (drawType == SArrow::Free)
+    {
+        QMatrix4x4 translation;
+        QVector4D axis(botCenter - topCenter, 1.0f);
+        cylinder.middle = (botCenter + topCenter) / 2;
+        double r = axis.toVector3D().length();
+
+        if (r > MINIMAL_LENGTH)
+            translation.translate(topCenter + 0.1*axis.toVector3D());
+        else
+            translation.translate(topCenter + 0.3*axis.toVector3D());
+
+        axis.normalize();
+        translation.rotate (2*qRadiansToDegrees(atan(axis.x())), 0, 0, 1);
+        translation.rotate (2*qRadiansToDegrees(atan2(axis.y(), 1)), 0, 1, 0);
+        translation.rotate (2*qRadiansToDegrees(atan2(axis.z(), 1)), 1, 0, 0);
+        QVector4D temp;
+        for (int i = 0; i < 60; i++)
+        {
+            if (r > MINIMAL_LENGTH)
+                temp = QVector4D(0.02*r*qSin(qDegreesToRadians(i*6.0f)),
+                             0.0f,
+                             0.02*r*qCos(qDegreesToRadians(i*6.0f)),
+                             1.0f
+                             );
+            else
+                temp = QVector4D(0.15*r*qSin(qDegreesToRadians(i*6.0f)),
+                             0.0f,
+                             0.15*r*qCos(qDegreesToRadians(i*6.0f)),
+                             1.0f
+                             );
+            temp = translation*temp;
+            cylinder.arrowHead.append(temp.toVector3D());
+        }
+        freeVortons.append(cylinder);
+    }
+    update();
+}
+
+void MainField::addVortonGA(QVector3D botCenter, QVector3D topCenter)
+{
+    addVortonGA (botCenter, topCenter, SArrow::Free);
+}
+
 void MainField::clearCylinders(int n)
 {
     if (n < 0)
     {
         grid.clear();
+        gridGA.clear();
         freeVortons.clear();
     } else {
         grid.remove (grid.size() - n, n);
+        gridGA.remove(gridGA.size() - n, n);
     }
     update();
 }

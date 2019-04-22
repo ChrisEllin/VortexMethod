@@ -121,6 +121,7 @@ public slots:
     void recieveProgressRotationCutBody(const int percentage);
     void drawGUI(const QVector<Vorton>& vortons, const QVector<std::shared_ptr<MultiFrame>>& frames);
     void drawGUI(const QVector<Vorton>& vortons, const QVector<Vorton>& frames);
+    void drawGUIGA(const QVector<Vorton>& vortons, const QVector<Vorton>& vortonsGA);
     void setNormalsVis(QVector<Vector3D>& controlPoints, QVector<Vector3D>& normals);
 signals:
     void setPlaneXY(); ///<Сигнал о переходе к YX отображению
@@ -134,6 +135,8 @@ signals:
     void sendSolverParameters(SolverParameters& solvPar); ///<Сигнал, отправляющий параметры расчета
     void drawSegment(QVector3D center, QVector3D top, SArrow::vort_type); ///<Сигнал об отрисовке с выбором типа отрисовки
     void drawSegment(QVector3D center, QVector3D top); ///< \overload Сигнал об отрисовке точки
+    void drawSegmentGA(QVector3D center, QVector3D top, SArrow::vort_type);
+    void drawSegmentGA(QVector3D center, QVector3D top);
     void clearSegments(int n = -1); ///<Сигнал об очистке экрана
     void setRadius(double radius); ///<Сигнал об установке радиуса трехмерной фигуры
     void setHeight(double height); ///<Сигнал об установке высоты цилиндра

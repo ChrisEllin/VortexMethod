@@ -967,7 +967,7 @@ void Solver::ovalSolver()
         {
             gaVortons=log.gaVortons(kadrPath,ii/10);
 
-        emit repaintGUI(V1+V2+gaVortons,frams);
+        emit repaintGUI(V1+V2,gaVortons);
         }
 
 

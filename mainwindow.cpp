@@ -51,6 +51,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect (this, SIGNAL(resetPlane()), ui->openGLWidget, SLOT(resetPlane()));
     connect (this, SIGNAL(drawSegment(QVector3D,QVector3D)), ui->openGLWidget, SLOT(addVorton(QVector3D,QVector3D)));
     connect (this, SIGNAL(drawSegment(QVector3D,QVector3D, SArrow::vort_type)), ui->openGLWidget, SLOT(addVorton(QVector3D,QVector3D,SArrow::vort_type)));
+    connect (this, SIGNAL(drawSegmentGA(QVector3D,QVector3D, SArrow::vort_type)), ui->openGLWidget, SLOT(addVortonGA(QVector3D,QVector3D,SArrow::vort_type)));
+    connect (this, SIGNAL(drawSegmentGA(QVector3D,QVector3D)), ui->openGLWidget, SLOT(addVortonGA(QVector3D,QVector3D)));
     connect (this, SIGNAL(clearSegments(int)), ui->openGLWidget, SLOT(clearCylinders(int)));
     connect (ui->toolButtonViewZoomIn, SIGNAL(clicked(bool)), ui->openGLWidget, SLOT(zoomIn()));
     connect (ui->toolButtonViewZoomOut, SIGNAL(clicked(bool)), ui->openGLWidget, SLOT(zoomOut()));
@@ -66,6 +68,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect (solver, SIGNAL(sendProgressRotationCutBody(const int)), this, SLOT(recieveProgressRotationCutBody(const int)), Qt::BlockingQueuedConnection);
     connect (solver, SIGNAL (repaintGUI(const QVector<Vorton>&, const QVector<std::shared_ptr<MultiFrame>>&)), this,
              SLOT(drawGUI(const QVector<Vorton>&, const QVector<std::shared_ptr<MultiFrame>>&)), Qt::BlockingQueuedConnection);
+    connect (solver, SIGNAL (repaintGUI(const QVector<Vorton>&, const QVector<Vorton>&)), this,
+             SLOT(drawGUIGA(const QVector<Vorton>&, const QVector<Vorton>&)), Qt::BlockingQueuedConnection);
     connect (solver, SIGNAL(updateSphereMaximum(const int)), ui->sphereProgressBar, SLOT(setMaximum(const int)), Qt::BlockingQueuedConnection);
     connect (solver, SIGNAL(updateCylinderMaximum(const int)), ui->cylinderProgressBar, SLOT(setMaximum(const int)), Qt::BlockingQueuedConnection);
     connect (solver, SIGNAL(updateRotationBodyMaximum(const int)), ui->rotationBodyProgressBar, SLOT(setMaximum(const int)), Qt::BlockingQueuedConnection);
@@ -1093,6 +1097,31 @@ void MainWindow::drawGUI(const QVector<Vorton> &vortons, const QVector<Vorton> &
     {
         for (int i=0; i<currentNormals.size();i++)
             emit drawSegment(Vector3D::toQVector3D(currentControlPoints[i]), Vector3D::toQVector3D(currentControlPoints[i]+currentNormals[i]), SArrow::Grid);
+    }
+}
+
+void MainWindow::drawGUIGA(const QVector<Vorton> &vortons, const QVector<Vorton> &vortonsGA)
+{
+    clearSegments();
+
+    ui->freeVortonsQuantityLineEdit->setText(QString::number(vortons.size()));
+    QVector<double> vorticities;
+    for (int i=0; i<vortons.size(); i++)
+        vorticities.push_back(vortons[i].getVorticity());
+    ui->maxGammaLineEdit->setText(QString::number(*std::max_element(vorticities.begin(),vorticities.end(),Vector3D::fabsCompare)));
+    for (int i=0; i<vortons.size(); i++)
+    {
+        QVector3D mid=Vector3D::toQVector3D(vortons[i].getMid());
+        QVector3D tail=Vector3D::toQVector3D(vortons[i].getTail());
+        if (checkDrawing(vortons[i].getMid(),vortons[i].getTail()))
+            emit drawSegment(2.0*mid-tail, tail,SArrow::Grid);
+    }
+    for (int i=0; i<vortonsGA.size(); i++)
+    {
+        QVector3D mid=Vector3D::toQVector3D(vortonsGA[i].getMid());
+        QVector3D tail=Vector3D::toQVector3D(vortonsGA[i].getTail());
+        if (checkDrawing(vortonsGA[i].getMid(),vortonsGA[i].getTail()))
+            emit drawSegmentGA(2.0*mid-tail, tail,SArrow::Grid);
     }
 }
 

@@ -79,6 +79,7 @@ private:
     QPoint mousePositionStart;
 
     QVector <SArrow> grid;
+    QVector <SArrow> gridGA;
     QVector <SArrow> freeVortons;
     QVector3D posCenter;
     QVector3D posEye;
@@ -87,6 +88,7 @@ private:
     Vertex marker[4];
 
     void drawGrid();
+    void drawGridGA();
     void drawFreeVortons();
     void drawCylinder();
     void drawSphere(double r);
@@ -135,6 +137,8 @@ public slots:
 
     void addVorton(QVector3D botCenter, QVector3D topCenter, SArrow::vort_type drawFreeType);
     void addVorton(QVector3D botCenter, QVector3D topCenter);
+    void addVortonGA(QVector3D botCenter, QVector3D topCenter, SArrow::vort_type drawType);
+    void addVortonGA(QVector3D botCenter, QVector3D topCenter);
     void clearCylinders(int n = -1);
 
     void setRadius(double radius);
