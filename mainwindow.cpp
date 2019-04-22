@@ -42,6 +42,7 @@ MainWindow::MainWindow(QWidget *parent) :
     settings =new SolverSettings();
     variateSettings = new VariateSettings();
     preprocessor = new PreprocessorSettings();
+    connect (solver, SIGNAL(makeScreenShot(QString)), this, SLOT(makeScreenShot(QString)));
     connect (this, SIGNAL(setPlaneXY()), ui->openGLWidget, SLOT(setPlaneXY()));
     connect (this, SIGNAL(setPlaneYX()), ui->openGLWidget, SLOT(setPlaneYX()));
     connect (this, SIGNAL(setPlaneXZ()), ui->openGLWidget, SLOT(setPlaneXZ()));
@@ -735,6 +736,21 @@ void MainWindow::solverFinished()
             ui->variateRotationCutBodySolverPushButton->setDisabled(false);
         }
     }
+}
+
+void MainWindow::makeScreenShot(QString screenshotDir)
+{
+    QString filename=screenshotDir;
+    filename+="/";
+    filename+=QDateTime::currentDateTime().toString("dd.MM.yyyy_hh_mm_ss.png");
+    QScreen* screen = QGuiApplication::primaryScreen();
+    QPixmap inPixmap = screen->grabWindow( 0 );
+    QFile pict(filename);
+    if (pict.open(QIODevice::WriteOnly))
+    {
+        inPixmap.save(filename, "PNG");
+    }
+    pict.close();
 }
 
 void MainWindow::setMaxGamma(double maxGamma)

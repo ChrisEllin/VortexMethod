@@ -53,6 +53,7 @@ public:
 signals:
     void sendReguliser(double reguliser);
     void finishSolver();
+    void makeScreenShot(QString screenDir);
     void sendNormalsVis(QVector<Vector3D>& controlPoints, QVector<Vector3D>& normals);
     void sendMaxGamma(double maxGamma);
     void repaintGUI(const QVector<Vorton>& vortons, const QVector<std::shared_ptr<MultiFrame>>& frames);

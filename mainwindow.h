@@ -10,7 +10,7 @@
 #include "preprocessorsettings.h"
 #include <QProgressDialog>
 #include <QActionGroup>
-
+#include <QScreen>
 enum ExitState {Stopped, Closed, None};
 namespace Ui {
 class MainWindow;
@@ -113,7 +113,7 @@ public slots:
     void showInfo();
     void stop();
     void solverFinished();
-
+    void makeScreenShot(QString screenshotDir);
     void setMaxGamma(double maxGamma);
     void recieveProgressSphere(const int percentage);
     void recieveProgressCylinder(const int percentage);
@@ -132,6 +132,7 @@ signals:
     void setPlaneZY(); ///<Сигнал о переходе к ZY отображению
     void resetPlane(); ///<Сигнал о переходе к начальному отображению
     void sendPanelLength(double panelLength);
+
     void sendSolverParameters(SolverParameters& solvPar); ///<Сигнал, отправляющий параметры расчета
     void drawSegment(QVector3D center, QVector3D top, SArrow::vort_type); ///<Сигнал об отрисовке с выбором типа отрисовки
     void drawSegment(QVector3D center, QVector3D top); ///< \overload Сигнал об отрисовке точки
