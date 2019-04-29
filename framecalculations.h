@@ -72,6 +72,7 @@ struct Timers
     void clear();
 };
 
+
 /*!
     \brief Класс, содержащий функции для работы с рамками
 
@@ -102,6 +103,8 @@ public:
     Eigen::VectorXd columnCalc(const Vector3D streamVel, const QVector<Vorton> &vortons, const QVector<Vector3D> &normals, const QVector<Vector3D> controlPoints);
     Eigen::VectorXd columnCalc(const Vector3D streamVel, const QVector<Vorton> &vortons, const QVector<Vector3D> &normals, const Vector3D angularVel, const QVector<Vector3D>& controlPoints, const Vector3D center);
     Eigen::VectorXd vorticitiesCalc(const Eigen::VectorXd& column);
+    static int universalInside(const Vorton vort, const QVector<std::pair<double, double> > boundaries, QVector<std::shared_ptr<MultiFrame>>& frames);
+    void universalGetBack(QVector<Vorton> &vortons, QVector<std::pair<double, double> > boundaries, const double layerHeight,  const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals, QVector<std::shared_ptr<MultiFrame>>& frames);
     void unionVortons(QVector<Vorton> &vortons, const double eStar, const double eDoubleStar,const  double vortonRad);
     void removeSmallVorticity(QVector<Vorton> &vortons,const double minVorticity);
     void removeFarSphere(QVector <Vorton> &vortons, const double farDistance, const Vector3D bodyCenter);
@@ -159,7 +162,7 @@ public:
     void getBackRotationBody(QVector<Vorton> &vortons, const Vector3D bodyNose, const double xEnd, const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals, FormingParameters forming);
     void rotateRotationBody(QVector<Vorton> &vortons, const Vector3D bodyNose, const double xEnd,const double layerHeight, const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals, FormingParameters forming);
     void velForStreamLines(QVector<Vector3D>& velocities, Vector3D streamVel, double step, QVector<Vorton>& freeVortons, QPair<int, int> boundaries);
-    bool coDirectionallyCheck(const Vector3D a, const Vector3D b, const Vector3D c);
+    static bool coDirectionallyCheck(const Vector3D a, const Vector3D b, const Vector3D c);
     static void setVorticity(QVector<std::shared_ptr<MultiFrame>> frames, const Eigen::VectorXd vorticities);
     static QVector<Vorton> getFrameVortons(QVector<std::shared_ptr<MultiFrame>> frames);
     static QVector<Vorton> getLiftedFrameVortons (QVector<std::shared_ptr<MultiFrame>> frames, const QVector<Vector3D>& normals, const double deltaUp);
@@ -204,6 +207,10 @@ public:
     void clearRestrictions();
     void clearTimers();
     void clear();
+    QVector<std::pair<double, double> > makeParalllepiped(QVector<Vorton> newVortons);
+    static bool xCompare(const Vorton a, const Vorton b);
+    static bool yCompare(Vorton a,Vorton b);
+    static bool zCompare(Vorton a, Vorton b);
 
 };
 
