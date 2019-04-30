@@ -522,16 +522,18 @@ void FrameCalculations::displacementCalcGauss3(QVector<Vorton> &freeVortons, QVe
 //            resultedVec[i].setElongation(Vector3D());
 //            restrictions.turnRestr++;
 //        }
-        if ((lengthChange)>dlMax)
-        {
-            resultedVec[i].setElongation((resultedVec[i].getTail()-resultedVec[i].getMid())*(dlMax/(lengthChange)-1));
-            restrictions.elongationRestr++;
-        }
-        else if ((lengthChange)<dlMin)
-        {
-            resultedVec[i].setElongation((resultedVec[i].getTail()-resultedVec[i].getMid())*(dlMin/(lengthChange)-1));
-            restrictions.elongationRestr++;
-        }
+//        if ((lengthChange)>dlMax)
+//        {
+//            resultedVec[i].setElongation((resultedVec[i].getTail()-resultedVec[i].getMid())*(dlMax/(lengthChange)-1));
+//            resultedVec[i].setTail(resultedVec[i].getMid()+(resultedVec[i].getTail()-resultedVec[i].getMid()+resultedVec[i].getElongation()))
+//            restrictions.elongationRestr++;
+//        }
+//        else if ((lengthChange)<dlMin)
+//        {
+//            resultedVec[i].setElongation((resultedVec[i].getTail()-resultedVec[i].getMid())*(dlMin/(lengthChange)-1));
+//            resultedVec[i].setTail(resultedVec[i].getMid());
+//            restrictions.elongationRestr++;
+//        }
 
 
 //        if (resultedVec[i].getElongation().length()>eDelta)
@@ -552,12 +554,14 @@ void FrameCalculations::displacementCalcGauss3(QVector<Vorton> &freeVortons, QVe
     for (int i=0; i<freeVortons.size(); i++)
     {
         freeVortons[i].setMove(resultedVec[i].getMove());
+        freeVortons[i].setTail(resultedVec[i].getTail());
         freeVortons[i].setElongation(resultedVec[i].getElongation());
     }
 
     for (int i=0; i<newVortons.size(); i++)
     {
         newVortons[i].setMove(resultedVec[i+freeVortons.size()].getMove());
+        newVortons[i].setTail(resultedVec[i+freeVortons.size()].getTail());
         newVortons[i].setElongation(resultedVec[i+freeVortons.size()].getElongation());
     }
     timers.integrationTimer=start.elapsed()*0.01;
@@ -1899,6 +1903,26 @@ void FrameCalculations::translateAndRotatev3(QVector<std::shared_ptr<MultiFrame>
     dCloseODE();
 }
 
+void FrameCalculations::displace(QVector<Vorton> &vortons, double dlMax, double dlMin)
+{
+    for (int i=0; i<vortons.size(); i++)
+    {
+        vortons[i].setMid(vortons[i].getMid()+vortons[i].getMove());
+        vortons[i].setTail(vortons[i].getTail()+vortons[i].getMove()+vortons[i].getElongation());
+
+        double diff=(vortons[i].getTail()-vortons[i].getMid()).length();
+       if (diff<dlMin)
+       {
+           vortons[i].setTail(vortons[i].getMid()+(vortons[i].getTail()-vortons[i].getMid())*(dlMin/diff));
+       }
+       if (diff>dlMax)
+       {
+           vortons[i].setTail(vortons[i].getMid()+(vortons[i].getTail()-vortons[i].getMid())*(dlMax/diff));
+       }
+
+    }
+}
+
 void FrameCalculations::getBackRotationBody(QVector<Vorton> &vortons, const Vector3D bodyNose, const double xEnd, const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals, FormingParameters forming)
 {
     QTime start=QTime::currentTime();
@@ -2060,8 +2084,8 @@ Vorton FrameCalculations::parallelDisplacementGauss(const Parallel el)
     double xElong=vb.B[0][0]*selfLen[0]+vb.B[0][1]*selfLen[1]+vb.B[0][2]*selfLen[2];
     double yElong=vb.B[1][0]*selfLen[0]+vb.B[1][1]*selfLen[1]+vb.B[1][2]*selfLen[2];
     double zElong=vb.B[2][0]*selfLen[0]+vb.B[2][1]*selfLen[1]+vb.B[2][2]*selfLen[2];
-    res.setElongation(Vector3D(xElong, yElong, zElong)*el.tau);
-    res.setMove(vb.Vel*el.tau);
+    res.setElongation(/*0.5**/Vector3D(xElong, yElong, zElong)*el.tau);
+    res.setMove(/*0.5**/vb.Vel*el.tau);
     return res;
 }
 
@@ -2073,8 +2097,12 @@ void FrameCalculations::displace(QVector<Vorton> &vortons)
 {
     for (int i=0; i<vortons.size(); i++)
     {
-        vortons[i].setTail(vortons[i].getTail()+vortons[i].getMove()+vortons[i].getElongation());
         vortons[i].setMid(vortons[i].getMid()+vortons[i].getMove());
+        vortons[i].setTail(vortons[i].getTail()+vortons[i].getMove()+vortons[i].getElongation());
+
+
+//       if ((vortons[i].getTail()-vortons[i].getMid()).length()<
+
     }
 }
 

@@ -555,10 +555,10 @@ void Solver::rotationBodySolver(const FragmentationParameters &fragPar)
 //        tempV1=freeVortons;
 //        tempV2=newVortons;
 
-        //ЭЙЛЕР
+        //ЭЙЛЕ� 
         functions.displacementCalc(freeVortons,newVortons,solvPar.tau,currentSpeed,solvPar.eDelta,solvPar.fiMax,solvPar.maxMove);
 
-        //ЭЙЛЕР 2-го порядка
+        //ЭЙЛЕ�  2-го порядка
 //        functions.displacementCalcGauss3(tempV1,tempV2,solvPar.tau,currentSpeed,solvPar.eDelta,solvPar.fiMax,solvPar.maxMove);
 //        for (int i=0; i<freeVortons.size(); i++) {
 //            freeVortons[i].setMove(tempV1[i].getMove());
@@ -732,20 +732,6 @@ void Solver::rotationBodySolver(const FragmentationParameters &fragPar)
 
 void Solver::ovalSolver()
 {
-    Vorton vort;
-    QVector <Vorton> v;
-    vort.setMid(Vector3D(2.500000,10.000000,7.000000));
-    vort.setTail(vort.getMid()+Vector3D(5.000000,8.000000,7.000000));
-    vort.setVorticity(0.500000);
-    vort.setRadius(0.200000);
-    v.push_back(vort);
-    Vorton v2;
-    v2.setMid(Vector3D(2.400000,9.900000,6.950000));
-    v2.setTail(v2.getMid()+Vector3D(1.000000,2.100000,3.200000));
-    v2.setVorticity(0.500000);
-    v2.setRadius(0.200000);
-    v.push_back(v2);
-
 //    Vorton vort;
 //    QVector <Vorton> v;
 //    vort.setMid(Vector3D(2.500000,10.000000,7.000000));
@@ -754,17 +740,31 @@ void Solver::ovalSolver()
 //    vort.setRadius(0.200000);
 //    v.push_back(vort);
 //    Vorton v2;
-//    v2.setMid(Vector3D(3.500000,7.000000,8.000000));
+//    v2.setMid(Vector3D(2.400000,9.900000,6.950000));
 //    v2.setTail(v2.getMid()+Vector3D(1.000000,2.100000,3.200000));
 //    v2.setVorticity(0.500000);
 //    v2.setRadius(0.200000);
 //    v.push_back(v2);
 
+////    Vorton vort;
+////    QVector <Vorton> v;
+////    vort.setMid(Vector3D(2.500000,10.000000,7.000000));
+////    vort.setTail(vort.getMid()+Vector3D(5.000000,8.000000,7.000000));
+////    vort.setVorticity(0.500000);
+////    vort.setRadius(0.200000);
+////    v.push_back(vort);
+////    Vorton v2;
+////    v2.setMid(Vector3D(3.500000,7.000000,8.000000));
+////    v2.setTail(v2.getMid()+Vector3D(1.000000,2.100000,3.200000));
+////    v2.setVorticity(0.500000);
+////    v2.setRadius(0.200000);
+////    v.push_back(v2);
 
-    Vector3D deltar=v2.getTail()-v2.getMid();
+
+//    Vector3D deltar=v2.getTail()-v2.getMid();
 
 
-    VelBsym res=FrameCalculations::velocityAndBsymmGauss3(v2.getMid(),deltar,Vector3D(0.0,0.0,0.0),v);
+//    VelBsym res=FrameCalculations::velocityAndBsymmGauss3(v2.getMid(),deltar,Vector3D(0.0,0.0,0.0),v);
 
 
 
@@ -969,8 +969,8 @@ void Solver::ovalSolver()
          // эйлер с перес;четом
         functions.displacementCalcGauss3(tempV1,tempV2,0.5*tau,Vinf,eDelta,fi_max,MaxMove,dl_max_etalon,dl_min_etalon);
 
-        functions.displace(tempV1);
-        functions.displace(tempV2);
+        functions.displace(tempV1,dl_max_etalon,dl_min_etalon);
+        functions.displace(tempV2,dl_max_etalon,dl_min_etalon);
 
         functions.displacementCalcGauss3(tempV1,tempV2,0.5*tau,Vinf,eDelta,fi_max,MaxMove,dl_max_etalon,dl_min_etalon);
 
@@ -989,8 +989,8 @@ void Solver::ovalSolver()
 
 
 
-        functions.displace(V1);
-        functions.displace(V2);
+        functions.displace(V1,dl_max_etalon,dl_min_etalon);
+        functions.displace(V2,dl_max_etalon,dl_min_etalon);
 
 
         qDebug()<< "Step number: "<<ii;
@@ -1684,7 +1684,7 @@ void Solver::rotationCutBodySolver(const FragmentationParameters &fragPar)
 /*!
 Осуществляет расчет неподвижного тела вращения со срезом с заданными параметрами вблизи экрана
 \param fragPar Параметры разбиения тела вращения со срезом
-\param screenDistance Расстояние между дном тела и экраном
+\param screenDistance � асстояние между дном тела и экраном
 */
 void Solver::rotationCutBodySolverNearScreen(const FragmentationParameters &fragPar, const double screenDistance)
 {
