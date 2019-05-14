@@ -41,7 +41,7 @@ double FrameCalculations::getConditionalNum()
 }
 
 /*!
-Рассчитывает значения углов тета для сферы
+� ассчитывает значения углов тета для сферы
 \param tetaFragNum Количество разбиений тела по тета
 \return Вектор с рассчитанными значениями углов тета
 */
@@ -74,7 +74,7 @@ void FrameCalculations::epsNormal(QVector<std::shared_ptr<MultiFrame> > &frames,
 }
 
 /*!
-Рассчитывает значения элементов матрицы, составленной из произведения единичных интенсивностей от каждой из рамок на соответствующую нормаль и вычисляет обратную к ней
+� ассчитывает значения элементов матрицы, составленной из произведения единичных интенсивностей от каждой из рамок на соответствующую нормаль и вычисляет обратную к ней
 \param frames Вектор рамок
 \param controlPoints Вектор контрольных точек
 \param normals Вектор нормалей
@@ -134,7 +134,7 @@ void FrameCalculations::matrixCalc(QVector<std::shared_ptr<MultiFrame> > frames,
 
 }
 /*!
-Рассчитывает значения столбца b для решения СЛАУ вида A*x=b, где А-матрица, х-искомый столбец.
+� ассчитывает значения столбца b для решения СЛАУ вида A*x=b, где А-матрица, х-искомый столбец.
 \param streamVel Скорость потока
 \param vortons Вектор содержащий текущие вортоны в потоке
 \param normals Вектор нормалей
@@ -162,7 +162,7 @@ Eigen::VectorXd FrameCalculations::columnCalc(const Vector3D streamVel, const QV
 }
 
 /*!
-Рассчитывает значения столбца x путем решения СЛАУ вида A*x=b, где А-матрица, b-известный столбец.
+� ассчитывает значения столбца x путем решения СЛАУ вида A*x=b, где А-матрица, b-известный столбец.
 \param column Столбец b
 \return Столбец x, содержащий значения завихренностей рамок
 */
@@ -173,14 +173,14 @@ Eigen::VectorXd FrameCalculations::vorticitiesCalc(const Eigen::VectorXd &column
 
 int FrameCalculations::universalInside(const Vorton vort,const QVector<std::pair<double,double>> boundaries, QVector<std::shared_ptr<MultiFrame> > &frames)
 {
-    if ((vort.getTail().x()>boundaries[0].second ||vort.getTail().x()<boundaries[0].first) &&
-            ((2.0*vort.getMid()-vort.getTail()).x()>boundaries[0].second || (2.0*vort.getMid()-vort.getTail()).x()<boundaries[0].first))
+    if ((vort.getTail().x()>boundaries[0].second && (2.0*vort.getMid()-vort.getTail()).x()>boundaries[0].second) || (( vort.getTail().x()<boundaries[0].first) &&
+            (2.0*vort.getMid()-vort.getTail()).x()<boundaries[0].first))
         return -1;
-    if ((vort.getTail().y()>boundaries[1].second ||vort.getTail().y()<boundaries[1].first) &&
-            ((2.0*vort.getMid()-vort.getTail()).y()>boundaries[1].second || (2.0*vort.getMid()-vort.getTail()).y()<boundaries[1].first))
+    if ((vort.getTail().y()>boundaries[1].second && (2.0*vort.getMid()-vort.getTail()).y()>boundaries[1].second) || (( vort.getTail().y()<boundaries[1].first) &&
+               (2.0*vort.getMid()-vort.getTail()).y()<boundaries[1].first))
         return -1;
-    if ((vort.getTail().z()>boundaries[2].second ||vort.getTail().z()<boundaries[2].first) &&
-            ((2.0*vort.getMid()-vort.getTail()).z()>boundaries[2].second || (2.0*vort.getMid()-vort.getTail()).z()<boundaries[2].first))
+    if ((vort.getTail().z()>boundaries[2].second && (2.0*vort.getMid()-vort.getTail()).z()>boundaries[2].second) || (( vort.getTail().z()<boundaries[2].first) &&
+             (2.0*vort.getMid()-vort.getTail()).z()<boundaries[2].first))
         return -1;
 
     srand(time(NULL));
@@ -196,30 +196,30 @@ int FrameCalculations::universalInside(const Vorton vort,const QVector<std::pair
                 Vector3D e2=frames[i]->at(2).getTail()-frames[i]->at(0).getTail();
                 Vector3D n=Vector3D::crossProduct(e1,e2);
                 Vector3D tau=vort.getTail()-frames[num]->at(0).getTail();
-                double t=Vector3D::dotProduct(frames[i]->at(0).getTail()-frames[num]->at(0).getTail(),n)/Vector3D::dotProduct(tau,n);
+                double t=Vector3D::dotProduct(frames[i]->at(0).getTail()-choosen,n)/Vector3D::dotProduct(tau,n);
                 if (t<=0.0||t>=1.0)
                 {
-                    Vector3D rtilda=frames[num]->at(0).getTail()+t*tau;
+                    Vector3D rtilda=choosen+t*tau;
                     Vector3D a1=frames[i]->at(0).getTail()-rtilda;
                     Vector3D a2=frames[i]->at(1).getTail()-rtilda;
                     Vector3D a3=frames[i]->at(2).getTail()-rtilda;
                     if (coDirectionallyCheck(a1,a2,a3))
                     {
-                        if (Vector3D::dotProduct(frames[num]->at(0).getTail()-vort.getTail(),rtilda-vort.getTail())>0)
+                        if (Vector3D::dotProduct(choosen-vort.getTail(),rtilda-vort.getTail())>0)
                             return 1;
                     }
                 }
-                tau=2.0*vort.getMid()-vort.getTail()-frames[num]->at(0).getTail();
-                t=Vector3D::dotProduct(frames[i]->at(0).getTail()-frames[num]->at(0).getTail(),n)/Vector3D::dotProduct(tau,n);
+                tau=2.0*vort.getMid()-vort.getTail()-choosen;
+                t=Vector3D::dotProduct(frames[i]->at(0).getTail()-choosen,n)/Vector3D::dotProduct(tau,n);
                 if (t<=0.0||t>=1.0)
                 {
-                    Vector3D rtilda=frames[num]->at(0).getTail()+t*tau;
+                    Vector3D rtilda=choosen+t*tau;
                     Vector3D a1=frames[i]->at(0).getTail()-rtilda;
                     Vector3D a2=frames[i]->at(1).getTail()-rtilda;
                     Vector3D a3=frames[i]->at(2).getTail()-rtilda;
                     if (coDirectionallyCheck(a1,a2,a3))
                     {
-                        if (Vector3D::dotProduct(frames[num]->at(0).getTail()-(2.0*vort.getMid()-vort.getTail()),rtilda-(2.0*vort.getMid()-vort.getTail()))>0)
+                        if (Vector3D::dotProduct(choosen-(2.0*vort.getMid()-vort.getTail()),rtilda-(2.0*vort.getMid()-vort.getTail()))>0)
                             return 0;
                     }
                 }
@@ -231,31 +231,31 @@ int FrameCalculations::universalInside(const Vorton vort,const QVector<std::pair
                     Vector3D e1=frames[i]->at(j).getTail()-frames[i]->at(0).getTail();
                     Vector3D e2=frames[i]->at(j+1).getTail()-frames[i]->at(0).getTail();
                     Vector3D n=Vector3D::crossProduct(e1,e2);
-                    Vector3D tau=vort.getTail()-frames[num]->at(0).getTail();
-                    double t=Vector3D::dotProduct(frames[i]->at(0).getTail()-frames[num]->at(0).getTail(),n)/Vector3D::dotProduct(tau,n);
+                    Vector3D tau=vort.getTail()-choosen;
+                    double t=Vector3D::dotProduct(frames[i]->at(0).getTail()-choosen,n)/Vector3D::dotProduct(tau,n);
                     if (t<=0.0||t>=1.0)
                     {
-                        Vector3D rtilda=frames[num]->at(0).getTail()+t*tau;
+                        Vector3D rtilda=choosen+t*tau;
                         Vector3D a1=frames[i]->at(0).getTail()-rtilda;
                         Vector3D a2=frames[i]->at(j).getTail()-rtilda;
                         Vector3D a3=frames[i]->at(j+1).getTail()-rtilda;
                         if (coDirectionallyCheck(a1,a2,a3))
                         {
-                            if (Vector3D::dotProduct(frames[num]->at(0).getTail()-vort.getTail(),rtilda-vort.getTail())>0)
+                            if (Vector3D::dotProduct(choosen-vort.getTail(),rtilda-vort.getTail())>0)
                                 return 1;
                         }
                     }
-                    tau=2.0*vort.getMid()-vort.getTail()-frames[num]->at(0).getTail();
-                    t=Vector3D::dotProduct(frames[i]->at(0).getTail()-frames[num]->at(0).getTail(),n)/Vector3D::dotProduct(tau,n);
+                    tau=2.0*vort.getMid()-vort.getTail()-choosen;
+                    t=Vector3D::dotProduct(frames[i]->at(0).getTail()-choosen,n)/Vector3D::dotProduct(tau,n);
                     if (t<=0.0||t>=1.0)
                     {
-                        Vector3D rtilda=frames[num]->at(0).getTail()+t*tau;
+                        Vector3D rtilda=choosen+t*tau;
                         Vector3D a1=frames[i]->at(0).getTail()-rtilda;
                         Vector3D a2=frames[i]->at(j).getTail()-rtilda;
                         Vector3D a3=frames[i]->at(j+1).getTail()-rtilda;
                         if (coDirectionallyCheck(a1,a2,a3))
                         {
-                            if (Vector3D::dotProduct(frames[num]->at(0).getTail()-(2.0*vort.getMid()-vort.getTail()),rtilda-(2.0*vort.getMid()-vort.getTail()))>0)
+                            if (Vector3D::dotProduct(choosen-(2.0*vort.getMid()-vort.getTail()),rtilda-(2.0*vort.getMid()-vort.getTail()))>0)
                                 return 0;
                         }
                     }
@@ -267,12 +267,21 @@ int FrameCalculations::universalInside(const Vorton vort,const QVector<std::pair
 
 }
 
-void FrameCalculations::universalGetBack(QVector<Vorton> &vortons,QVector<std::pair<double,double>> boundaries, const double layerHeight, const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals, QVector<std::shared_ptr<MultiFrame>>& frames)
+QVector<int> FrameCalculations::universalGetBack(QVector<Vorton> &vortons, QVector<std::pair<double,double>> boundaries, const double layerHeight, const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals, QVector<std::shared_ptr<MultiFrame>>& frames, bool screen)
 {
+    QVector<int> results;
     for (int i=0; i<vortons.size();i++)
     {
+        if (screen==true)
+        {
+            if (FrameCalculations::insideScreen(vortons[i]))
+            {
+                vortons.remove(i);
+            }
+        }
         int res;
         res=universalInside(vortons[i],boundaries,frames);
+        results.push_back(res);
         if (res==1)
         {
             QPair<double,int> closest=BodyFragmentation::findClosest(vortons[i].getTail(),controlPoints, normals);
@@ -302,13 +311,37 @@ void FrameCalculations::universalGetBack(QVector<Vorton> &vortons,QVector<std::p
                 vortons[i].setMove(vortons[i].getMove()+2.0*closest.first*normals[closest.second]);
             }
         }
-        if (res==-1)
-        {
-            QPair<double,int> closest=BodyFragmentation::findClosest(vortons[i].getTail(),controlPoints, normals);
-            QPair<double,int> closestSec=BodyFragmentation::findClosest(2.0*vortons[i].getMid()-vortons[i].getTail(),controlPoints, normals);
-            if (closest.first<layerHeight||closestSec.first<layerHeight)
-                vortons[i].rotateAroundNormal(normals[closest.second]);
+//        if (res==-1)
+//        {
 
+//            QPair<double,int> closest=BodyFragmentation::findClosest(vortons[i].getTail(),controlPoints, normals);
+//            QPair<double,int> closestSec=BodyFragmentation::findClosest(2.0*vortons[i].getMid()-vortons[i].getTail(),controlPoints, normals);
+//            if (closest.first<layerHeight||closestSec.first<layerHeight)
+//                vortons[i].rotateAroundNormal(normals[closest.second]);
+
+//        }
+    }
+    return results;
+}
+
+void FrameCalculations::correctMove(QVector<Vorton> &freeVortons, QVector<Vorton> &copyVort)
+{
+    for (int i=0; i<freeVortons.size();i++)
+    {
+        freeVortons[i].setMid(copyVort[i].getMid()-freeVortons[i].getMid());
+    }
+}
+
+void FrameCalculations::universalRotate(QVector<Vorton> vortons, QVector<int> res, const double layerHeight, const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals)
+{
+    for (int i=0; i<res.size();i++)
+    {
+        if (res[i]==-1)
+        {
+                    QPair<double,int> closest=BodyFragmentation::findClosest(vortons[i].getTail(),controlPoints, normals);
+                    QPair<double,int> closestSec=BodyFragmentation::findClosest(2.0*vortons[i].getMid()-vortons[i].getTail(),controlPoints, normals);
+                    if (closest.first<layerHeight||closestSec.first<layerHeight)
+                        vortons[i].rotateAroundNormal(normals[closest.second]);
         }
     }
 }
@@ -318,7 +351,7 @@ void FrameCalculations::universalGetBack(QVector<Vorton> &vortons,QVector<std::p
 \param[in,out] vortons Вектор, содержащий вортоны для объединения
 \param[in] eStar Максимальное расстояние для объединения
 \param[in] eDoubleStar Минимальный косинус угла для объединения
-\param[in] vortonRad Радиус вортон-отрезков
+\param[in] vortonRad � адиус вортон-отрезков
 */
 void FrameCalculations::unionVortons(QVector<Vorton> &vortons,const double eStar,const double eDoubleStar,const double vortonRad)
 {
@@ -438,7 +471,7 @@ void FrameCalculations::removeFarRotationCutBody(QVector<Vorton> &vortons, const
 Функция расчета перемещений и удалений для вортонов с рамок и вортонов в потоке
 \param[in,out] freeVortons Вектор, содержащий вортоны в потоке
 \param[in,out] newVortons Вектор, содержащий вортоны с рамок
-\param[in] step Размер шага
+\param[in] step � азмер шага
 \param[in] streamVel Скорость потока
 \param[in] eDelta Максимальное значение удлинения
 \param[in] fiMax Максимальное значение угла поворота
@@ -517,11 +550,11 @@ void FrameCalculations::displacementCalcGauss3(QVector<Vorton> &freeVortons, QVe
         //const double dlmax=0.5*2.0*M_PI/36.0*2.0;
         double turnAngle=acos(Vector3D::dotProduct(selfLenBef.normalized(), selfLenAft.normalized()));
         double lengthChange=(resultedVec[i].getTail()-resultedVec[i].getMid()+resultedVec[i].getElongation()).length();
-//        if (turnAngle>fiMax)
-//        {
-//            resultedVec[i].setElongation(Vector3D());
-//            restrictions.turnRestr++;
-//        }
+        if (turnAngle>fiMax)
+        {
+            resultedVec[i].setElongation(Vector3D());
+            restrictions.turnRestr++;
+        }
 //        if ((lengthChange)>dlMax)
 //        {
 //            resultedVec[i].setElongation((resultedVec[i].getTail()-resultedVec[i].getMid())*(dlMax/(lengthChange)-1));
@@ -536,18 +569,18 @@ void FrameCalculations::displacementCalcGauss3(QVector<Vorton> &freeVortons, QVe
 //        }
 
 
-//        if (resultedVec[i].getElongation().length()>eDelta)
-//        {
-//            resultedVec[i].setElongation(Vector3D());
-//            restrictions.elongationRestr++;
-//        }
+        if (resultedVec[i].getElongation().length()>eDelta)
+        {
+            resultedVec[i].setElongation(Vector3D());
+            restrictions.elongationRestr++;
+        }
 
 
-//        if (resultedVec[i].getMove().length()>maxMove)
-//        {
-//            resultedVec[i].setMove(Vector3D());
-//            restrictions.moveRestr++;
-//        }
+        if (resultedVec[i].getMove().length()>maxMove)
+        {
+            resultedVec[i].setMove(Vector3D());
+            restrictions.moveRestr++;
+        }
 
     }
 
@@ -573,7 +606,7 @@ void FrameCalculations::displacementCalcGauss3(QVector<Vorton> &freeVortons, QVe
 \param[in,out] newVortons Вектор, содержащий вортоны с рамок
 \param[in,out] symFreeVortons Симметричный вектор вектору, содержащему вортоны в потоке
 \param[in,out] symNewVortons Симметричный вектор вектору, содержащему вортоны с рамок
-\param[in] step Размер шага
+\param[in] step � азмер шага
 \param[in] streamVel Скорость потока
 \param[in] eDelta Максимальное значение удлинения
 \param[in] fiMax Максимальное значение угла поворота
@@ -635,7 +668,7 @@ void FrameCalculations::displacementLaunchCalc(QVector<Vorton> &freeVortons, QVe
 
 /*!
 Функция установки размера матрицы
-\param size Размер матрциы
+\param size � азмер матрциы
 */
 void FrameCalculations::setMatrixSize(int size)
 {
@@ -856,7 +889,7 @@ void FrameCalculations::forceAndTorqueCalc(const Vector3D streamVel, double stre
 \param[in] stepNum Номер текущего шага
 \param[in,out] cp Вектор для записи значений ср
 \param[in] fiFragNum Количество разбиений по фи
-\param[in] radius Радиус сферы
+\param[in] radius � адиус сферы
 \param[in] pointsRaising Величина подъема точек для вычисления давления
 \param[in] tetas Вектор значений углов тета
 \param[in] streamVel Скорость потока
@@ -2153,7 +2186,7 @@ void FrameCalculations::reflectMove(QVector<Vorton> &symFreeVortons, QVector<Vor
 Функция для проверки попадания вортона внутрь сферы
 \param vorton Вортон
 \param center Центра сферы
-\param radius Радиус сферы
+\param radius � адиус сферы
 \return Определение попадания внутрь сферы
 */
 bool FrameCalculations::insideSphere(const Vorton& vort, const Vector3D& center, const double radius)
@@ -2167,7 +2200,7 @@ bool FrameCalculations::insideSphere(const Vorton& vort, const Vector3D& center,
 Функция для проверки попадания вортона внутрь слоя вокруг сферы
 \param vorton Вортон
 \param center Центр сферы
-\param radius Радиус сферы
+\param radius � адиус сферы
 \param layerHeight Высота слоя
 \return Определение попадания внутрь слоя вокруг сферы
 */

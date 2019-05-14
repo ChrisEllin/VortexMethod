@@ -21,7 +21,7 @@ struct Parallel
     QVector<std::shared_ptr<MultiFrame>> *frames; ///< Указатель на вектор рамок
     int num; ///< Номер текущей рамки
     Vector3D streamVel; ///< Скорость потока
-    double tau; ///< Размер шага
+    double tau; ///< � азмер шага
 };
 
 //struct Lengths
@@ -83,8 +83,8 @@ class FrameCalculations
 {
 private:
 
-    Eigen::MatrixXd matrix; ///<Матрица, составленная из произведения единичных интенсивностей от каждой из рамок на соответствующую нормаль. Используется для дальнейшего решения СЛАУ и вычисления завихренностей рамок.
-    int matrixSize;  ///<Размер матрицы
+    Eigen::MatrixXd matrix; ///<Матрица, составленная из произведения единичных интенсивностей от каждой из рамок на соответствующую нормаль. �?спользуется для дальнейшего решения СЛАУ и вычисления завихренностей рамок.
+    int matrixSize;  ///<� азмер матрицы
     double conditionalNum;
     Counters counters;  ///<Количество удаленных вортонов в результате действия различных функций
 
@@ -104,7 +104,9 @@ public:
     Eigen::VectorXd columnCalc(const Vector3D streamVel, const QVector<Vorton> &vortons, const QVector<Vector3D> &normals, const Vector3D angularVel, const QVector<Vector3D>& controlPoints, const Vector3D center);
     Eigen::VectorXd vorticitiesCalc(const Eigen::VectorXd& column);
     static int universalInside(const Vorton vort, const QVector<std::pair<double, double> > boundaries, QVector<std::shared_ptr<MultiFrame>>& frames);
-    void universalGetBack(QVector<Vorton> &vortons, QVector<std::pair<double, double> > boundaries, const double layerHeight,  const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals, QVector<std::shared_ptr<MultiFrame>>& frames);
+    QVector<int> universalGetBack(QVector<Vorton> &vortons, QVector<std::pair<double, double> > boundaries, const double layerHeight,  const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals, QVector<std::shared_ptr<MultiFrame>>& frames,bool screen = false);
+    void correctMove(QVector<Vorton>& freeVortons, QVector<Vorton>& copyVort);
+    void universalRotate(QVector<Vorton> vortons, QVector<int> res, const double layerHeight,  const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals);
     void unionVortons(QVector<Vorton> &vortons, const double eStar, const double eDoubleStar,const  double vortonRad);
     void removeSmallVorticity(QVector<Vorton> &vortons,const double minVorticity);
     void removeFarSphere(QVector <Vorton> &vortons, const double farDistance, const Vector3D bodyCenter);
