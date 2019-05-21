@@ -40,7 +40,7 @@ struct FragmentationParameters
     ///@{
     int sphereFiFragNum; ///<Количество разбиений по fi
     int sphereTetaFragNum; ///<Количество разбиений по teta
-    double sphereRad; ///<Радиус сферы
+    double sphereRad; ///<� адиус сферы
     ///@}
 
     /*!
@@ -100,7 +100,7 @@ struct FragmentationParameters
         \brief В данном модуле хранятся Общие параметры, необходимые для разбиения тела.
     */
     ///@{
-    double vortonsRad; ///<Радиус вортона
+    double vortonsRad; ///<� адиус вортона
     double delta; ///<Подъем рамок над телом
     double pointsRaising; ///<Подъем контрольных точек для подсчета давления
     ///@}
@@ -117,10 +117,10 @@ struct SphereParameters
 {
     int fiFragNum; ///<Количество разбиений по fi
     int tetaFragNum; ///<Количество разбиений по teta
-    double radius; ///<Радиус сферы
+    double radius; ///<� адиус сферы
     double delta; ///<Подъем рамок над телом
     double raise; ///<Подъем контрольных точек для подсчета давления
-    double vortonsRad; ///<Радиус вортона
+    double vortonsRad; ///<� адиус вортона
     void setData(const int i, const double value);
 };
 
@@ -136,7 +136,7 @@ struct CylinderParameters
     double height; ///<Высота цилиндра
     double delta; ///<Подъем рамок над телом
     double raise; ///<Подъем контрольных точек для подсчета давления
-    double vortonsRad;  ///<Радиус вортона
+    double vortonsRad;  ///<� адиус вортона
     void setData(const int i, const double value);
 };
 
@@ -153,7 +153,7 @@ struct RotationBodyParameters
     double sectionEndDistance;
     double delta;  ///<Подъем рамок над телом
     double raise;  ///<Подъем контрольных точек для подсчета давления
-    double vortonsRad;  ///<Радиус вортона
+    double vortonsRad;  ///<� адиус вортона
     void setData(const int i, const double value);
 };
 
@@ -171,7 +171,7 @@ struct RotationCutBodyParameters
     double sectionEndDistance;
     double delta;  ///<Подъем рамок над телом
     double raise;  ///<Подъем контрольных точек для подсчета давления
-    double vortonsRad; ///<Радиус вортона
+    double vortonsRad; ///<� адиус вортона
     void setData(const int i, const double value);
 };
 
@@ -247,7 +247,10 @@ public:
     QVector<Vector3D> getControlPointsRaised() const;
     QVector<std::shared_ptr<MultiFrame>> getFrames() const;
     static QPair<double, int> findClosest(const Vector3D point, const QVector<Vector3D>& controlPoints, const QVector<Vector3D>& normals);
+    static QPair<double, int> findClosestTriangle(const Vector3D point, const QVector<std::shared_ptr<MultiFrame> > &frames, const QVector<Vector3D>& normals);
     static int findClosetElementFromArray(const QVector<double> arr, const double point);
+
+    static bool coDirectionallyCheck(const Vector3D a, const Vector3D b);
 };
 
 #endif // BODYFRAGMENTATION_H

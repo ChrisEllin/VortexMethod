@@ -144,7 +144,7 @@ void RotationCutBodyParameters::setData(const int i, const double value)
 }
 
 /*!
-Разбивает тело, определяя его тип.
+� азбивает тело, определяя его тип.
 \param body Тип тела
 \param param Параметры разбиения
 \param launch Необходимость решения задачи старта
@@ -203,7 +203,7 @@ BodyFragmentation::BodyFragmentation(BodyType body, const FragmentationParameter
 //}
 
 /*!
-Реализует разбиение сферы.
+� еализует разбиение сферы.
 */
 
 void BodyFragmentation::sphereFragmentation()
@@ -252,7 +252,7 @@ void BodyFragmentation::sphereFragmentation()
 }
 
 /*!
-Реализует разбиение цилиндра.
+� еализует разбиение цилиндра.
 */
 void BodyFragmentation::cylinderFragmentation()
 {
@@ -342,7 +342,7 @@ QPair<int, int> BodyFragmentation::getStreamLinesSizes()
 }
 
 /*!
-Реализует разбиение тела вращения.
+� еализует разбиение тела вращения.
 */
 void BodyFragmentation::rotationBodyFragmantation()
 {
@@ -461,7 +461,7 @@ void BodyFragmentation::rotationBodyFragmantation()
 }
 
 /*!
-Реализует разбиение тела вращения со срезом дна.
+� еализует разбиение тела вращения со срезом дна.
 */
 void BodyFragmentation::rotationCutBodyFragmantation()
 {
@@ -600,10 +600,10 @@ void BodyFragmentation::rotationCutBodyFragmantation()
 }
 
 /*!
-Реализует разбиение тела вращения со срезом дна для решения задачи старта.
+� еализует разбиение тела вращения со срезом дна для решения задачи старта.
 \param i Текущий шаг
 \param bodyVel Скорость тела
-\param tau Размер шага
+\param tau � азмер шага
 */
 void BodyFragmentation::rotationCutBodyLaunchFragmentation(const int i, const Vector3D& bodyVel, const double tau,const double fullLength)
 {
@@ -1307,6 +1307,82 @@ QPair<double, int> BodyFragmentation::findClosest(const Vector3D point, const QV
     return closest;
 }
 
+QPair<double, int> BodyFragmentation::findClosestTriangle(const Vector3D point, const QVector<std::shared_ptr<MultiFrame>> &frames, const QVector<Vector3D> &normals)
+{
+    QPair<double, int> closest = qMakePair(1000000000000000.0,0);
+    for (int i=0; i<frames.size(); i++)
+    {
+        if (frames[i]->getAnglesNum()==4)
+        {
+            Vector3D a1=(frames[i]->at(0).getTail()+frames[i]->at(2).getTail())*0.5;
+            Vector3D a2=(frames[i]->at(1).getTail()+frames[i]->at(2).getTail())*0.5;
+            Vector3D n=Vector3D::crossProduct(frames[i]->at(2).getTail()-frames[i]->at(0).getTail(),frames[i]->at(1).getTail()-frames[i]->at(0).getTail());
+            Vector3D n1=Vector3D::crossProduct(n,frames[i]->at(2).getTail()-frames[i]->at(0).getTail());
+            Vector3D n2=Vector3D::crossProduct(n,frames[i]->at(2).getTail()-frames[i]->at(1).getTail());
+            double t1;
+            if (coDirectionallyCheck(Vector3D::crossProduct(a2-a2,n),Vector3D::crossProduct(n1,n2)))
+                t1=Vector3D::crossProduct(a2-a1,n2).length()/Vector3D::crossProduct(n1,n2).length();
+            else {
+                t1=-Vector3D::crossProduct(a2-a1,n2).length()/Vector3D::crossProduct(n1,n2).length();
+            }
+            Vector3D center=a1+n1*t1;
+
+            double newClosest=(point-center).length();
+            if (newClosest<closest.first)
+            {
+                closest.first=newClosest;
+                closest.second=i;
+            }
+
+
+            a1=(frames[i]->at(0).getTail()+frames[i]->at(2).getTail())*0.5;
+            a2=(frames[i]->at(3).getTail()+frames[i]->at(2).getTail())*0.5;
+            n=Vector3D::crossProduct(frames[i]->at(2).getTail()-frames[i]->at(0).getTail(),frames[i]->at(3).getTail()-frames[i]->at(0).getTail());
+            n1=Vector3D::crossProduct(n,frames[i]->at(2).getTail()-frames[i]->at(0).getTail());
+            n2=Vector3D::crossProduct(n,frames[i]->at(2).getTail()-frames[i]->at(3).getTail());
+            if (coDirectionallyCheck(Vector3D::crossProduct(a2-a2,n),Vector3D::crossProduct(n1,n2)))
+                t1=Vector3D::crossProduct(a2-a1,n2).length()/Vector3D::crossProduct(n1,n2).length();
+            else {
+                t1=-Vector3D::crossProduct(a2-a1,n2).length()/Vector3D::crossProduct(n1,n2).length();
+            }
+            center=a1+n1*t1;
+
+            newClosest=(point-center).length();
+            if (newClosest<closest.first)
+            {
+                closest.first=newClosest;
+                closest.second=i;
+            }
+        }
+        else {
+            for (int j=1;j<frames[i]->getAnglesNum()-1;j++)
+            {
+                Vector3D a1=(frames[i]->at(0).getTail()+frames[i]->at(j+1).getTail())*0.5;
+                Vector3D a2=(frames[i]->at(j).getTail()+frames[i]->at(j+1).getTail())*0.5;
+                Vector3D n=Vector3D::crossProduct(frames[i]->at(j+1).getTail()-frames[i]->at(0).getTail(),frames[i]->at(j).getTail()-frames[i]->at(0).getTail());
+                Vector3D n1=Vector3D::crossProduct(n,frames[i]->at(j+1).getTail()-frames[i]->at(0).getTail());
+                Vector3D n2=Vector3D::crossProduct(n,frames[i]->at(j+1).getTail()-frames[i]->at(j).getTail());
+                double t1;
+                if (coDirectionallyCheck(Vector3D::crossProduct(a2-a2,n),Vector3D::crossProduct(n1,n2)))
+                    t1=Vector3D::crossProduct(a2-a1,n2).length()/Vector3D::crossProduct(n1,n2).length();
+                else {
+                    t1=-Vector3D::crossProduct(a2-a1,n2).length()/Vector3D::crossProduct(n1,n2).length();
+                }
+                Vector3D center=a1+n1*t1;
+
+                double newClosest=(point-center).length();
+                if (newClosest<closest.first)
+                {
+                    closest.first=newClosest;
+                    closest.second=i;
+                }
+            }
+
+        }
+    }
+    return closest;
+}
+
 /*!
 Поиск ближайшего элемента из массива к точке
 \param arr Массив, в котором ищется ближайший элемент
@@ -1326,4 +1402,12 @@ int BodyFragmentation::findClosetElementFromArray(const QVector<double> arr, con
         }
     }
     return num;
+}
+
+bool BodyFragmentation::coDirectionallyCheck(const Vector3D a, const Vector3D b)
+{
+    Vector3D collinearCrossing=Vector3D::crossProduct(a,b);
+    if (collinearCrossing.length()<0.0000001 && Vector3D::dotProduct(a,b)>0)
+        return true;
+    return false;
 }

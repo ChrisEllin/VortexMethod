@@ -28,7 +28,7 @@ private:
     Vector3D mid; ///<Центр вортон-отрезка
     Vector3D tail; ///<Хвост вортон-отрезка
     double vorticity; ///<Завихренность вортон-отрезка
-    double radius; ///<Радиус вортон-отрезка
+    double radius; ///<� адиус вортон-отрезка
     Vector3D move; ///<Значение для последующего перемещений
     Vector3D elongation; ///<Значение для последующего удлинения
 public:
@@ -42,6 +42,7 @@ public:
     VelBsym velAndBsymGauss3(const Vector3D& point, const Vector3D &deltar) const;
     void turn();
     void translate(const Vector3D& translation);
+    void translateWithMove(const Vector3D& translation);
     Vorton operator =(const Vorton &vort2);
     static double levi(int firstComponent, int secondComponent, int thirdComponent);
     //static Vector3D rotated(const Vector3D& vec1, const Vector3D& axis, const double theta);

@@ -195,7 +195,7 @@ int FrameCalculations::universalInside(const Vorton vort,const QVector<std::pair
                 Vector3D e1=frames[i]->at(1).getTail()-frames[i]->at(0).getTail();
                 Vector3D e2=frames[i]->at(2).getTail()-frames[i]->at(0).getTail();
                 Vector3D n=Vector3D::crossProduct(e1,e2);
-                Vector3D tau=vort.getTail()-frames[num]->at(0).getTail();
+                Vector3D tau=(vort.getTail()-choosen).normalized();
                 double t=Vector3D::dotProduct(frames[i]->at(0).getTail()-choosen,n)/Vector3D::dotProduct(tau,n);
                 if (t<=0.0||t>=1.0)
                 {
@@ -205,7 +205,7 @@ int FrameCalculations::universalInside(const Vorton vort,const QVector<std::pair
                     Vector3D a3=frames[i]->at(2).getTail()-rtilda;
                     if (coDirectionallyCheck(a1,a2,a3))
                     {
-                        if (Vector3D::dotProduct(choosen-vort.getTail(),rtilda-vort.getTail())>0)
+                        if (!(Vector3D::dotProduct(choosen-vort.getTail(),rtilda-vort.getTail())>0))
                             return 1;
                     }
                 }
@@ -219,10 +219,45 @@ int FrameCalculations::universalInside(const Vorton vort,const QVector<std::pair
                     Vector3D a3=frames[i]->at(2).getTail()-rtilda;
                     if (coDirectionallyCheck(a1,a2,a3))
                     {
-                        if (Vector3D::dotProduct(choosen-(2.0*vort.getMid()-vort.getTail()),rtilda-(2.0*vort.getMid()-vort.getTail()))>0)
+                        if (!(Vector3D::dotProduct(choosen-(2.0*vort.getMid()-vort.getTail()),rtilda-(2.0*vort.getMid()-vort.getTail()))>0))
                             return 0;
                     }
                 }
+
+
+
+                e1=frames[i]->at(2).getTail()-frames[i]->at(0).getTail();
+                e2=frames[i]->at(3).getTail()-frames[i]->at(0).getTail();
+                n=Vector3D::crossProduct(e1,e2);
+                tau=(vort.getTail()-choosen).normalized();
+                t=Vector3D::dotProduct(frames[i]->at(0).getTail()-choosen,n)/Vector3D::dotProduct(tau,n);
+                if (t<=0.0||t>=1.0)
+                {
+                    Vector3D rtilda=choosen+t*tau;
+                    Vector3D a1=frames[i]->at(0).getTail()-rtilda;
+                    Vector3D a2=frames[i]->at(2).getTail()-rtilda;
+                    Vector3D a3=frames[i]->at(3).getTail()-rtilda;
+                    if (coDirectionallyCheck(a1,a2,a3))
+                    {
+                        if (!(Vector3D::dotProduct(choosen-vort.getTail(),rtilda-vort.getTail())>0))
+                            return 1;
+                    }
+                }
+                tau=2.0*vort.getMid()-vort.getTail()-choosen;
+                t=Vector3D::dotProduct(frames[i]->at(0).getTail()-choosen,n)/Vector3D::dotProduct(tau,n);
+                if (t<=0.0||t>=1.0)
+                {
+                    Vector3D rtilda=choosen+t*tau;
+                    Vector3D a1=frames[i]->at(0).getTail()-rtilda;
+                    Vector3D a2=frames[i]->at(2).getTail()-rtilda;
+                    Vector3D a3=frames[i]->at(3).getTail()-rtilda;
+                    if (coDirectionallyCheck(a1,a2,a3))
+                    {
+                        if (!(Vector3D::dotProduct(choosen-(2.0*vort.getMid()-vort.getTail()),rtilda-(2.0*vort.getMid()-vort.getTail()))>0))
+                            return 0;
+                    }
+                }
+
 
             }
             else {
@@ -241,7 +276,7 @@ int FrameCalculations::universalInside(const Vorton vort,const QVector<std::pair
                         Vector3D a3=frames[i]->at(j+1).getTail()-rtilda;
                         if (coDirectionallyCheck(a1,a2,a3))
                         {
-                            if (Vector3D::dotProduct(choosen-vort.getTail(),rtilda-vort.getTail())>0)
+                            if (!(Vector3D::dotProduct(choosen-vort.getTail(),rtilda-vort.getTail())>0))
                                 return 1;
                         }
                     }
@@ -255,7 +290,7 @@ int FrameCalculations::universalInside(const Vorton vort,const QVector<std::pair
                         Vector3D a3=frames[i]->at(j+1).getTail()-rtilda;
                         if (coDirectionallyCheck(a1,a2,a3))
                         {
-                            if (Vector3D::dotProduct(choosen-(2.0*vort.getMid()-vort.getTail()),rtilda-(2.0*vort.getMid()-vort.getTail()))>0)
+                            if (!(Vector3D::dotProduct(choosen-(2.0*vort.getMid()-vort.getTail()),rtilda-(2.0*vort.getMid()-vort.getTail()))>0))
                                 return 0;
                         }
                     }
@@ -266,6 +301,137 @@ int FrameCalculations::universalInside(const Vorton vort,const QVector<std::pair
    return -1;
 
 }
+
+Inside FrameCalculations::universalInsideCorrect(const Vorton vort, const QVector<std::pair<double, double> > boundaries, QVector<std::shared_ptr<MultiFrame> > &frames)
+{
+    if ((vort.getTail().x()>boundaries[0].second && (2.0*vort.getMid()-vort.getTail()).x()>boundaries[0].second) || (( vort.getTail().x()<boundaries[0].first) &&
+            (2.0*vort.getMid()-vort.getTail()).x()<boundaries[0].first))
+        return Inside {-1,Vector3D(),0};
+    if ((vort.getTail().y()>boundaries[1].second && (2.0*vort.getMid()-vort.getTail()).y()>boundaries[1].second) || (( vort.getTail().y()<boundaries[1].first) &&
+               (2.0*vort.getMid()-vort.getTail()).y()<boundaries[1].first))
+        return Inside {-1,Vector3D(),0};
+    if ((vort.getTail().z()>boundaries[2].second && (2.0*vort.getMid()-vort.getTail()).z()>boundaries[2].second) || (( vort.getTail().z()<boundaries[2].first) &&
+             (2.0*vort.getMid()-vort.getTail()).z()<boundaries[2].first))
+        return Inside {-1,Vector3D(),0};
+
+    srand(time(NULL));
+    int num=rand() % frames.size();
+    Vector3D choosen=frames[num]->at(0).getTail();
+    for (int i=0; i<frames.size();i++)
+    {
+        if (i!=num)
+        {
+            if (frames[i]->getAnglesNum()==4)
+            {
+                Vector3D e1=frames[i]->at(1).getTail()-frames[i]->at(0).getTail();
+                Vector3D e2=frames[i]->at(2).getTail()-frames[i]->at(0).getTail();
+                Vector3D n=Vector3D::crossProduct(e1,e2);
+                Vector3D tau=(vort.getTail()-choosen).normalized();
+                double t=Vector3D::dotProduct(frames[i]->at(0).getTail()-choosen,n)/Vector3D::dotProduct(tau,n);
+                if (t<=0.0||t>=1.0)
+                {
+                    Vector3D rtilda=choosen+t*tau;
+                    Vector3D a1=frames[i]->at(0).getTail()-rtilda;
+                    Vector3D a2=frames[i]->at(1).getTail()-rtilda;
+                    Vector3D a3=frames[i]->at(2).getTail()-rtilda;
+                    if (coDirectionallyCheck(a1,a2,a3))
+                    {
+                        if (!(Vector3D::dotProduct(choosen-vort.getTail(),rtilda-vort.getTail())>0))
+                            return Inside {1,rtilda, i};
+                    }
+                }
+                tau=2.0*vort.getMid()-vort.getTail()-choosen;
+                t=Vector3D::dotProduct(frames[i]->at(0).getTail()-choosen,n)/Vector3D::dotProduct(tau,n);
+                if (t<=0.0||t>=1.0)
+                {
+                    Vector3D rtilda=choosen+t*tau;
+                    Vector3D a1=frames[i]->at(0).getTail()-rtilda;
+                    Vector3D a2=frames[i]->at(1).getTail()-rtilda;
+                    Vector3D a3=frames[i]->at(2).getTail()-rtilda;
+                    if (coDirectionallyCheck(a1,a2,a3))
+                    {
+                        if (!(Vector3D::dotProduct(choosen-(2.0*vort.getMid()-vort.getTail()),rtilda-(2.0*vort.getMid()-vort.getTail()))>0))
+                            return Inside {0,rtilda, i};
+                    }
+                }
+
+
+
+                e1=frames[i]->at(2).getTail()-frames[i]->at(0).getTail();
+                e2=frames[i]->at(3).getTail()-frames[i]->at(0).getTail();
+                n=Vector3D::crossProduct(e1,e2);
+                tau=(vort.getTail()-choosen).normalized();
+                t=Vector3D::dotProduct(frames[i]->at(0).getTail()-choosen,n)/Vector3D::dotProduct(tau,n);
+                if (t<=0.0||t>=1.0)
+                {
+                    Vector3D rtilda=choosen+t*tau;
+                    Vector3D a1=frames[i]->at(0).getTail()-rtilda;
+                    Vector3D a2=frames[i]->at(2).getTail()-rtilda;
+                    Vector3D a3=frames[i]->at(3).getTail()-rtilda;
+                    if (coDirectionallyCheck(a1,a2,a3))
+                    {
+                        if (!(Vector3D::dotProduct(choosen-vort.getTail(),rtilda-vort.getTail())>0))
+                           return Inside {1,rtilda, i};
+                    }
+                }
+                tau=2.0*vort.getMid()-vort.getTail()-choosen;
+                t=Vector3D::dotProduct(frames[i]->at(0).getTail()-choosen,n)/Vector3D::dotProduct(tau,n);
+                if (t<=0.0||t>=1.0)
+                {
+                    Vector3D rtilda=choosen+t*tau;
+                    Vector3D a1=frames[i]->at(0).getTail()-rtilda;
+                    Vector3D a2=frames[i]->at(2).getTail()-rtilda;
+                    Vector3D a3=frames[i]->at(3).getTail()-rtilda;
+                    if (coDirectionallyCheck(a1,a2,a3))
+                    {
+                        if (!(Vector3D::dotProduct(choosen-(2.0*vort.getMid()-vort.getTail()),rtilda-(2.0*vort.getMid()-vort.getTail()))>0))
+                            return Inside {0,rtilda, i};
+                    }
+                }
+
+
+            }
+            else {
+                for (int j=1;j<frames[i]->getAnglesNum()-1;j++)
+                {
+                    Vector3D e1=frames[i]->at(j).getTail()-frames[i]->at(0).getTail();
+                    Vector3D e2=frames[i]->at(j+1).getTail()-frames[i]->at(0).getTail();
+                    Vector3D n=Vector3D::crossProduct(e1,e2);
+                    Vector3D tau=vort.getTail()-choosen;
+                    double t=Vector3D::dotProduct(frames[i]->at(0).getTail()-choosen,n)/Vector3D::dotProduct(tau,n);
+                    if (t<=0.0||t>=1.0)
+                    {
+                        Vector3D rtilda=choosen+t*tau;
+                        Vector3D a1=frames[i]->at(0).getTail()-rtilda;
+                        Vector3D a2=frames[i]->at(j).getTail()-rtilda;
+                        Vector3D a3=frames[i]->at(j+1).getTail()-rtilda;
+                        if (coDirectionallyCheck(a1,a2,a3))
+                        {
+                            if (!(Vector3D::dotProduct(choosen-vort.getTail(),rtilda-vort.getTail())>0))
+                                return Inside {1,rtilda, i};
+                        }
+                    }
+                    tau=2.0*vort.getMid()-vort.getTail()-choosen;
+                    t=Vector3D::dotProduct(frames[i]->at(0).getTail()-choosen,n)/Vector3D::dotProduct(tau,n);
+                    if (t<=0.0||t>=1.0)
+                    {
+                        Vector3D rtilda=choosen+t*tau;
+                        Vector3D a1=frames[i]->at(0).getTail()-rtilda;
+                        Vector3D a2=frames[i]->at(j).getTail()-rtilda;
+                        Vector3D a3=frames[i]->at(j+1).getTail()-rtilda;
+                        if (coDirectionallyCheck(a1,a2,a3))
+                        {
+                            if (!(Vector3D::dotProduct(choosen-(2.0*vort.getMid()-vort.getTail()),rtilda-(2.0*vort.getMid()-vort.getTail()))>0))
+                                return Inside {0,rtilda, i};
+                        }
+                    }
+                }
+            }
+        }
+    }
+   return Inside {-1,Vector3D(), 0};
+}
+
 
 QVector<int> FrameCalculations::universalGetBack(QVector<Vorton> &vortons, QVector<std::pair<double,double>> boundaries, const double layerHeight, const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals, QVector<std::shared_ptr<MultiFrame>>& frames, bool screen)
 {
@@ -284,13 +450,13 @@ QVector<int> FrameCalculations::universalGetBack(QVector<Vorton> &vortons, QVect
         results.push_back(res);
         if (res==1)
         {
-            QPair<double,int> closest=BodyFragmentation::findClosest(vortons[i].getTail(),controlPoints, normals);
+            QPair<double,int> closest=BodyFragmentation::findClosestTriangle(vortons[i].getTail(),frames, normals);
             vortons[i].setMid(vortons[i].getMid()+2.0*closest.first*normals[closest.second]);
             vortons[i].setTail(vortons[i].getTail()+2.0*closest.first*normals[closest.second]);
             vortons[i].setMove(vortons[i].getMove()+2.0*closest.first*normals[closest.second]);
             if (universalInside(vortons[i],boundaries,frames)==0)
             {
-                QPair<double,int> closest=BodyFragmentation::findClosest(2.0*vortons[i].getMid()-vortons[i].getTail(),controlPoints, normals);
+                QPair<double,int> closest=BodyFragmentation::findClosestTriangle(2.0*vortons[i].getMid()-vortons[i].getTail(),frames, normals);
                 vortons[i].setMid(vortons[i].getMid()+2.0*closest.first*normals[closest.second]);
                 vortons[i].setTail(vortons[i].getTail()+2.0*closest.first*normals[closest.second]);
                 vortons[i].setMove(vortons[i].getMove()+2.0*closest.first*normals[closest.second]);
@@ -299,13 +465,13 @@ QVector<int> FrameCalculations::universalGetBack(QVector<Vorton> &vortons, QVect
         }
         if (res==0)
         {
-            QPair<double,int> closest=BodyFragmentation::findClosest(2.0*vortons[i].getMid()-vortons[i].getTail(),controlPoints, normals);
+            QPair<double,int> closest=BodyFragmentation::findClosestTriangle(2.0*vortons[i].getMid()-vortons[i].getTail(),frames, normals);
             vortons[i].setMid(vortons[i].getMid()+2.0*closest.first*normals[closest.second]);
             vortons[i].setTail(vortons[i].getTail()+2.0*closest.first*normals[closest.second]);
             vortons[i].setMove(vortons[i].getMove()+2.0*closest.first*normals[closest.second]);
             if (universalInside(vortons[i],boundaries,frames)==1)
             {
-                QPair<double,int> closest=BodyFragmentation::findClosest(vortons[i].getTail(),controlPoints, normals);
+                QPair<double,int> closest=BodyFragmentation::findClosestTriangle(vortons[i].getTail(),frames, normals);
                 vortons[i].setMid(vortons[i].getMid()+2.0*closest.first*normals[closest.second]);
                 vortons[i].setTail(vortons[i].getTail()+2.0*closest.first*normals[closest.second]);
                 vortons[i].setMove(vortons[i].getMove()+2.0*closest.first*normals[closest.second]);
@@ -324,11 +490,69 @@ QVector<int> FrameCalculations::universalGetBack(QVector<Vorton> &vortons, QVect
     return results;
 }
 
+QVector<int> FrameCalculations::universalGetBackTriangle(QVector<Vorton> &vortons, QVector<std::pair<double, double> > boundaries, const double layerHeight, const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals, QVector<std::shared_ptr<MultiFrame> > &frames, bool screen)
+{
+    QVector<int> results;
+    for (int i=0; i<vortons.size();i++)
+    {
+        if (screen==true)
+        {
+            if (FrameCalculations::insideScreen(vortons[i]))
+            {
+                vortons.remove(i);
+            }
+        }
+        Inside res;
+        res=universalInsideCorrect(vortons[i],boundaries,frames);
+        results.push_back(res.res);
+        if (res.res==1)
+        {
+            //QPair<double,int> closest=BodyFragmentation::findClosestTriangle(vortons[i].getTail(),frames, normals);
+            double d=Vector3D::crossProduct(res.rtilda-vortons[i].getTail(),normals[res.num]).length();
+            vortons[i].translateWithMove(vortons[i].getMove().normalized()*d);
+            //vortons[i].setMid(vortons[i].getMid()+2.0*closest.first*normals[closest.second]);
+            //vortons[i].setTail(vortons[i].getTail()+2.0*closest.first*normals[closest.second]);
+            //vortons[i].setMove(vortons[i].getMove()+2.0*closest.first*normals[closest.second]);
+            Inside resInter=universalInsideCorrect(vortons[i],boundaries,frames);
+            if (resInter.res==0)
+            {
+                double d=Vector3D::crossProduct(res.rtilda-(2.0*vortons[i].getMid()-vortons[i].getTail()),normals[res.num]).length();
+                vortons[i].translateWithMove(vortons[i].getMove().normalized()*d);
+//                QPair<double,int> closest=BodyFragmentation::findClosestTriangle(2.0*vortons[i].getMid()-vortons[i].getTail(),frames, normals);
+//                vortons[i].setMid(vortons[i].getMid()+2.0*closest.first*normals[closest.second]);
+//                vortons[i].setTail(vortons[i].getTail()+2.0*closest.first*normals[closest.second]);
+//                vortons[i].setMove(vortons[i].getMove()+2.0*closest.first*normals[closest.second]);
+            }
+
+        }
+        if (res.res==0)
+        {
+            double d=Vector3D::crossProduct(res.rtilda-(2.0*vortons[i].getMid()-vortons[i].getTail()),normals[res.num]).length();
+            vortons[i].translateWithMove(vortons[i].getMove().normalized()*d);
+//            QPair<double,int> closest=BodyFragmentation::findClosestTriangle(2.0*vortons[i].getMid()-vortons[i].getTail(),frames, normals);
+//            vortons[i].setMid(vortons[i].getMid()+2.0*closest.first*normals[closest.second]);
+//            vortons[i].setTail(vortons[i].getTail()+2.0*closest.first*normals[closest.second]);
+//            vortons[i].setMove(vortons[i].getMove()+2.0*closest.first*normals[closest.second]);
+            Inside resInter=universalInsideCorrect(vortons[i],boundaries,frames);
+            if (resInter.res==1)
+            {
+                  double d=Vector3D::crossProduct(res.rtilda-vortons[i].getTail(),normals[res.num]).length();
+                  vortons[i].translateWithMove(vortons[i].getMove().normalized()*d);
+//                QPair<double,int> closest=BodyFragmentation::findClosestTriangle(vortons[i].getTail(),frames, normals);
+//                vortons[i].setMid(vortons[i].getMid()+2.0*closest.first*normals[closest.second]);
+//                vortons[i].setTail(vortons[i].getTail()+2.0*closest.first*normals[closest.second]);
+//                vortons[i].setMove(vortons[i].getMove()+2.0*closest.first*normals[closest.second]);
+            }
+        }
+    }
+    return results;
+}
+
 void FrameCalculations::correctMove(QVector<Vorton> &freeVortons, QVector<Vorton> &copyVort)
 {
     for (int i=0; i<freeVortons.size();i++)
     {
-        freeVortons[i].setMid(copyVort[i].getMid()-freeVortons[i].getMid());
+        freeVortons[i].setMove(copyVort[i].getMid()-freeVortons[i].getMid());
     }
 }
 
@@ -343,6 +567,30 @@ void FrameCalculations::universalRotate(QVector<Vorton> vortons, QVector<int> re
                     if (closest.first<layerHeight||closestSec.first<layerHeight)
                         vortons[i].rotateAroundNormal(normals[closest.second]);
         }
+    }
+}
+
+void FrameCalculations::universalRotateTriangle(QVector<Vorton> vortons, QVector<int> res, const double layerHeight, const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals, QVector<std::shared_ptr<MultiFrame>>& frames)
+{
+    for (int i=0; i<res.size();i++)
+    {
+        //if (res[i]==-1)
+        //{
+//                    QPair<double,int> closest=BodyFragmentation::findClosest(vortons[i].getTail(),controlPoints, normals);
+//                    QPair<double,int> closestSec=BodyFragmentation::findClosest(2.0*vortons[i].getMid()-vortons[i].getTail(),controlPoints, normals);
+//                    if (closest.first<layerHeight||closestSec.first<layerHeight)
+//                    {
+//                        int num=findMaxSolidAngle(vortons[i].getMid(),frames);
+//                        vortons[i].rotateAroundNormal(normals[num]);
+
+//                    }
+                    int num=findMaxSolidAngle(vortons[i].getMid(),frames);
+                    double dist=(vortons[i].getMid()-frames[num]->getCenter()).length();
+                    if (dist<layerHeight)
+                    {
+                        vortons[i].rotateAroundNormal(normals[num]);
+                    }
+        //}
     }
 }
 
@@ -490,6 +738,63 @@ void FrameCalculations::displacementCalc(QVector<Vorton> &freeVortons, QVector<V
         paralVec.push_back(element);
     }
     QVector<Vorton> resultedVec=QtConcurrent::blockingMappedReduced(paralVec, parallelDisplacement, addToVortonsVec, QtConcurrent::OrderedReduce);
+
+    for (int i=0; i<resultedVec.size(); i++)
+    {
+        Vector3D selfLenBef=resultedVec[i].getTail()-resultedVec[i].getMid();
+        Vector3D selfLenAft=resultedVec[i].getElongation()+selfLenBef;
+        double turnAngle=acos(Vector3D::dotProduct(selfLenBef.normalized(), selfLenAft.normalized()));
+        double lengthChange=fabs(selfLenBef.length()-selfLenAft.length());
+        if (turnAngle>fiMax)
+        {
+            resultedVec[i].setElongation(Vector3D());
+            restrictions.turnRestr++;
+        }
+        if (lengthChange>eDelta)
+        {
+            resultedVec[i].setElongation(Vector3D());
+            restrictions.elongationRestr++;
+        }
+        if (resultedVec[i].getMove().length()>maxMove)
+        {
+            resultedVec[i].setMove(Vector3D());
+            restrictions.moveRestr++;
+        }
+
+    }
+
+    for (int i=0; i<freeVortons.size(); i++)
+    {
+        freeVortons[i].setMove(resultedVec[i].getMove());
+        freeVortons[i].setElongation(resultedVec[i].getElongation());
+    }
+
+    for (int i=0; i<newVortons.size(); i++)
+    {
+        newVortons[i].setMove(resultedVec[i+freeVortons.size()].getMove());
+        newVortons[i].setElongation(resultedVec[i+freeVortons.size()].getElongation());
+    }
+    timers.integrationTimer=start.elapsed()*0.01;
+}
+
+void FrameCalculations::displacementPassiveCalc(QVector<Vorton> &freeVortons, QVector<Vorton> &newVortons, QVector<Vorton> &frameVortons, double step, Vector3D streamVel, double eDelta, double fiMax, double maxMove)
+{
+    QTime start = QTime::currentTime();
+    QVector<Vorton> vortons;
+    vortons.append(freeVortons);
+    vortons.append(frameVortons);
+    QVector<ParallelPassive> paralVec;
+    for (int i=0; i<freeVortons.size(); i++)
+    {
+        ParallelPassive element {&vortons, freeVortons[i], streamVel, step};
+        paralVec.push_back(element);
+    }
+    for (int i=0; i<newVortons.size();i++)
+    {
+        ParallelPassive element {&vortons, newVortons[i], streamVel, step};
+        paralVec.push_back(element);
+    }
+    QVector<Vorton> resultedVec=QtConcurrent::blockingMappedReduced(paralVec, parallelDisplacementPassive, addToVortonsVec, QtConcurrent::OrderedReduce);
 
     for (int i=0; i<resultedVec.size(); i++)
     {
@@ -2013,13 +2318,16 @@ bool FrameCalculations::coDirectionallyCheck(const Vector3D a, const Vector3D b,
     Vector3D cross1=Vector3D::crossProduct(a,b);
     Vector3D cross2=Vector3D::crossProduct(b,c);
     Vector3D cross3=Vector3D::crossProduct(c,a);
-    if (cross1.length()<0.0000001 &&cross2.length()<0.0000001 && cross3.length()<0.0000001
+
+    Vector3D collinearCrossing1=Vector3D::crossProduct(cross1,cross2);
+    Vector3D collinearCrossing2=Vector3D::crossProduct(cross3,cross2);
+
+
+    if (collinearCrossing1.length()<0.0000001 &&collinearCrossing2.length()<0.0000001
             && Vector3D::dotProduct(cross1,cross2)>0.0 && Vector3D::dotProduct(cross2,cross3)>0.0)
             return true;
     return false;
 }
-
-
 
 /*!
 Функция, добавляющая вортон в вектор. Создана для совместимости с QtConcurrent
@@ -2099,6 +2407,20 @@ Vorton FrameCalculations::parallelDisplacement(const Parallel el)
 
     VelBsym vb=FrameCalculations::velocityAndBsymm(el.Vortons->at(el.num).getMid(),el.streamVel, *el.Vortons);
      Vector3D selfLen=el.Vortons->at(el.num).getTail()-el.Vortons->at(el.num).getMid();
+    double xElong=vb.B[0][0]*selfLen[0]+vb.B[0][1]*selfLen[1]+vb.B[0][2]*selfLen[2];
+    double yElong=vb.B[1][0]*selfLen[0]+vb.B[1][1]*selfLen[1]+vb.B[1][2]*selfLen[2];
+    double zElong=vb.B[2][0]*selfLen[0]+vb.B[2][1]*selfLen[1]+vb.B[2][2]*selfLen[2];
+    res.setElongation(Vector3D(xElong, yElong, zElong)*el.tau);
+    res.setMove(vb.Vel*el.tau);
+    return res;
+}
+
+Vorton FrameCalculations::parallelDisplacementPassive(const ParallelPassive el)
+{
+    Vorton res=el.centralVort;
+
+    VelBsym vb=FrameCalculations::velocityAndBsymm(res.getMid(),el.streamVel, *el.vortons);
+    Vector3D selfLen=res.getTail()-res.getMid();
     double xElong=vb.B[0][0]*selfLen[0]+vb.B[0][1]*selfLen[1]+vb.B[0][2]*selfLen[2];
     double yElong=vb.B[1][0]*selfLen[0]+vb.B[1][1]*selfLen[1]+vb.B[1][2]*selfLen[2];
     double zElong=vb.B[2][0]*selfLen[0]+vb.B[2][1]*selfLen[1]+vb.B[2][2]*selfLen[2];
@@ -2482,6 +2804,22 @@ void FrameCalculations::translateVortons(const Vector3D &translation, QVector<Vo
         vortons[i].translate(translation);
 }
 
+int FrameCalculations::findMaxSolidAngle(Vector3D point, QVector<std::shared_ptr<MultiFrame> > &frames)
+{
+    QPair<double,int> closest;
+    closest.first=frames[0]->solidAngleFrame(point);
+    closest.second=0;
+    for (int i=1; i<frames.size();i++)
+    {
+        if (frames[i]->solidAngleFrame(point)>closest.first)
+        {
+            closest.first=frames[i]->solidAngleFrame(point);
+            closest.second=i;
+        }
+    }
+    return closest.second;
+}
+
 /*!
 Функция возвращающая значения счетчиков
 \return Структура с текущими значениями счетчиков
@@ -2578,6 +2916,7 @@ bool FrameCalculations::zCompare(Vorton a, Vorton b)
 {
     return (a.getTail().z() < b.getTail().z());
 }
+
 
 
 
