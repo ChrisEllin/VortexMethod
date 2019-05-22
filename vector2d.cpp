@@ -11,7 +11,7 @@ Vector2D::Vector2D()
 /*!
 Создает вектор с заданными значениями
 \param _x заданная компонента X
-\param _y заданная компонента Y
+\param _y заданная компонента Y 
 */
 Vector2D::Vector2D(const double _x, const double _y)
 {

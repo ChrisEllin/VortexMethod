@@ -2,7 +2,7 @@
 #include "ui_variatesettings.h"
 
 /*!
-Создает новую форму с заголовком "Настройки вариации"
+Создает новую форму с заголовком "Настройки вариации" 
 */
 VariateSettings::VariateSettings(QWidget *parent) :
     QWidget(parent),

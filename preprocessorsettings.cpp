@@ -8,7 +8,7 @@ PreprocessorSettings::PreprocessorSettings(QWidget *parent) :
     ui->setupUi(this);
     setWindowTitle("Настройки препроцессора");
 }
-
+ 
 Boundaries PreprocessorSettings::getBoundaries()
 {
     Vector3D minBoundary;

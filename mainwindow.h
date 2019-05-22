@@ -16,7 +16,7 @@ namespace Ui {
 class MainWindow;
 }
 /*!
-    \brief Класс, отвечающий за интерфейс основного окна
+    \brief Класс, отвечающий за интерфейс основного окна 
 */
 class MainWindow : public QMainWindow
 {

@@ -23,7 +23,7 @@ void MainField::setZoom(double zoom)
 {
     float perspective = zoom * 60.0f;
     matrixProjection.setToIdentity();
-//    matrixProjection.perspective(perspective, (float)width()/height(), 0.1f, 100.0f);
+//    matrixProjection.perspective(perspective, (float)width()/height(), 0.1f, 100.0f); 
 //    matrixProjection.perspective(perspective, static_cast<float>(width())/static_cast<float>(height()), 0.1f, 100.0f);
 //    matrixProjection.ortho(-width()/2, width()/2, -height()/2, height()/2, -100, 100);
     float r = posEye.length();

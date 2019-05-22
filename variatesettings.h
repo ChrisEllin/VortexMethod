@@ -9,7 +9,7 @@ class VariateSettings;
 
 
 /*!
-    \brief Класс, реализующий форму с настройками вариации и экрана
+    \brief Класс, реализующий форму с настройками вариации и экрана 
 */
 class VariateSettings : public QWidget
 {

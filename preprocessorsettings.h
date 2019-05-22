@@ -8,7 +8,7 @@ struct Boundaries
     Vector3D minBoundary;
     Vector3D maxBoundary;
 };
-
+ 
 namespace Ui {
 class PreprocessorSettings;
 }

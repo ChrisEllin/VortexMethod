@@ -10,7 +10,7 @@ struct IntegrationResults
     Vector3D massCenter;
     Eigen::Matrix3d inertiaTensor;
 };
-
+ 
 class SimpsonIntegration
 {
 private:

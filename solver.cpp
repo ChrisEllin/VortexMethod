@@ -4,7 +4,7 @@ bool Solver::interrupted=false;
 bool Solver::explosion=false;
 bool Solver::getBackGA=false;
 /*!
-Создает экземпляр класса с нулевыми параметрами
+Создает экземпляр класса с нулевыми параметрами  
 */
 
 bool Solver::checkFinishing()
@@ -567,7 +567,7 @@ void Solver::rotationBodySolver(const FragmentationParameters &fragPar)
 //        tempV1=freeVortons;
 //        tempV2=newVortons;
 
-        //ЭЙЛЕ� 
+        //ЭЙЛЕР
         QVector<Vorton> tempV1,tempV2;
         tempV1=freeVortons;
         tempV2=newVortons;
@@ -1444,7 +1444,7 @@ void Solver::rotationBodyFreeMotionSolver(const FragmentationParameters &fragPar
         functions.translateAndRotatev3(frames,freeVortons,results.mass,results.inertiaTensor,torque,rotation,rotationNull,force,center,nullCenter, results.massCenter,/*(i+1)**/solvPar.tau,freeMotionPar.bodyVel,controlPoints,normals,controlPointsRaised,oldFrames,oldControlPoints,oldNormals,oldControlPointsRaised, angularVel,bodyNose,xend);
         functions.clear();
 //        FrameCalculations::translateBody(translation, frames, controlPoints, controlPointsRaised, center,bodyNose, xend, fragPar);
- //       FrameCalculations���::translateVortons(translation, freeVortons);
+ //       FrameCalculations?::translateVortons(translation, freeVortons);
         emit sendNormalsVis(controlPoints,normals);
         logger->writeForces(force,Vector3D(0.0,0.0,0.0));
         logger->writeLogs(i,stepTime.elapsed()*0.001, freeVortons.size(), countersBeforeIntegration,countersAfterIntegration, timersBeforeIntegration, timersAfterIntegration, restrictions);
@@ -1712,7 +1712,7 @@ void Solver::rotationCutBodySolver(const FragmentationParameters &fragPar)
 /*!
 Осуществляет расчет неподвижного тела вращения со срезом с заданными параметрами вблизи экрана
 \param fragPar Параметры разбиения тела вращения со срезом
-\param screenDistance � асстояние между дном тела и экраном
+\param screenDistance Расстояние между дном тела и экраном
 */
 void Solver::rotationCutBodySolverNearScreen(const FragmentationParameters &fragPar, const double screenDistance)
 {

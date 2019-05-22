@@ -68,7 +68,7 @@ Logger::Logger(const BodyType _type, const SolvType _stype)
 
 /*!
 Создает каталог для хранения результатов расчета по заданному пути
-\param _type вид рассчитываемого тела
+\param _type вид рассчитываемого тела 
 \param _path путь для записи каталога
 \param _stype тип расчета
 */
@@ -262,7 +262,7 @@ void Logger::createFiles()
     if (logFile->open(QIODevice::WriteOnly))
     {
         logTextStream=std::shared_ptr<QTextStream>(new QTextStream(logFile.get()));
-        *logTextStream.get()<<"� асчет запущен в "+QTime::currentTime().toString("H:m:s a")+"\n\n";
+        *logTextStream.get()<<"Расчет запущен в "+QTime::currentTime().toString("H:m:s a")+"\n\n";
     }
     else
     {
@@ -380,9 +380,9 @@ void Logger::writeLogs(const int stepNum, const double stepTime, const int freeV
 
     *logTextStream.get()<<"Объединение вортонов с рамок заняло "+QString::number(beforeIntegrT.unionTimer)+" с.\n";
     *logTextStream.get()<<"Удаление по гамме вортонов с рамок заняло "+QString::number(beforeIntegrT.removeVorticityTimer)+" с.\n";
-    *logTextStream.get()<<"� асчет перемещений и удлинений занял "+QString::number(beforeIntegrT.integrationTimer)+" с.\n";
-    *logTextStream.get()<<"� асчет сил занял "+QString::number(beforeIntegrT.forceTimer)+" с.\n";
-    *logTextStream.get()<<"� азворот и возвращение в поток заняло "+QString::number(afterIntegrT.getBackAndRotateTimer)+" с.\n";
+    *logTextStream.get()<<"Расчет перемещений и удлинений занял "+QString::number(beforeIntegrT.integrationTimer)+" с.\n";
+    *logTextStream.get()<<"Расчет сил занял "+QString::number(beforeIntegrT.forceTimer)+" с.\n";
+    *logTextStream.get()<<"Разворот и возвращение в поток заняло "+QString::number(afterIntegrT.getBackAndRotateTimer)+" с.\n";
     *logTextStream.get()<<"Объединение вортонов в слое заняло "+QString::number(afterIntegrT.unionTimer)+" с.\n";
     *logTextStream.get()<<"Удаление по гамме вортонов с рамок заняло "+QString::number(afterIntegrT.removeVorticityTimer)+" с.\n";
     *logTextStream.get()<<"Удаление вортонов по причине большой дальности заняло "+QString::number(afterIntegrT.farTimer)+" с.\n";
@@ -406,7 +406,7 @@ void Logger::writePassport(const SolverParameters& solvPar,const FragmentationPa
         *passportTextStream.get()<<QString("Тип тела: Сфера \n\n");
         *passportTextStream.get()<<"Количество разбиений по фи: "+QString::number(fragPar.sphereFiFragNum)+"\n";
         *passportTextStream.get()<<"Количество разбиений по тета: "+QString::number(fragPar.sphereTetaFragNum)+"\n";
-        *passportTextStream.get()<<"� адиус сферы: "+QString::number(fragPar.sphereRad)+"\n";
+        *passportTextStream.get()<<"Радиус сферы: "+QString::number(fragPar.sphereRad)+"\n";
         break;
     }
     case CYLINDER:
@@ -447,18 +447,18 @@ void Logger::writePassport(const SolverParameters& solvPar,const FragmentationPa
         *passportTextStream.get()<<QString("Тип тела: Финальные параметры после варьирования для сферы \n\n");
         *passportTextStream.get()<<"Количество разбиений по фи: "+QString::number(fragPar.sphereFiFragNum)+"\n";
         *passportTextStream.get()<<"Количество разбиений по тета: "+QString::number(fragPar.sphereTetaFragNum)+"\n";
-        *passportTextStream.get()<<"� адиус сферы: "+QString::number(fragPar.sphereRad)+"\n";
+        *passportTextStream.get()<<"Радиус сферы: "+QString::number(fragPar.sphereRad)+"\n";
         break;
     }
     }
 
     *passportTextStream.get()<<"Подъем вортонов при разбиении: "+QString::number(fragPar.delta)+"\n";
     *passportTextStream.get()<<"Подъем контрольных точек для вычисления давления: "+QString::number(fragPar.pointsRaising)+"\n";
-    *passportTextStream.get()<<"� адиус вортонов: "+QString::number(fragPar.vortonsRad)+"\n";
+    *passportTextStream.get()<<"Радиус вортонов: "+QString::number(fragPar.vortonsRad)+"\n";
     *passportTextStream.get()<<"Давление потока: "+QString::number(solvPar.streamPres)+"\n";
     *passportTextStream.get()<<"Плотность: "+QString::number(solvPar.density)+"\n";
     *passportTextStream.get()<<"Cкорость потока: "+QString::number(solvPar.streamVel.x())+" "+QString::number(solvPar.streamVel.y())+" "+QString::number(solvPar.streamVel.z())+"\n";
-    *passportTextStream.get()<<"� асстояние между центрами для объединения: "+QString::number(solvPar.eStar)+"\n";
+    *passportTextStream.get()<<"Расстояние между центрами для объединения: "+QString::number(solvPar.eStar)+"\n";
     *passportTextStream.get()<<"Минимальный косинус для объединения: "+QString::number(solvPar.eDoubleStar)+"\n";
     *passportTextStream.get()<<"Максимальный угол для поворота: "+QString::number(solvPar.fiMax)+"\n";
     *passportTextStream.get()<<"Максимальное удлинение вортона: "+QString::number(solvPar.eDelta)+"\n";
@@ -559,7 +559,7 @@ void Logger::writeForces(const Vector3D forces,const Vector3D c)
 */
 void Logger::writeSolverTime(const double solvTime)
 {
-    *logTextStream.get()<<"� асчет занял "+QString::number(solvTime)+" с.\n";
+    *logTextStream.get()<<"Расчет занял "+QString::number(solvTime)+" с.\n";
     logTextStream.get()->flush();
 }
 

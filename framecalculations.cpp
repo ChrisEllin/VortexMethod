@@ -1,7 +1,7 @@
 #include "framecalculations.h"
 
 /*!
-Обнуляет значения всех счетчиков
+Обнуляет значения всех счетчиков 
 */
 void Counters::clear()
 {
@@ -21,7 +21,7 @@ void Restrictions::clear()
 */
 void Timers::clear()
 {
-    getBackAndRotateTimer=forceTimer=unionTimer=farTimer=integrationTimer=removeVorticityTimer=0.0;
+    getBackAndRotateTimer=forceTimer=unionTimer=farTimer=integrationTimer=removeVorticityTimer=rotateTimer=0.0;
 }
 
 /*!
@@ -41,7 +41,7 @@ double FrameCalculations::getConditionalNum()
 }
 
 /*!
-� ассчитывает значения углов тета для сферы
+Рассчитывает значения углов тета для сферы
 \param tetaFragNum Количество разбиений тела по тета
 \return Вектор с рассчитанными значениями углов тета
 */
@@ -74,7 +74,7 @@ void FrameCalculations::epsNormal(QVector<std::shared_ptr<MultiFrame> > &frames,
 }
 
 /*!
-� ассчитывает значения элементов матрицы, составленной из произведения единичных интенсивностей от каждой из рамок на соответствующую нормаль и вычисляет обратную к ней
+Рассчитывает значения элементов матрицы, составленной из произведения единичных интенсивностей от каждой из рамок на соответствующую нормаль и вычисляет обратную к ней
 \param frames Вектор рамок
 \param controlPoints Вектор контрольных точек
 \param normals Вектор нормалей
@@ -134,7 +134,7 @@ void FrameCalculations::matrixCalc(QVector<std::shared_ptr<MultiFrame> > frames,
 
 }
 /*!
-� ассчитывает значения столбца b для решения СЛАУ вида A*x=b, где А-матрица, х-искомый столбец.
+Рассчитывает значения столбца b для решения СЛАУ вида A*x=b, где А-матрица, х-искомый столбец.
 \param streamVel Скорость потока
 \param vortons Вектор содержащий текущие вортоны в потоке
 \param normals Вектор нормалей
@@ -162,7 +162,7 @@ Eigen::VectorXd FrameCalculations::columnCalc(const Vector3D streamVel, const QV
 }
 
 /*!
-� ассчитывает значения столбца x путем решения СЛАУ вида A*x=b, где А-матрица, b-известный столбец.
+Рассчитывает значения столбца x путем решения СЛАУ вида A*x=b, где А-матрица, b-известный столбец.
 \param column Столбец b
 \return Столбец x, содержащий значения завихренностей рамок
 */
@@ -492,6 +492,7 @@ QVector<int> FrameCalculations::universalGetBack(QVector<Vorton> &vortons, QVect
 
 QVector<int> FrameCalculations::universalGetBackTriangle(QVector<Vorton> &vortons, QVector<std::pair<double, double> > boundaries, const double layerHeight, const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals, QVector<std::shared_ptr<MultiFrame> > &frames, bool screen)
 {
+    QTime start=QTime::currentTime();
     QVector<int> results;
     for (int i=0; i<vortons.size();i++)
     {
@@ -545,6 +546,7 @@ QVector<int> FrameCalculations::universalGetBackTriangle(QVector<Vorton> &vorton
             }
         }
     }
+    timers.getBackAndRotateTimer=start.elapsed()*0.001;
     return results;
 }
 
@@ -572,6 +574,7 @@ void FrameCalculations::universalRotate(QVector<Vorton> vortons, QVector<int> re
 
 void FrameCalculations::universalRotateTriangle(QVector<Vorton> vortons, QVector<int> res, const double layerHeight, const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals, QVector<std::shared_ptr<MultiFrame>>& frames)
 {
+    QTime start=QTime::currentTime();
     for (int i=0; i<res.size();i++)
     {
         //if (res[i]==-1)
@@ -592,6 +595,7 @@ void FrameCalculations::universalRotateTriangle(QVector<Vorton> vortons, QVector
                     }
         //}
     }
+    timers.rotateTimer=start.elapsed()*0.001;
 }
 
 /*!
@@ -599,7 +603,7 @@ void FrameCalculations::universalRotateTriangle(QVector<Vorton> vortons, QVector
 \param[in,out] vortons Вектор, содержащий вортоны для объединения
 \param[in] eStar Максимальное расстояние для объединения
 \param[in] eDoubleStar Минимальный косинус угла для объединения
-\param[in] vortonRad � адиус вортон-отрезков
+\param[in] vortonRad Радиус вортон-отрезков
 */
 void FrameCalculations::unionVortons(QVector<Vorton> &vortons,const double eStar,const double eDoubleStar,const double vortonRad)
 {
@@ -719,7 +723,7 @@ void FrameCalculations::removeFarRotationCutBody(QVector<Vorton> &vortons, const
 Функция расчета перемещений и удалений для вортонов с рамок и вортонов в потоке
 \param[in,out] freeVortons Вектор, содержащий вортоны в потоке
 \param[in,out] newVortons Вектор, содержащий вортоны с рамок
-\param[in] step � азмер шага
+\param[in] step Размер шага
 \param[in] streamVel Скорость потока
 \param[in] eDelta Максимальное значение удлинения
 \param[in] fiMax Максимальное значение угла поворота
@@ -911,7 +915,7 @@ void FrameCalculations::displacementCalcGauss3(QVector<Vorton> &freeVortons, QVe
 \param[in,out] newVortons Вектор, содержащий вортоны с рамок
 \param[in,out] symFreeVortons Симметричный вектор вектору, содержащему вортоны в потоке
 \param[in,out] symNewVortons Симметричный вектор вектору, содержащему вортоны с рамок
-\param[in] step � азмер шага
+\param[in] step Размер шага
 \param[in] streamVel Скорость потока
 \param[in] eDelta Максимальное значение удлинения
 \param[in] fiMax Максимальное значение угла поворота
@@ -973,7 +977,7 @@ void FrameCalculations::displacementLaunchCalc(QVector<Vorton> &freeVortons, QVe
 
 /*!
 Функция установки размера матрицы
-\param size � азмер матрциы
+\param size Размер матрциы
 */
 void FrameCalculations::setMatrixSize(int size)
 {
@@ -1194,7 +1198,7 @@ void FrameCalculations::forceAndTorqueCalc(const Vector3D streamVel, double stre
 \param[in] stepNum Номер текущего шага
 \param[in,out] cp Вектор для записи значений ср
 \param[in] fiFragNum Количество разбиений по фи
-\param[in] radius � адиус сферы
+\param[in] radius Радиус сферы
 \param[in] pointsRaising Величина подъема точек для вычисления давления
 \param[in] tetas Вектор значений углов тета
 \param[in] streamVel Скорость потока
@@ -2508,7 +2512,7 @@ void FrameCalculations::reflectMove(QVector<Vorton> &symFreeVortons, QVector<Vor
 Функция для проверки попадания вортона внутрь сферы
 \param vorton Вортон
 \param center Центра сферы
-\param radius � адиус сферы
+\param radius Радиус сферы
 \return Определение попадания внутрь сферы
 */
 bool FrameCalculations::insideSphere(const Vorton& vort, const Vector3D& center, const double radius)
@@ -2522,7 +2526,7 @@ bool FrameCalculations::insideSphere(const Vorton& vort, const Vector3D& center,
 Функция для проверки попадания вортона внутрь слоя вокруг сферы
 \param vorton Вортон
 \param center Центр сферы
-\param radius � адиус сферы
+\param radius Радиус сферы
 \param layerHeight Высота слоя
 \return Определение попадания внутрь слоя вокруг сферы
 */

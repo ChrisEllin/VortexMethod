@@ -4,7 +4,7 @@
 #include "vector2d.h"
 #include <QVariant>
 
-/** \file bodyfragmentation.h
+/** \file bodyfragmentation.h 
     \brief Заголовочный файл для описания классов, структур и перечислений для разбиения исходного тела на рамки
 */
 
@@ -40,7 +40,7 @@ struct FragmentationParameters
     ///@{
     int sphereFiFragNum; ///<Количество разбиений по fi
     int sphereTetaFragNum; ///<Количество разбиений по teta
-    double sphereRad; ///<� адиус сферы
+    double sphereRad; ///<Радиус сферы
     ///@}
 
     /*!
@@ -100,7 +100,7 @@ struct FragmentationParameters
         \brief В данном модуле хранятся Общие параметры, необходимые для разбиения тела.
     */
     ///@{
-    double vortonsRad; ///<� адиус вортона
+    double vortonsRad; ///<Радиус вортона
     double delta; ///<Подъем рамок над телом
     double pointsRaising; ///<Подъем контрольных точек для подсчета давления
     ///@}
@@ -117,10 +117,10 @@ struct SphereParameters
 {
     int fiFragNum; ///<Количество разбиений по fi
     int tetaFragNum; ///<Количество разбиений по teta
-    double radius; ///<� адиус сферы
+    double radius; ///<Радиус сферы
     double delta; ///<Подъем рамок над телом
     double raise; ///<Подъем контрольных точек для подсчета давления
-    double vortonsRad; ///<� адиус вортона
+    double vortonsRad; ///<Радиус вортона
     void setData(const int i, const double value);
 };
 
@@ -136,7 +136,7 @@ struct CylinderParameters
     double height; ///<Высота цилиндра
     double delta; ///<Подъем рамок над телом
     double raise; ///<Подъем контрольных точек для подсчета давления
-    double vortonsRad;  ///<� адиус вортона
+    double vortonsRad;  ///<Радиус вортона
     void setData(const int i, const double value);
 };
 
@@ -153,7 +153,7 @@ struct RotationBodyParameters
     double sectionEndDistance;
     double delta;  ///<Подъем рамок над телом
     double raise;  ///<Подъем контрольных точек для подсчета давления
-    double vortonsRad;  ///<� адиус вортона
+    double vortonsRad;  ///<Радиус вортона
     void setData(const int i, const double value);
 };
 
@@ -171,7 +171,7 @@ struct RotationCutBodyParameters
     double sectionEndDistance;
     double delta;  ///<Подъем рамок над телом
     double raise;  ///<Подъем контрольных точек для подсчета давления
-    double vortonsRad; ///<� адиус вортона
+    double vortonsRad; ///<Радиус вортона
     void setData(const int i, const double value);
 };
 

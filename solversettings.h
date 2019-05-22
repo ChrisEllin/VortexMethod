@@ -5,7 +5,7 @@
 #include "vector3d.h"
 
 /*!
-    \brief Структура, хранящая параметры расчета
+    \brief Структура, хранящая параметры расчета 
 */
 struct SolverParameters
 {

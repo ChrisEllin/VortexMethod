@@ -23,7 +23,7 @@ IntegrationResults SimpsonIntegration::integralsCalculator()
     inertiaTensorCalculator();
     return results;
 }
-
+ 
 void SimpsonIntegration::massCalculator()
 {
     if(rotationBottomCutFlag)

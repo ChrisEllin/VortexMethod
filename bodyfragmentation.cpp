@@ -3,9 +3,9 @@
 #include <QTextStream>
 #include <QDebug>
 /*!
-Установка соотвествующего значения в объект структуры параметров разбиения сферы
+Установка соотвествующего значения в объект структуры параметров разбиения сферы 
 \param i Номер поля структуры
-\param value Значение поля структуры
+\param value Значение поля структуры 
 */
 void SphereParameters::setData(const int i, const double value)
 {
@@ -144,7 +144,7 @@ void RotationCutBodyParameters::setData(const int i, const double value)
 }
 
 /*!
-� азбивает тело, определяя его тип.
+Разбивает тело, определяя его тип.
 \param body Тип тела
 \param param Параметры разбиения
 \param launch Необходимость решения задачи старта
@@ -203,7 +203,7 @@ BodyFragmentation::BodyFragmentation(BodyType body, const FragmentationParameter
 //}
 
 /*!
-� еализует разбиение сферы.
+Реализует разбиение сферы.
 */
 
 void BodyFragmentation::sphereFragmentation()
@@ -252,7 +252,7 @@ void BodyFragmentation::sphereFragmentation()
 }
 
 /*!
-� еализует разбиение цилиндра.
+Реализует разбиение цилиндра.
 */
 void BodyFragmentation::cylinderFragmentation()
 {
@@ -342,7 +342,7 @@ QPair<int, int> BodyFragmentation::getStreamLinesSizes()
 }
 
 /*!
-� еализует разбиение тела вращения.
+Реализует разбиение тела вращения.
 */
 void BodyFragmentation::rotationBodyFragmantation()
 {
@@ -461,7 +461,7 @@ void BodyFragmentation::rotationBodyFragmantation()
 }
 
 /*!
-� еализует разбиение тела вращения со срезом дна.
+Реализует разбиение тела вращения со срезом дна.
 */
 void BodyFragmentation::rotationCutBodyFragmantation()
 {
@@ -600,10 +600,10 @@ void BodyFragmentation::rotationCutBodyFragmantation()
 }
 
 /*!
-� еализует разбиение тела вращения со срезом дна для решения задачи старта.
+Реализует разбиение тела вращения со срезом дна для решения задачи старта.
 \param i Текущий шаг
 \param bodyVel Скорость тела
-\param tau � азмер шага
+\param tau Размер шага
 */
 void BodyFragmentation::rotationCutBodyLaunchFragmentation(const int i, const Vector3D& bodyVel, const double tau,const double fullLength)
 {

@@ -4,7 +4,7 @@
 /*!
 Установка соотвествующего значения в объект структуры
 \param i Номер поля структуры
-\param value Значение поля структуры
+\param value Значение поля структуры 
 */
 void SolverParameters::setData(const int i, const double value)
 {
