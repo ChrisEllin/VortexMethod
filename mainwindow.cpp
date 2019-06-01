@@ -1,4 +1,4 @@
-#include "mainwindow.h"
+﻿#include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QStyleFactory>
 
@@ -2149,3 +2149,4 @@ void MainWindow::on_ringsPushButton_clicked()
 {
     QFuture<void> ring=QtConcurrent::run(solver,&Solver::ringsSolver);
 }
+

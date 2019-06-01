@@ -1,4 +1,4 @@
-#include "logger.h"
+﻿#include "logger.h"
 
 /*!
 Создает каталог для хранения результатов расчета внутри каталога сборки
@@ -365,7 +365,7 @@ void Logger::writeLogs(const int stepNum, const double stepTime, const int freeV
     *logTextStream.get()<<"Начата запись шага расчета №"+QString::number(stepNum)+" \n\n";
     *logTextStream.get()<<"С рамок объединилось "+QString::number(beforeIntegrC.unitedNum)+" вортонов \n";
     *logTextStream.get()<<"По гамме c рамок удалилось "+QString::number(beforeIntegrC.vorticityEliminated)+" вортонов \n";
-    *logTextStream.get()<<"Из фигуры назад возвращено "+QString::number(afterIntegrC.gotBackNum)+" вортонов \n";
+    *logTextStream.get()<<"Из фигуры назад возвращено "+QString::number(beforeIntegrC.gotBackNum)+" вортонов \n";
     *logTextStream.get()<<"Из слоя развернуто относительно поверхности "+QString::number(afterIntegrC.rotatedNum)+" вортонов \n";
     *logTextStream.get()<<"В слое объединилось "+QString::number(afterIntegrC.unitedNum)+" вортонов \n";
     *logTextStream.get()<<"В слое удалилось по гамме "+QString::number(afterIntegrC.vorticityEliminated)+" вортонов \n";
@@ -381,10 +381,11 @@ void Logger::writeLogs(const int stepNum, const double stepTime, const int freeV
     *logTextStream.get()<<"Объединение вортонов с рамок заняло "+QString::number(beforeIntegrT.unionTimer)+" с.\n";
     *logTextStream.get()<<"Удаление по гамме вортонов с рамок заняло "+QString::number(beforeIntegrT.removeVorticityTimer)+" с.\n";
     *logTextStream.get()<<"Расчет перемещений и удлинений занял "+QString::number(beforeIntegrT.integrationTimer)+" с.\n";
+    *logTextStream.get()<<"Возвращение в поток заняло "+QString::number(beforeIntegrT.getBackAndRotateTimer)+" с.\n";
     *logTextStream.get()<<"Расчет сил занял "+QString::number(beforeIntegrT.forceTimer)+" с.\n";
-    *logTextStream.get()<<"Разворот и возвращение в поток заняло "+QString::number(afterIntegrT.getBackAndRotateTimer)+" с.\n";
     *logTextStream.get()<<"Объединение вортонов в слое заняло "+QString::number(afterIntegrT.unionTimer)+" с.\n";
-    *logTextStream.get()<<"Удаление по гамме вортонов с рамок заняло "+QString::number(afterIntegrT.removeVorticityTimer)+" с.\n";
+    *logTextStream.get()<<"Удаление по гамме вортонов в слое заняло "+QString::number(afterIntegrT.removeVorticityTimer)+" с.\n";
+    *logTextStream.get()<<"Разворот вортонов в потоке заняло "+QString::number(afterIntegrT.rotateTimer)+" с.\n";
     *logTextStream.get()<<"Удаление вортонов по причине большой дальности заняло "+QString::number(afterIntegrT.farTimer)+" с.\n";
     *logTextStream.get()<<"Шаг №"+QString::number(stepNum)+" занял "+QString::number(stepTime)+" с.\n\n";
     *logTextStream.get()<<"Закончена запись шага расчета №"+QString::number(stepNum)+"\n\n";

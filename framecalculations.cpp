@@ -1,4 +1,4 @@
-#include "framecalculations.h"
+﻿#include "framecalculations.h"
 
 /*!
 Обнуляет значения всех счетчиков 
@@ -304,19 +304,21 @@ int FrameCalculations::universalInside(const Vorton vort,const QVector<std::pair
 
 Inside FrameCalculations::universalInsideCorrect(const Vorton vort, const QVector<std::pair<double, double> > boundaries, QVector<std::shared_ptr<MultiFrame> > &frames)
 {
+    Inside ress;
     if ((vort.getTail().x()>boundaries[0].second && (2.0*vort.getMid()-vort.getTail()).x()>boundaries[0].second) || (( vort.getTail().x()<boundaries[0].first) &&
-            (2.0*vort.getMid()-vort.getTail()).x()<boundaries[0].first))
+                                                                                                                     (2.0*vort.getMid()-vort.getTail()).x()<boundaries[0].first))
         return Inside {-1,Vector3D(),0};
     if ((vort.getTail().y()>boundaries[1].second && (2.0*vort.getMid()-vort.getTail()).y()>boundaries[1].second) || (( vort.getTail().y()<boundaries[1].first) &&
-               (2.0*vort.getMid()-vort.getTail()).y()<boundaries[1].first))
+                                                                                                                     (2.0*vort.getMid()-vort.getTail()).y()<boundaries[1].first))
         return Inside {-1,Vector3D(),0};
     if ((vort.getTail().z()>boundaries[2].second && (2.0*vort.getMid()-vort.getTail()).z()>boundaries[2].second) || (( vort.getTail().z()<boundaries[2].first) &&
-             (2.0*vort.getMid()-vort.getTail()).z()<boundaries[2].first))
+                                                                                                                     (2.0*vort.getMid()-vort.getTail()).z()<boundaries[2].first))
         return Inside {-1,Vector3D(),0};
 
     srand(time(NULL));
-    int num=rand() % frames.size();
-    Vector3D choosen=frames[num]->at(0).getTail();
+    int num=/*rand() % frames.size()*/ 1;
+    Vector3D choosen=frames[num]->at(0).getTail()+0.25*(frames[num]->at(1).getTail()-frames[num]->at(0).getTail())
+            +0.25*(frames[num]->at(2).getTail()-frames[num]->at(0).getTail());
     for (int i=0; i<frames.size();i++)
     {
         if (i!=num)
@@ -326,67 +328,62 @@ Inside FrameCalculations::universalInsideCorrect(const Vorton vort, const QVecto
                 Vector3D e1=frames[i]->at(1).getTail()-frames[i]->at(0).getTail();
                 Vector3D e2=frames[i]->at(2).getTail()-frames[i]->at(0).getTail();
                 Vector3D n=Vector3D::crossProduct(e1,e2);
-                Vector3D tau=(vort.getTail()-choosen).normalized();
+                Vector3D tau=(vort.getTail()-choosen);
                 double t=Vector3D::dotProduct(frames[i]->at(0).getTail()-choosen,n)/Vector3D::dotProduct(tau,n);
-                if (t<=0.0||t>=1.0)
+
+
+                Vector3D rtilda=choosen+t*tau;
+                Vector3D a1=frames[i]->at(0).getTail()-rtilda;
+                Vector3D a2=frames[i]->at(1).getTail()-rtilda;
+                Vector3D a3=frames[i]->at(2).getTail()-rtilda;
+
+
+                if (coDirectionallyCheck(a1,a2,a3))
                 {
-                    Vector3D rtilda=choosen+t*tau;
-                    Vector3D a1=frames[i]->at(0).getTail()-rtilda;
-                    Vector3D a2=frames[i]->at(1).getTail()-rtilda;
-                    Vector3D a3=frames[i]->at(2).getTail()-rtilda;
-                    if (coDirectionallyCheck(a1,a2,a3))
-                    {
-                        if (!(Vector3D::dotProduct(choosen-vort.getTail(),rtilda-vort.getTail())>0))
-                            return Inside {1,rtilda, i};
-                    }
+                    double dot=Vector3D::dotProduct(choosen-vort.getTail(),rtilda-vort.getTail());
+                    if (!((dot)>0||qFuzzyIsNull(dot)))
+                           return Inside {1, rtilda,i};
                 }
                 tau=2.0*vort.getMid()-vort.getTail()-choosen;
                 t=Vector3D::dotProduct(frames[i]->at(0).getTail()-choosen,n)/Vector3D::dotProduct(tau,n);
-                if (t<=0.0||t>=1.0)
+                rtilda=choosen+t*tau;
+                a1=frames[i]->at(0).getTail()-rtilda;
+                a2=frames[i]->at(1).getTail()-rtilda;
+                a3=frames[i]->at(2).getTail()-rtilda;
+                if (coDirectionallyCheck(a1,a2,a3))
                 {
-                    Vector3D rtilda=choosen+t*tau;
-                    Vector3D a1=frames[i]->at(0).getTail()-rtilda;
-                    Vector3D a2=frames[i]->at(1).getTail()-rtilda;
-                    Vector3D a3=frames[i]->at(2).getTail()-rtilda;
-                    if (coDirectionallyCheck(a1,a2,a3))
-                    {
-                        if (!(Vector3D::dotProduct(choosen-(2.0*vort.getMid()-vort.getTail()),rtilda-(2.0*vort.getMid()-vort.getTail()))>0))
-                            return Inside {0,rtilda, i};
-                    }
+                    double dot=Vector3D::dotProduct(choosen-(2.0*vort.getMid()-vort.getTail()),rtilda-(2.0*vort.getMid()-vort.getTail()));
+                    if (!((dot)>0||qFuzzyIsNull(dot)))
+                            return Inside {0, rtilda,i};
                 }
-
-
 
                 e1=frames[i]->at(2).getTail()-frames[i]->at(0).getTail();
                 e2=frames[i]->at(3).getTail()-frames[i]->at(0).getTail();
                 n=Vector3D::crossProduct(e1,e2);
-                tau=(vort.getTail()-choosen).normalized();
+                tau=(vort.getTail()-choosen);
                 t=Vector3D::dotProduct(frames[i]->at(0).getTail()-choosen,n)/Vector3D::dotProduct(tau,n);
-                if (t<=0.0||t>=1.0)
+
+                rtilda=choosen+t*tau;
+                a1=frames[i]->at(0).getTail()-rtilda;
+                a2=frames[i]->at(2).getTail()-rtilda;
+                a3=frames[i]->at(3).getTail()-rtilda;
+                if (coDirectionallyCheck(a1,a2,a3))
                 {
-                    Vector3D rtilda=choosen+t*tau;
-                    Vector3D a1=frames[i]->at(0).getTail()-rtilda;
-                    Vector3D a2=frames[i]->at(2).getTail()-rtilda;
-                    Vector3D a3=frames[i]->at(3).getTail()-rtilda;
-                    if (coDirectionallyCheck(a1,a2,a3))
-                    {
-                        if (!(Vector3D::dotProduct(choosen-vort.getTail(),rtilda-vort.getTail())>0))
-                           return Inside {1,rtilda, i};
-                    }
+                    double dot=Vector3D::dotProduct(choosen-vort.getTail(),rtilda-vort.getTail());
+                    if (!((dot)>0||qFuzzyIsNull(dot)))
+                            return Inside {1, rtilda,i};
                 }
                 tau=2.0*vort.getMid()-vort.getTail()-choosen;
                 t=Vector3D::dotProduct(frames[i]->at(0).getTail()-choosen,n)/Vector3D::dotProduct(tau,n);
-                if (t<=0.0||t>=1.0)
+                rtilda=choosen+t*tau;
+                a1=frames[i]->at(0).getTail()-rtilda;
+                a2=frames[i]->at(2).getTail()-rtilda;
+                a3=frames[i]->at(3).getTail()-rtilda;
+                if (coDirectionallyCheck(a1,a2,a3))
                 {
-                    Vector3D rtilda=choosen+t*tau;
-                    Vector3D a1=frames[i]->at(0).getTail()-rtilda;
-                    Vector3D a2=frames[i]->at(2).getTail()-rtilda;
-                    Vector3D a3=frames[i]->at(3).getTail()-rtilda;
-                    if (coDirectionallyCheck(a1,a2,a3))
-                    {
-                        if (!(Vector3D::dotProduct(choosen-(2.0*vort.getMid()-vort.getTail()),rtilda-(2.0*vort.getMid()-vort.getTail()))>0))
-                            return Inside {0,rtilda, i};
-                    }
+                    double dot=Vector3D::dotProduct(choosen-(2.0*vort.getMid()-vort.getTail()),rtilda-(2.0*vort.getMid()-vort.getTail()));
+                    if (!((dot)>0||qFuzzyIsNull(dot)))
+                                return Inside {0, rtilda,i};
                 }
 
 
@@ -394,42 +391,304 @@ Inside FrameCalculations::universalInsideCorrect(const Vorton vort, const QVecto
             else {
                 for (int j=1;j<frames[i]->getAnglesNum()-1;j++)
                 {
+
                     Vector3D e1=frames[i]->at(j).getTail()-frames[i]->at(0).getTail();
                     Vector3D e2=frames[i]->at(j+1).getTail()-frames[i]->at(0).getTail();
                     Vector3D n=Vector3D::crossProduct(e1,e2);
                     Vector3D tau=vort.getTail()-choosen;
                     double t=Vector3D::dotProduct(frames[i]->at(0).getTail()-choosen,n)/Vector3D::dotProduct(tau,n);
-                    if (t<=0.0||t>=1.0)
+                    Vector3D rtilda=choosen+t*tau;
+                    Vector3D a1=frames[i]->at(0).getTail()-rtilda;
+                    Vector3D a2=frames[i]->at(j).getTail()-rtilda;
+                    Vector3D a3=frames[i]->at(j+1).getTail()-rtilda;
+                    if (coDirectionallyCheck(a1,a2,a3))
                     {
-                        Vector3D rtilda=choosen+t*tau;
-                        Vector3D a1=frames[i]->at(0).getTail()-rtilda;
-                        Vector3D a2=frames[i]->at(j).getTail()-rtilda;
-                        Vector3D a3=frames[i]->at(j+1).getTail()-rtilda;
-                        if (coDirectionallyCheck(a1,a2,a3))
-                        {
-                            if (!(Vector3D::dotProduct(choosen-vort.getTail(),rtilda-vort.getTail())>0))
-                                return Inside {1,rtilda, i};
-                        }
+                        double dot=Vector3D::dotProduct(choosen-vort.getTail(),rtilda-vort.getTail());
+                        if (!((dot)>0||qFuzzyIsNull(dot)))
+                        return Inside {1, rtilda,i};
                     }
                     tau=2.0*vort.getMid()-vort.getTail()-choosen;
                     t=Vector3D::dotProduct(frames[i]->at(0).getTail()-choosen,n)/Vector3D::dotProduct(tau,n);
-                    if (t<=0.0||t>=1.0)
+                    rtilda=choosen+t*tau;
+                    a1=frames[i]->at(0).getTail()-rtilda;
+                    a2=frames[i]->at(j).getTail()-rtilda;
+                    a3=frames[i]->at(j+1).getTail()-rtilda;
+                    if (coDirectionallyCheck(a1,a2,a3))
                     {
-                        Vector3D rtilda=choosen+t*tau;
-                        Vector3D a1=frames[i]->at(0).getTail()-rtilda;
-                        Vector3D a2=frames[i]->at(j).getTail()-rtilda;
-                        Vector3D a3=frames[i]->at(j+1).getTail()-rtilda;
-                        if (coDirectionallyCheck(a1,a2,a3))
-                        {
-                            if (!(Vector3D::dotProduct(choosen-(2.0*vort.getMid()-vort.getTail()),rtilda-(2.0*vort.getMid()-vort.getTail()))>0))
-                                return Inside {0,rtilda, i};
-                        }
+                        double dot=Vector3D::dotProduct(choosen-(2.0*vort.getMid()-vort.getTail()),rtilda-(2.0*vort.getMid()-vort.getTail()));
+                        if (!((dot)>0||qFuzzyIsNull(dot)))
+                                    return Inside {0, rtilda,i};
                     }
                 }
             }
         }
     }
-   return Inside {-1,Vector3D(), 0};
+    return Inside {-1,Vector3D(), 0};
+}
+
+Inside FrameCalculations::testInsideCorrect(const Vorton vort, const QVector<std::pair<double, double> > boundaries, QVector<std::shared_ptr<MultiFrame> > &frames, int partNum)
+{
+    Inside ress;
+    if ((vort.getTail().x()>boundaries[0].second && (2.0*vort.getMid()-vort.getTail()).x()>boundaries[0].second) || (( vort.getTail().x()<boundaries[0].first) &&
+                                                                                                                     (2.0*vort.getMid()-vort.getTail()).x()<boundaries[0].first))
+        return Inside {-1,Vector3D(),0};
+    if ((vort.getTail().y()>boundaries[1].second && (2.0*vort.getMid()-vort.getTail()).y()>boundaries[1].second) || (( vort.getTail().y()<boundaries[1].first) &&
+                                                                                                                     (2.0*vort.getMid()-vort.getTail()).y()<boundaries[1].first))
+        return Inside {-1,Vector3D(),0};
+    if ((vort.getTail().z()>boundaries[2].second && (2.0*vort.getMid()-vort.getTail()).z()>boundaries[2].second) || (( vort.getTail().z()<boundaries[2].first) &&
+                                                                                                                     (2.0*vort.getMid()-vort.getTail()).z()<boundaries[2].first))
+        return Inside {-1,Vector3D(),0};
+
+    srand(time(NULL));
+    int num=/*rand() % frames.size()*/ 1;
+
+    Vector3D choosen;
+    if (partNum==0)
+        choosen=2.0*vort.getMid()-vort.getTail()-vort.getMove();
+    else {
+        choosen=vort.getTail()-vort.getMove();
+    }
+    for (int i=0; i<frames.size();i++)
+    {
+        if (i!=num)
+        {
+            if (frames[i]->getAnglesNum()==4)
+            {
+                Vector3D e1=frames[i]->at(1).getTail()-frames[i]->at(0).getTail();
+                Vector3D e2=frames[i]->at(2).getTail()-frames[i]->at(0).getTail();
+                Vector3D n=Vector3D::crossProduct(e1,e2);
+                Vector3D tau=(vort.getTail()-choosen);
+                double t=Vector3D::dotProduct(frames[i]->at(0).getTail()-choosen,n)/Vector3D::dotProduct(tau,n);
+
+
+                Vector3D rtilda=choosen+t*tau;
+                Vector3D a1=frames[i]->at(0).getTail()-rtilda;
+                Vector3D a2=frames[i]->at(1).getTail()-rtilda;
+                Vector3D a3=frames[i]->at(2).getTail()-rtilda;
+
+
+                if (coDirectionallyCheck(a1,a2,a3))
+                {
+                    double dot=Vector3D::dotProduct(choosen-vort.getTail(),rtilda-vort.getTail());
+                    if (!((dot)>0||qFuzzyIsNull(dot)))
+                           Inside {1, rtilda,i};
+                }
+                tau=2.0*vort.getMid()-vort.getTail()-choosen;
+                t=Vector3D::dotProduct(frames[i]->at(0).getTail()-choosen,n)/Vector3D::dotProduct(tau,n);
+                rtilda=choosen+t*tau;
+                a1=frames[i]->at(0).getTail()-rtilda;
+                a2=frames[i]->at(1).getTail()-rtilda;
+                a3=frames[i]->at(2).getTail()-rtilda;
+                if (coDirectionallyCheck(a1,a2,a3))
+                {
+                    double dot=Vector3D::dotProduct(choosen-(2.0*vort.getMid()-vort.getTail()),rtilda-(2.0*vort.getMid()-vort.getTail()));
+                    if (!((dot)>0||qFuzzyIsNull(dot)))
+                            Inside {0, rtilda,i};
+                }
+
+                e1=frames[i]->at(2).getTail()-frames[i]->at(0).getTail();
+                e2=frames[i]->at(3).getTail()-frames[i]->at(0).getTail();
+                n=Vector3D::crossProduct(e1,e2);
+                tau=(vort.getTail()-choosen);
+                t=Vector3D::dotProduct(frames[i]->at(0).getTail()-choosen,n)/Vector3D::dotProduct(tau,n);
+
+                rtilda=choosen+t*tau;
+                a1=frames[i]->at(0).getTail()-rtilda;
+                a2=frames[i]->at(2).getTail()-rtilda;
+                a3=frames[i]->at(3).getTail()-rtilda;
+                if (coDirectionallyCheck(a1,a2,a3))
+                {
+                    double dot=Vector3D::dotProduct(choosen-vort.getTail(),rtilda-vort.getTail());
+                    if (!((dot)>0||qFuzzyIsNull(dot)))
+                            Inside {1, rtilda,i};
+                }
+                tau=2.0*vort.getMid()-vort.getTail()-choosen;
+                t=Vector3D::dotProduct(frames[i]->at(0).getTail()-choosen,n)/Vector3D::dotProduct(tau,n);
+                rtilda=choosen+t*tau;
+                a1=frames[i]->at(0).getTail()-rtilda;
+                a2=frames[i]->at(2).getTail()-rtilda;
+                a3=frames[i]->at(3).getTail()-rtilda;
+                if (coDirectionallyCheck(a1,a2,a3))
+                {
+                    double dot=Vector3D::dotProduct(choosen-(2.0*vort.getMid()-vort.getTail()),rtilda-(2.0*vort.getMid()-vort.getTail()));
+                    if (!((dot)>0||qFuzzyIsNull(dot)))
+                                Inside {0, rtilda,i};
+                }
+
+
+            }
+            else {
+                for (int j=1;j<frames[i]->getAnglesNum()-1;j++)
+                {
+
+                    Vector3D e1=frames[i]->at(j).getTail()-frames[i]->at(0).getTail();
+                    Vector3D e2=frames[i]->at(j+1).getTail()-frames[i]->at(0).getTail();
+                    Vector3D n=Vector3D::crossProduct(e1,e2);
+                    Vector3D tau=vort.getTail()-choosen;
+                    double t=Vector3D::dotProduct(frames[i]->at(0).getTail()-choosen,n)/Vector3D::dotProduct(tau,n);
+                    Vector3D rtilda=choosen+t*tau;
+                    Vector3D a1=frames[i]->at(0).getTail()-rtilda;
+                    Vector3D a2=frames[i]->at(j).getTail()-rtilda;
+                    Vector3D a3=frames[i]->at(j+1).getTail()-rtilda;
+                    if (coDirectionallyCheck(a1,a2,a3))
+                    {
+                        double dot=Vector3D::dotProduct(choosen-vort.getTail(),rtilda-vort.getTail());
+                        if (!((dot)>0||qFuzzyIsNull(dot)))
+                        Inside {1, rtilda,i};
+                    }
+                    tau=2.0*vort.getMid()-vort.getTail()-choosen;
+                    t=Vector3D::dotProduct(frames[i]->at(0).getTail()-choosen,n)/Vector3D::dotProduct(tau,n);
+                    rtilda=choosen+t*tau;
+                    a1=frames[i]->at(0).getTail()-rtilda;
+                    a2=frames[i]->at(j).getTail()-rtilda;
+                    a3=frames[i]->at(j+1).getTail()-rtilda;
+                    if (coDirectionallyCheck(a1,a2,a3))
+                    {
+                        double dot=Vector3D::dotProduct(choosen-(2.0*vort.getMid()-vort.getTail()),rtilda-(2.0*vort.getMid()-vort.getTail()));
+                        if (!((dot)>0||qFuzzyIsNull(dot)))
+                                    Inside {0, rtilda,i};
+                    }
+                }
+            }
+        }
+    }
+    return Inside {-1,Vector3D(), 0};
+}
+
+InsideSeg FrameCalculations::universalInsideCorrectSegment(const Vorton vort, const QVector<std::pair<double, double> > boundaries, QVector<std::shared_ptr<MultiFrame> > &frames, int part)
+{
+
+    Vector3D choosen=vort.getTail()-vort.getMove()-vort.getElongation();
+    Vector3D choosenBeg=2.0*vort.getMid()-vort.getTail()-vort.getMove()+vort.getElongation();
+    Inside res1=Inside {-1,Vector3D(), 0};;
+    Inside res0=Inside {-1,Vector3D(), 0};;
+    for (int i=0; i<frames.size();i++)
+    {
+//        if (i!=num)
+//        {
+
+            if (frames[i]->getAnglesNum()==4)
+            {
+
+                Vector3D e1=frames[i]->at(1).getTail()-frames[i]->at(0).getTail();
+                Vector3D e2=frames[i]->at(2).getTail()-frames[i]->at(0).getTail();
+                Vector3D n=Vector3D::crossProduct(e1,e2);
+                Vector3D tau=(vort.getTail()-choosen);
+                double t=Vector3D::dotProduct(frames[i]->at(0).getTail()-choosen,n)/Vector3D::dotProduct(tau,n);
+
+                if (!(t<0 || t>1))
+                {
+                qDebug()<<"naideno dlya513";
+                Vector3D rtilda=choosen+t*tau;
+                Vector3D a1=frames[i]->at(0).getTail()-rtilda;
+                Vector3D a2=frames[i]->at(1).getTail()-rtilda;
+                Vector3D a3=frames[i]->at(2).getTail()-rtilda;
+
+
+                if (coDirectionallyCheck(a1,a2,a3))
+                {
+                        res1= Inside {1,rtilda, i};
+                }
+                }
+
+                tau=2.0*vort.getMid()-vort.getTail()-choosenBeg;
+                t=Vector3D::dotProduct(frames[i]->at(0).getTail()-choosenBeg,n)/Vector3D::dotProduct(tau,n);
+
+                if (!(t<0 || t>1))
+                {
+                    qDebug()<<"naideno dlya513";
+                Vector3D rtilda=choosenBeg+t*tau;
+                Vector3D a1=frames[i]->at(0).getTail()-rtilda;
+                Vector3D a2=frames[i]->at(1).getTail()-rtilda;
+                Vector3D a3=frames[i]->at(2).getTail()-rtilda;
+                if (coDirectionallyCheck(a1,a2,a3))
+                {
+                        res0= Inside {0,rtilda, i};
+                }
+                }
+
+
+                e1=frames[i]->at(2).getTail()-frames[i]->at(0).getTail();
+                e2=frames[i]->at(3).getTail()-frames[i]->at(0).getTail();
+                n=Vector3D::crossProduct(e1,e2);
+                tau=(vort.getTail()-choosen);
+                t=Vector3D::dotProduct(frames[i]->at(0).getTail()-choosen,n)/Vector3D::dotProduct(tau,n);
+
+                if (!(t<0 || t>1))
+                {
+                    qDebug()<<"naideno dlya513";
+                Vector3D rtilda=choosen+t*tau;
+                Vector3D a1=frames[i]->at(0).getTail()-rtilda;
+                Vector3D a2=frames[i]->at(2).getTail()-rtilda;
+                Vector3D a3=frames[i]->at(3).getTail()-rtilda;
+                if (coDirectionallyCheck(a1,a2,a3))
+                {
+                         res1= Inside {1,rtilda, i};
+                }
+                }
+
+                tau=2.0*vort.getMid()-vort.getTail()-choosenBeg;
+                t=Vector3D::dotProduct(frames[i]->at(0).getTail()-choosenBeg,n)/Vector3D::dotProduct(tau,n);
+
+                if (!(t<0 || t>1))
+                {
+                    qDebug()<<"naideno dlya513";
+                Vector3D rtilda=choosenBeg+t*tau;
+                Vector3D a1=frames[i]->at(0).getTail()-rtilda;
+                Vector3D a2=frames[i]->at(2).getTail()-rtilda;
+                Vector3D a3=frames[i]->at(3).getTail()-rtilda;
+                if (coDirectionallyCheck(a1,a2,a3))
+                {
+                        res0= Inside {0,rtilda, i};
+                }
+
+                }
+            }
+            else {
+                for (int j=1;j<frames[i]->getAnglesNum()-1;j++)
+                {
+                    Vector3D e1=frames[i]->at(j).getTail()-frames[i]->at(0).getTail();
+                    Vector3D e2=frames[i]->at(j+1).getTail()-frames[i]->at(0).getTail();
+                    Vector3D n=Vector3D::crossProduct(e1,e2);
+
+                    Vector3D tau=vort.getTail()-choosen;
+                    double t=Vector3D::dotProduct(frames[i]->at(0).getTail()-choosen,n)/Vector3D::dotProduct(tau,n);
+                    if (!(t<0 || t>1))
+                    {
+                    qDebug()<<"naideno dlya513";
+                    Vector3D rtilda=choosen+t*tau;
+                    Vector3D a1=frames[i]->at(0).getTail()-rtilda;
+                    Vector3D a2=frames[i]->at(j).getTail()-rtilda;
+                    Vector3D a3=frames[i]->at(j+1).getTail()-rtilda;
+                    if (coDirectionallyCheck(a1,a2,a3))
+                    {
+
+                            res1= Inside {1,rtilda, i};
+                    }
+                    }
+
+                    tau=2.0*vort.getMid()-vort.getTail()-choosenBeg;
+                    t=Vector3D::dotProduct(frames[i]->at(0).getTail()-choosenBeg,n)/Vector3D::dotProduct(tau,n);
+                    if (!(t<0 || t>1))
+                    {
+                        qDebug()<<"naideno dlya513";
+                    Vector3D rtilda=choosenBeg+t*tau;
+                    Vector3D a1=frames[i]->at(0).getTail()-rtilda;
+                    Vector3D a2=frames[i]->at(j).getTail()-rtilda;
+                    Vector3D a3=frames[i]->at(j+1).getTail()-rtilda;
+                    if (coDirectionallyCheck(a1,a2,a3))
+                    {
+
+                            res0= Inside {0,rtilda, i};
+                    }
+                    }
+                    }
+            }
+        //}
+    }
+    if (res0.res==-1 && res1.res==-1)
+        qDebug()<<"Ne osilil";
+    return InsideSeg {QPair<int,int>{res0.res,res1.res}, QPair<Vector3D,Vector3D>(res0.rtilda,res1.rtilda),QPair<int,int>(res0.num,res1.num)};
 }
 
 
@@ -487,6 +746,7 @@ QVector<int> FrameCalculations::universalGetBack(QVector<Vorton> &vortons, QVect
 
 //        }
     }
+
     return results;
 }
 
@@ -494,6 +754,8 @@ QVector<int> FrameCalculations::universalGetBackTriangle(QVector<Vorton> &vorton
 {
     QTime start=QTime::currentTime();
     QVector<int> results;
+    QVector<QPair<int,int>> segRes;
+     int k=0;
     for (int i=0; i<vortons.size();i++)
     {
         if (screen==true)
@@ -501,52 +763,133 @@ QVector<int> FrameCalculations::universalGetBackTriangle(QVector<Vorton> &vorton
             if (FrameCalculations::insideScreen(vortons[i]))
             {
                 vortons.remove(i);
+                counters.underScreenNum++;
             }
         }
         Inside res;
+        if (i==153)
+            qDebug()<<"naideno";
         res=universalInsideCorrect(vortons[i],boundaries,frames);
         results.push_back(res.res);
-        if (res.res==1)
+
+        if (res.res!=-1)
         {
-            //QPair<double,int> closest=BodyFragmentation::findClosestTriangle(vortons[i].getTail(),frames, normals);
-            double d=Vector3D::crossProduct(res.rtilda-vortons[i].getTail(),normals[res.num]).length();
-            vortons[i].translateWithMove(vortons[i].getMove().normalized()*d);
-            //vortons[i].setMid(vortons[i].getMid()+2.0*closest.first*normals[closest.second]);
-            //vortons[i].setTail(vortons[i].getTail()+2.0*closest.first*normals[closest.second]);
-            //vortons[i].setMove(vortons[i].getMove()+2.0*closest.first*normals[closest.second]);
-            Inside resInter=universalInsideCorrect(vortons[i],boundaries,frames);
-            if (resInter.res==0)
+
+            InsideSeg resn=universalInsideCorrectSegment(vortons[i],boundaries,frames,res.res);
+            if (resn.res.first==-1 && resn.res.second==-1)
             {
-                double d=Vector3D::crossProduct(res.rtilda-(2.0*vortons[i].getMid()-vortons[i].getTail()),normals[res.num]).length();
-                vortons[i].translateWithMove(vortons[i].getMove().normalized()*d);
-//                QPair<double,int> closest=BodyFragmentation::findClosestTriangle(2.0*vortons[i].getMid()-vortons[i].getTail(),frames, normals);
-//                vortons[i].setMid(vortons[i].getMid()+2.0*closest.first*normals[closest.second]);
-//                vortons[i].setTail(vortons[i].getTail()+2.0*closest.first*normals[closest.second]);
-//                vortons[i].setMove(vortons[i].getMove()+2.0*closest.first*normals[closest.second]);
+                    Inside aa=testInsideCorrect(vortons[i],boundaries,frames,res.res);
             }
+            segRes.push_back(QPair<int,int>(resn.res.first,resn.res.second));
+            //QPair<double,int> closest=BodyFragmentation::findClosestTriangle(vortons[i].getTail(),frames, normals);
+            double d;
+            Vector3D l=-vortons[i].getMove().normalized();
+            if (resn.res.first!=-1 && resn.res.second!=-1)
+            {
+                k++;
+            d=std::max(fabs(Vector3D::dotProduct(resn.rtilda.second-vortons[i].getTail(),l)),
+                    fabs(Vector3D::dotProduct(resn.rtilda.first-2.0*vortons[i].getMid()+vortons[i].getTail(),l)));
+            qDebug()<<d;
+            }
+            else{
+            if (resn.res.second!=-1)
+            {
+                    d=fabs(Vector3D::dotProduct(resn.rtilda.second-vortons[i].getTail(),l));
+                    k++;
+            }
+            else {
+                if (resn.res.first!=-1)
+                {
+                 k++;
+                    d=fabs(Vector3D::dotProduct(resn.rtilda.first-2.0*vortons[i].getMid()+vortons[i].getTail(),l));
+                }
+                else continue;
+            }
+            }
+            if (std::isnan(d)||std::isnan(vortons[i].getMove().normalized().length()))
+                qDebug()<<i;
+            if (d>0.5)
+                qDebug()<<"so"<<i;
+            Vector3D futTrans=l*d;
+            vortons[i].translateWithMove(futTrans);
+
+//            //vortons[i].setMid(vortons[i].getMid()+2.0*closest.first*normals[closest.second]);
+//            //vortons[i].setTail(vortons[i].getTail()+2.0*closest.first*normals[closest.second]);
+//            //vortons[i].setMove(vortons[i].getMove()+2.0*closest.first*normals[closest.second]);
+//            Inside resInter=universalInsideCorrect(vortons[i],boundaries,frames);
+//            if (resInter.res==0)
+//            {
+//                Inside resn=universalInsideCorrectSegment(vortons[i],boundaries,frames,resInter.res);
+//                double d=fabs(Vector3D::dotProduct(resn.rtilda-(2.0*vortons[i].getMid()-vortons[i].getTail()),normals[resn.num]));
+//                if (std::isnan(d)||std::isnan(vortons[i].getMove().normalized().length()))
+//                    qDebug()<<i;
+//                vortons[i].translateWithMove(-2.0*vortons[i].getMove().normalized()*d+2.0*futTrans);
+
+////                QPair<double,int> closest=BodyFragmentation::findClosestTriangle(2.0*vortons[i].getMid()-vortons[i].getTail(),frames, normals);
+////                vortons[i].setMid(vortons[i].getMid()+2.0*closest.first*normals[closest.second]);
+////                vortons[i].setTail(vortons[i].getTail()+2.0*closest.first*normals[closest.second]);
+////                vortons[i].setMove(vortons[i].getMove()+2.0*closest.first*normals[closest.second]);
+//            }
+//            else vortons[i].setMove(vortons[i].getMove()+futTrans);
+            counters.gotBackNum++;
 
         }
-        if (res.res==0)
-        {
-            double d=Vector3D::crossProduct(res.rtilda-(2.0*vortons[i].getMid()-vortons[i].getTail()),normals[res.num]).length();
-            vortons[i].translateWithMove(vortons[i].getMove().normalized()*d);
-//            QPair<double,int> closest=BodyFragmentation::findClosestTriangle(2.0*vortons[i].getMid()-vortons[i].getTail(),frames, normals);
-//            vortons[i].setMid(vortons[i].getMid()+2.0*closest.first*normals[closest.second]);
-//            vortons[i].setTail(vortons[i].getTail()+2.0*closest.first*normals[closest.second]);
-//            vortons[i].setMove(vortons[i].getMove()+2.0*closest.first*normals[closest.second]);
-            Inside resInter=universalInsideCorrect(vortons[i],boundaries,frames);
-            if (resInter.res==1)
-            {
-                  double d=Vector3D::crossProduct(res.rtilda-vortons[i].getTail(),normals[res.num]).length();
-                  vortons[i].translateWithMove(vortons[i].getMove().normalized()*d);
-//                QPair<double,int> closest=BodyFragmentation::findClosestTriangle(vortons[i].getTail(),frames, normals);
-//                vortons[i].setMid(vortons[i].getMid()+2.0*closest.first*normals[closest.second]);
-//                vortons[i].setTail(vortons[i].getTail()+2.0*closest.first*normals[closest.second]);
-//                vortons[i].setMove(vortons[i].getMove()+2.0*closest.first*normals[closest.second]);
-            }
-        }
+//        if (res.res==0)
+//        {
+//            InsideSeg resn=universalInsideCorrectSegment(vortons[i],boundaries,frames,res.res);
+//            double d;
+//            if (resn.res.first!=-1 && resn.res.second!=-1)
+//            d=std::max(fabs(Vector3D::dotProduct(resn.rtilda.second-vortons[i].getTail(),normals[resn.num.second])),
+//                    fabs(Vector3D::dotProduct(resn.rtilda.first-2.0*vortons[i].getMid()+vortons[i].getTail(),normals[resn.num.first])));
+//            else
+//                if (resn.res.first!=-1)
+//                    d= fabs(Vector3D::dotProduct(resn.rtilda.first-2.0*vortons[i].getMid()+vortons[i].getTail(),normals[resn.num.first]));
+//                else {
+//                    if (resn.res.second!=-1)
+//                    d=fabs(Vector3D::dotProduct(resn.rtilda.second-vortons[i].getTail(),normals[resn.num.second]));
+//                    else continue;
+//                }
+//            if (std::isnan(d)||std::isnan(vortons[i].getMove().normalized().length()))
+//                qDebug()<<i;
+//            if (d>0.5)
+//                qDebug()<<"so"<<i;
+//            Vector3D futTrans=-2.0*vortons[i].getMove().normalized()*d;
+//            vortons[i].translateWithMove(futTrans);
+
+//////            QPair<double,int> closest=BodyFragmentation::findClosestTriangle(2.0*vortons[i].getMid()-vortons[i].getTail(),frames, normals);
+//////            vortons[i].setMid(vortons[i].getMid()+2.0*closest.first*normals[closest.second]);
+//////            vortons[i].setTail(vortons[i].getTail()+2.0*closest.first*normals[closest.second]);
+//////            vortons[i].setMove(vortons[i].getMove()+2.0*closest.first*normals[closest.second]);
+////            Inside resInter=universalInsideCorrect(vortons[i],boundaries,frames);
+////            if (resInter.res==1)
+////            {
+////                    Inside resn=universalInsideCorrectSegment(vortons[i],boundaries,frames,resInter.res);
+////                  double d=fabs(Vector3D::dotProduct(resn.rtilda-vortons[i].getTail(),normals[resn.num]));
+////                  if (std::isnan(d)||std::isnan(vortons[i].getMove().normalized().length()))
+////                      qDebug()<<i;
+////                  vortons[i].translateWithMove(-2.0*vortons[i].getMove().normalized()*d+2.0*futTrans);
+
+//////                QPair<double,int> closest=BodyFragmentation::findClosestTriangle(vortons[i].getTail(),frames, normals);
+//////                vortons[i].setMid(vortons[i].getMid()+2.0*closest.first*normals[closest.second]);
+//////                vortons[i].setTail(vortons[i].getTail()+2.0*closest.first*normals[closest.second]);
+//////                vortons[i].setMove(vortons[i].getMove()+2.0*closest.first*normals[closest.second]);
+////            }
+////            else vortons[i].setMove(vortons[i].getMove()+futTrans);
+//            counters.gotBackNum++;
+//        }
     }
-    timers.getBackAndRotateTimer=start.elapsed()*0.001;
+    QVector<int> res2;
+for (int i=0; i<vortons.size();i++)
+{
+
+res2.push_back(universalInside(vortons[i],boundaries,frames));
+}
+int no_otskok=0;
+for (int i=0;i<res2.size();i++)
+if (res2[i]!=-1)
+    no_otskok++;
+qDebug()<<"no_otskok"<<no_otskok;
+    timers.getBackAndRotateTimer+=start.elapsed()*0.001;
     return results;
 }
 
@@ -572,11 +915,21 @@ void FrameCalculations::universalRotate(QVector<Vorton> vortons, QVector<int> re
     }
 }
 
-void FrameCalculations::universalRotateTriangle(QVector<Vorton> vortons, QVector<int> res, const double layerHeight, const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals, QVector<std::shared_ptr<MultiFrame>>& frames)
+void FrameCalculations::universalRotateTriangle(QVector<Vorton> &vortons, QVector<int> res, QVector<std::pair<double, double> > boundaries, const double layerHeight, const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals, QVector<std::shared_ptr<MultiFrame>>& frames)
 {
+
     QTime start=QTime::currentTime();
-    for (int i=0; i<res.size();i++)
+    for (int i=0; i<vortons.size();i++)
     {
+        if (vortons[i].getMid().x()>(boundaries[0].second+layerHeight )
+                || vortons[i].getMid().x()<(boundaries[0].first-layerHeight))
+            continue;
+        if (vortons[i].getMid().y()>(boundaries[1].second+layerHeight )
+                || vortons[i].getMid().y()<(boundaries[1].first-layerHeight))
+            continue;
+        if (vortons[i].getMid().z()>(boundaries[2].second+layerHeight )
+                || vortons[i].getMid().z()<(boundaries[2].first-layerHeight))
+            continue;
         //if (res[i]==-1)
         //{
 //                    QPair<double,int> closest=BodyFragmentation::findClosest(vortons[i].getTail(),controlPoints, normals);
@@ -593,6 +946,7 @@ void FrameCalculations::universalRotateTriangle(QVector<Vorton> vortons, QVector
                     {
                         vortons[i].rotateAroundNormal(normals[num]);
                     }
+                    counters.rotatedNum++;
         //}
     }
     timers.rotateTimer=start.elapsed()*0.001;
@@ -2319,16 +2673,18 @@ void FrameCalculations::velForStreamLines(QVector<Vector3D> &velocities, Vector3
 
 bool FrameCalculations::coDirectionallyCheck(const Vector3D a, const Vector3D b, const Vector3D c)
 {
-    Vector3D cross1=Vector3D::crossProduct(a,b);
-    Vector3D cross2=Vector3D::crossProduct(b,c);
-    Vector3D cross3=Vector3D::crossProduct(c,a);
+    Vector3D cross1=Vector3D::crossProduct(b,a);
+    Vector3D cross2=Vector3D::crossProduct(c,b);
+    Vector3D cross3=Vector3D::crossProduct(a,c);
 
     Vector3D collinearCrossing1=Vector3D::crossProduct(cross1,cross2);
-    Vector3D collinearCrossing2=Vector3D::crossProduct(cross3,cross2);
+    Vector3D collinearCrossing2=Vector3D::crossProduct(cross2,cross3);
 
+    double dot1=Vector3D::dotProduct(cross1.normalized(),cross2.normalized());
+    double dot2=Vector3D::dotProduct(cross2.normalized(),cross3.normalized());
 
     if (collinearCrossing1.length()<0.0000001 &&collinearCrossing2.length()<0.0000001
-            && Vector3D::dotProduct(cross1,cross2)>0.0 && Vector3D::dotProduct(cross2,cross3)>0.0)
+            && (dot1>0.0||qFuzzyIsNull(dot1)) && (dot2>0.0||qFuzzyIsNull(dot2)))
             return true;
     return false;
 }
@@ -2897,11 +3253,11 @@ QVector<std::pair<double,double>> FrameCalculations::makeParalllepiped(QVector<V
     std::pair<double, double> xBoundaries(xBoundariesIter.first->getTail().x(),xBoundariesIter.second->getTail().x());
     boundaries[0]=xBoundaries;
     std::pair<Vorton*,Vorton*> yBoundariesIter = std::minmax_element(newVortons.begin(),newVortons.end(),yCompare);
-    std::pair<double, double> yBoundaries(yBoundariesIter.first->getTail().y(),xBoundariesIter.second->getTail().y());
-    boundaries[0]=yBoundaries;
+    std::pair<double, double> yBoundaries(yBoundariesIter.first->getTail().y(),yBoundariesIter.second->getTail().y());
+    boundaries[1]=yBoundaries;
     std::pair<Vorton*,Vorton*> zBoundariesIter = std::minmax_element(newVortons.begin(),newVortons.end(),zCompare);
-    std::pair<double, double> zBoundaries(zBoundariesIter.first->getTail().z(),xBoundariesIter.second->getTail().z());
-    boundaries[0]=zBoundaries;
+    std::pair<double, double> zBoundaries(zBoundariesIter.first->getTail().z(),zBoundariesIter.second->getTail().z());
+    boundaries[2]=zBoundaries;
     return boundaries;
 
 }
