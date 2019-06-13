@@ -1065,7 +1065,7 @@ void MainWindow::drawGUI(const QVector<Vorton> &vortons, const QVector<std::shar
         QVector3D mid=Vector3D::toQVector3D(vortons[i].getMid());
         QVector3D tail=Vector3D::toQVector3D(vortons[i].getTail());
         if (checkDrawing(vortons[i].getMid(),vortons[i].getTail()))
-            emit drawSegment(2.0*mid-tail, tail);
+            emit drawSegment(2.0*mid-tail, tail/*,SArrow::Grid*/);
     }
     }
     else

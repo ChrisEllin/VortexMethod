@@ -88,6 +88,13 @@ struct Inside
     int num;
 };
 
+struct InsideWithNormal
+{
+    int res;
+    Vector3D rtilda;
+    Vector3D normal;
+};
+
 struct InsideSeg
 {
     QPair<int,int> res;
@@ -117,6 +124,9 @@ public:
     FrameCalculations();
     double getConditionalNum();
     QVector<double> calcTetas(const int tetaFragNum);
+
+    QVector<QPair<int,int>> unionFrameVortons(QVector<Vorton> frameVortons, const double eDoubleStar);
+    void unionWithSchedule(QVector<Vorton>& vortons, QVector<QPair<int,int>>& schedule);
     void epsZero(QVector<std::shared_ptr<MultiFrame>> &frames);
     void epsNormal(QVector<Vorton>& newVortons, double eps);
     void epsNormal(QVector<std::shared_ptr<MultiFrame>> &frames, double eps);
@@ -127,6 +137,13 @@ public:
     static int universalInside(const Vorton vort, const QVector<std::pair<double, double> > boundaries, QVector<std::shared_ptr<MultiFrame>>& frames);
 
     static Inside universalInsideCorrect(const Vorton vort, const QVector<std::pair<double, double> > boundaries, QVector<std::shared_ptr<MultiFrame>>& frames);
+    bool insideFramesVector(QVector<std::shared_ptr<MultiFrame>>& frames, Vorton vort, QVector<std::pair<double, double> > boundaries);
+    QPair<int, int> intersectsFramesVector(QVector<std::shared_ptr<MultiFrame>>& frames, Vorton vort);
+    void universalGetBackTriangleFrames(QVector<Vorton> &vortons, QVector<std::pair<double, double> > boundaries, const double layerHeight,  const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals, QVector<std::shared_ptr<MultiFrame>>& frames,bool screen = false);
+    static bool universalInsideR0Correct(const Vorton vort, const QVector<std::pair<double, double> > boundaries, QVector<std::shared_ptr<MultiFrame>>& frames);
+    void universalGetBackR0Triangle(QVector<Vorton> &vortons, QVector<std::pair<double, double> > boundaries, const double layerHeight,  const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals, QVector<std::shared_ptr<MultiFrame>>& frames,bool screen = false);
+    static InsideWithNormal universalInsideR0CorrectSegment(const Vorton vort, QVector<std::shared_ptr<MultiFrame>>& frames);
+
     static Inside testInsideCorrect(const Vorton vort, const QVector<std::pair<double, double> > boundaries, QVector<std::shared_ptr<MultiFrame>>& frames, int partNum);
     static InsideSeg universalInsideCorrectSegment(const Vorton vort, const QVector<std::pair<double, double> > boundaries, QVector<std::shared_ptr<MultiFrame>>& frames, int part);
 
@@ -135,9 +152,12 @@ public:
 
     void correctMove(QVector<Vorton>& freeVortons, QVector<Vorton>& copyVort);
     void universalRotate(QVector<Vorton> vortons, QVector<int> res, const double layerHeight,  const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals);
-    void universalRotateTriangle(QVector<Vorton>& vortons, QVector<int> res, QVector<std::pair<double, double> > boundaries, const double layerHeight,  const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals, QVector<std::shared_ptr<MultiFrame> > &frames);
+    void universalRotateTriangle(QVector<Vorton>& vortons, QVector<std::pair<double, double> > boundaries, const double layerHeight,  const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals, QVector<std::shared_ptr<MultiFrame> > &frames);
 
-    void unionVortons(QVector<Vorton> &vortons, const double eStar, const double eDoubleStar,const  double vortonRad);
+
+    void unionVortons(QVector<Vorton> &vortons, const double eStar, const double eDoubleStar, const  double vortonRad,QVector<std::shared_ptr<MultiFrame>> &frames,QVector<std::pair<double, double> > boundaries=QVector<std::pair<double, double> >());
+    void unionVortons(QVector<Vorton> &vortons, const double eStar, const double eDoubleStar, const  double vortonRad);
+
     void removeSmallVorticity(QVector<Vorton> &vortons,const double minVorticity);
     void removeFarSphere(QVector <Vorton> &vortons, const double farDistance, const Vector3D bodyCenter);
     void removeFarCylinder(QVector<Vorton> &vortons, const double farDistance, const double height);
@@ -197,6 +217,7 @@ public:
     void rotateRotationBody(QVector<Vorton> &vortons, const Vector3D bodyNose, const double xEnd,const double layerHeight, const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals, FormingParameters forming);
     void velForStreamLines(QVector<Vector3D>& velocities, Vector3D streamVel, double step, QVector<Vorton>& freeVortons, QPair<int, int> boundaries);
     static bool coDirectionallyCheck(const Vector3D a, const Vector3D b, const Vector3D c);
+    static bool coDirectionallyCheck(const Vector3D a, const Vector3D b);
 
     static void setVorticity(QVector<std::shared_ptr<MultiFrame>> frames, const Eigen::VectorXd vorticities);
     static QVector<Vorton> getFrameVortons(QVector<std::shared_ptr<MultiFrame>> frames);

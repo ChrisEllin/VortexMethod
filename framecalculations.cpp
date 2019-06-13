@@ -55,6 +55,64 @@ QVector<double> FrameCalculations::calcTetas(const int tetaFragNum)
     return tetas;
 }
 
+QVector<QPair<int, int> > FrameCalculations::unionFrameVortons(QVector<Vorton> frameVortons, const double eDoubleStar)
+{
+    QTime start = QTime::currentTime();
+    QVector<QPair<int,int>> unionSchedule;
+    QVector<int> iIndexes;
+    QVector<int> jIndexes;
+    for (int i=frameVortons.size()-1; i>=0; i--)
+    {
+        if (jIndexes.indexOf(i)!=-1)
+            continue;
+        for (int j=i-1; j>=0; j--)
+        {
+            if(qFuzzyIsNull((frameVortons[i].getMid()-frameVortons[j].getMid()).length()))
+            {
+                double psi=Vector3D::dotProduct((frameVortons[i].getTail()-frameVortons[i].getMid()).normalized(),(frameVortons[j].getTail()-frameVortons[j].getMid()).normalized());
+                if (fabs(psi)>eDoubleStar)
+                {
+                    iIndexes.push_back(i);
+                    jIndexes.push_back(j);
+                    QPair<int,int> schedule(i,j);
+                    unionSchedule.push_front(schedule);
+                    //i--;
+                    //frameVortons.remove(j);
+                    break;
+                }
+
+            }
+        }
+    }
+
+    timers.unionTimer=start.elapsed()*0.01;
+    return unionSchedule;
+}
+
+void FrameCalculations::unionWithSchedule(QVector<Vorton> &vortons, QVector<QPair<int, int> > &schedule)
+{
+    QVector<Vorton> correctVortons;
+    for (int i=0; i<schedule.size(); i++)
+    {
+        double psi=Vector3D::dotProduct((vortons[schedule[i].first].getTail()-vortons[schedule[i].first].getMid()).normalized(),
+                (vortons[schedule[i].second].getTail()-vortons[schedule[i].second].getMid()).normalized());
+        if (psi<0)
+            vortons[schedule[i].second].turn();
+        counters.unitedNum++;
+        Vector3D newMid = (fabs(vortons[schedule[i].first].getVorticity())*vortons[schedule[i].first].getMid()+
+                fabs(vortons[schedule[i].second].getVorticity())*vortons[schedule[i].second].getMid())/
+                (fabs(vortons[schedule[i].first].getVorticity())+fabs(vortons[schedule[i].second].getVorticity()));
+
+        Vector3D selfLen = (fabs(vortons[schedule[i].first].getVorticity())*(vortons[schedule[i].first].getTail()-vortons[schedule[i].first].getMid())
+                +fabs(vortons[schedule[i].second].getVorticity())*(vortons[schedule[i].second].getTail()-vortons[schedule[i].second].getMid()))/
+                (fabs(vortons[schedule[i].first].getVorticity())+fabs(vortons[schedule[i].second].getVorticity()));
+        double newVorticity=vortons[schedule[i].first].getVorticity()+vortons[schedule[i].second].getVorticity();
+        Vorton newVorton = Vorton (newMid, newMid+selfLen, newVorticity, vortons[0].getRadius());
+        correctVortons.push_back(newVorton);
+    }
+    vortons=correctVortons;
+}
+
 void FrameCalculations::epsZero(QVector<std::shared_ptr<MultiFrame>> &frames)
 {
     for (int i=0; i<frames.size();i++)
@@ -321,7 +379,7 @@ Inside FrameCalculations::universalInsideCorrect(const Vorton vort, const QVecto
             +0.25*(frames[num]->at(2).getTail()-frames[num]->at(0).getTail());
     for (int i=0; i<frames.size();i++)
     {
-        if (i!=num)
+        if (i!=num )
         {
             if (frames[i]->getAnglesNum()==4)
             {
@@ -338,7 +396,8 @@ Inside FrameCalculations::universalInsideCorrect(const Vorton vort, const QVecto
                 Vector3D a3=frames[i]->at(2).getTail()-rtilda;
 
 
-                if (coDirectionallyCheck(a1,a2,a3))
+                if (/*coDirectionallyCheck(a1,a2,a3)*/ coDirectionallyCheck(Vector3D::crossProduct(a2,a1),Vector3D::crossProduct(a3,a2)) &&
+                        coDirectionallyCheck(Vector3D::crossProduct(a3,a2),Vector3D::crossProduct(a1,a3)))
                 {
                     double dot=Vector3D::dotProduct(choosen-vort.getTail(),rtilda-vort.getTail());
                     if (!((dot)>0||qFuzzyIsNull(dot)))
@@ -350,7 +409,8 @@ Inside FrameCalculations::universalInsideCorrect(const Vorton vort, const QVecto
                 a1=frames[i]->at(0).getTail()-rtilda;
                 a2=frames[i]->at(1).getTail()-rtilda;
                 a3=frames[i]->at(2).getTail()-rtilda;
-                if (coDirectionallyCheck(a1,a2,a3))
+                if (/*coDirectionallyCheck(a1,a2,a3)*/ coDirectionallyCheck(Vector3D::crossProduct(a2,a1),Vector3D::crossProduct(a3,a2)) &&
+                        coDirectionallyCheck(Vector3D::crossProduct(a3,a2),Vector3D::crossProduct(a1,a3)))
                 {
                     double dot=Vector3D::dotProduct(choosen-(2.0*vort.getMid()-vort.getTail()),rtilda-(2.0*vort.getMid()-vort.getTail()));
                     if (!((dot)>0||qFuzzyIsNull(dot)))
@@ -367,7 +427,8 @@ Inside FrameCalculations::universalInsideCorrect(const Vorton vort, const QVecto
                 a1=frames[i]->at(0).getTail()-rtilda;
                 a2=frames[i]->at(2).getTail()-rtilda;
                 a3=frames[i]->at(3).getTail()-rtilda;
-                if (coDirectionallyCheck(a1,a2,a3))
+                if (/*coDirectionallyCheck(a1,a2,a3)*/ coDirectionallyCheck(Vector3D::crossProduct(a2,a1),Vector3D::crossProduct(a3,a2)) &&
+                        coDirectionallyCheck(Vector3D::crossProduct(a3,a2),Vector3D::crossProduct(a1,a3)))
                 {
                     double dot=Vector3D::dotProduct(choosen-vort.getTail(),rtilda-vort.getTail());
                     if (!((dot)>0||qFuzzyIsNull(dot)))
@@ -379,7 +440,8 @@ Inside FrameCalculations::universalInsideCorrect(const Vorton vort, const QVecto
                 a1=frames[i]->at(0).getTail()-rtilda;
                 a2=frames[i]->at(2).getTail()-rtilda;
                 a3=frames[i]->at(3).getTail()-rtilda;
-                if (coDirectionallyCheck(a1,a2,a3))
+                if (/*coDirectionallyCheck(a1,a2,a3)*/ coDirectionallyCheck(Vector3D::crossProduct(a2,a1),Vector3D::crossProduct(a3,a2)) &&
+                        coDirectionallyCheck(Vector3D::crossProduct(a3,a2),Vector3D::crossProduct(a1,a3)))
                 {
                     double dot=Vector3D::dotProduct(choosen-(2.0*vort.getMid()-vort.getTail()),rtilda-(2.0*vort.getMid()-vort.getTail()));
                     if (!((dot)>0||qFuzzyIsNull(dot)))
@@ -401,7 +463,8 @@ Inside FrameCalculations::universalInsideCorrect(const Vorton vort, const QVecto
                     Vector3D a1=frames[i]->at(0).getTail()-rtilda;
                     Vector3D a2=frames[i]->at(j).getTail()-rtilda;
                     Vector3D a3=frames[i]->at(j+1).getTail()-rtilda;
-                    if (coDirectionallyCheck(a1,a2,a3))
+                    if (/*coDirectionallyCheck(a1,a2,a3)*/ coDirectionallyCheck(Vector3D::crossProduct(a2,a1),Vector3D::crossProduct(a3,a2)) &&
+                            coDirectionallyCheck(Vector3D::crossProduct(a3,a2),Vector3D::crossProduct(a1,a3)))
                     {
                         double dot=Vector3D::dotProduct(choosen-vort.getTail(),rtilda-vort.getTail());
                         if (!((dot)>0||qFuzzyIsNull(dot)))
@@ -413,7 +476,8 @@ Inside FrameCalculations::universalInsideCorrect(const Vorton vort, const QVecto
                     a1=frames[i]->at(0).getTail()-rtilda;
                     a2=frames[i]->at(j).getTail()-rtilda;
                     a3=frames[i]->at(j+1).getTail()-rtilda;
-                    if (coDirectionallyCheck(a1,a2,a3))
+                    if (/*coDirectionallyCheck(a1,a2,a3)*/ coDirectionallyCheck(Vector3D::crossProduct(a2,a1),Vector3D::crossProduct(a3,a2)) &&
+                            coDirectionallyCheck(Vector3D::crossProduct(a3,a2),Vector3D::crossProduct(a1,a3)))
                     {
                         double dot=Vector3D::dotProduct(choosen-(2.0*vort.getMid()-vort.getTail()),rtilda-(2.0*vort.getMid()-vort.getTail()));
                         if (!((dot)>0||qFuzzyIsNull(dot)))
@@ -424,6 +488,264 @@ Inside FrameCalculations::universalInsideCorrect(const Vorton vort, const QVecto
         }
     }
     return Inside {-1,Vector3D(), 0};
+}
+
+bool FrameCalculations::insideFramesVector(QVector<std::shared_ptr<MultiFrame> > &frames, Vorton vort,QVector<std::pair<double, double> > boundaries)
+{
+  if ((vort.getTail().x()>boundaries[0].second && (2.0*vort.getMid()-vort.getTail()).x()>boundaries[0].second) || (( vort.getTail().x()<boundaries[0].first) &&
+                                                                                                                  (2.0*vort.getMid()-vort.getTail()).x()<boundaries[0].first))
+     return false;
+ if ((vort.getTail().y()>boundaries[1].second && (2.0*vort.getMid()-vort.getTail()).y()>boundaries[1].second) || (( vort.getTail().y()<boundaries[1].first) &&
+                                                                                                                  (2.0*vort.getMid()-vort.getTail()).y()<boundaries[1].first))
+     return false;
+ if ((vort.getTail().z()>boundaries[2].second && (2.0*vort.getMid()-vort.getTail()).z()>boundaries[2].second) || (( vort.getTail().z()<boundaries[2].first) &&
+                                                                                                                  (2.0*vort.getMid()-vort.getTail()).z()<boundaries[2].first))
+     return false;
+
+ Vector3D choosen=frames[0]->getTriangle(0).getCenter();
+ for (int i=0;i<frames.size();i++)
+ {
+     bool checking;
+     if (i==0)
+         checking=true;
+     else checking=false;
+     if (frames[i]->inside(choosen,vort.getMid(),0,checking))
+         return true;
+ }
+ return false;
+
+}
+
+QPair<int,int> FrameCalculations::intersectsFramesVector(QVector<std::shared_ptr<MultiFrame> > &frames, Vorton vort)
+{
+   for (int i=0;i<frames.size();i++)
+   {
+       int res=frames[i]->intersection(vort.getMid()-vort.getMove(),vort.getMid());
+           if (res!=-1)
+            return QPair<int,int>(i,res);
+   }
+   return QPair<int,int>(-1,-1);
+}
+
+void FrameCalculations::universalGetBackTriangleFrames(QVector<Vorton> &vortons, QVector<std::pair<double, double> > boundaries, const double layerHeight, const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals, QVector<std::shared_ptr<MultiFrame> > &frames, bool screen)
+{
+    QTime start=QTime::currentTime();
+    for (int i=0; i<vortons.size();i++)
+    {
+        if (screen==true)
+        {
+            if (FrameCalculations::insideScreen(vortons[i]))
+            {
+                vortons.remove(i);
+                counters.underScreenNum++;
+            }
+        }
+
+        bool result=insideFramesVector(frames,vortons[i],boundaries);
+        if (result)
+        {
+            QPair<int,int> res=intersectsFramesVector(frames,vortons[i]);
+            if (res.first!=-1)
+            {
+
+                Vector3D tau=vortons[i].getMove();
+                double t=Vector3D::dotProduct(frames[res.first]->getTriangle(res.second).getR0()-vortons[i].getMid()+vortons[i].getMove(),frames[res.first]->getTriangle(res.second).getNormal())/
+                        Vector3D::dotProduct(tau,frames[res.first]->getTriangle(res.second).getNormal());
+                Vector3D rtilda=vortons[i].getMid()-vortons[i].getMove()+t*tau;
+                Vector3D l=-vortons[i].getMove().normalized();
+                double d=(rtilda-vortons[i].getMid()).length();
+                vortons[i].translate(2.0*d*l);
+                vortons[i].rotateAroundNormal(frames[res.first]->getTriangle(res.second).getNormal());
+                counters.gotBackNum++;
+                counters.rotatedNum++;
+            }
+
+            else {
+
+
+                int num=findMaxSolidAngle(vortons[i].getMid(),frames);
+                double dist=(vortons[i].getMid()-frames[num]->getCenter()).length();
+                if (dist<layerHeight)
+                {
+                    vortons[i].rotateAroundNormal(normals[num]);
+                    counters.rotatedNum++;
+                }
+
+            }
+
+        }
+        else {
+            int num=findMaxSolidAngle(vortons[i].getMid(),frames);
+            double dist=(vortons[i].getMid()-frames[num]->getCenter()).length();
+            if (dist<layerHeight)
+            {
+                vortons[i].rotateAroundNormal(normals[num]);
+                counters.rotatedNum++;
+            }
+
+        }
+    }
+    timers.getBackAndRotateTimer=start.elapsed()*0.001;
+}
+
+bool FrameCalculations::universalInsideR0Correct(const Vorton vort, const QVector<std::pair<double, double> > boundaries, QVector<std::shared_ptr<MultiFrame> > &frames)
+{
+    if ((vort.getTail().x()>boundaries[0].second && (2.0*vort.getMid()-vort.getTail()).x()>boundaries[0].second) || (( vort.getTail().x()<boundaries[0].first) &&
+                                                                                                                     (2.0*vort.getMid()-vort.getTail()).x()<boundaries[0].first))
+        return false;
+    if ((vort.getTail().y()>boundaries[1].second && (2.0*vort.getMid()-vort.getTail()).y()>boundaries[1].second) || (( vort.getTail().y()<boundaries[1].first) &&
+                                                                                                                     (2.0*vort.getMid()-vort.getTail()).y()<boundaries[1].first))
+        return false;
+    if ((vort.getTail().z()>boundaries[2].second && (2.0*vort.getMid()-vort.getTail()).z()>boundaries[2].second) || (( vort.getTail().z()<boundaries[2].first) &&
+                                                                                                                     (2.0*vort.getMid()-vort.getTail()).z()<boundaries[2].first))
+        return false;
+
+    srand(time(NULL));
+    int num=/*rand() % frames.size()*/ 1;
+    Vector3D choosen=frames[num]->at(0).getTail()+0.25*(frames[num]->at(1).getTail()-frames[num]->at(0).getTail())
+            +0.25*(frames[num]->at(2).getTail()-frames[num]->at(0).getTail());
+    for (int i=0; i<frames.size();i++)
+    {
+            for (int j=1; j<frames[i]->getAnglesNum()-1; j++)
+            {
+
+                if (i==num && j==1)
+                    continue;
+                Vector3D e1=frames[i]->at(j).getTail()-frames[i]->at(0).getTail();
+                Vector3D e2=frames[i]->at(j+1).getTail()-frames[i]->at(0).getTail();
+                Vector3D n=Vector3D::crossProduct(e1,e2);
+                Vector3D tau=(vort.getMid()-choosen);
+                double t=Vector3D::dotProduct(frames[i]->at(0).getTail()-choosen,n)/Vector3D::dotProduct(tau,n);
+
+
+                Vector3D rtilda=choosen+t*tau;
+                Vector3D a1=frames[i]->at(0).getTail()-rtilda;
+                Vector3D a2=frames[i]->at(j).getTail()-rtilda;
+                Vector3D a3=frames[i]->at(j+1).getTail()-rtilda;
+
+
+                if (/*coDirectionallyCheck(a1,a2,a3)*/ coDirectionallyCheck(Vector3D::crossProduct(a2,a1),Vector3D::crossProduct(a3,a2)) &&
+                        coDirectionallyCheck(Vector3D::crossProduct(a3,a2),Vector3D::crossProduct(a1,a3)))
+                {
+                    double dot=Vector3D::dotProduct(choosen-vort.getMid(),rtilda-vort.getMid());
+                    if (!((dot)>0||fabs(dot)<1e-10))
+                           return true;
+                }
+
+            }
+    }
+    return false;
+}
+
+void FrameCalculations::universalGetBackR0Triangle(QVector<Vorton> &vortons, QVector<std::pair<double, double> > boundaries, const double layerHeight, const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals, QVector<std::shared_ptr<MultiFrame> > &frames, bool screen)
+{
+    QTime start=QTime::currentTime();
+     int sdfsd=0;
+    for (int i=0; i<vortons.size();i++)
+    {
+        if (screen==true)
+        {
+            if (FrameCalculations::insideScreen(vortons[i]))
+            {
+                vortons.remove(i);
+                counters.underScreenNum++;
+            }
+        }
+
+        bool result=universalInsideR0Correct(vortons[i],boundaries,frames);
+
+        if (result)
+        {
+//            Vorton a=vortons[i];
+//            a.setMid(a.getMid()-a.getMove());
+//            if (universalInsideR0Correct(a,boundaries,frames))
+//                qDebug()<<"WTF?";
+//            if (i==30)
+//                qDebug()<<"stop";
+            InsideWithNormal resSeg=universalInsideR0CorrectSegment(vortons[i],frames);
+
+            if (resSeg.res!=-1)
+            {
+                Vector3D length=-vortons[i].getMove().normalized();
+                double distance=(resSeg.rtilda-vortons[i].getMid()).length();
+                vortons[i].translate(2.0*distance*length);
+                vortons[i].rotateAroundNormal(resSeg.normal);
+                counters.gotBackNum++;
+                counters.rotatedNum++;
+
+            }
+
+            else {
+
+
+                int num=findMaxSolidAngle(vortons[i].getMid(),frames);
+                double dist=(vortons[i].getMid()-frames[num]->getCenter()).length();
+                if (dist<layerHeight)
+                {
+                    vortons[i].rotateAroundNormal(normals[num]);
+                    counters.rotatedNum++;
+                }
+
+            }
+
+        }
+        else {
+            int num=findMaxSolidAngle(vortons[i].getMid(),frames);
+            double dist=(vortons[i].getMid()-frames[num]->getCenter()).length();
+            if (dist<layerHeight)
+            {
+                vortons[i].rotateAroundNormal(normals[num]);
+                counters.rotatedNum++;
+            }
+
+        }
+    }
+    timers.getBackAndRotateTimer=start.elapsed()*0.001;
+}
+
+
+InsideWithNormal FrameCalculations::universalInsideR0CorrectSegment(const Vorton vort, QVector<std::shared_ptr<MultiFrame> > &frames)
+{
+    Vector3D choosen=vort.getMid();
+
+
+
+    for (int i=0; i<frames.size();i++)
+    {
+        for (int j=1; j<frames[i]->getAnglesNum()-1; j++)
+        {
+            Vector3D e1=frames[i]->at(j).getTail()-frames[i]->at(0).getTail();
+            Vector3D e2=frames[i]->at(j+1).getTail()-frames[i]->at(0).getTail();
+            Vector3D n=Vector3D::crossProduct(e1,e2);
+            Vector3D tau=(vort.getMid()-vort.getMove()-choosen);
+            double t=Vector3D::dotProduct(frames[i]->at(0).getTail()-choosen,n)/Vector3D::dotProduct(tau,n);
+
+
+            Vector3D rtilda=choosen+t*tau;
+            Vector3D a1=frames[i]->at(0).getTail()-rtilda;
+            Vector3D a2=frames[i]->at(j).getTail()-rtilda;
+            Vector3D a3=frames[i]->at(j+1).getTail()-rtilda;
+
+
+            if (/*coDirectionallyCheck(a1,a2,a3)*/ coDirectionallyCheck(Vector3D::crossProduct(a2,a1),Vector3D::crossProduct(a3,a2)) &&
+                    coDirectionallyCheck(Vector3D::crossProduct(a3,a2),Vector3D::crossProduct(a1,a3)))
+            {
+                if ((t>0.0 && t<1.0) || fabs(t)<1e-10 || fabs(t-1.0)<1e-10)
+                {
+
+                    //double dot=Vector3D::dotProduct(choosen-vort.getMid(),rtilda-vort.getMid());
+                    //if (!((dot)>0||fabs(dot)<1e-10))
+                    //{
+                    //    qDebug()<<"naideno";
+                    return InsideWithNormal {i,rtilda,n};
+                    //}
+                }
+            }
+
+
+        }
+    }
+    return InsideWithNormal {-1,Vector3D(),Vector3D()};
 }
 
 Inside FrameCalculations::testInsideCorrect(const Vorton vort, const QVector<std::pair<double, double> > boundaries, QVector<std::shared_ptr<MultiFrame> > &frames, int partNum)
@@ -787,30 +1109,31 @@ QVector<int> FrameCalculations::universalGetBackTriangle(QVector<Vorton> &vorton
             if (resn.res.first!=-1 && resn.res.second!=-1)
             {
                 k++;
-            d=std::max(fabs(Vector3D::dotProduct(resn.rtilda.second-vortons[i].getTail(),l)),
-                    fabs(Vector3D::dotProduct(resn.rtilda.first-2.0*vortons[i].getMid()+vortons[i].getTail(),l)));
+            d=std::max(fabs(Vector3D::dotProduct(resn.rtilda.second-vortons[i].getMid(),l)),
+                    fabs(Vector3D::dotProduct(resn.rtilda.first-vortons[i].getMid(),l)));
             qDebug()<<d;
             }
             else{
             if (resn.res.second!=-1)
             {
-                    d=fabs(Vector3D::dotProduct(resn.rtilda.second-vortons[i].getTail(),l));
+                    d=fabs(Vector3D::dotProduct(resn.rtilda.second-vortons[i].getMid(),l));
                     k++;
             }
             else {
                 if (resn.res.first!=-1)
                 {
                  k++;
-                    d=fabs(Vector3D::dotProduct(resn.rtilda.first-2.0*vortons[i].getMid()+vortons[i].getTail(),l));
+                    d=fabs(Vector3D::dotProduct(resn.rtilda.first-vortons[i].getMid(),l));
                 }
                 else continue;
             }
             }
+
             if (std::isnan(d)||std::isnan(vortons[i].getMove().normalized().length()))
                 qDebug()<<i;
             if (d>0.5)
                 qDebug()<<"so"<<i;
-            Vector3D futTrans=l*d;
+            Vector3D futTrans=2.0*l*d;
             vortons[i].translateWithMove(futTrans);
 
 //            //vortons[i].setMid(vortons[i].getMid()+2.0*closest.first*normals[closest.second]);
@@ -915,7 +1238,7 @@ void FrameCalculations::universalRotate(QVector<Vorton> vortons, QVector<int> re
     }
 }
 
-void FrameCalculations::universalRotateTriangle(QVector<Vorton> &vortons, QVector<int> res, QVector<std::pair<double, double> > boundaries, const double layerHeight, const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals, QVector<std::shared_ptr<MultiFrame>>& frames)
+void FrameCalculations::universalRotateTriangle(QVector<Vorton> &vortons, QVector<std::pair<double, double> > boundaries, const double layerHeight, const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals, QVector<std::shared_ptr<MultiFrame>>& frames)
 {
 
     QTime start=QTime::currentTime();
@@ -945,11 +1268,50 @@ void FrameCalculations::universalRotateTriangle(QVector<Vorton> &vortons, QVecto
                     if (dist<layerHeight)
                     {
                         vortons[i].rotateAroundNormal(normals[num]);
+                        qDebug()<<i<<"razvernut";
                     }
                     counters.rotatedNum++;
         //}
     }
     timers.rotateTimer=start.elapsed()*0.001;
+}
+
+void FrameCalculations::unionVortons(QVector<Vorton> &vortons, const double eStar, const double eDoubleStar, const double vortonRad, QVector<std::shared_ptr<MultiFrame> > &frames, QVector<std::pair<double, double> > boundaries)
+{
+    QTime start = QTime::currentTime();
+
+
+    for (int i=vortons.size()-1; i>=0; i--)
+    {
+        for (int j=i-1; j>=0; j--)
+        {
+            if((vortons[i].getMid()-vortons[j].getMid()).length()<eStar)
+            {
+                double psi=Vector3D::dotProduct((vortons[i].getTail()-vortons[i].getMid()).normalized(),(vortons[j].getTail()-vortons[j].getMid()).normalized());
+                if (fabs(psi)>eDoubleStar)
+                {
+                    if (psi<0)
+                        vortons[j].turn();
+
+                    Vector3D newMid = (fabs(vortons[i].getVorticity())*vortons[i].getMid()+fabs(vortons[j].getVorticity())*vortons[j].getMid())/
+                    (fabs(vortons[i].getVorticity())+fabs(vortons[j].getVorticity()));
+                    Vector3D selfLen = (fabs(vortons[i].getVorticity())*(vortons[i].getTail()-vortons[i].getMid())+fabs(vortons[j].getVorticity())*(vortons[j].getTail()-vortons[j].getMid()))/
+                    (fabs(vortons[i].getVorticity())+fabs(vortons[j].getVorticity()));
+                    double newVorticity=vortons[i].getVorticity()+vortons[j].getVorticity();
+                    Vorton newVorton = Vorton (newMid, newMid+selfLen, newVorticity, vortonRad);
+                    if (insideFramesVector(frames,newVorton,boundaries))
+                        continue;
+                    counters.unitedNum++;
+                    vortons[i]=newVorton;
+                    i--;
+                    vortons.remove(j);
+                    break;
+                }
+
+            }
+        }
+    }
+    timers.unionTimer=start.elapsed()*0.01;
 }
 
 /*!
@@ -962,6 +1324,8 @@ void FrameCalculations::universalRotateTriangle(QVector<Vorton> &vortons, QVecto
 void FrameCalculations::unionVortons(QVector<Vorton> &vortons,const double eStar,const double eDoubleStar,const double vortonRad)
 {
     QTime start = QTime::currentTime();
+
+
     for (int i=vortons.size()-1; i>=0; i--)
     {
         for (int j=i-1; j>=0; j--)
@@ -980,6 +1344,7 @@ void FrameCalculations::unionVortons(QVector<Vorton> &vortons,const double eStar
                     (fabs(vortons[i].getVorticity())+fabs(vortons[j].getVorticity()));
                     double newVorticity=vortons[i].getVorticity()+vortons[j].getVorticity();
                     Vorton newVorton = Vorton (newMid, newMid+selfLen, newVorticity, vortonRad);
+                    //if ()
                     vortons[i]=newVorton;
                     i--;
                     vortons.remove(j);
@@ -2684,8 +3049,22 @@ bool FrameCalculations::coDirectionallyCheck(const Vector3D a, const Vector3D b,
     double dot2=Vector3D::dotProduct(cross2.normalized(),cross3.normalized());
 
     if (collinearCrossing1.length()<0.0000001 &&collinearCrossing2.length()<0.0000001
-            && (dot1>0.0||qFuzzyIsNull(dot1)) && (dot2>0.0||qFuzzyIsNull(dot2)))
+            && (dot1>0.0||fabs(dot1)<1e-10) && (dot2>0.0||fabs(dot2)<1e-10))
             return true;
+    return false;
+}
+
+bool FrameCalculations::coDirectionallyCheck(const Vector3D a, const Vector3D b)
+{
+    if (a.length()<1e-10||b.length()<1e-10)
+        return true;
+    Vector3D a1=a;
+    a1=a1.normalized();
+    Vector3D a2=b;
+    a2=a2.normalized();
+    Vector3D p=a1-a2;
+    if (p.length()<1e-10)
+        return true;
     return false;
 }
 

@@ -1,4 +1,4 @@
-#include "fourframe.h"
+﻿#include "fourframe.h"
 
 /*!
 Создает пустую четырехугольную рамку
@@ -25,6 +25,7 @@ FourFrame::FourFrame(Vector3D r01, Vector3D r11, Vector3D r21, Vector3D r31, dou
     vortons[2]=Vorton((r11+r21)*0.5,r21,0,eps);
     vortons[3]=Vorton((r21+r31)*0.5,r31,0,eps);
     center=0.5*(vortons[0].getTail()+vortons[2].getTail());
+    makeTriangles();
 }
 
 

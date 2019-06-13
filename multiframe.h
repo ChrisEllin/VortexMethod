@@ -1,4 +1,4 @@
-#ifndef MultiFrame_H
+﻿#ifndef MultiFrame_H
 #define MultiFrame_H
 #include "vorton.h"
 
@@ -14,6 +14,34 @@ struct FramesSizes
     double maxFrameSize;
 };
 
+class TriangleFrame
+{
+private:
+    Vector3D r0;
+    Vector3D r1;
+    Vector3D r2;
+    Vector3D normal;
+    Vector3D center;
+public:
+    TriangleFrame();
+    TriangleFrame(Vector3D _r0, Vector3D _r1, Vector3D _r2, Vector3D _normal, Vector3D _center);
+    void setR0(const Vector3D _r0);
+    void setR1(const Vector3D _r1);
+    void setR2(const Vector3D _r2);
+    void setNormal(const Vector3D _normal);
+    void setCenter(const Vector3D _center);
+
+    Vector3D getR0() const;
+    Vector3D getR1() const;
+    Vector3D getR2() const;
+    Vector3D getNormal() const;
+    Vector3D getCenter() const;
+
+    bool intersection(Vector3D ra, Vector3D rb) const;
+    bool inside(Vector3D ra, Vector3D rb) const;
+    bool colinear(Vector3D a, Vector3D b) const;
+};
+
 class MultiFrame
 {
 protected:
@@ -21,8 +49,11 @@ protected:
     double vorticity; ///<Завихренность рамки (Гамма)
     QVector<Vorton> vortons; ///<Вектор вортон-отрезков, из которых состоит рамка
     Vector3D center; ///<Центр рамки в трехмерном пространстве
+    QVector<TriangleFrame> triangles;
+    virtual void makeTriangles();
 public:
     MultiFrame();
+    virtual ~MultiFrame();
     MultiFrame(const int anglesNumber, const Vector3D& r0, const Vector3D& r01, const Vector3D& r11, const double eps);
     virtual Vorton &operator [] (std::size_t i);
     virtual Vorton& at(int i);
@@ -45,6 +76,10 @@ public:
     virtual double getRadius() const;
     virtual void setCenter(const Vector3D& _center);
     virtual Vector3D getCenter() const;
+
+    virtual TriangleFrame getTriangle(int num);
+    virtual int intersection(Vector3D ra,Vector3D rb) const;
+    virtual bool inside(Vector3D ra, Vector3D rb, int choosenNum, bool checking=false) const;
 };
 
 #endif // MultiFrame_H

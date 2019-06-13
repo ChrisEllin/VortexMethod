@@ -1,9 +1,14 @@
-#include "multiframe.h"
+﻿#include "multiframe.h"
 
 /*!
 Cоздает пустую рамку
 */
 MultiFrame::MultiFrame()
+{
+
+}
+
+MultiFrame::~MultiFrame()
 {
 
 }
@@ -35,6 +40,7 @@ MultiFrame::MultiFrame(const int anglesNumber, const Vector3D& r0, const Vector3
         a/=cos(fi*0.5);
         vortons[i] = Vorton(Vort_r0,r0+a,0,eps);
     }
+    makeTriangles();
 }
 
 /*!
@@ -272,4 +278,162 @@ Vector3D MultiFrame::getCenter() const
     return center;
 }
 
+void MultiFrame::makeTriangles()
+{
+    triangles.clear();
+    for (int i=1; i<vortons.size()-1;i++)
+    {
+       Vector3D e1=vortons[i].getTail()-vortons[0].getTail();
+       Vector3D e2=vortons[i+1].getTail()-vortons[0].getTail();
+       Vector3D normal=Vector3D::crossProduct(e1,e2);
+       Vector3D center=vortons[0].getTail()+e1*0.25+e2*0.25;
+       TriangleFrame tr(vortons[0].getTail(),vortons[i].getTail(),vortons[i+1].getTail(),normal,center);
+       triangles.push_back(tr);
+    }
+}
 
+TriangleFrame MultiFrame::getTriangle(int num)
+{
+    if (num!=-1)
+    return triangles[num];
+    else {
+        return TriangleFrame (Vector3D(),Vector3D(),Vector3D(),Vector3D(),Vector3D());
+    }
+}
+
+int MultiFrame::intersection(Vector3D ra, Vector3D rb) const
+{
+    for (int i=0; i<triangles.size();i++)
+    {
+        if (triangles[i].intersection(ra,rb))
+            return i;
+    }
+    return -1;
+}
+
+bool MultiFrame::inside(Vector3D ra, Vector3D rb, int choosenNum, bool checking) const
+{
+    for (int i=0; i<triangles.size();i++)
+    {
+        if (i==choosenNum && checking)
+            continue;
+        if (triangles[i].inside(ra,rb))
+            return true;
+    }
+    return false;
+}
+
+
+
+TriangleFrame::TriangleFrame()
+{
+
+}
+
+TriangleFrame::TriangleFrame(Vector3D _r0, Vector3D _r1, Vector3D _r2, Vector3D _normal, Vector3D _center)
+{
+    r0=_r0;
+    r1=_r1;
+    r2=_r2;
+    normal=_normal;
+    center=_center;
+}
+
+void TriangleFrame::setR0(const Vector3D _r0)
+{
+    r0=_r0;
+}
+
+void TriangleFrame::setR1(const Vector3D _r1)
+{
+    r1=_r1;
+}
+
+void TriangleFrame::setR2(const Vector3D _r2)
+{
+    r2=_r2;
+}
+
+void TriangleFrame::setNormal(const Vector3D _normal)
+{
+    normal=_normal;
+}
+
+void TriangleFrame::setCenter(const Vector3D _center)
+{
+    center=_center;
+}
+
+Vector3D TriangleFrame::getR0() const
+{
+    return r0;
+}
+
+Vector3D TriangleFrame::getR1() const
+{
+    return r1;
+}
+
+Vector3D TriangleFrame::getR2() const
+{
+    return r2;
+}
+
+Vector3D TriangleFrame::getNormal() const
+{
+    return normal;
+}
+
+Vector3D TriangleFrame::getCenter() const
+{
+    return center;
+}
+
+bool TriangleFrame::intersection(Vector3D ra, Vector3D rb) const
+{
+    Vector3D tau=rb-ra;
+    double t=Vector3D::dotProduct(r0-ra,normal)/Vector3D::dotProduct(tau,normal);
+    Vector3D rtilda=ra+t*tau;
+    if (fabs(t)<1e-10 || (t>0.0 && t<1.0) || fabs(t-1.0)<1e-10)
+    {
+        Vector3D a1=r0-rtilda;
+        Vector3D a2=r1-rtilda;
+        Vector3D a3=r2-rtilda;
+        if (colinear(Vector3D::crossProduct(a2,a1),Vector3D::crossProduct(a3,a2)) &&
+                colinear(Vector3D::crossProduct(a3,a2),Vector3D::crossProduct(a1,a3)))
+            return true;
+    }
+    return false;
+}
+
+bool TriangleFrame::inside(Vector3D ra, Vector3D rb) const
+{
+    Vector3D tau=rb-ra;
+    double t=Vector3D::dotProduct(r0-ra,normal)/Vector3D::dotProduct(tau,normal);
+    Vector3D rtilda=ra+t*tau;
+    Vector3D a1=r0-rtilda;
+    Vector3D a2=r1-rtilda;
+    Vector3D a3=r2-rtilda;
+    if (colinear(Vector3D::crossProduct(a2,a1),Vector3D::crossProduct(a3,a2)) &&
+            colinear(Vector3D::crossProduct(a3,a2),Vector3D::crossProduct(a1,a3)))
+    {
+        double dot=Vector3D::dotProduct(ra-rb,rtilda-rb);
+        if (dot<0.0 && fabs(dot)>1e-10)
+            return true;
+    }
+    return false;
+}
+
+bool TriangleFrame::colinear(Vector3D a, Vector3D b) const
+{
+    if (a.length()<1e-10||b.length()<1e-10)
+            return true;
+        Vector3D a1=a;
+        a1=a1.normalized();
+        Vector3D a2=b;
+        a2=a2.normalized();
+        Vector3D p=a1-a2;
+        if (p.length()<1e-10)
+            return true;
+        return false;
+}
