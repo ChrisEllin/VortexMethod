@@ -1,4 +1,4 @@
-#include "solversettings.h"
+﻿#include "solversettings.h"
 #include "ui_solversettings.h"
 #include <QIntValidator>
 /*!
@@ -165,9 +165,9 @@ void SolverSettings::calcAttributes(double panelLength)
                               /Vector3D(ui->xVelStreamLineEdit->text().toDouble(),ui->yVelStreamLineEdit->text().toDouble(),
                                                                         ui->zVelStreamLineEdit->text().toDouble()).length()));
     ui->elongationMaxLineEdit->setText(QString::number(0.05*panelLength));
-    ui->layerHeightLineEdit->setText(QString::number(0.1));
-    ui->deltaUpLineEdit->setText(QString::number(/*panelLength*0.1*/0.0));
-    ui->maxMoveLineEdit->setText(QString::number(panelLength*1.5));
+    ui->layerHeightLineEdit->setText(QString::number(3.0*panelLength/8.0));
+    ui->deltaUpLineEdit->setText(QString::number(panelLength/8.0));
+    ui->maxMoveLineEdit->setText(QString::number(panelLength*10.5));
     on_saveSolverSettingsPushButton_clicked();
 }
 

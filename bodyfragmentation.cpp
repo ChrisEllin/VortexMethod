@@ -1,4 +1,4 @@
-#include "bodyfragmentation.h"
+﻿#include "bodyfragmentation.h"
 #include <QFile>
 #include <QTextStream>
 #include <QDebug>
@@ -152,6 +152,7 @@ void RotationCutBodyParameters::setData(const int i, const double value)
 
 BodyFragmentation::BodyFragmentation(BodyType body, const FragmentationParameters &param, bool launch)
 {
+    clearGraphNodes();
     switch(body)
     {
     case SPHERE:
@@ -352,6 +353,7 @@ void BodyFragmentation::rotationBodyFragmantation()
     case 0:
     {
         rotationBody.xEnd=rotationBody.xBeg+forming.diameter*0.5+forming.sectorOneLength+forming.sectorTwoLength;
+
         break;
     }
     case 1:
@@ -365,6 +367,40 @@ void BodyFragmentation::rotationBodyFragmantation()
         break;
     }
     }
+    double xNull=(rotationBody.xEnd+rotationBody.xBeg)*0.5;
+    for (double i=-forming.diameter*0.5-0.5; i<forming.diameter*0.5+0.5; i=i+0.05)
+    {
+        QVector<Vector3D> grInt;
+        for (double j=-forming.diameter*0.5-0.5; j<forming.diameter*0.5+0.5 ; j=j+0.05)
+        {
+         grInt.push_back(Vector3D(xNull,i,j));
+        }
+        graphNodesX.push_back(grInt);
+        grInt.clear();
+    }
+
+    for (double i=-1.0; i<rotationBody.xEnd+0.4; i=i+0.05)
+    {
+        QVector<Vector3D> grInt;
+        for (double j=-forming.diameter*0.5-0.5; j<forming.diameter*0.5+0.5; j=j+0.05)
+        {
+         grInt.push_back(Vector3D(i,0.0,j));
+        }
+        graphNodesY.push_back(grInt);
+        grInt.clear();
+    }
+
+    for (double i=-1.0; i<rotationBody.xEnd+0.4; i=i+0.05)
+    {
+        QVector<Vector3D> grInt;
+        for (double j=-forming.diameter*0.5-0.5; j<forming.diameter*0.5+0.5; j=j+0.05)
+        {
+         grInt.push_back(Vector3D(i,j,0.0));
+        }
+        graphNodesZ.push_back(grInt);
+        grInt.clear();
+    }
+
     QVector<Vector2D> part(rotationBody.partFragNum);
     QVector<Vector2D> forNormals(rotationBody.partFragNum-1);
     QVector<Vector2D> forControlPoint(rotationBody.partFragNum-1);
@@ -376,9 +412,11 @@ void BodyFragmentation::rotationBodyFragmantation()
     QVector<double> yArr(NFRAG);
 
     double newBeg=rotationBody.xBeg+rotationBody.sectionDistance;
-    double newEnd=rotationBody.xEnd-rotationBody.sectionEndDistance;
+    double newEnd=rotationBody.xEnd-rotationBody.sectionDistance;
+
     double fi0 = 2*M_PI/rotationBody.fiFragNum;
     double height=(newEnd-newBeg)/(NFRAG-1);
+
     s[0]=0.0;
     xArr[0]=newBeg;
     yArr[0]=BodyFragmentation::presetFunctionF(newBeg,forming);
@@ -389,16 +427,15 @@ void BodyFragmentation::rotationBodyFragmantation()
         double derivative=BodyFragmentation::presetDeriveFunctionF(xArr[i],forming);
         s[i]=s[i-1]+height*sqrt(1+derivative*derivative);
     }
-    //    QFile curving("curving.csv");
-    //    if (curving.open(QIODevice::WriteOnly))
-    //    {
-    //        QTextStream ts(&curving);
-    //        for (int i=0; i<NFRAG;i++)
-    //        {
-    //            ts<<QString::number(xArr[i])+"\t"+QString::number(yArr[i])+"\n";
-    //        }
-    //    }
-    //    curving.close();
+//    QFile deb("c.txt");
+//    if (deb.open(QIODevice::WriteOnly))
+//    {
+//        QTextStream tsss(&deb);
+//        for(int i=0; i<part.size();i++)
+//            tsss<<xArr[i]<<"\n";
+//    }
+//    deb.close();
+
 
     double length=s[s.size()-1];
     for (int i=0; i<rotationBody.partFragNum; i++)
@@ -414,6 +451,8 @@ void BodyFragmentation::rotationBodyFragmantation()
         forControlPoint[i]=Vector2D(xArr[translNum],yArr[translNum]);
         forNormals[i]=Vector2D(-BodyFragmentation::presetDeriveFunctionF(xArr[translNum],forming),1).normalized();
     }
+
+
 
     for (int i=0; i<part.size(); i++)
         part[i]+=forUp[i]*rotationBody.delta;
@@ -483,6 +522,39 @@ void BodyFragmentation::rotationCutBodyFragmantation()
         rotationBottomCutBody.xEnd=rotationBottomCutBody.xBeg+formingRBC.fullLength;
         break;
     }
+    }
+    double xNull=(rotationBottomCutBody.xEnd+rotationBottomCutBody.xBeg)*0.5;
+    for (double i=-formingRBC.ellipsoidDiameter*0.5-0.5; i<formingRBC.ellipsoidDiameter*0.5+0.5; i=i+0.05)
+    {
+        QVector<Vector3D> grInt;
+        for (double j=-formingRBC.ellipsoidDiameter*0.5-0.5; j<formingRBC.ellipsoidDiameter*0.5+0.5 ; j=j+0.05)
+        {
+         grInt.push_back(Vector3D(xNull,i,j));
+        }
+        graphNodesX.push_back(grInt);
+        grInt.clear();
+    }
+
+    for (double i=-1.0; i<rotationBottomCutBody.xEnd+0.4; i=i+0.05)
+    {
+        QVector<Vector3D> grInt;
+        for (double j=-formingRBC.ellipsoidDiameter*0.5-0.5; j<formingRBC.ellipsoidDiameter*0.5+0.5; j=j+0.05)
+        {
+         grInt.push_back(Vector3D(i,0.0,j));
+        }
+        graphNodesY.push_back(grInt);
+        grInt.clear();
+    }
+
+    for (double i=-1.0; i<rotationBottomCutBody.xEnd+0.4; i=i+0.05)
+    {
+        QVector<Vector3D> grInt;
+        for (double j=-formingRBC.ellipsoidDiameter*0.5-0.5; j<formingRBC.ellipsoidDiameter*0.5+0.5; j=j+0.05)
+        {
+         grInt.push_back(Vector3D(i,j,0.0));
+        }
+        graphNodesZ.push_back(grInt);
+        grInt.clear();
     }
     QVector<Vector2D> part(rotationBottomCutBody.partFragNum);
     QVector<Vector2D> forNormals(rotationBottomCutBody.partFragNum);
@@ -1031,7 +1103,7 @@ double BodyFragmentation::presetFunctionF(double x, FormingParameters parameters
     }
     case 2:
     {
-        if (x<parameters.sectorOneLength&&x>=0)
+        if (x<=parameters.sectorOneLength&&x>=0)
             return parameters.diameter*0.5*sqrt(1-(4.0*pow(x-parameters.sectorOneLength*0.5,2))/pow(parameters.sectorOneLength,2));
         else
             break;
@@ -1089,7 +1161,7 @@ double BodyFragmentation::presetDeriveFunctionF(double x, FormingParameters para
     }
     case 2:
     {
-        if (x<parameters.sectorOneLength&&x>=0)
+        if (x<=parameters.sectorOneLength&&x>=0)
             return -(x-parameters.sectorOneLength*0.5)/BodyFragmentation::presetFunctionF(x,parameters)*pow(parameters.diameter/parameters.sectorOneLength,2);
         else
             break;
@@ -1402,6 +1474,28 @@ int BodyFragmentation::findClosetElementFromArray(const QVector<double> arr, con
         }
     }
     return num;
+}
+
+QVector<QVector<Vector3D>> BodyFragmentation::getGraphNodesX()
+{
+    return graphNodesX;
+}
+
+QVector<QVector<Vector3D>> BodyFragmentation::getGraphNodesY()
+{
+    return graphNodesY;
+}
+
+QVector<QVector<Vector3D>> BodyFragmentation::getGraphNodesZ()
+{
+    return graphNodesZ;
+}
+
+void BodyFragmentation::clearGraphNodes()
+{
+    graphNodesX.clear();
+    graphNodesZ.clear();
+    graphNodesY.clear();
 }
 
 bool BodyFragmentation::coDirectionallyCheck(const Vector3D a, const Vector3D b)

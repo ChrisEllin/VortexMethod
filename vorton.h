@@ -1,4 +1,4 @@
-#ifndef VORTON_H
+﻿#ifndef VORTON_H
 #define VORTON_H
 #include "vector3d.h"
 
@@ -39,6 +39,7 @@ public:
     Vector3D qHelp(const Vector3D& point) const;
     Vector3D velocity(const Vector3D& point) const;
     VelBsym velAndBsym(const Vector3D& point) const;
+    bool operator == (const Vorton& v2) const;
     VelBsym velAndBsymGauss3(const Vector3D& point, const Vector3D &deltar) const;
     void turn();
     void translate(const Vector3D& translation);
@@ -62,6 +63,6 @@ public:
 
 };
 
-bool operator ==(const Vorton& vort1, const Vorton& vort2);
+//bool operator ==(const Vorton& vort1, const Vorton& vort2);
 
 #endif // VORTON_H

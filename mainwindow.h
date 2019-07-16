@@ -1,4 +1,4 @@
-﻿ #ifndef MAINWINDOW_H
+﻿#ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
 #include <QMainWindow>
@@ -54,6 +54,8 @@ private:
     void setParameters(SphereParameters &sphPar);
     void setParameters(CylinderParameters &cylPar);
     void setParameters(RotationBodyParameters &rotBodyPar);
+
+    double calcNewLength();
 
 private slots:
     void openDirectory();
@@ -111,6 +113,7 @@ private slots:
 public slots:
     void setReguliser(double reguliser);
     void showInfo();
+
     void stop();
     void solverFinished();
     void makeScreenShot(QString screenshotDir);

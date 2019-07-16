@@ -1,4 +1,4 @@
-#ifndef BODYFRAGMENTATION_H
+﻿#ifndef BODYFRAGMENTATION_H
 #define BODYFRAGMENTATION_H
 #include "fourframe.h"
 #include "vector2d.h"
@@ -220,6 +220,10 @@ private:
     FormingParameters forming;
     QPair<int,int> streamLinesSize;
     FormingParametersRBC formingRBC;
+
+    QVector<QVector<Vector3D>> graphNodesX;
+    QVector<QVector<Vector3D>> graphNodesY;
+    QVector<QVector<Vector3D>> graphNodesZ;
     //bool launch;
 public:
     BodyFragmentation(BodyType body, const FragmentationParameters& param, bool launch=false);
@@ -250,6 +254,10 @@ public:
     static QPair<double, int> findClosestTriangle(const Vector3D point, const QVector<std::shared_ptr<MultiFrame> > &frames, const QVector<Vector3D>& normals);
     static int findClosetElementFromArray(const QVector<double> arr, const double point);
 
+    QVector<QVector<Vector3D>> getGraphNodesX();
+    QVector<QVector<Vector3D>> getGraphNodesY();
+    QVector<QVector<Vector3D>> getGraphNodesZ();
+    void clearGraphNodes();
     static bool coDirectionallyCheck(const Vector3D a, const Vector3D b);
 };
 

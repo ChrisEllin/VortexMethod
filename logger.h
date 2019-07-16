@@ -1,4 +1,4 @@
-#ifndef LOGGER_H
+﻿#ifndef LOGGER_H
 #define LOGGER_H
 #include <memory>
 #include <QString>
@@ -42,6 +42,8 @@ private:
     std::shared_ptr<QTextStream> cpTextStream; ///<Поток для записи распределения Ср
     std::shared_ptr<QFile> tableFile;
     std::shared_ptr<QTextStream> tableTextStream;
+    std::shared_ptr<QFile> gammaFile;
+    std::shared_ptr<QTextStream> gammaTextStream;
 
     QString path; ///<Текущий путь записи каталога; если пуст - каталог сборки
     BodyType type; ///<Вид рассчитываемого тела
@@ -51,6 +53,7 @@ public:
     Logger(BodyType _type, QString _path, SolvType _stype=NOOPTIMIZATION);
     std::shared_ptr<QPair<QVector<QVector<Vorton>>, QVector<QVector<Vorton>>>> loadKadrDir(const QString vortonsDir);
     void writeVortons(QVector<std::shared_ptr<MultiFrame>> frames, QVector<Vorton> freevortons, const int stepNum);
+
     void createFiles();
     void writeCpFile(const QVector<double> cp, const QVector<double> tetas);
     void writeCpDegreeFile(const QVector<double> cp, const QVector<double> tetas, const int degree);
@@ -60,16 +63,19 @@ public:
     void writePassport(const SolverParameters& solvPar,const FragmentationParameters& fragPar, const FreeMotionParameters& freeMotionPar);
     void writeForces(const Vector3D forces, const Vector3D c);
     void writeSolverTime(const double solvTime);
-    void writeTable(const int stepNum, const double stepTime, const double generatedNum, const double maxGamma, const Vector3D velocity, const double reguliser, const int freeVortonsSize, const Counters beforeIntegrC, const Counters afterIntegrC, const double conditionalNum);
+    void writeTable(const int stepNum, const double stepTime, const double generatedNum, const double maxGamma, const Vector3D velocity, const double reguliser, const int freeVortonsSize, const Counters beforeIntegrC, const Counters afterIntegrC, const double conditionalNum, double quant2=0);
     void createParaviewFile(QVector<std::shared_ptr<MultiFrame>> &frames, QVector<double> &forces, QVector<Vector3D> &velocities, QVector<double> &tangentialVelocities, QVector<double> &normalVelocities, QVector<std::shared_ptr<MultiFrame> > &sectionFrames, int currentStep);
     void createParaviewFile(QVector<std::shared_ptr<MultiFrame>> &frames, QVector<double> &forces, QVector<Vector3D> &velocities, QVector<double> &tangentialVelocities, QVector<double> &normalVelocities, int currentStep);
     void createParaviewFile(QVector<std::shared_ptr<MultiFrame>> &frames, QVector<double> &forces, QVector<Vector3D> &velocities, QVector<double> &tangentialVelocities, QVector<double> &normalVelocitiesBefore, QVector<double> &normalVelocitiesAfter, QVector<double> &normalVelocitiesEnd, QVector<std::shared_ptr<MultiFrame> > &sectionFrames, int currentStep);
-    void createParaviewFile(QVector<std::shared_ptr<MultiFrame>> &frames, QVector<double> &forces, QVector<Vector3D> &velocities, QVector<double> &tangentialVelocities, QVector<double> &normalVelocitiesAfter, QVector<double> &normalVelocitiesBefore, QVector<double> &normalVelocitiesCenter, QVector<double> &normalVelocitiesDelta, QVector<double> &normalVelocitiesEnd, QVector<std::shared_ptr<MultiFrame> > &sectionFrames, int currentStep);
+    void createParaviewFile(QVector<std::shared_ptr<MultiFrame>> &frames, QVector<double> &forces, QVector<Vector3D> &velocities, QVector<double> &tangentialVelocities, QVector<double> &normalVelocitiesAfter, QVector<double> &normalVelocitiesBefore, QVector<double> &normalVelocitiesCenter, QVector<double> &normalVelocitiesEnd, QVector<std::shared_ptr<MultiFrame> > &sectionFrames, int currentStep);
     void createParaviewStreamlinesFile(QVector<Vector3D> velocities, QPair<int, int> boundary, double step, int currentStep);
     void createParaviewTraceVerticesFile(QVector<Vorton> &vortons, int currentStep);
+    void createParaviewVelocityField(QVector<Vorton> &vortons, double tau, int currentStep);
     void createParaviewTraceFile(QVector<Vorton> &vortons, int currentStep);
     void createCenterGraphs(FormingParameters pars, double step, int currentStep, QVector<Vorton> &freeVortons, Vector3D velInf, QVector<std::shared_ptr<MultiFrame> > &xFrames,QVector<std::shared_ptr<MultiFrame> > &yFrames,QVector<std::shared_ptr<MultiFrame> > &zFrames);
     void createCenterGraphs(FormingParameters pars, double step, int currentStep, QVector<Vorton> &freeVortons, QVector<Vorton> &newVortons, Vector3D velInf, QVector<std::shared_ptr<MultiFrame> > &xFrames, QVector<std::shared_ptr<MultiFrame> > &yFrames, QVector<std::shared_ptr<MultiFrame> > &zFrames, QVector<std::shared_ptr<MultiFrame> > &frames, int inter);
+    void writeGammas(QVector<double> gammaMax, double initialGamma);
+    void createQuadroGraphs(int currentStep, QVector<Vorton> &freeVortons, QVector<Vorton> &newVortons, Vector3D velInf, QVector<QVector<Vector3D> > &graphNodesX, QVector<QVector<Vector3D> > &graphNodesY, QVector<QVector<Vector3D> > &graphNodesZ, QVector<std::shared_ptr<MultiFrame> > &frames, int inter);
 
     QVector<Vorton> gaVortons(const QString vortonsDir, int currentFileNum);
     void closeFiles();

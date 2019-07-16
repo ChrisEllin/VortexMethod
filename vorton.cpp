@@ -215,8 +215,8 @@ VelBsym Vorton::velAndBsym(const Vector3D& point) const
     if (qFuzzyIsNull(R))
     {
         VelBsym ans;
-        ans.Vel = Vector3D (0,0,0);
-        ans.B[0][0] = ans.B[0][1] =ans.B[0][2] =ans.B[1][0] = ans.B[1][1] = ans.B[1][2] =ans.B[2][0] =ans.B[2][1]=ans.B[2][2]=0;
+        ans.Vel = Vector3D (0.0,0.0,0.0);
+        ans.B[0][0] = ans.B[0][1] =ans.B[0][2] =ans.B[1][0] = ans.B[1][1] = ans.B[1][2] =ans.B[2][0] =ans.B[2][1]=ans.B[2][2]=0.0;
         return ans;
     }
     if (R>=radius)
@@ -227,12 +227,13 @@ VelBsym Vorton::velAndBsym(const Vector3D& point) const
         Vector3D av = Vector3D::crossProduct(h0,s0);
         double cv = Vector3D::dotProduct((s2.normalized()-s1.normalized()),h0)/av.lengthSquared();
         ans.Vel = (vorticity/(4.0*M_PI))*cv*av;
+        double cpn1=(1.0/s2.length()-1.0/s1.length()+2.0*cv*Vector3D::dotProduct(s0,h0));
         for (int m=0; m<3; m++)
         {
             for (int n=0; n<3; n++)
             {
                 double apn = levi(m,0,n)*h0.x()+levi(m,1,n)*h0.y()+levi(m,2,n)*h0.z();
-                double cpn=((1.0/s2.length()-1.0/s1.length()+2.0*cv*Vector3D::dotProduct(s0,h0))*h0[n]
+                double cpn=(cpn1*h0[n]
                             -(Vector3D::dotProduct((s2[n]*s2/pow(s2.length(),3)-s1[n]*s1/pow(s1.length(),3)+2*cv*s0[n]*h0),h0)))/av.lengthSquared();
                 ans.B[m][n]=(vorticity/(4*M_PI))*(cpn*av[m]+cv*apn);
             }
@@ -271,6 +272,14 @@ VelBsym Vorton::velAndBsym(const Vector3D& point) const
         ans.B[1][2]=ans.B[2][1]=z;
         return ans;
     }
+}
+
+bool Vorton::operator ==(const Vorton &v2) const
+{
+    if (qFuzzyIsNull((mid-v2.getMid()).length())&&qFuzzyIsNull((tail-v2.getTail()).length())&&qFuzzyIsNull(radius-v2.getRadius()))
+        return true;
+    else
+        return false;
 }
 
 VelBsym Vorton::velAndBsymGauss3(const Vector3D &point, const Vector3D &deltar) const

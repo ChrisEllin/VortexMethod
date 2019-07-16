@@ -396,11 +396,18 @@ bool TriangleFrame::intersection(Vector3D ra, Vector3D rb) const
     Vector3D rtilda=ra+t*tau;
     if (fabs(t)<1e-10 || (t>0.0 && t<1.0) || fabs(t-1.0)<1e-10)
     {
-        Vector3D a1=r0-rtilda;
-        Vector3D a2=r1-rtilda;
-        Vector3D a3=r2-rtilda;
-        if (colinear(Vector3D::crossProduct(a2,a1),Vector3D::crossProduct(a3,a2)) &&
-                colinear(Vector3D::crossProduct(a3,a2),Vector3D::crossProduct(a1,a3)))
+//        Vector3D a1=r0-rtilda;
+//        Vector3D a2=r1-rtilda;
+//        Vector3D a3=r2-rtilda;
+//        if (colinear(Vector3D::crossProduct(a2,a1),Vector3D::crossProduct(a3,a2)) &&
+//                colinear(Vector3D::crossProduct(a3,a2),Vector3D::crossProduct(a1,a3)))
+//            return true;
+
+
+        double s=0.5*Vector3D::crossProduct(r1-r0,r2-r0).length();
+        double s1=0.5*Vector3D::crossProduct(rtilda-r0,rtilda-r1).length()+0.5*Vector3D::crossProduct(rtilda-r1,rtilda-r2).length()
+                +0.5*Vector3D::crossProduct(rtilda-r2,rtilda-r0).length();
+        if (qFuzzyCompare(s,s1))
             return true;
     }
     return false;
@@ -411,17 +418,33 @@ bool TriangleFrame::inside(Vector3D ra, Vector3D rb) const
     Vector3D tau=rb-ra;
     double t=Vector3D::dotProduct(r0-ra,normal)/Vector3D::dotProduct(tau,normal);
     Vector3D rtilda=ra+t*tau;
-    Vector3D a1=r0-rtilda;
-    Vector3D a2=r1-rtilda;
-    Vector3D a3=r2-rtilda;
-    if (colinear(Vector3D::crossProduct(a2,a1),Vector3D::crossProduct(a3,a2)) &&
-            colinear(Vector3D::crossProduct(a3,a2),Vector3D::crossProduct(a1,a3)))
+
+//    Vector3D a1=r0-rtilda;
+//    Vector3D a2=r1-rtilda;
+//    Vector3D a3=r2-rtilda;
+//    if (colinear(Vector3D::crossProduct(a2,a1),Vector3D::crossProduct(a3,a2)) &&
+//            colinear(Vector3D::crossProduct(a3,a2),Vector3D::crossProduct(a1,a3)))
+//    {
+//        double dot=Vector3D::dotProduct(ra-rb,rtilda-rb);
+//        if (dot<0.0 && fabs(dot)>1e-10)
+//            return true;
+//    }
+//    return false;
+
+    double s=0.5*Vector3D::crossProduct(r1-r0,r2-r0).length();
+    double s1=0.5*Vector3D::crossProduct(rtilda-r0,rtilda-r1).length()+0.5*Vector3D::crossProduct(rtilda-r1,rtilda-r2).length()
+            +0.5*Vector3D::crossProduct(rtilda-r2,rtilda-r0).length();
+    if (qFuzzyCompare(s,s1))
     {
         double dot=Vector3D::dotProduct(ra-rb,rtilda-rb);
         if (dot<0.0 && fabs(dot)>1e-10)
             return true;
     }
     return false;
+
+
+
+
 }
 
 bool TriangleFrame::colinear(Vector3D a, Vector3D b) const
@@ -436,4 +459,9 @@ bool TriangleFrame::colinear(Vector3D a, Vector3D b) const
         if (p.length()<1e-10)
             return true;
         return false;
+}
+
+double TriangleFrame::solidAngle(Vector3D r)
+{
+    return MultiFrame::solidAngle(r0,r1,r2,r);
 }

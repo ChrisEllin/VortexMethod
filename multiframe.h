@@ -7,6 +7,9 @@
  
     Создает многоугольную рамку из вортон-отрезков для последующего построения сетки вокруг тела
 */
+
+enum VortonsPart {Beginning, Center, Tail};
+
 struct FramesSizes
 {
     double minFrameSize;
@@ -40,6 +43,7 @@ public:
     bool intersection(Vector3D ra, Vector3D rb) const;
     bool inside(Vector3D ra, Vector3D rb) const;
     bool colinear(Vector3D a, Vector3D b) const;
+    double solidAngle(Vector3D r);
 };
 
 class MultiFrame

@@ -1,4 +1,4 @@
-#ifndef FOURFRAME_H
+﻿#ifndef FOURFRAME_H
 #define FOURFRAME_H
 #include "multiframe.h"
 #include <memory>
