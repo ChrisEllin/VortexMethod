@@ -153,6 +153,7 @@ void RotationCutBodyParameters::setData(const int i, const double value)
 BodyFragmentation::BodyFragmentation(BodyType body, const FragmentationParameters &param, bool launch)
 {
     clearGraphNodes();
+    exisetingType=body;
     switch(body)
     {
     case SPHERE:
@@ -193,6 +194,87 @@ BodyFragmentation::BodyFragmentation(BodyType body, const FragmentationParameter
         }
         break;
     }
+    case ROTATIONTWOBOTTOM:
+    {
+        rotationBodyTwoBot = RotationBodyWithTwoBottomsParameters {param.rotationBodyFiFragNum,param.rotationBodyPartFragNum,param.rotationBodyRFragNum,param.rotationBodyR2FragNum,param.rotationBodyXBeg, param.rotationBodyXEnd, param.delta, param.pointsRaising, param.vortonsRad};
+        formingRBB = FormingParametersRBB{ param.formingRBB_R1,param.formingRBB_R2,param.formingRBB_length};
+        streamLinesSize=QPair<int,int>(static_cast<int>(ceil(param.formingRBB_length)),static_cast<int>(ceil(param.formingRBB_R1)));
+        rotationBodyWithTwoBottoms();
+        break;
+    }
+
+    }
+}
+
+BodyFragmentation::BodyFragmentation(const BodyFragmentation &frag)
+{
+    frames=frag.frames;
+    controlPoints=frag.controlPoints;
+    controlPointsRaised=frag.controlPointsRaised;
+    normals=frag.normals;
+    squares=frag.squares;
+    rotationBottomCutBody=frag.rotationBottomCutBody;
+    formingRBC=frag.formingRBC;
+    graphNodesX=frag.graphNodesX;
+    graphNodesZ=frag.graphNodesZ;
+    graphNodesY=frag.graphNodesY;
+    exisetingType=frag.exisetingType;
+    streamLinesSize=frag.streamLinesSize;
+}
+
+BodyFragmentation::BodyFragmentation(BodyType body, const FragmentationParameters &param, int a, bool launch)
+{
+    clearGraphNodes();
+    exisetingType=body;
+    switch(body)
+    {
+    case SPHERE:
+    {
+        sphere = SphereParameters {param.sphereFiFragNum, param.sphereTetaFragNum, param.sphereRad, param.delta, param.pointsRaising,param.vortonsRad};
+        streamLinesSize=QPair<int,int>(static_cast<int>(ceil(param.sphereRad*2)),static_cast<int>(ceil(param.sphereRad)));
+        sphereFragmentation();
+        break;
+    }
+    case CYLINDER:
+    {
+        cylinder = CylinderParameters {param.cylinderFiFragNum, param.cylinderRadFragNum, param.cylinderHeightFragNum,param.cylinderDiameter, param.cylinderHeight,  param.delta, param.pointsRaising,param.vortonsRad};
+        cylinderFragmentation();
+        break;
+    }
+    case ROTATIONBODY:
+    {
+        rotationBody = RotationBodyParameters {param.rotationBodyFiFragNum, param.rotationBodyPartFragNum, param.rotationBodyXBeg, param.rotationBodyXEnd,param.rotationBodySectionDistance,param.rotationBodySectionEndDistance,  param.delta, param.pointsRaising, param.vortonsRad};
+        forming=FormingParameters{param.formingDiameter,param.formingTailDiameter, param.formingLengthSectorOne,param.formingLengthSectorTwo,param.formingAngle,param.rotationBodyFormingType};
+        streamLinesSize=QPair<int,int>(static_cast<int>(ceil(param.formingDiameter*0.5+param.formingLengthSectorOne+param.formingLengthSectorTwo)),static_cast<int>(ceil(param.formingDiameter*0.5)));
+        rotationBodyFragmantation();
+        break;
+    }
+    case ROTATIONBOTTOMCUT:
+    {
+        if (!launch)
+        {
+            rotationBottomCutBody = RotationCutBodyParameters {param.rotationBodyFiFragNum, param.rotationBodyPartFragNum,param.rotationBodyRFragNum, param.rotationBodyXBeg, param.rotationBodyXEnd,param.rotationBodySectionDistance,param.rotationBodySectionEndDistance,  param.delta, param.pointsRaising, param.vortonsRad};
+            formingRBC=FormingParametersRBC{param.formingEllipsoidDiameter,param.formingTailDiameter,param.formingEllisoidLength,param.formingConeLength,param.formingFullLength,param.rotationBodyRBCFormingType};
+            streamLinesSize=QPair<int,int>(static_cast<int>(ceil(param.formingFullLength)),static_cast<int>(ceil(param.formingEllipsoidDiameter*0.5)));
+            rotationCutBodyFragmantationWithConcentration();
+        }
+        else
+        {
+            rotationBottomCutBody = RotationCutBodyParameters {param.rotationBodyFiFragNum, param.rotationBodyPartFragNum,param.rotationBodyRFragNum, param.rotationBodyXBeg, param.rotationBodyXEnd,param.rotationBodySectionDistance,param.rotationBodySectionEndDistance,  param.delta, param.pointsRaising, param.vortonsRad};
+            formingRBC=FormingParametersRBC{param.formingEllipsoidDiameter,param.formingTailDiameter,param.formingEllisoidLength,param.formingConeLength,param.formingFullLength,param.rotationBodyRBCFormingType};
+            streamLinesSize=QPair<int,int>(static_cast<int>(ceil(param.formingFullLength)),static_cast<int>(ceil(param.formingEllipsoidDiameter*0.5)));
+        }
+        break;
+    }
+    case ROTATIONTWOBOTTOM:
+    {
+        rotationBodyTwoBot = RotationBodyWithTwoBottomsParameters {param.rotationBodyFiFragNum,param.rotationBodyPartFragNum,param.rotationBodyRFragNum,param.rotationBodyR2FragNum,param.rotationBodyXBeg, param.rotationBodyXEnd, param.delta, param.pointsRaising, param.vortonsRad};
+        formingRBB = FormingParametersRBB{ param.formingRBB_R1,param.formingRBB_R2,param.formingRBB_length};
+        streamLinesSize=QPair<int,int>(static_cast<int>(ceil(param.formingRBB_length)),static_cast<int>(ceil(param.formingRBB_R1)));
+        rotationBodyWithTwoBottoms();
+        break;
+    }
+
     }
 }
 
@@ -337,6 +419,71 @@ void BodyFragmentation::cylinderFragmentation()
     }
 }
 
+void BodyFragmentation::calculateBoundaries(Vector3D &bodyNose, Vector3D &center, double &xend)
+{
+    switch (exisetingType)
+    {
+    case ROTATIONBODY:
+    {
+        bodyNose=Vector3D(rotationBody.xBeg,0.0,0.0);
+        switch (forming.typeNum)
+        {
+        case 0:
+        {
+            center=Vector3D((rotationBody.xBeg+forming.sectorOneLength+forming.sectorTwoLength+forming.diameter*0.5/*fragPar.rotationBodyXEnd*/)*0.5,0.0,0.0);
+            xend=rotationBody.xBeg+forming.sectorOneLength+forming.sectorTwoLength+forming.diameter*0.5;
+            break;
+        }
+        case 1:
+        {
+            center=Vector3D((rotationBody.xBeg+forming.sectorOneLength)*0.5,0.0,0.0);
+            xend=rotationBody.xBeg+forming.sectorOneLength;
+            break;
+        }
+        case 2:
+        {
+            center=Vector3D((rotationBody.xBeg+forming.sectorOneLength)*0.5,0.0,0.0);
+            xend=rotationBody.xBeg+forming.sectorOneLength;
+            break;
+        }
+        };
+        break;
+    }
+    case ROTATIONBOTTOMCUT:
+    {
+        bodyNose=Vector3D(rotationBottomCutBody.xBeg,0.0,0.0);
+        switch (formingRBC.type)
+        {
+        case ELLIPSOID_CONE:
+        {
+            center=Vector3D((bodyNose.x()+formingRBC.ellipsoidLength+formingRBC.coneLength)*0.5,0.0,0.0);
+            xend=bodyNose.x()+formingRBC.ellipsoidLength+formingRBC.coneLength;
+            break;
+        }
+        case ELLIPSOID_CYLINDER:
+        {
+            center=Vector3D((bodyNose.x()+formingRBC.fullLength)*0.5,0.0,0.0);
+            xend=bodyNose.x()+formingRBC.fullLength;
+            break;
+        }
+        case ELLIPSOID_CYLINDER_CONE:
+        {
+            center=Vector3D((bodyNose.x()+formingRBC.fullLength)*0.5,0.0,0.0);
+            xend=bodyNose.x()+formingRBC.fullLength;
+            break;
+        }
+        };
+        break;
+    };
+    case ROTATIONTWOBOTTOM:
+    {
+        center=Vector3D((bodyNose.x()+formingRBB.length)*0.5,0.0,0.0);
+        xend=bodyNose.x()+formingRBB.length;
+    }
+    }
+
+}
+
 QPair<int, int> BodyFragmentation::getStreamLinesSizes()
 {
     return streamLinesSize;
@@ -373,7 +520,7 @@ void BodyFragmentation::rotationBodyFragmantation()
         QVector<Vector3D> grInt;
         for (double j=-forming.diameter*0.5-0.5; j<forming.diameter*0.5+0.5 ; j=j+0.05)
         {
-         grInt.push_back(Vector3D(xNull,i,j));
+            grInt.push_back(Vector3D(xNull,i,j));
         }
         graphNodesX.push_back(grInt);
         grInt.clear();
@@ -384,7 +531,7 @@ void BodyFragmentation::rotationBodyFragmantation()
         QVector<Vector3D> grInt;
         for (double j=-forming.diameter*0.5-0.5; j<forming.diameter*0.5+0.5; j=j+0.05)
         {
-         grInt.push_back(Vector3D(i,0.0,j));
+            grInt.push_back(Vector3D(i,0.0,j));
         }
         graphNodesY.push_back(grInt);
         grInt.clear();
@@ -395,7 +542,7 @@ void BodyFragmentation::rotationBodyFragmantation()
         QVector<Vector3D> grInt;
         for (double j=-forming.diameter*0.5-0.5; j<forming.diameter*0.5+0.5; j=j+0.05)
         {
-         grInt.push_back(Vector3D(i,j,0.0));
+            grInt.push_back(Vector3D(i,j,0.0));
         }
         graphNodesZ.push_back(grInt);
         grInt.clear();
@@ -427,14 +574,14 @@ void BodyFragmentation::rotationBodyFragmantation()
         double derivative=BodyFragmentation::presetDeriveFunctionF(xArr[i],forming);
         s[i]=s[i-1]+height*sqrt(1+derivative*derivative);
     }
-//    QFile deb("c.txt");
-//    if (deb.open(QIODevice::WriteOnly))
-//    {
-//        QTextStream tsss(&deb);
-//        for(int i=0; i<part.size();i++)
-//            tsss<<xArr[i]<<"\n";
-//    }
-//    deb.close();
+    //    QFile deb("c.txt");
+    //    if (deb.open(QIODevice::WriteOnly))
+    //    {
+    //        QTextStream tsss(&deb);
+    //        for(int i=0; i<part.size();i++)
+    //            tsss<<xArr[i]<<"\n";
+    //    }
+    //    deb.close();
 
 
     double length=s[s.size()-1];
@@ -529,7 +676,7 @@ void BodyFragmentation::rotationCutBodyFragmantation()
         QVector<Vector3D> grInt;
         for (double j=-formingRBC.ellipsoidDiameter*0.5-0.5; j<formingRBC.ellipsoidDiameter*0.5+0.5 ; j=j+0.05)
         {
-         grInt.push_back(Vector3D(xNull,i,j));
+            grInt.push_back(Vector3D(xNull,i,j));
         }
         graphNodesX.push_back(grInt);
         grInt.clear();
@@ -540,7 +687,7 @@ void BodyFragmentation::rotationCutBodyFragmantation()
         QVector<Vector3D> grInt;
         for (double j=-formingRBC.ellipsoidDiameter*0.5-0.5; j<formingRBC.ellipsoidDiameter*0.5+0.5; j=j+0.05)
         {
-         grInt.push_back(Vector3D(i,0.0,j));
+            grInt.push_back(Vector3D(i,0.0,j));
         }
         graphNodesY.push_back(grInt);
         grInt.clear();
@@ -551,7 +698,7 @@ void BodyFragmentation::rotationCutBodyFragmantation()
         QVector<Vector3D> grInt;
         for (double j=-formingRBC.ellipsoidDiameter*0.5-0.5; j<formingRBC.ellipsoidDiameter*0.5+0.5; j=j+0.05)
         {
-         grInt.push_back(Vector3D(i,j,0.0));
+            grInt.push_back(Vector3D(i,j,0.0));
         }
         graphNodesZ.push_back(grInt);
         grInt.clear();
@@ -568,7 +715,7 @@ void BodyFragmentation::rotationCutBodyFragmantation()
 
     double newBeg=rotationBottomCutBody.xBeg+rotationBottomCutBody.sectionDistance;
 
-    double newEnd=rotationBottomCutBody.xEnd+rotationBottomCutBody.delta;
+    double newEnd=rotationBottomCutBody.xEnd-rotationBottomCutBody.delta;
     double fi0 = 2*M_PI/rotationBottomCutBody.fiFragNum;
     double height=(newEnd-newBeg)/(NFRAG-1);
     s[0]=0.0;
@@ -581,6 +728,7 @@ void BodyFragmentation::rotationCutBodyFragmantation()
         double derivative=BodyFragmentation::presetDeriveFunctionG(xArr[i],formingRBC);
         s[i]=s[i-1]+height*sqrt(1+derivative*derivative);
     }
+
 
     double length=s[s.size()-2];
     for (int i=0; i<rotationBottomCutBody.partFragNum; i++)
@@ -671,6 +819,189 @@ void BodyFragmentation::rotationCutBodyFragmantation()
     }
 }
 
+void BodyFragmentation::rotationCutBodyFragmantationWithConcentration()
+{
+    clearVectors();
+    switch (formingRBC.type)
+    {
+    case ELLIPSOID_CONE:
+    {
+        rotationBottomCutBody.xEnd=rotationBottomCutBody.xBeg+formingRBC.ellipsoidLength+formingRBC.coneLength;
+        break;
+    }
+    case ELLIPSOID_CYLINDER:
+    {
+        rotationBottomCutBody.xEnd=rotationBottomCutBody.xBeg+formingRBC.fullLength;
+        break;
+    }
+    case ELLIPSOID_CYLINDER_CONE:
+    {
+        rotationBottomCutBody.xEnd=rotationBottomCutBody.xBeg+formingRBC.fullLength;
+        break;
+    }
+    }
+    double xNull=(rotationBottomCutBody.xEnd+rotationBottomCutBody.xBeg)*0.5;
+    for (double i=-formingRBC.ellipsoidDiameter*0.5-0.5; i<formingRBC.ellipsoidDiameter*0.5+0.5; i=i+0.05)
+    {
+        QVector<Vector3D> grInt;
+        for (double j=-formingRBC.ellipsoidDiameter*0.5-0.5; j<formingRBC.ellipsoidDiameter*0.5+0.5 ; j=j+0.05)
+        {
+            grInt.push_back(Vector3D(xNull,i,j));
+        }
+        graphNodesX.push_back(grInt);
+        grInt.clear();
+    }
+
+    for (double i=-1.0; i<rotationBottomCutBody.xEnd+0.4; i=i+0.05)
+    {
+        QVector<Vector3D> grInt;
+        for (double j=-formingRBC.ellipsoidDiameter*0.5-0.5; j<formingRBC.ellipsoidDiameter*0.5+0.5; j=j+0.05)
+        {
+            grInt.push_back(Vector3D(i,0.0,j));
+        }
+        graphNodesY.push_back(grInt);
+        grInt.clear();
+    }
+
+    for (double i=-1.0; i<rotationBottomCutBody.xEnd+0.4; i=i+0.05)
+    {
+        QVector<Vector3D> grInt;
+        for (double j=-formingRBC.ellipsoidDiameter*0.5-0.5; j<formingRBC.ellipsoidDiameter*0.5+0.5; j=j+0.05)
+        {
+            grInt.push_back(Vector3D(i,j,0.0));
+        }
+        graphNodesZ.push_back(grInt);
+        grInt.clear();
+    }
+    QVector<Vector2D> part(0);
+    QVector<Vector2D> forNormals(0);
+    QVector<Vector2D> forControlPoint(0);
+    QVector<Vector2D> forUp(0);
+    const int NFRAG=4000;
+
+    QVector<double> s(NFRAG);
+    QVector<double> xArr(NFRAG);
+    QVector<double> yArr(NFRAG);
+
+    double newBeg=rotationBottomCutBody.xBeg+rotationBottomCutBody.sectionDistance;
+
+    double newEnd=rotationBottomCutBody.xEnd-rotationBottomCutBody.delta;
+    double fi0 = 2*M_PI/rotationBottomCutBody.fiFragNum;
+    double height=(newEnd-newBeg)/(NFRAG-1);
+    s[0]=0.0;
+    xArr[0]=newBeg;
+    yArr[0]=BodyFragmentation::presetFunctionG(newBeg,formingRBC);
+    for (int i=1; i<NFRAG; i++)
+    {
+        xArr[i]=newBeg+i*height;
+        yArr[i]=BodyFragmentation::presetFunctionG(xArr[i],formingRBC);
+        double derivative=BodyFragmentation::presetDeriveFunctionG(xArr[i],formingRBC);
+        s[i]=s[i-1]+height*sqrt(1+derivative*derivative);
+    }
+
+
+    int i=0;
+    while (i<xArr.size())
+    {
+        double deltaLfi = 2*M_PI*yArr[i]/rotationBottomCutBody.fiFragNum;
+        int num = findClosetElementFromArray(s,deltaLfi+s[i]); //найти элемент x, чтобы разбиение было равномерным по образующей
+        //qDebug()<<"num: "<<num;
+        part.push_back(Vector2D (xArr[num],yArr[num]));
+        forUp.push_back(Vector2D (-presetDeriveFunctionG(xArr[num],formingRBC),1).normalized());
+        i = num;
+        if (num>=xArr.size()-1)
+            break;
+    }
+
+    part.removeLast();
+    forUp.removeLast();
+    part.push_back(Vector2D (newEnd,presetFunctionG(newEnd,formingRBC)));
+    forUp.push_back(Vector2D (-presetDeriveFunctionG(newEnd,formingRBC),1).normalized());
+
+    for (int i=0; i<rotationBottomCutBody.partFragNum-1; i++)
+    {
+        Vector2D K=0.5*(part[i]+part[i+1]);
+        forControlPoint.push_back(K);
+        double delta_x = K.x()-part[i].x();
+        double delta_y = K.y()-part[i].y();
+        forNormals.push_back(Vector2D(-delta_y,delta_x).normalized());
+
+    }
+
+    for (int i=0; i<part.size(); i++)
+        part[i]+=forUp[i]*rotationBottomCutBody.delta;
+
+    for (int i=0; i<part.size(); i++)
+    {
+        part[i]-=Vector2D(part[0].x()-rotationBottomCutBody.xBeg,0.0);
+        if (i!=part.size()-1)
+            forControlPoint[i]-=Vector2D(part[part.size()-1].x()-rotationBottomCutBody.xEnd,0.0);
+    }
+
+    for (int j=0; j<rotationBottomCutBody.partFragNum-1; j++)
+    {
+        for (int i=0; i<rotationBottomCutBody.fiFragNum; i++)
+        {
+            double fi=fi0*i;
+            Vector3D r01=Vector3D(part[j].x(),part[j].y()*cos(fi),part[j].y()*sin(fi));
+            Vector3D r11=Vector3D(part[j].x(),part[j].y()*cos(fi+fi0),part[j].y()*sin(fi+fi0));
+            Vector3D r21=Vector3D(part[j+1].x(),part[j+1].y()*cos(fi+fi0),part[j+1].y()*sin(fi+fi0));
+            Vector3D r31=Vector3D(part[j+1].x(),part[j+1].y()*cos(fi),part[j+1].y()*sin(fi));
+            Vector3D controlPoint = Vector3D(forControlPoint[j].x(),forControlPoint[j].y()*cos(fi+fi0*0.5),forControlPoint[j].y()*sin(fi+fi0*0.5));
+            Vector3D normal = Vector3D(forNormals[j].x(),forNormals[j].y()*cos(fi+fi0*0.5),forNormals[j].y()*sin(fi+fi0*0.5));
+            frames.push_back(std::make_shared <FourFrame>(r01,r11,r21,r31,rotationBottomCutBody.vortonsRad));
+            normals.push_back(normal);
+            controlPoints.push_back(controlPoint);
+            squares.push_back((0.5*Vector3D::crossProduct(r21-r01,r31-r11).length()));
+            controlPointsRaised.push_back(controlPoint+rotationBottomCutBody.raise*normal);
+        }
+    }
+
+    Vector3D r0 = Vector3D(part[0].x(),0.0,0.0);
+    Vector3D r11 = Vector3D(part[0].x(),part[0].y()*cos(fi0),part[0].y()*sin(fi0));
+    Vector3D r21 = Vector3D(part[0].x(),part[0].y(),0.0);
+    frames.push_back(std::make_shared<MultiFrame>(rotationBottomCutBody.fiFragNum,r0,r11,r21,rotationBottomCutBody.vortonsRad));
+    Vector3D controlPoint = Vector3D(part[0].x(),0.0,0.0);
+    controlPoints.push_back(controlPoint);
+    Vector3D normal (-1,0,0);
+    normals.push_back(normal);
+    squares.push_back((0.5*Vector3D::crossProduct(r11-r0,r21-r0).length()*rotationBottomCutBody.fiFragNum));
+    controlPointsRaised.push_back(controlPoint+rotationBottomCutBody.raise*normal);
+
+    double rad0=part.last().y()/rotationBottomCutBody.rFragNum;
+
+    r0 = Vector3D(part[rotationBottomCutBody.partFragNum-1].x(), 0.0, 0.0);
+    r11 = Vector3D(part[rotationBottomCutBody.partFragNum-1].x(), rad0, 0.0);
+    r21 = Vector3D(part[rotationBottomCutBody.partFragNum-1].x(), rad0*cos(fi0),rad0*sin(fi0));
+    frames.push_back(std::make_shared<MultiFrame>(rotationBottomCutBody.fiFragNum,r0,r11,r21,rotationBottomCutBody.vortonsRad));
+    controlPoint = Vector3D(part[rotationBottomCutBody.partFragNum-1].x()-rotationBottomCutBody.delta,0.0,0);
+    controlPoints.push_back(controlPoint);
+    normal =Vector3D (1,0,0);
+    normals.push_back(normal);
+    squares.push_back(0.5*(r11-r0).lengthSquared()*rotationBottomCutBody.fiFragNum*sin(2*M_PI/rotationBottomCutBody.fiFragNum));
+    controlPointsRaised.push_back(controlPoint+rotationBottomCutBody.raise*normal);
+
+    for (int i=1; i<rotationBottomCutBody.rFragNum; i++)
+    {
+        for (int j=0; j<rotationBottomCutBody.fiFragNum; j++)
+        {
+            double fi = fi0*j;
+            double r = rad0*i;
+            Vector3D r11 (part[rotationBottomCutBody.partFragNum-1].x(),r*cos(fi),r*sin(fi));
+            Vector3D r01 (part[rotationBottomCutBody.partFragNum-1].x(),r*cos(fi+fi0),r*sin(fi+fi0));
+            Vector3D r31 (part[rotationBottomCutBody.partFragNum-1].x(),(r+rad0)*cos(fi+fi0),(r+rad0)*sin(fi+fi0));
+            Vector3D r21 (part[rotationBottomCutBody.partFragNum-1].x(),(r+rad0)*cos(fi),(r+rad0)*sin(fi));
+            frames.push_back(std::make_shared <FourFrame>(r01,r11,r21,r31,rotationBottomCutBody.vortonsRad));
+            controlPoint = Vector3D(part[rotationBottomCutBody.partFragNum-1].x()-rotationBottomCutBody.delta,(r+0.5*rad0)*cos(fi+0.5*fi0),(r+rad0*0.5)*sin(fi+fi0*0.5));
+            controlPoints.push_back(controlPoint);
+            normal = Vector3D (1,0,0);
+            normals.push_back(normal);
+            squares.push_back((Vector3D::crossProduct(r21-r01,r31-r11)).length()*0.5);
+            controlPointsRaised.append(controlPoint+rotationBottomCutBody.raise*normal);
+        }
+    }
+}
+
 /*!
 Реализует разбиение тела вращения со срезом дна для решения задачи старта.
 \param i Текущий шаг
@@ -681,9 +1012,10 @@ void BodyFragmentation::rotationCutBodyLaunchFragmentation(const int i, const Ve
 {
 
     double ledge=bodyVel.length()*tau*(i+1);
-
+    double nextLedge=bodyVel.length()*tau*(i+2);
     if (fabs(ledge)<fullLength)
     {
+        clearGraphNodes();
         clearVectors();
         switch (formingRBC.type)
         {
@@ -731,6 +1063,8 @@ void BodyFragmentation::rotationCutBodyLaunchFragmentation(const int i, const Ve
         //        for (int i=0; i<xArr.size();i++)
         //            xArr[i]-=xArr[xArr.size()-1];
 
+
+
         double length=s[s.size()-2];
         for (int i=0; i<rotationBottomCutBody.partFragNum; i++)
         {
@@ -755,6 +1089,40 @@ void BodyFragmentation::rotationCutBodyLaunchFragmentation(const int i, const Ve
             forNormals.removeLast();
             end--;
             currentEnd=part[end].x();
+        }
+
+        double xNull=(part[0].x()+currentEnd)*0.5;
+        for (double i=-formingRBC.ellipsoidDiameter*0.5-0.5; i<formingRBC.ellipsoidDiameter*0.5+0.5; i=i+0.05)
+        {
+            QVector<Vector3D> grInt;
+            for (double j=-formingRBC.ellipsoidDiameter*0.5-0.5; j<formingRBC.ellipsoidDiameter*0.5+0.5 ; j=j+0.05)
+            {
+                grInt.push_back(Vector3D(xNull,i,j));
+            }
+            graphNodesX.push_back(grInt);
+            grInt.clear();
+        }
+
+        for (double i=part[0].x()-1.0; i<currentEnd+0.4; i=i+0.05)
+        {
+            QVector<Vector3D> grInt;
+            for (double j=-formingRBC.ellipsoidDiameter*0.5-0.5; j<formingRBC.ellipsoidDiameter*0.5+0.5; j=j+0.05)
+            {
+                grInt.push_back(Vector3D(i,0.0,j));
+            }
+            graphNodesY.push_back(grInt);
+            grInt.clear();
+        }
+
+        for (double i=part[0].x()-1.0; i<currentEnd+0.4; i=i+0.05)
+        {
+            QVector<Vector3D> grInt;
+            for (double j=-formingRBC.ellipsoidDiameter*0.5-0.5; j<formingRBC.ellipsoidDiameter*0.5+0.5; j=j+0.05)
+            {
+                grInt.push_back(Vector3D(i,j,0.0));
+            }
+            graphNodesZ.push_back(grInt);
+            grInt.clear();
         }
         //        part.removeLast();
         //        forUp.removeLast();
@@ -809,11 +1177,11 @@ void BodyFragmentation::rotationCutBodyLaunchFragmentation(const int i, const Ve
         squares.push_back((0.5*Vector3D::crossProduct(r11-r0,r21-r0).length()*rotationBottomCutBody.fiFragNum));
         controlPointsRaised.push_back(controlPoint+rotationBottomCutBody.raise*normal);
 
-        double rad0=part.last().y()/rotationBottomCutBody.rFragNum;
-
+        if (fabs(nextLedge)<fullLength)
+        {
         Vector3D r00 (part[newPartFragmNum].x(),0.0,0.0);
-        r11=Vector3D(part[newPartFragmNum].x(),rad0,0);
-        r21=Vector3D (part[newPartFragmNum].x(),rad0*cos(fi0),rad0*sin(fi0));
+        r11=Vector3D(part[newPartFragmNum].x(),part.last().y(),0);
+        r21=Vector3D (part[newPartFragmNum].x(),part.last().y()*cos(fi0),part.last().y()*sin(fi0));
         frames.push_back(std::make_shared<MultiFrame>(rotationBottomCutBody.fiFragNum,r00,r11,r21,rotationBottomCutBody.vortonsRad));
         controlPoint =Vector3D(part[newPartFragmNum].x()-rotationBottomCutBody.delta,0.0,0.0);
         controlPoints.push_back(Vector3D(controlPoint));
@@ -821,24 +1189,203 @@ void BodyFragmentation::rotationCutBodyLaunchFragmentation(const int i, const Ve
         normals.push_back(normal);
         controlPointsRaised.push_back(controlPoint+normal*rotationBottomCutBody.raise);
         squares.push_back(0.5*(r11-r00).lengthSquared()*rotationBottomCutBody.fiFragNum*sin(2*M_PI/rotationBottomCutBody.fiFragNum));
-        //     qDebug()<<"ya zhiv";
-        for (int i=1; i<rotationBottomCutBody.rFragNum; i++)
+        }
+        else
         {
-            for (int j=0; j<rotationBottomCutBody.fiFragNum; j++)
+
+            double rad0=part.last().y()/rotationBottomCutBody.rFragNum;
+            Vector3D r00 (part[newPartFragmNum].x(),0.0,0.0);
+            r11=Vector3D(part[newPartFragmNum].x(),rad0,0);
+            r21=Vector3D (part[newPartFragmNum].x(),rad0*cos(fi0),rad0*sin(fi0));
+            frames.push_back(std::make_shared<MultiFrame>(rotationBottomCutBody.fiFragNum,r00,r11,r21,rotationBottomCutBody.vortonsRad));
+            controlPoint =Vector3D(part[newPartFragmNum].x()-rotationBottomCutBody.delta,0.0,0.0);
+            controlPoints.push_back(Vector3D(controlPoint));
+            normal = Vector3D(1,0,0);
+            normals.push_back(normal);
+            controlPointsRaised.push_back(controlPoint+normal*rotationBottomCutBody.raise);
+            squares.push_back(0.5*(r11-r00).lengthSquared()*rotationBottomCutBody.fiFragNum*sin(2*M_PI/rotationBottomCutBody.fiFragNum));
+            //     qDebug()<<"ya zhiv";
+            for (int i=1; i<rotationBottomCutBody.rFragNum; i++)
+            {
+                for (int j=0; j<rotationBottomCutBody.fiFragNum; j++)
+                {
+                    double fi = fi0*j;
+                    double r = rad0*i;
+                    Vector3D r11 (part[newPartFragmNum].x(),r*cos(fi),r*sin(fi));
+                    Vector3D r01 (part[newPartFragmNum].x(),r*cos(fi+fi0),r*sin(fi+fi0));
+                    Vector3D r31 (part[newPartFragmNum].x(),(r+rad0)*cos(fi+fi0),(r+rad0)*sin(fi+fi0));
+                    Vector3D r21 (part[newPartFragmNum].x(),(r+rad0)*cos(fi),(r+rad0)*sin(fi));
+                    frames.push_back(std::make_shared <FourFrame>(r01,r11,r21,r31,rotationBottomCutBody.vortonsRad));
+                    controlPoint = Vector3D(part[newPartFragmNum].x()-rotationBottomCutBody.delta,(r+0.5*rad0)*cos(fi+0.5*fi0),(r+rad0*0.5)*sin(fi+fi0*0.5));
+                    controlPoints.push_back(controlPoint);
+                    normal = Vector3D (1,0,0);
+                    normals.push_back(normal);
+                    squares.push_back((Vector3D::crossProduct(r21-r01,r31-r11)).length()*0.5);
+                    controlPointsRaised.push_back(controlPoint+normal*rotationBottomCutBody.raise);
+                }
+            }
+        }
+    }
+}
+
+void BodyFragmentation::rotationBodyWithTwoBottoms()
+{
+    clearVectors();
+
+    rotationBodyTwoBot.xEnd=rotationBodyTwoBot.xBeg+formingRBB.length;
+    double R01 = (formingRBB.radius1+rotationBodyTwoBot.delta)/(rotationBodyTwoBot.r1FragNum);
+    double R02 = (formingRBB.radius2+rotationBodyTwoBot.delta)/(rotationBodyTwoBot.r2FragNum);
+    double xNull=(rotationBodyTwoBot.xEnd+rotationBodyTwoBot.xBeg)*0.5;
+    for (double i=-(formingRBB.radius1+formingRBB.radius2)*0.5-0.5; i<(formingRBB.radius1+formingRBB.radius2)*0.5+0.5; i=i+0.05)
+    {
+        QVector<Vector3D> grInt;
+        for (double j=-(formingRBB.radius1+formingRBB.radius2)*0.5-0.5; j<(formingRBB.radius1+formingRBB.radius2)*0.5+0.5 ; j=j+0.05)
+        {
+            grInt.push_back(Vector3D(xNull,i,j));
+        }
+        graphNodesX.push_back(grInt);
+        grInt.clear();
+    }
+
+    for (double i=-1.0; i<rotationBodyTwoBot.xEnd+0.4; i=i+0.05)
+    {
+        QVector<Vector3D> grInt;
+        for (double j=-(formingRBB.radius1+formingRBB.radius2)*0.5-0.5; j<(formingRBB.radius1+formingRBB.radius2)*0.5+0.5; j=j+0.05)
+        {
+            grInt.push_back(Vector3D(i,0.0,j));
+        }
+        graphNodesY.push_back(grInt);
+        grInt.clear();
+    }
+
+    for (double i=-1.0; i<rotationBodyTwoBot.xEnd+0.4; i=i+0.05)
+    {
+        QVector<Vector3D> grInt;
+        for (double j=-(formingRBB.radius1+formingRBB.radius2)*0.5-0.5; j<(formingRBB.radius1+formingRBB.radius2)*0.5+0.5; j=j+0.05)
+        {
+            grInt.push_back(Vector3D(i,j,0.0));
+        }
+        graphNodesZ.push_back(grInt);
+        grInt.clear();
+    }
+    QVector<Vector2D> part(rotationBodyTwoBot.partFragNum);
+    QVector<Vector2D> forNormals(rotationBodyTwoBot.partFragNum-1);
+    QVector<Vector2D> forControlPoint(rotationBodyTwoBot.partFragNum-1);
+    QVector<Vector2D> forUp(rotationBodyTwoBot.partFragNum);
+    const int NFRAG=400;
+
+    QVector<double> s(NFRAG);
+    QVector<double> xArr(NFRAG);
+    QVector<double> yArr(NFRAG);
+
+    double newBeg=rotationBodyTwoBot.xBeg+rotationBodyTwoBot.delta;
+    double newEnd=rotationBodyTwoBot.xEnd-rotationBodyTwoBot.delta;
+    double fi0 = 2*M_PI/rotationBodyTwoBot.fiFragNum;
+    double h = (newEnd-newBeg)/(NFRAG-1);
+    s[0]=0;
+    xArr[0]=newBeg;
+    yArr[0]=presetFunctionRBB(newBeg,formingRBB);
+    for (int i=1; i<NFRAG; i++)
+    {
+        xArr[i] = newBeg+i*h;
+        yArr[i] = presetFunctionRBB(xArr[i],formingRBB);
+        double df = presetDeriveFunctionRBB(xArr[i],formingRBB); //производная в точке
+        s[i]=s[i-1]+h*sqrt(1+df*df);
+    }
+
+    double length = s[s.size()-1];
+    for (int i=0; i<rotationBodyTwoBot.partFragNum; i++)
+    {
+        int num = findClosetElementFromArray(s,length/(rotationBodyTwoBot.partFragNum-1)*i);
+        part[i]  = Vector2D (xArr[num],yArr[num]);
+        forUp[i] = Vector2D (-presetDeriveFunctionRBB(xArr[num],formingRBB),1).normalized();
+    }
+
+    for (int i=0; i<rotationBodyTwoBot.partFragNum-1; i++)
+    {
+        int Knum = findClosetElementFromArray(s,length/(rotationBodyTwoBot.partFragNum-1)*(i+0.5));
+        forControlPoint[i] = Vector2D (xArr[Knum],yArr[Knum]);
+        forNormals[i] = Vector2D (-presetDeriveFunctionRBB(xArr[Knum],formingRBB),1).normalized();
+    }
+
+    for (int j=0; j<rotationBodyTwoBot.partFragNum-1; j++)
+        for (int i=0; i<rotationBodyTwoBot.fiFragNum; i++)
+        {
+            double fi=fi0*i;
+            Vector3D r01=Vector3D(part[j].x(),part[j].y()*cos(fi),part[j].y()*sin(fi));
+            Vector3D r11=Vector3D(part[j].x(),part[j].y()*cos(fi+fi0),part[j].y()*sin(fi+fi0));
+            Vector3D r21=Vector3D(part[j+1].x(),part[j+1].y()*cos(fi+fi0),part[j+1].y()*sin(fi+fi0));
+            Vector3D r31=Vector3D(part[j+1].x(),part[j+1].y()*cos(fi),part[j+1].y()*sin(fi));
+            Vector3D kontrol = Vector3D(forControlPoint[j].x(),forControlPoint[j].y()*cos(fi+fi0*0.5),forControlPoint[j].y()*sin(fi+fi0*0.5));
+            Vector3D normal = Vector3D(forNormals[j].x(),forNormals[j].y()*cos(fi+fi0*0.5),forNormals[j].y()*sin(fi+fi0*0.5));
+            frames.push_back(std::make_shared <FourFrame>(r01,r11,r21,r31,rotationBodyTwoBot.vortonsRad));
+            normals.append(normal);
+            controlPoints.append(kontrol);
+            squares.append((0.5*Vector3D::crossProduct(r21-r01,r31-r11).length()));
+            controlPointsRaised.append(kontrol+rotationBodyTwoBot.raise*normal);
+        }
+
+    //дно 1
+    Vector3D r00 (part[rotationBodyTwoBot.partFragNum-1].x(),0,0);
+    Vector3D r11=Vector3D(part[rotationBodyTwoBot.partFragNum-1].x(),R01,0);
+    Vector3D r21=Vector3D (part[rotationBodyTwoBot.partFragNum-1].x(),R01*cos(fi0),R01*sin(fi0));
+    frames.push_back(std::make_shared<MultiFrame>(rotationBodyTwoBot.fiFragNum,r00,r11,r21,rotationBodyTwoBot.vortonsRad));
+    Vector3D kontrol =Vector3D(part[rotationBodyTwoBot.partFragNum-1].x()-rotationBodyTwoBot.delta,0,0);
+    controlPoints.append(Vector3D(kontrol));
+    Vector3D normal = Vector3D(1,0,0);
+    normals.append(normal);
+    controlPointsRaised.append(kontrol+normal*rotationBodyTwoBot.raise);
+    squares.append(0.5*(r11-r00).lengthSquared()*rotationBodyTwoBot.fiFragNum*sin(2*M_PI/rotationBodyTwoBot.fiFragNum));
+
+    for (int i=1; i<rotationBodyTwoBot.r1FragNum; i++) {
+        double r = R01*i;
+        for (int j=0; j<rotationBodyTwoBot.fiFragNum; j++)
+        {
+            double fi = fi0*j;
+            Vector3D r11 (part[rotationBodyTwoBot.partFragNum-1].x(),r*cos(fi),r*sin(fi));
+            Vector3D r01 (part[rotationBodyTwoBot.partFragNum-1].x(),r*cos(fi+fi0),r*sin(fi+fi0));
+            Vector3D r31 (part[rotationBodyTwoBot.partFragNum-1].x(),(r+R01)*cos(fi+fi0),(r+R01)*sin(fi+fi0));
+            Vector3D r21 (part[rotationBodyTwoBot.partFragNum-1].x(),(r+R01)*cos(fi),(r+R01)*sin(fi));
+            frames.push_back(std::make_shared <FourFrame>(r01,r11,r21,r31,rotationBodyTwoBot.vortonsRad));
+            kontrol = Vector3D(part[rotationBodyTwoBot.partFragNum-1].x()-rotationBodyTwoBot.delta,(r+0.5*R01)*cos(fi+0.5*fi0),(r+R01*0.5)*sin(fi+fi0*0.5));
+            controlPoints.append(kontrol);
+            normal = Vector3D (1,0,0);
+            normals.append(normal);
+            squares.append((Vector3D::crossProduct(r21-r01,r31-r11)).length()*0.5);
+            controlPointsRaised.append(kontrol+normal*rotationBodyTwoBot.raise);
+        }
+    }
+
+    //дно 2
+    {
+        Vector3D r00 (part[0].x(),0,0);
+        r21=Vector3D(part[0].x(),R02,0);
+        r11=Vector3D (part[0].x(),R02*cos(fi0),R02*sin(fi0));
+        frames.push_back(std::make_shared<MultiFrame>(rotationBodyTwoBot.fiFragNum,r00,r11,r21,rotationBodyTwoBot.vortonsRad));
+        kontrol =Vector3D(part[0].x()+rotationBodyTwoBot.delta,0,0);  //наверное, + delta
+        controlPoints.append(Vector3D(kontrol));
+        normal = Vector3D(-1,0,0);
+        normals.append(normal);
+        controlPointsRaised.append(kontrol+normal*rotationBodyTwoBot.raise);
+        squares.append(0.5*(r11-r00).lengthSquared()*rotationBodyTwoBot.fiFragNum*sin(2*M_PI/rotationBodyTwoBot.fiFragNum));
+
+        for (int i=1; i<rotationBodyTwoBot.r2FragNum; i++) {
+            double r = R02*i;
+            //qDebug()<<"r: "<<r;
+            for (int j=0; j<rotationBodyTwoBot.fiFragNum; j++)
             {
                 double fi = fi0*j;
-                double r = rad0*i;
-                Vector3D r11 (part[newPartFragmNum].x(),r*cos(fi),r*sin(fi));
-                Vector3D r01 (part[newPartFragmNum].x(),r*cos(fi+fi0),r*sin(fi+fi0));
-                Vector3D r31 (part[newPartFragmNum].x(),(r+rad0)*cos(fi+fi0),(r+rad0)*sin(fi+fi0));
-                Vector3D r21 (part[newPartFragmNum].x(),(r+rad0)*cos(fi),(r+rad0)*sin(fi));
-                frames.push_back(std::make_shared <FourFrame>(r01,r11,r21,r31,rotationBottomCutBody.vortonsRad));
-                controlPoint = Vector3D(part[newPartFragmNum].x()-rotationBottomCutBody.delta,(r+0.5*rad0)*cos(fi+0.5*fi0),(r+rad0*0.5)*sin(fi+fi0*0.5));
-                controlPoints.push_back(controlPoint);
-                normal = Vector3D (1,0,0);
-                normals.push_back(normal);
-                squares.push_back((Vector3D::crossProduct(r21-r01,r31-r11)).length()*0.5);
-                controlPointsRaised.push_back(controlPoint+normal*rotationBottomCutBody.raise);
+                Vector3D r31 (part[0].x(),r*cos(fi+fi0),r*sin(fi+fi0));
+                Vector3D r21 (part[0].x(),r*cos(fi),r*sin(fi));
+                Vector3D r11 (part[0].x(),(r+R02)*cos(fi),(r+R02)*sin(fi));
+                Vector3D r01 (part[0].x(),(r+R02)*cos(fi+fi0),(r+R02)*sin(fi+fi0));
+                frames.push_back(std::make_shared <FourFrame>(r01,r11,r21,r31,rotationBodyTwoBot.vortonsRad));
+                kontrol = Vector3D(part[0].x()+rotationBodyTwoBot.delta,(r+0.5*R02)*cos(fi+0.5*fi0),(r+R02*0.5)*sin(fi+fi0*0.5));
+                controlPoints.append(kontrol);
+                normal = Vector3D (-1,0,0);
+                normals.append(normal);
+                squares.append((Vector3D::crossProduct(r21-r01,r31-r11)).length()*0.5);
+                controlPointsRaised.append(kontrol+normal*rotationBodyTwoBot.raise);
             }
         }
     }
@@ -1226,6 +1773,18 @@ double BodyFragmentation::presetFunctionG(double x, FormingParametersRBC paramet
     }
 }
 
+double BodyFragmentation::presetFunctionRBB(double x, FormingParametersRBB parameters)
+{
+    if (x>=0 && x<=parameters.length)
+        return parameters.radius1;
+}
+
+double BodyFragmentation::presetDeriveFunctionRBB(double x, FormingParametersRBB parameters)
+{
+    if (x>=0 && x<=parameters.length)
+        return 0;
+}
+
 /*!
 Высчитывает значение функции g(x)
 \param x Значение х
@@ -1504,4 +2063,39 @@ bool BodyFragmentation::coDirectionallyCheck(const Vector3D a, const Vector3D b)
     if (collinearCrossing.length()<0.0000001 && Vector3D::dotProduct(a,b)>0)
         return true;
     return false;
+}
+
+void RotationBodyWithTwoBottomsParameters::setData(const int i, const double value)
+{
+    switch (i)
+    {
+    case 0:
+        fiFragNum=static_cast<int>(value+0.5);
+        break;
+    case 1:
+        partFragNum=static_cast<int>(value+0.5);
+        break;
+    case 2:
+        r1FragNum=static_cast<int>(value+0.5);
+
+        break;
+    case 3:
+        r2FragNum=static_cast<int>(value+0.5);
+        break;
+    case 4:
+        xBeg=value;
+        break;
+    case 5:
+        xEnd=value;
+        break;
+    case 6:
+        delta=value;
+        break;
+    case 7:
+        raise=value;
+        break;
+    case 8:
+        vortonsRad=value;
+        break;
+    }
 }

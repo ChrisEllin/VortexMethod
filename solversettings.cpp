@@ -320,6 +320,6 @@ void SolverSettings::on_resetFreeMotionSettingsPushButton_clicked()
 
 void SolverSettings::on_xVelBodyLineEdit_editingFinished()
 {
-    if (ui->xVelBodyLineEdit->text().toInt()>-5)
-        ui->xVelBodyLineEdit->setText(QString::number(-5));
+//    if (ui->xVelBodyLineEdit->text().toInt()>-5)
+//        ui->xVelBodyLineEdit->setText(QString::number(-5));
 }

@@ -445,6 +445,11 @@ Vector3D Vorton::getTail() const
     return tail;
 }
 
+Vector3D Vorton::getBeggining() const
+{
+    return 2.0*mid-tail;
+}
+
 /*!
 Возвращает значение завихренности вортон-отрезка
 \return Значение завихренности

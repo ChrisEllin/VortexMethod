@@ -98,8 +98,9 @@ MainWindow::MainWindow(QWidget *parent) :
     connect (ui->epsilonSphereLineEdit, SIGNAL(textChanged(const QString)),settings,SLOT(calcAttributes(const QString)));
     connect (ui->epsilonRotationBodyLineEdit, SIGNAL(textChanged(const QString)),settings,SLOT(calcAttributes(const QString)));
     connect (ui->epsilonRotationCutBodyLineEdit, SIGNAL(textChanged(const QString)),settings,SLOT(calcAttributes(const QString)));
-    connect (ui->fiRotationBodyLineEdit, SIGNAL(textChanged(const QString)), this, SLOT(calcAverLength()));
+    connect (ui->fiRotationBodyLineEdit, SIGNAL(editingFinished()), this, SLOT(calcAverLength()));
     connect (ui->fiRotationCutBodyLineEdit, SIGNAL(textChanged(const QString)), this, SLOT(calcAverLength()));
+    connect (ui->fiRotationBodyTwoBotLineEdit, SIGNAL(editingFinished()), this, SLOT(calcAverLength()));
     connect (ui->epsilonCylinderLineEdit, SIGNAL(textChanged(const QString)),this,SLOT(calcAverLength()));
     connect (ui->epsilonSphereLineEdit, SIGNAL(textChanged(const QString)),this,SLOT(calcAverLength()));
     connect (ui->epsilonRotationBodyLineEdit, SIGNAL(textChanged(const QString)),this,SLOT(calcAverLength()));
@@ -244,6 +245,28 @@ MainWindow::~MainWindow()
     delete keyCtrlR;
     delete waitForOpen;
     delete variateSettings;
+}
+
+double MainWindow::calcSection(double panelLength, int Nfi,FormingParameters pars)
+{
+    double accuracy = 1e-06;
+    double sPanel = panelLength*panelLength;
+    double h = 0.1;
+    double x = 0, s = 0.5*(BodyFragmentation::presetFunctionF(x,pars)*BodyFragmentation::presetFunctionF(x,pars))*Nfi*sin(2*M_PI/Nfi);
+    double difference = fabs(s-sPanel);
+    while (difference>accuracy)
+    {
+        if (s<sPanel)
+            x+=h;
+        else
+        {
+            x-=h;
+            h/=2.0;
+        }
+        s=0.5*(BodyFragmentation::presetFunctionF(x,pars)*BodyFragmentation::presetFunctionF(x,pars))*Nfi*sin(2*M_PI/Nfi);
+        difference = fabs(s-sPanel);
+    }
+    return x;
 }
 
 bool MainWindow::checkDrawing(const Vector3D &mid,const Vector3D &tail)
@@ -709,7 +732,7 @@ void MainWindow::on_rotationBodySolverPushButton_clicked()
     else
         solver->setMotionType(MotionType::NOACCELERATE);
 
-    QFuture<void> rotationBodyFuture=QtConcurrent::run(solver,&Solver::rotationBodySolver, fragPar);
+    QFuture<void> rotationBodyFuture=QtConcurrent::run(solver,&Solver::unifiedSolver, fragPar,BodyType::ROTATIONBODY);
     solving=true;
 
     ui->pointsRaisingRotationBodyLineEdit->setDisabled(true);
@@ -1339,7 +1362,7 @@ void MainWindow::on_rotationCutBodySolverPushButton_clicked()
         solver->setMotionType(MotionType::ACCELERATED);
     else
         solver->setMotionType(MotionType::NOACCELERATE);
-    QFuture<void> rotationCutBodyFuture=QtConcurrent::run(solver,&Solver::rotationCutBodySolver, fragPar);
+    QFuture<void> rotationCutBodyFuture=QtConcurrent::run(solver,&Solver::unifiedSolver, fragPar,BodyType::ROTATIONBOTTOMCUT);
     solving=true;
     ui->pointsRaisingRotationCutBodyLineEdit->setDisabled(true);
     ui->radRotationCutBodyLineEdit->setDisabled(true);
@@ -1713,6 +1736,7 @@ void MainWindow::calcAverLength()
         case 2:
             double a = ui->formingEllipsoidRBLengthLineEdit->text().toDouble()*0.5;
             double b = ui->formingEllipsoidRBDiameterLineEdit->text().toDouble()*0.5;
+            FormingParameters f {b*2.0,0.0,a*2.0,0.0,0.0,2};
 
             double length=0.5*M_PI*(a+b)*(1.0+(3.0*pow((a-b)/(a+b),2))/(10.0+sqrt(4.0-3.0*pow((a-b)/(a+b),2))));
             //double length=3.29491121044429;
@@ -1724,10 +1748,14 @@ void MainWindow::calcAverLength()
 //                    : ((ui->formingEllipsoidRBLengthLineEdit->text().toDouble())/ui->partRotationBodyLineEdit->text().toInt());
 //            //qDebug()<<panelLength;
             panelLength=M_PI*ui->formingEllipsoidRBDiameterLineEdit->text().toDouble()/ui->fiRotationBodyLineEdit->text().toInt();
+            double section=calcSection(panelLength,ui->fiRotationBodyLineEdit->text().toInt(),f);
+            ui->sectionDistanceRotationBodyLineEdit->setText(QString::number(section));
             break;
         }
+
         ui->pointsRaisingRotationBodyLineEdit->setText(QString::number(panelLength*0.25));
-        ui->sectionDistanceRotationBodyLineEdit->setText(QString::number(panelLength*0.5));
+
+
         break;
     case 3:
         switch(ui->stackedWidget_2->currentIndex())
@@ -1763,6 +1791,18 @@ void MainWindow::calcAverLength()
             ui->pointsRaisingRotationCutBodyLineEdit->setText(QString::number(panelLength*0.5));
             break;
         }
+        break;
+    case 4:
+    {
+        qDebug()<<"GOT IT";
+        panelLength=(2.0*M_PI*ui->rad1RotationBodyTwoBotLineEdit->text().toDouble()/ui->fiRotationBodyTwoBotLineEdit->text().toInt());
+        qDebug()<<panelLength;
+        ui->partRotationBodyTwoBotLineEdit->setText(QString::number(static_cast<int>(ui->lengthRotationBodyTwoBotLineEdit->text().toDouble()/panelLength)));
+        ui->rad1FragRotationBodyTwoBotLineEdit->setText(QString::number(static_cast<int>(ui->rad1RotationBodyTwoBotLineEdit->text().toDouble()/panelLength)));
+        ui->rad2FragRotationBodyTwoBotLineEdit->setText(QString::number(static_cast<int>(ui->rad2RotationBodyTwoBotLineEdit->text().toDouble()/panelLength)));
+        ui->pointsRaisingRotationBodyTwoBotLineEdit->setText(QString::number(panelLength*0.5));
+        break;
+    }
     }
     emit sendPanelLength(panelLength);
     }
@@ -2223,6 +2263,7 @@ void MainWindow::calcEpsilonLength(double panel)
     {
         ui->epsilonRotationBodyLineEdit->setText(QString::number(panel*0.5));
         ui->epsilonRotationCutBodyLineEdit->setText(QString::number(panel*0.5));
+        ui->epsilonRotationBodyTwoBotLineEdit->setText(QString::number(panel*0.5));
     }
 }
 
@@ -2241,3 +2282,171 @@ void MainWindow::on_ringsPushButton_clicked()
     QFuture<void> ring=QtConcurrent::run(solver,&Solver::ringsSolver);
 }
 
+
+void MainWindow::on_rotationBodyTwoBotSolverPushButton_clicked()
+{
+    FragmentationParameters fragPar;
+    fragPar.rotationBodyFiFragNum=ui->fiRotationBodyTwoBotLineEdit->text().toInt();
+    fragPar.rotationBodyPartFragNum=ui->partRotationBodyTwoBotLineEdit->text().toInt();
+    fragPar.rotationBodyRFragNum=ui->rad1FragRotationBodyTwoBotLineEdit->text().toInt();
+    fragPar.rotationBodyR2FragNum=ui->rad2FragRotationBodyTwoBotLineEdit->text().toInt();
+    fragPar.rotationBodyXBeg=ui->xBegRotationBodyTwoBotLineEdit->text().toDouble();
+
+
+    fragPar.vortonsRad=ui->epsilonRotationBodyTwoBotLineEdit->text().toDouble();
+    fragPar.delta=ui->deltaRotationBodyTwoBotLineEdit->text().toDouble();
+    fragPar.pointsRaising=ui->pointsRaisingRotationBodyTwoBotLineEdit->text().toDouble();
+
+    fragPar.formingRBB_R1=ui->rad2RotationBodyTwoBotLineEdit->text().toDouble();
+    fragPar.formingRBB_R2=ui->rad2RotationBodyTwoBotLineEdit->text().toDouble();
+    fragPar.formingRBB_length=ui->lengthRotationBodyTwoBotLineEdit->text().toDouble();
+
+    SolverParameters solvPar=settings->getSolverParameters();
+
+    *solver=Solver(solvPar);
+    if (ui->acceleratedMotionAction->isChecked())
+        solver->setMotionType(MotionType::ACCELERATED);
+    else
+        solver->setMotionType(MotionType::NOACCELERATE);
+
+    QFuture<void> rotationBodyFuture=QtConcurrent::run(solver,&Solver::unifiedSolver, fragPar,BodyType::ROTATIONTWOBOTTOM);
+    solving=true;
+
+    ui->fiRotationBodyTwoBotLineEdit->setDisabled(true);
+    ui->partRotationBodyTwoBotLineEdit->setDisabled(true);
+    ui->rad1FragRotationBodyTwoBotLineEdit->setDisabled(true);
+    ui->rad2FragRotationBodyTwoBotLineEdit->setDisabled(true);
+    ui->xBegRotationBodyTwoBotLineEdit->setDisabled(true);
+    ui->epsilonRotationBodyLineEdit->setDisabled(true);
+    ui->deltaRotationBodyFragmLineEdit->setDisabled(true);
+    ui->pointsRaisingRotationBodyLineEdit->setDisabled(true);
+    ui->rad2RotationBodyTwoBotLineEdit->setDisabled(true);
+    ui->rad2RotationBodyTwoBotLineEdit->setDisabled(true);
+    ui->lengthRotationBodyTwoBotLineEdit->setDisabled(true);
+    ui->rotationBodyTwoBotSolverPushButton->setDisabled(true);
+}
+
+void MainWindow::on_rotationCutWithConcentrationBodySolverPushButton_clicked()
+{
+    if(ui->fiRotationCutBodyLineEdit->text().isEmpty())
+    {
+        QMessageBox::critical(this, tr("Ошибка"), tr("Не введено количество разбиений по фи"));
+        return;
+    }
+
+    if(ui->partRotationCutBodyLineEdit->text().isEmpty())
+    {
+        QMessageBox::critical(this, tr("Ошибка"), tr("Не введено количество разбиений по частям"));
+        return;
+    }
+
+    if(ui->radRotationCutBodyLineEdit->text().isEmpty())
+    {
+        QMessageBox::critical(this, tr("Ошибка"), tr("Не введено количество разбиений по радиусу"));
+        return;
+    }
+
+    if(ui->xBegRotationCutBodyLineEdit->text().isEmpty())
+    {
+        QMessageBox::critical(this, tr("Ошибка"), tr("Не введена начальная координата по Х"));
+        return;
+    }
+
+    if (ui->deltaRotationCutBodyFragmLineEdit->text().isEmpty())
+    {
+        QMessageBox::critical(this, tr("Ошибка"), tr("Не введена высота для подъема отрезков при разбиении"));
+        return;
+    }
+    if (ui->epsilonRotationCutBodyLineEdit->text().isEmpty())
+    {
+        QMessageBox::critical(this, tr("Ошибка"), tr("Не введено значение радиуса вортона"));
+        return;
+    }
+    if (ui->pointsRaisingRotationCutBodyLineEdit->text().isEmpty())
+    {
+        QMessageBox::critical(this, tr("Ошибка"), tr("Не введена высота подъема точек для вычисления давления"));
+        return;
+    }
+
+    if (ui->xEndRotationCutBodyLineEdit->text().isEmpty())
+    {
+        QMessageBox::critical(this, tr("Ошибка"), tr("Не введена конечная координата по X"));
+        return;
+    }
+
+    if (ui->sectionDistanceRotationCutBodyLineEdit->text().isEmpty())
+    {
+        QMessageBox::critical(this, tr("Ошибка"), tr("Не введена высота среза"));
+        return;
+    }
+
+    FragmentationParameters fragPar;
+    fragPar.rotationBodyFiFragNum=ui->fiRotationCutBodyLineEdit->text().toInt();
+    fragPar.rotationBodyPartFragNum=ui->partRotationCutBodyLineEdit->text().toInt();
+    fragPar.rotationBodyRFragNum=ui->radRotationCutBodyLineEdit->text().toInt();
+    fragPar.rotationBodyXBeg=ui->xBegRotationCutBodyLineEdit->text().toDouble();
+    fragPar.rotationBodyXEnd=ui->xEndRotationCutBodyLineEdit->text().toDouble();
+    fragPar.rotationBodySectionDistance=ui->sectionDistanceRotationCutBodyLineEdit->text().toDouble();
+    fragPar.rotationBodySectionEndDistance=ui->sectionEndDistanceRotationBodyLineEdit->text().toDouble();
+    fragPar.vortonsRad=ui->epsilonRotationCutBodyLineEdit->text().toDouble();
+    fragPar.delta=ui->deltaRotationCutBodyFragmLineEdit->text().toDouble();
+    fragPar.pointsRaising=ui->pointsRaisingRotationCutBodyLineEdit->text().toDouble();
+    fragPar.formingEllipsoidDiameter=ui->formingRBCDiameterLineEdit->text().toDouble();
+    fragPar.formingLengthSectorOne=ui->formingRBCSectorOneLength->text().toDouble();
+    fragPar.formingLengthSectorTwo=ui->formingRBCSectorTwoLength->text().toDouble();
+    fragPar.formingTailDiameter=ui->formingRBCTailDiameterLineEdit->text().toDouble();
+    ui->formRotationCutBodyComboBox->currentIndex()==0 ? fragPar.rotationBodyRBCFormingType=ELLIPSOID_CYLINDER :
+            (ui->formRotationCutBodyComboBox->currentIndex()==1 ? fragPar.rotationBodyRBCFormingType=ELLIPSOID_CONE :fragPar.rotationBodyRBCFormingType=ELLIPSOID_CYLINDER_CONE);
+    switch (fragPar.rotationBodyRBCFormingType) {
+    case ELLIPSOID_CONE:
+    {
+        fragPar.formingEllipsoidDiameter=ui->formingRBCDiameterLineEdit->text().toDouble();
+        fragPar.formingTailDiameter=ui->formingRBCTailDiameterLineEdit->text().toDouble();
+        fragPar.formingEllisoidLength=ui->formingRBCSectorOneLength->text().toDouble();
+        fragPar.formingConeLength=ui->formingRBCSectorTwoLength->text().toDouble();
+        fragPar.formingFullLength=fragPar.formingEllisoidLength+fragPar.formingConeLength;
+        break;
+    }
+    case ELLIPSOID_CYLINDER:
+    {
+        fragPar.formingEllipsoidDiameter=ui->cylDiameterRotationCutBodyLineEdit->text().toDouble();
+        fragPar.formingEllisoidLength=ui->ellipsoidLengthRotationCutBodyLineEdit->text().toDouble();
+        fragPar.formingFullLength=ui->lengthRotationCutBodyLineEdit->text().toDouble();
+        break;
+    }
+    case ELLIPSOID_CYLINDER_CONE:
+    {
+        fragPar.formingEllipsoidDiameter=ui->formingRBC3FormDiameterLineEdit->text().toDouble();
+        fragPar.formingEllisoidLength=ui->formingRBC3FormSectorOneLength->text().toDouble();
+        fragPar.formingConeLength=ui->formingRBC3FormSectorThreeLength->text().toDouble();
+        fragPar.formingFullLength=ui->formingRBC3FormSectorTwoLength->text().toDouble()+fragPar.formingConeLength+fragPar.formingEllisoidLength;
+        fragPar.formingTailDiameter=ui->formingRBC3FormTailDiameterLineEdit->text().toDouble();
+        break;
+    }
+    }
+
+    SolverParameters solvPar=settings->getSolverParameters();
+
+    *solver=Solver(solvPar);
+    solver->setConcentration(true);
+    if (ui->acceleratedMotionAction->isChecked())
+        solver->setMotionType(MotionType::ACCELERATED);
+    else
+        solver->setMotionType(MotionType::NOACCELERATE);
+    QFuture<void> rotationCutBodyFuture=QtConcurrent::run(solver,&Solver::unifiedSolver, fragPar,BodyType::ROTATIONBOTTOMCUT);
+    solving=true;
+    ui->pointsRaisingRotationCutBodyLineEdit->setDisabled(true);
+    ui->radRotationCutBodyLineEdit->setDisabled(true);
+    ui->epsilonRotationCutBodyLineEdit->setDisabled(true);
+    ui->deltaRotationCutBodyFragmLineEdit->setDisabled(true);
+    ui->partRotationCutBodyLineEdit->setDisabled(true);
+    ui->fiRotationCutBodyLineEdit->setDisabled(true);
+    ui->sectionDistanceRotationCutBodyLineEdit->setDisabled(true);
+    ui->xBegRotationCutBodyLineEdit->setDisabled(true);
+    ui->xEndRotationCutBodyLineEdit->setDisabled(true);
+    ui->rotationCutBodySolverPushButton->setDisabled(true);
+    ui->rotationCutBodyFreeMotionSolverPushButton->setDisabled(true);
+    ui->rotationCutBodyLaunchSolverPushButton->setDisabled(true);
+    ui->rotationCutBodyNearScreenPushButton->setDisabled(true);
+    ui->variateRotationCutBodySolverPushButton->setDisabled(true);
+}

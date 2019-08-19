@@ -3,7 +3,7 @@
 #include <QObject>
 #include "logger.h"
 
-enum MotionType {NOACCELERATE, ACCELERATED};
+
 /*!
     \brief Класс, реализующий расчеты для различных типов тел 
 
@@ -22,11 +22,14 @@ private:
     QVector<Vector3D> torques;
     QString logPath; ///<Путь к каталогу для записи результатов расчета
     MotionType motion;
+    bool concentration=false;
     bool checkFinishing();
 public:
     static bool interrupted;
     static bool getBackGA;
     Solver();
+    void setConcentration(bool conc);
+    BodyFragmentation fragmentate(const FragmentationParameters parameters, const BodyType type);
     void setMotionType(const MotionType type);
     Solver(const SolverParameters& parameters);
     Solver(const SolverParameters& parameters, const FreeMotionParameters& motionParameters);
@@ -50,6 +53,10 @@ public:
     static bool explosion;///<Существование "взрыва"
     bool checkingVariate(double& dispersion, double& oldDispersion,FragmentationParameters &fragPar, FragmentationParameters &resultFrag, SolverParameters& resultSolv);
     bool checkingForceVariate(double& dispersion, double& oldDispersion,FragmentationParameters &fragPar, FragmentationParameters &resultFrag, SolverParameters& resultSolv);
+
+    void updateMaximum(int steps, BodyType type);
+    void updateProgress(int step, BodyType type);
+    void unifiedSolver(const FragmentationParameters &fragPar, const BodyType type);
 signals:
     void sendReguliser(double reguliser);
     void finishSolver();

@@ -325,6 +325,199 @@ void Logger::createFiles()
 
 }
 
+void Logger::parseSalomeMesh(const QString &path, const double raise, double vortonsRad, QVector<std::shared_ptr<MultiFrame> > &frames, QVector<Vector3D> &controlPoints, QVector<Vector3D> &normals, QVector<Vector3D> &controlPointsRaised, QVector<double> &squares)
+{
+    QFile salomeMeshFile(path);
+    if (salomeMeshFile.open(QIODevice::ReadOnly))
+    {
+        QTextStream stream(&salomeMeshFile);
+        QString currentline=stream.readLine();
+        while (currentline!="Vertices") {
+            currentline=stream.readLine();
+        };
+        QVector<Vector3D> vertices;
+        QVector<TriangleVectors> triangles;
+        double verticesQuant=QString(stream.readLine()).toInt();
+        for (int i=0; i<verticesQuant;i++)
+        {
+            QStringList vertex=QString(stream.readLine()).split(" ");
+            vertices.append(Vector3D(vertex[0].toDouble(),vertex[1].toDouble(),vertex[2].toDouble()));
+        }
+        currentline=stream.readLine();
+        while(currentline!="Triangles")
+        {
+            currentline=stream.readLine();
+        }
+        double trianglesQuant=QString(stream.readLine()).toInt();
+        for (int i=0;i<trianglesQuant;i++)
+        {
+            QStringList triangle=QString(stream.readLine()).split(" ");
+            TriangleVectors triangleVec;
+            triangleVec.a=vertices[triangle[0].toInt()];
+            triangleVec.b=vertices[triangle[1].toInt()];
+            triangleVec.c=vertices[triangle[2].toInt()];
+            triangleVec.calcParameters(raise);
+            frames.append(std::make_shared<MultiFrame>(3,triangleVec.center,triangleVec.a,triangleVec.b,vortonsRad));
+            controlPoints.append(triangleVec.center);
+            controlPointsRaised.append(triangleVec.controlPointRaised);
+            normals.append(triangleVec.normal);
+            squares.append(triangleVec.square);
+        }
+    }
+    salomeMeshFile.close();
+}
+
+void Logger::writeCpGraphs(QVector<QVector<double> > &cpArray, QVector<double> &fis)
+{
+    switch (type)
+    {
+    case ROTATIONBODY:
+    {
+    QCustomPlot graph;
+    graph.clearGraphs();
+
+    graph.legend->setVisible(true);   //Включаем Легенду графика
+    graph.axisRect()->insetLayout()->setInsetAlignment(0, Qt::AlignLeft|Qt::AlignTop);
+
+    graph.addGraph();
+    graph.graph(0)->setName("Cp0");
+    graph.graph(0)->setPen(QColor(255,0,0));
+    graph.addGraph();
+    graph.graph(1)->setName("Cp90");
+    graph.graph(1)->setPen(QColor(0,255,0));
+    graph.addGraph();
+    graph.graph(2)->setName("Cp180");
+    graph.graph(2)->setPen(QColor(0,0,255));
+    graph.addGraph();
+    graph.graph(3)->setName("Cp270");
+    graph.graph(3)->setPen(QColor(0,125,125));
+
+    //Подписываем оси Ox и Oy
+    graph.xAxis->setLabel("Position");
+    graph.yAxis->setLabel("Cp");
+
+
+    double minCp=cpArray[0][0];
+    double maxCp=cpArray[0][0];
+    for (int i=0; i<cpArray.size();i++)
+    {
+        for (int j=0; j<cpArray[i].size();j++)
+        {
+            if (cpArray[i][j]>maxCp)
+                maxCp=cpArray[i][j];
+            if (cpArray[i][j]<minCp)
+                minCp=cpArray[i][j];
+        }
+    }
+    graph.xAxis->setRange(*std::min_element(fis.begin(),fis.end()), *std::max_element(fis.begin(),fis.end()));
+    graph.yAxis->setRange(minCp, maxCp);
+
+
+
+   graph.graph(0)->setData(fis, cpArray[0]);
+   graph.graph(1)->setData(fis, cpArray[1]);
+   graph.graph(2)->setData(fis, cpArray[2]);
+   graph.graph(3)->setData(fis, cpArray[3]);
+   graph.replot();
+
+   QString fileName(path+"/СpGraph.png");
+   QFile file(fileName);
+
+   if (file.open(QIODevice::WriteOnly))
+       graph.savePng(fileName);
+    file.close();
+
+    break;
+    }
+    case ROTATIONBOTTOMCUT:
+    {
+    QCustomPlot graph;
+    graph.clearGraphs();
+
+    graph.legend->setVisible(true);   //Включаем Легенду графика
+    graph.axisRect()->insetLayout()->setInsetAlignment(0, Qt::AlignLeft|Qt::AlignTop);
+
+    graph.addGraph();
+    graph.graph(0)->setName("Cp0");
+    graph.graph(0)->setPen(QColor(255,0,0));
+    graph.addGraph();
+    graph.graph(1)->setName("Cp90");
+    graph.graph(1)->setPen(QColor(0,255,0));
+    graph.addGraph();
+    graph.graph(2)->setName("Cp180");
+    graph.graph(2)->setPen(QColor(0,0,255));
+    graph.addGraph();
+    graph.graph(3)->setName("Cp270");
+    graph.graph(3)->setPen(QColor(0,125,125));
+
+    //Подписываем оси Ox и Oy
+    graph.xAxis->setLabel("Position");
+    graph.yAxis->setLabel("Cp");
+
+
+    double minCp=cpArray[0][0];
+    double maxCp=cpArray[0][0];
+    for (int i=0; i<cpArray.size();i++)
+    {
+        for (int j=0; j<cpArray[i].size();j++)
+        {
+            if (cpArray[i][j]>maxCp)
+                maxCp=cpArray[i][j];
+            if (cpArray[i][j]<minCp)
+                minCp=cpArray[i][j];
+        }
+    }
+    graph.xAxis->setRange(*std::min_element(fis.begin(),fis.end()), *std::max_element(fis.begin(),fis.end()));
+    graph.yAxis->setRange(minCp, maxCp);
+
+
+
+   graph.graph(0)->setData(fis, cpArray[0]);
+   graph.graph(1)->setData(fis, cpArray[1]);
+   graph.graph(2)->setData(fis, cpArray[2]);
+   graph.graph(2)->setData(fis, cpArray[3]);
+   graph.replot();
+
+   QString fileName(path+"/СpGraph.png");
+   QFile file(fileName);
+
+   if (file.open(QIODevice::WriteOnly))
+       graph.savePng(fileName);
+    file.close();
+
+    break;
+    }
+    }
+}
+
+void Logger::writeNormals(QVector<Vector3D> &controlPoints, QVector<Vector3D> &normals)
+{
+    QFile traceFile(path+"/normalsVis.vtk");
+    if (traceFile.open(QIODevice::WriteOnly))
+    {
+        QTextStream traceStream(&traceFile);
+        traceStream<<"# vtk DataFile Version 3.0\n";
+        traceStream<<"vtk output\n";
+        traceStream<<"ASCII\n";
+        traceStream<<"DATASET POLYDATA\n";
+        traceStream<<"POINTS "+QString::number(controlPoints.size()*2)+" float\n";
+        for (int i=0; i<controlPoints.size();i++)
+        {
+
+            traceStream<<QString::number(controlPoints[i].x())+" "+QString::number(controlPoints[i].y())+" "+QString::number(controlPoints[i].z())+"\n";
+            traceStream<<QString::number((controlPoints[i]+normals[i]).x())+" "+QString::number((controlPoints[i]+normals[i]).y())+" "+QString::number((controlPoints[i]+normals[i]).z())+"\n";
+        }
+        traceStream.flush();
+        traceStream<<"LINES "+QString::number(controlPoints.size())+" "+QString::number(controlPoints.size()*3)+"\n";
+        for (int i=0; i<controlPoints.size()*2;i=i+2)
+        {
+            traceStream<<"2 "+QString::number(i)+" "+QString::number(i+1)+"\n";
+        }
+        traceStream.flush();
+    }
+    traceFile.close();
+}
+
 /*!
 Записывает данные Ср-распределения в файл
 \param cp вектор, содержащий значения Ср
@@ -453,6 +646,16 @@ void Logger::writePassport(const SolverParameters& solvPar,const FragmentationPa
 
         break;
     }
+    case ROTATIONTWOBOTTOM:
+    {
+        *passportTextStream.get()<<QString("Тип тела: Тело вращения(двудонное) \n\n");
+        *passportTextStream.get()<<"Количество разбиений по фи: "+QString::number(fragPar.rotationBodyFiFragNum)+"\n";
+        *passportTextStream.get()<<"Количество разбиений по образующей: "+QString::number(fragPar.rotationBodyPartFragNum)+"\n";
+        *passportTextStream.get()<<"Количество разбиений по радиусу в носу: "+QString::number(fragPar.rotationBodyRFragNum)+"\n";
+        *passportTextStream.get()<<"Количество разбиений по радиусу в торце: "+QString::number(fragPar.rotationBodyR2FragNum)+"\n";
+        *passportTextStream.get()<<"Начальная точка по х: "+QString::number(fragPar.rotationBodyXBeg)+"\n";
+
+    }
     default:
     {
         *passportTextStream.get()<<QString("Тип тела: Финальные параметры после варьирования для сферы \n\n");
@@ -484,9 +687,10 @@ void Logger::writePassport(const SolverParameters& solvPar,const FragmentationPa
 
 }
 
-void Logger::writePassport(const SolverParameters &solvPar, const FragmentationParameters &fragPar, const FormingParameters forming, const FramesSizes framesSizes)
+void Logger::writePassport(const SolverParameters &solvPar, const FragmentationParameters &fragPar, const FormingParameters forming, const FramesSizes framesSizes, double maxGammFactor)
 {
     writePassport(solvPar,fragPar);
+    *passportTextStream.get()<<"Максимальный множитель гамма: "+QString::number(maxGammFactor)+"\n";
     switch (type)
     {
     case ROTATIONBODY:
@@ -525,6 +729,13 @@ void Logger::writePassport(const SolverParameters &solvPar, const FragmentationP
         *passportTextStream.get()<<"Диаметр ''хвоста'': "+QString::number(forming.tailDiameter)+"\n";
         *passportTextStream.get()<<"Длина первой секции: "+QString::number(forming.sectorOneLength)+"\n";
         *passportTextStream.get()<<"Длина второй секции: "+QString::number(forming.sectorTwoLength)+"\n";
+        break;
+    }
+    case ROTATIONTWOBOTTOM:
+    {
+        //*passportTextStream.get()<<"Длина образующей: "+QString::number(forming)+"\n";
+        *passportTextStream.get()<<"Диаметр ''хвоста'': "+QString::number(forming.tailDiameter)+"\n";
+        *passportTextStream.get()<<"Длина первой секции: "+QString::number(forming.sectorOneLength)+"\n";
         break;
     }
     }
@@ -989,6 +1200,102 @@ void Logger::createParaviewFile(QVector<std::shared_ptr<MultiFrame> > &frames, Q
     paraviewFile.close();
 }
 
+void Logger::createParaviewFile(QVector<std::shared_ptr<MultiFrame> > &frames, QVector<double> &forces, QVector<double> &normalVelocitiesAfter, QVector<double> &normalVelocitiesBefore, QVector<double> &normalVelocitiesCenter, QVector<double> &normalVelocitiesEnd, int currentStep)
+{
+    QFile paraviewFile(path+"/mesh/visual.vtk."+QString::number(currentStep));
+    if (paraviewFile.open(QIODevice::WriteOnly))
+    {
+        QTextStream paraviewTs(&paraviewFile);
+        paraviewTs<<"# vtk DataFile Version 3.0\n";
+        paraviewTs<<"vtk output\n";
+        paraviewTs<<"ASCII\n";
+        paraviewTs<<"DATASET UNSTRUCTURED_GRID\n";
+        int points=0;
+        for (int i=0; i<frames.size();i++)
+            points+=frames[i]->getAnglesNum();
+        paraviewTs<<"POINTS "<<points<<" float\n";
+        paraviewTs.flush();
+        for (int i=0; i<frames.size();i++)
+        {
+            for (int j=0; j<frames[i]->getAnglesNum(); j++)
+                paraviewTs<<frames[i]->at(j).getTail().x()<<" "<<frames[i]->at(j).getTail().y()<<" "<<frames[i]->at(j).getTail().z()<<"\n";
+            paraviewTs.flush();
+        }
+
+        paraviewTs<<"CELLS "<<frames.size()<<" "<<points+frames.size()<<"\n";
+        int currentPointNumber=0;
+        for (int i=0; i<frames.size(); i++)
+        {
+            paraviewTs<<frames[i]->getAnglesNum();
+            int virtualNumber=currentPointNumber;
+            for (int j=currentPointNumber; j<currentPointNumber+frames[i]->getAnglesNum();j++)
+            {
+                paraviewTs<<" "<<j;
+                virtualNumber++;
+            }
+            currentPointNumber=virtualNumber;
+            paraviewTs<<"\n";
+        }
+
+        paraviewTs.flush();
+        paraviewTs<<"CELL_TYPES "<<frames.size()<<"\n";
+        for (int i=0;i<frames.size(); i++)
+            frames[i]->getAnglesNum()==4 ? paraviewTs<<"9\n" : paraviewTs<<"7\n";
+        paraviewTs.flush();
+
+        paraviewTs<<"CELL_DATA "<<frames.size()<<"\n";
+        paraviewTs<<"SCALARS pressure float 1\n";
+        paraviewTs<<"LOOKUP_TABLE default\n";
+        for (int i=0; i<forces.size(); i++)
+            i==0 ? paraviewTs<<forces[i] : paraviewTs<<" "<<forces[i];
+        paraviewTs<<"\n";
+        paraviewTs.flush();
+
+
+        paraviewTs<<"SCALARS normal_speedA(after_SLAU) float 1\n";
+        paraviewTs<<"LOOKUP_TABLE default\n";
+        for (int i=0; i<forces.size(); i++)
+            i==0 ? paraviewTs<<normalVelocitiesAfter[i]<<"\n" : paraviewTs<<" "<<normalVelocitiesAfter[i]<<"\n";
+        paraviewTs<<"\n";
+        paraviewTs.flush();
+
+
+        paraviewTs<<"SCALARS normal_speedB(after_setting_epsilon) float 1\n";
+        paraviewTs<<"LOOKUP_TABLE default\n";
+        for (int i=0; i<forces.size(); i++)
+            i==0 ? paraviewTs<<normalVelocitiesBefore[i]<<"\n" : paraviewTs<<" "<<normalVelocitiesBefore[i]<<"\n";
+        paraviewTs<<"\n";
+        paraviewTs.flush();
+
+
+
+        paraviewTs<<"SCALARS normal_speedC(after_movement) float 1\n";
+        paraviewTs<<"LOOKUP_TABLE default\n";
+        for (int i=0; i<forces.size(); i++)
+            i==0 ? paraviewTs<<normalVelocitiesCenter[i]<<"\n" : paraviewTs<<" "<<normalVelocitiesCenter[i]<<"\n";
+        paraviewTs<<"\n";
+        paraviewTs.flush();
+
+
+        paraviewTs<<"SCALARS normal_speedD(after_all_operations) float 1\n";
+        paraviewTs<<"LOOKUP_TABLE default\n";
+        for (int i=0; i<forces.size(); i++)
+            i==0 ? paraviewTs<<normalVelocitiesEnd[i]<<"\n" : paraviewTs<<" "<<normalVelocitiesEnd[i]<<"\n";
+        paraviewTs<<"\n";
+        paraviewTs.flush();
+
+        paraviewTs<<"SCALARS gamma float 1\n";
+        paraviewTs<<"LOOKUP_TABLE default\n";
+        for (int i=0; i<forces.size(); i++)
+            i==0 ? paraviewTs<<frames[i]->getVorticity()<<"\n" : paraviewTs<<" "<<frames[i]->getVorticity()<<"\n";
+        paraviewTs<<"\n";
+        paraviewTs.flush();
+
+
+    }
+    paraviewFile.close();
+}
+
 void Logger::createParaviewStreamlinesFile(QVector<Vector3D> velocities,QPair<int,int> boundary,double step, int currentStep)
 {
     QFile streamLinesFile(path+"/streamlines/streamlines.vtk."+QString::number(currentStep));
@@ -1106,6 +1413,189 @@ void Logger::createParaviewVelocityField(QVector<Vorton> &vortons, double tau, i
 
     }
     traceFile.close();
+}
+
+void Logger::createParaviewVelocityField(QVector<Vorton> &vortons, QVector<Vector3D> &moveFromFrames, QVector<Vector3D> &moveFromVortons, QVector<Vector3D> &moveFromGetBack,double tau, int currentStep)
+{
+    QFile traceFile(path+"/field/field.vtk."+QString::number(currentStep));
+    if (traceFile.open(QIODevice::WriteOnly))
+    {
+        QTextStream traceStream(&traceFile);
+        traceStream<<"# vtk DataFile Version 3.0\n";
+        traceStream<<"vtk output\n";
+        traceStream<<"ASCII\n";
+        traceStream<<"DATASET POLYDATA\n";
+        traceStream<<"POINTS "+QString::number(vortons.size()*2)+" float\n";
+        for (int i=0; i<vortons.size();i++)
+        {
+            Vector3D mid=vortons[i].getMid();
+            Vector3D move=vortons[i].getMove();
+
+            traceStream<<QString::number(mid.x())+" "+QString::number(mid.y())+" "+QString::number(mid.z())+"\n";
+            traceStream<<QString::number(mid.x()+move.x())+" "+QString::number(mid.y()+move.y())+" "+QString::number(mid.z()+move.z())+"\n";
+        }
+        traceStream.flush();
+        traceStream<<"LINES "+QString::number(vortons.size())+" "+QString::number(vortons.size()*3)+"\n";
+        for (int i=0; i<vortons.size()*2;i=i+2)
+        {
+            traceStream<<"2 "+QString::number(i)+" "+QString::number(i+1)+"\n";
+        }
+        traceStream.flush();
+        traceStream<<"POINT_DATA "+QString::number(vortons.size()*2)+"\n";
+        traceStream<<"SCALARS gamma double 1\n";
+        traceStream<<"LOOKUP_TABLE default\n";
+        for (int i=0; i<vortons.size();i++)
+        {
+            traceStream<<QString::number(vortons[i].getVorticity())+"\n";
+            traceStream<<QString::number(vortons[i].getVorticity())+"\n";
+        }
+        traceStream.flush();
+        traceStream<<"SCALARS velocity double 1\n";
+        traceStream<<"LOOKUP_TABLE default\n";
+        for (int i=0; i<vortons.size();i++)
+        {
+            traceStream<<QString::number(vortons[i].getMove().length()/tau)+"\n";
+            traceStream<<QString::number(vortons[i].getMove().length()/tau)+"\n";
+        }
+        traceStream.flush();
+
+    }
+    traceFile.close();
+
+    QFile traceFrFile(path+"/field/fieldFrames.vtk."+QString::number(currentStep));
+    if (traceFrFile.open(QIODevice::WriteOnly))
+    {
+        QTextStream traceStream(&traceFrFile);
+        traceStream<<"# vtk DataFile Version 3.0\n";
+        traceStream<<"vtk output\n";
+        traceStream<<"ASCII\n";
+        traceStream<<"DATASET POLYDATA\n";
+        traceStream<<"POINTS "+QString::number(vortons.size()*2)+" float\n";
+        for (int i=0; i<vortons.size();i++)
+        {
+            Vector3D mid=vortons[i].getMid();
+            Vector3D move=moveFromFrames[i];
+
+            traceStream<<QString::number(mid.x())+" "+QString::number(mid.y())+" "+QString::number(mid.z())+"\n";
+            traceStream<<QString::number(mid.x()+move.x())+" "+QString::number(mid.y()+move.y())+" "+QString::number(mid.z()+move.z())+"\n";
+        }
+        traceStream.flush();
+        traceStream<<"LINES "+QString::number(vortons.size())+" "+QString::number(vortons.size()*3)+"\n";
+        for (int i=0; i<vortons.size()*2;i=i+2)
+        {
+            traceStream<<"2 "+QString::number(i)+" "+QString::number(i+1)+"\n";
+        }
+        traceStream.flush();
+        traceStream<<"POINT_DATA "+QString::number(vortons.size()*2)+"\n";
+        traceStream<<"SCALARS gamma double 1\n";
+        traceStream<<"LOOKUP_TABLE default\n";
+        for (int i=0; i<vortons.size();i++)
+        {
+            traceStream<<QString::number(vortons[i].getVorticity())+"\n";
+            traceStream<<QString::number(vortons[i].getVorticity())+"\n";
+        }
+        traceStream.flush();
+        traceStream<<"SCALARS velocity double 1\n";
+        traceStream<<"LOOKUP_TABLE default\n";
+        for (int i=0; i<vortons.size();i++)
+        {
+            traceStream<<QString::number(vortons[i].getMove().length()/tau)+"\n";
+            traceStream<<QString::number(vortons[i].getMove().length()/tau)+"\n";
+        }
+        traceStream.flush();
+
+    }
+    traceFrFile.close();
+
+    QFile traceVFile(path+"/field/fieldVortons.vtk."+QString::number(currentStep));
+    if (traceVFile.open(QIODevice::WriteOnly))
+    {
+        QTextStream traceStream(&traceVFile);
+        traceStream<<"# vtk DataFile Version 3.0\n";
+        traceStream<<"vtk output\n";
+        traceStream<<"ASCII\n";
+        traceStream<<"DATASET POLYDATA\n";
+        traceStream<<"POINTS "+QString::number(vortons.size()*2)+" float\n";
+        for (int i=0; i<vortons.size();i++)
+        {
+            Vector3D mid=vortons[i].getMid();
+            Vector3D move=moveFromVortons[i];
+
+            traceStream<<QString::number(mid.x())+" "+QString::number(mid.y())+" "+QString::number(mid.z())+"\n";
+            traceStream<<QString::number(mid.x()+move.x())+" "+QString::number(mid.y()+move.y())+" "+QString::number(mid.z()+move.z())+"\n";
+        }
+        traceStream.flush();
+        traceStream<<"LINES "+QString::number(vortons.size())+" "+QString::number(vortons.size()*3)+"\n";
+        for (int i=0; i<vortons.size()*2;i=i+2)
+        {
+            traceStream<<"2 "+QString::number(i)+" "+QString::number(i+1)+"\n";
+        }
+        traceStream.flush();
+        traceStream<<"POINT_DATA "+QString::number(vortons.size()*2)+"\n";
+        traceStream<<"SCALARS gamma double 1\n";
+        traceStream<<"LOOKUP_TABLE default\n";
+        for (int i=0; i<vortons.size();i++)
+        {
+            traceStream<<QString::number(vortons[i].getVorticity())+"\n";
+            traceStream<<QString::number(vortons[i].getVorticity())+"\n";
+        }
+        traceStream.flush();
+        traceStream<<"SCALARS velocity double 1\n";
+        traceStream<<"LOOKUP_TABLE default\n";
+        for (int i=0; i<vortons.size();i++)
+        {
+            traceStream<<QString::number(vortons[i].getMove().length()/tau)+"\n";
+            traceStream<<QString::number(vortons[i].getMove().length()/tau)+"\n";
+        }
+        traceStream.flush();
+
+    }
+    traceVFile.close();
+
+    QFile traceGBFile(path+"/field/fieldGetBack.vtk."+QString::number(currentStep));
+    if (traceGBFile.open(QIODevice::WriteOnly))
+    {
+        QTextStream traceStream(&traceGBFile);
+        traceStream<<"# vtk DataFile Version 3.0\n";
+        traceStream<<"vtk output\n";
+        traceStream<<"ASCII\n";
+        traceStream<<"DATASET POLYDATA\n";
+        traceStream<<"POINTS "+QString::number(vortons.size()*2)+" float\n";
+        for (int i=0; i<vortons.size();i++)
+        {
+            Vector3D mid=vortons[i].getMid();
+            Vector3D move=moveFromGetBack[i];
+
+            traceStream<<QString::number(mid.x())+" "+QString::number(mid.y())+" "+QString::number(mid.z())+"\n";
+            traceStream<<QString::number(mid.x()+move.x())+" "+QString::number(mid.y()+move.y())+" "+QString::number(mid.z()+move.z())+"\n";
+        }
+        traceStream.flush();
+        traceStream<<"LINES "+QString::number(vortons.size())+" "+QString::number(vortons.size()*3)+"\n";
+        for (int i=0; i<vortons.size()*2;i=i+2)
+        {
+            traceStream<<"2 "+QString::number(i)+" "+QString::number(i+1)+"\n";
+        }
+        traceStream.flush();
+        traceStream<<"POINT_DATA "+QString::number(vortons.size()*2)+"\n";
+        traceStream<<"SCALARS gamma double 1\n";
+        traceStream<<"LOOKUP_TABLE default\n";
+        for (int i=0; i<vortons.size();i++)
+        {
+            traceStream<<QString::number(vortons[i].getVorticity())+"\n";
+            traceStream<<QString::number(vortons[i].getVorticity())+"\n";
+        }
+        traceStream.flush();
+        traceStream<<"SCALARS velocity double 1\n";
+        traceStream<<"LOOKUP_TABLE default\n";
+        for (int i=0; i<vortons.size();i++)
+        {
+            traceStream<<QString::number(vortons[i].getMove().length()/tau)+"\n";
+            traceStream<<QString::number(vortons[i].getMove().length()/tau)+"\n";
+        }
+        traceStream.flush();
+
+    }
+    traceGBFile.close();
 }
 
 void Logger::createParaviewTraceFile(QVector<Vorton> &vortons, int currentStep)
@@ -2354,3 +2844,11 @@ void Logger::openVortonFiles(QString vortonsDir)
 
 }
 
+
+void TriangleVectors::calcParameters(const double raise)
+{
+    normal=Vector3D::crossProduct(a,b).normalized();
+    center=Vector3D((a.x()+b.x()+c.x())/3.0,(a.y()+b.y()+c.y())/3.0,(a.z()+b.z()+c.z())/3.0);
+    controlPointRaised=center+raise*normal;
+    square=0.5*Vector3D::crossProduct(a,b).length();
+}

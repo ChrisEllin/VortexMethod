@@ -17,6 +17,7 @@ struct FramesSizes
     double maxFrameSize;
 };
 
+
 class TriangleFrame
 {
 private:
@@ -80,10 +81,24 @@ public:
     virtual double getRadius() const;
     virtual void setCenter(const Vector3D& _center);
     virtual Vector3D getCenter() const;
-
+    static TriangleFrame createTriangle(Vector3D r01, Vector3D r11, Vector3D r21, double vorticity, double eps);
     virtual TriangleFrame getTriangle(int num);
     virtual int intersection(Vector3D ra,Vector3D rb) const;
     virtual bool inside(Vector3D ra, Vector3D rb, int choosenNum, bool checking=false) const;
+    virtual int getTrianglesNum();
+    static Vector3D bissektCenter(Vector3D r1, Vector3D r2, Vector3D r3);
+};
+
+struct FrameData
+{
+    MultiFrame frame;
+    Vector3D controlPoint;
+    Vector3D controlPointRaised;
+    Vector3D normal;
+    double square;
+
+    bool full;
+    void clear();
 };
 
 #endif // MultiFrame_H

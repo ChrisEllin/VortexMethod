@@ -278,18 +278,38 @@ Vector3D MultiFrame::getCenter() const
     return center;
 }
 
+TriangleFrame MultiFrame::createTriangle(Vector3D r01, Vector3D r11, Vector3D r21,double vorticity, double eps)
+{
+    Vorton a =Vorton((r01+r11)*0.5,r11,vorticity,eps);
+    Vorton b =Vorton((r11+r21)*0.5,r21,vorticity,eps);
+    Vorton c =Vorton((r01+r21)*0.5,r01,vorticity,eps);
+    Vector3D normal = Vector3D::crossProduct(b.getTail()-b.getMid(),a.getTail()-a.getMid()).normalized();
+
+    Vector3D centerTr=MultiFrame::bissektCenter(r01,r11,r21);
+    TriangleFrame tr(r01,r11,r21,normal,centerTr);
+    return tr;
+}
+
 void MultiFrame::makeTriangles()
 {
     triangles.clear();
-    for (int i=1; i<vortons.size()-1;i++)
+//    for (int i=1; i<vortons.size()-1;i++)
+//    {
+       //Vector3D e1=vortons[i].getTail()-vortons[0].getTail();
+       //Vector3D e2=vortons[i+1].getTail()-vortons[0].getTail();
+       //Vector3D normal=Vector3D::crossProduct(e1,e2);
+       //Vector3D center=vortons[0].getTail()+e1*0.25+e2*0.25;
+       //TriangleFrame tr(vortons[0].getTail(),vortons[i].getTail(),vortons[i+1].getTail(),normal,center);
+       //triangles.push_back(tr);
+//    }
+    for (int i=0; i<vortons.size()-1;i++)
     {
-       Vector3D e1=vortons[i].getTail()-vortons[0].getTail();
-       Vector3D e2=vortons[i+1].getTail()-vortons[0].getTail();
-       Vector3D normal=Vector3D::crossProduct(e1,e2);
-       Vector3D center=vortons[0].getTail()+e1*0.25+e2*0.25;
-       TriangleFrame tr(vortons[0].getTail(),vortons[i].getTail(),vortons[i+1].getTail(),normal,center);
-       triangles.push_back(tr);
+        TriangleFrame tr=MultiFrame::createTriangle(center,vortons[i].getTail(),vortons[i+1].getTail(),vortons[i].getVorticity(),vortons[i].getRadius());
+        triangles.push_back(tr);
     }
+    TriangleFrame tr=MultiFrame::createTriangle(center,vortons[vortons.size()-1].getTail(),vortons[0].getTail(),vortons[0].getVorticity(),vortons[0].getRadius());
+    triangles.push_back(tr);
+
 }
 
 TriangleFrame MultiFrame::getTriangle(int num)
@@ -321,6 +341,25 @@ bool MultiFrame::inside(Vector3D ra, Vector3D rb, int choosenNum, bool checking)
             return true;
     }
     return false;
+}
+
+int MultiFrame::getTrianglesNum()
+{
+    return anglesNum;
+}
+
+Vector3D MultiFrame::bissektCenter(Vector3D r1, Vector3D r2, Vector3D r3)
+{
+    Vector3D e23 = r3-r2;
+    Vector3D e12 = r2-r1;
+    Vector3D e13 = r3-r1;
+
+    Vector3D a1 = r1-r2, a2 = e12+e13;
+    Vector3D b1 = e23-e12, b2 = e12+e13;
+    double t2 = (Vector3D::crossProduct(a1,a2)).lengthSquared()/Vector3D::dotProduct(Vector3D::crossProduct(a1,a2),Vector3D::crossProduct(b1,b2));
+
+    Vector3D rc = r2+(e23-e12)*t2;
+    return rc;
 }
 
 
@@ -464,4 +503,14 @@ bool TriangleFrame::colinear(Vector3D a, Vector3D b) const
 double TriangleFrame::solidAngle(Vector3D r)
 {
     return MultiFrame::solidAngle(r0,r1,r2,r);
+}
+
+void FrameData::clear()
+{
+    frame=MultiFrame();
+    controlPoint=Vector3D();
+    controlPointRaised=Vector3D();
+    normal=Vector3D();
+    square=0.0;
+    full=false;
 }

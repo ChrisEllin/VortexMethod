@@ -56,6 +56,7 @@ public:
     void setMove(const Vector3D& _move);
     Vector3D getMid() const;
     Vector3D getTail() const;
+    Vector3D getBeggining() const;
     double getVorticity() const;
     double getRadius() const;
     Vector3D getElongation() const;

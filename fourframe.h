@@ -10,6 +10,8 @@
 */
 class FourFrame : public MultiFrame
 {
+private:
+    void makeTriangles();
 public:
     FourFrame();
     FourFrame(Vector3D r01, Vector3D r11, Vector3D r21, Vector3D r31, double eps);
@@ -20,6 +22,7 @@ public:
     VelBsym VelAndBsym (const Vector3D& point) const;
     double solidAngleFrame(const Vector3D& point) const;
     QVector<Vorton> getVortons() const;
+    int getTrianglesNum();
 };
 
 #endif // FOURFRAME_H

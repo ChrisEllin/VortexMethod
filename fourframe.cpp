@@ -3,6 +3,12 @@
 /*!
 Создает пустую четырехугольную рамку
 */
+void FourFrame::makeTriangles()
+{
+    triangles.push_back(MultiFrame::createTriangle(vortons[0].getTail(),vortons[1].getTail(),vortons[2].getTail(),vortons[0].getVorticity(),vortons[0].getRadius()));
+    triangles.push_back(MultiFrame::createTriangle(vortons[2].getTail(),vortons[3].getTail(),vortons[0].getTail(),vortons[0].getVorticity(),vortons[0].getRadius()));
+}
+
 FourFrame::FourFrame()
 {
 
@@ -101,6 +107,11 @@ double FourFrame::solidAngleFrame(const Vector3D& point) const
 QVector<Vorton> FourFrame::getVortons() const
 {
     return vortons;
+}
+
+int FourFrame::getTrianglesNum()
+{
+    return 2;
 }
 
 

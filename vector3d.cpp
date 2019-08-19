@@ -209,10 +209,8 @@ void Vector3D::operator =(const Vector3D &vec1)
 */
 Vector3D Vector3D::operator -()
 {
-    this->X*=-1;
-    this->Y*=-1;
-    this->Z*=-1;
-    return *this;
+    return Vector3D(this->X*-1,this->Y*-1,this->Z*-1);
+
 }
 
 /*!

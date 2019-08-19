@@ -50,6 +50,7 @@ private:
     QShortcut *keyCtrlS;
     QShortcut *keyCtrlE;
     ExitState exitState;
+    double calcSection(double panelLength, int Nfi,FormingParameters pars);
     bool checkDrawing(const Vector3D &mid, const Vector3D &tail);
     void setParameters(SphereParameters &sphPar);
     void setParameters(CylinderParameters &cylPar);
@@ -109,6 +110,10 @@ private slots:
     void on_ovalPushButton_clicked();
 
     void on_ringsPushButton_clicked();
+
+    void on_rotationBodyTwoBotSolverPushButton_clicked();
+
+    void on_rotationCutWithConcentrationBodySolverPushButton_clicked();
 
 public slots:
     void setReguliser(double reguliser);

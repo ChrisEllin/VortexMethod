@@ -15,7 +15,8 @@ enum BodyType {
     SPHERE, ///<Сфера
     CYLINDER, ///<Цилиндр
     ROTATIONBODY, ///<Тело вращения
-    ROTATIONBOTTOMCUT ///<Тело вращения со срезом дна
+    ROTATIONBOTTOMCUT, ///<Тело вращения со срезом дна
+    ROTATIONTWOBOTTOM
 };
 
 
@@ -78,6 +79,10 @@ struct FragmentationParameters
     */
     ///@{
     int rotationBodyRFragNum; ///<Количество разбиений по радиусу
+
+    int rotationBodyR2FragNum;
+
+
     FormingTypeRBC rotationBodyRBCFormingType;
     ///@}
 
@@ -94,6 +99,10 @@ struct FragmentationParameters
     double formingConeLength;
     double formingFullLength;
 
+
+    double formingRBB_R1;
+    double formingRBB_R2;
+    double formingRBB_length;
     /*!
         \defgroup commonParameters Общие параметры
         \ingroup fragmentationParameters
@@ -175,6 +184,21 @@ struct RotationCutBodyParameters
     void setData(const int i, const double value);
 };
 
+struct RotationBodyWithTwoBottomsParameters
+{
+    int fiFragNum;  ///<Количество разбиений по fi
+    int partFragNum;  ///<Количество разбиений по длине
+    int r1FragNum; ///<Количество разбиений по радиусу
+    int r2FragNum;
+    double xBeg;  ///<Координата начала тела по X
+    double xEnd;  ///<Координата конца тела по Y
+
+    double delta;  ///<Подъем рамок над телом
+    double raise;  ///<Подъем контрольных точек для подсчета давления
+    double vortonsRad; ///<Радиус вортона
+    void setData(const int i, const double value);
+};
+
 struct FormingParameters
 {
     double diameter;
@@ -198,6 +222,13 @@ struct FormingParametersRBC
     FormingTypeRBC type;
 };
 
+struct FormingParametersRBB
+{
+    double radius1;
+    double radius2;
+    double length;
+};
+
 /*!
     \brief Класс, описывающие разбиение тела
 
@@ -217,23 +248,30 @@ private:
     CylinderParameters cylinder; ///<Параметры разбиения цилиндра
     RotationBodyParameters rotationBody; ///<Параметры разбиения тела вращения
     RotationCutBodyParameters rotationBottomCutBody; ///<Параметры разбиения тела вращения со срезом дна
+    RotationBodyWithTwoBottomsParameters rotationBodyTwoBot;
     FormingParameters forming;
     QPair<int,int> streamLinesSize;
     FormingParametersRBC formingRBC;
-
+    FormingParametersRBB formingRBB;
+    BodyType exisetingType;
     QVector<QVector<Vector3D>> graphNodesX;
     QVector<QVector<Vector3D>> graphNodesY;
     QVector<QVector<Vector3D>> graphNodesZ;
     //bool launch;
 public:
     BodyFragmentation(BodyType body, const FragmentationParameters& param, bool launch=false);
+    BodyFragmentation(const BodyFragmentation& frag);
+    BodyFragmentation(BodyType body, const FragmentationParameters& param, int a, bool launch=false);
 //    BodyFragmentation(const FragmentationParameters& param, const int i, const Vector3D &bodyVel, const double tau);
     void sphereFragmentation();
     void cylinderFragmentation();
+    void calculateBoundaries(Vector3D& bodyNose,Vector3D& center, double& xend);
     QPair<int,int> getStreamLinesSizes();
     void rotationBodyFragmantation();
     void rotationCutBodyFragmantation();
+    void rotationCutBodyFragmantationWithConcentration();
     void rotationCutBodyLaunchFragmentation(const int i, const Vector3D &bodyVel, const double tau, const double fullLength);
+    void rotationBodyWithTwoBottoms();
     void clearVectors();
     void prepareGraphsX0(QVector<std::shared_ptr<MultiFrame>>& xFrames,  FormingParameters pars);
     void prepareGraphsY0(QVector<std::shared_ptr<MultiFrame>>& yFrames,  FormingParameters pars);
@@ -243,6 +281,8 @@ public:
     static double presetFunctionF(double x, FormingParameters parameters);
     static double presetDeriveFunctionF(double x, FormingParameters parameters);
     static double presetFunctionG(double x, FormingParametersRBC parameters);
+    static double presetFunctionRBB(double x, FormingParametersRBB parameters);
+    static double presetDeriveFunctionRBB(double x, FormingParametersRBB parameters);
     //static double presetFunctionG(double x, double xBeg, FormingParameters parameters);
     static double presetDeriveFunctionG(double x, FormingParametersRBC parameters);
     QVector<Vector3D> getControlPoints() const;

@@ -118,6 +118,169 @@ void FrameCalculations::maxVortonsVelocity(const QVector<Vorton> &freeVortons, V
     }
 }
 
+void FrameCalculations::unionVortonsAuto(QVector<Vorton> &vortons, const double eStar, const double eDoubleStar, const double vortonRad, QVector<std::shared_ptr<MultiFrame> > &frames, const double maxInitialGamma, int currentStep, int &restrQuant, QVector<std::pair<double, double> > boundaries)
+{
+    restrQuant=0;
+    if (currentStep<2)
+        unionVortons(vortons,eStar,eDoubleStar,vortonRad,frames,boundaries);
+    else {
+        unionWithRestrictions(vortons,eStar,eDoubleStar,vortonRad,frames,maxInitialGamma,restrQuant,boundaries);
+    }
+}
+
+void FrameCalculations::updateSpeed(Vector3D &currentSpeed, Vector3D streamVel, int acceleratedStepsNum, MotionType type)
+{
+    if (type==ACCELERATED && currentSpeed.length()<= streamVel.length())
+    {
+        if ((currentSpeed+streamVel/(acceleratedStepsNum+2)).length()<streamVel.length())
+            currentSpeed+=streamVel/(acceleratedStepsNum+2);
+        else
+            currentSpeed=streamVel;
+    }
+}
+
+QVector<double> FrameCalculations::normalVelocitiesCalculations(QVector<Vorton> &freeVortons, QVector<Vorton> &newVortons,QVector<std::shared_ptr<MultiFrame> > &frames, QVector<Vector3D> &normals, QVector<Vector3D> &controlPoints, Vector3D streamVel, PLACE_IN_SOLVER place)
+{
+    QVector<double> velocities;
+    switch (place)
+    {
+    case AFTER_SLAU:
+    {
+        for (int i=0; i<controlPoints.size();i++)
+            velocities.push_back(Vector3D::dotProduct(FrameCalculations::velocity(controlPoints[i],streamVel,freeVortons,frames),normals[i]));
+        break;
+    }
+    case AFTER_EPSILON:
+    {
+        for (int i=0; i<controlPoints.size();i++)
+            velocities.push_back(Vector3D::dotProduct(FrameCalculations::velocity(controlPoints[i],streamVel,freeVortons+newVortons),normals[i]));
+        break;
+    }
+    case AFTER_INTEGRATION:
+    {
+        for (int i=0; i<controlPoints.size();i++)
+            velocities.push_back(Vector3D::dotProduct(FrameCalculations::velocity(controlPoints[i],streamVel,freeVortons),normals[i]));
+        break;
+    }
+    case IN_THE_END:
+    {
+        for (int i=0; i<controlPoints.size();i++)
+            velocities.push_back(Vector3D::dotProduct(FrameCalculations::velocity(controlPoints[i],streamVel,freeVortons),normals[i]));
+        break;
+    }
+    };
+    return velocities;
+}
+
+void FrameCalculations::fillPressures(QVector<Vorton> &freeVortons, QVector<std::shared_ptr<MultiFrame> > &frames, QVector<Vector3D> &controlPointsRaised, QVector<double> &pressures,Vector3D& streamVel, double streamPres, double density, double tau)
+{
+    pressures.clear();
+    for (int i=0; i<controlPointsRaised.size(); i++)
+        pressures.push_back((FrameCalculations::pressureCalc(controlPointsRaised[i], streamVel, streamPres,density, frames, freeVortons, tau)-streamPres)/
+                (density*Vector3D::dotProduct(streamVel,streamVel)*0.5));
+}
+
+void FrameCalculations::setMaxInitialGamma(double &maxGamma, const int &stepNum, const QVector<Vorton>& freeVortons)
+{
+    if (stepNum==0)
+    {
+        maxGamma=freeVortons[0].getVorticity();
+        for (int i=1; i<freeVortons.size();i++)
+        {
+            if (fabs(freeVortons[i].getVorticity())>fabs(maxGamma))
+                maxGamma=freeVortons[i].getVorticity();
+        }
+    }
+
+}
+
+void FrameCalculations::setRightMove(QVector<Vorton> &originalVort, QVector<Vorton> &copyVort)
+{
+    for (int i=0; i<copyVort.size();i++)
+        copyVort[i].setMove(originalVort[i].getMove());
+}
+
+QVector<QVector<double> > FrameCalculations::createCpArray(BodyType type, FragmentationParameters fragPar)
+{
+    switch (type) {
+    case ROTATIONBODY:
+    {
+        QVector<double> cp0(fragPar.rotationBodyPartFragNum+1);
+        QVector<double> cp90(fragPar.rotationBodyPartFragNum+1);
+        QVector<double> cp180(fragPar.rotationBodyPartFragNum+1);
+        QVector<double> cp270(fragPar.rotationBodyPartFragNum+1);
+        QVector<QVector<double>> cpArray;
+        cpArray.append(cp0);
+        cpArray.append(cp90);
+        cpArray.append(cp180);
+        cpArray.append(cp270);
+        return  cpArray;
+    }
+    case ROTATIONBOTTOMCUT:
+    {
+        QVector<double> cp0(fragPar.rotationBodyPartFragNum+1);
+        QVector<double> cp90(fragPar.rotationBodyPartFragNum+1);
+        QVector<double> cp180(fragPar.rotationBodyPartFragNum+1);
+        QVector<double> cp270(fragPar.rotationBodyPartFragNum+1);
+        QVector<QVector<double>> cpArray;
+        cpArray.append(cp0);
+        cpArray.append(cp90);
+        cpArray.append(cp180);
+        cpArray.append(cp270);
+        return  cpArray;
+    }
+    case ROTATIONTWOBOTTOM:
+    {
+        QVector<double> cp0(fragPar.rotationBodyFiFragNum);
+
+        QVector<QVector<double>> cpArray;
+        cpArray.append(cp0);
+        return  cpArray;
+    }
+    }
+}
+
+void FrameCalculations::setRightMove(QVector<Vorton> &freeVortons, QVector<Vorton> &copyVort, QVector<Vorton> &newVortons, QVector<Vorton> &copyNewVort)
+{
+    for (int i=0; i<copyVort.size();i++)
+        copyVort[i].setMove(freeVortons[i].getMove());
+
+    for (int i=0; i<copyNewVort.size();i++)
+        copyNewVort[i].setMove(newVortons[i].getMove());
+
+}
+
+FrameData FrameCalculations::framesMagic(QVector<std::shared_ptr<MultiFrame> > &frames,QVector<Vector3D>& controlPoints,QVector<Vector3D>& controlPointsRaised,QVector<Vector3D>& normals,QVector<double>& squares)
+{
+
+
+    MultiFrame backFrame=*frames.last().get();
+    frames.remove(frames.size()-1);
+    Vector3D controlPoint=controlPoints.last();
+    Vector3D normal=normals.last();
+    Vector3D controlPointRaised=controlPointsRaised.last();
+    double square=squares.last();
+    controlPoints.remove(controlPoints.size()-1);
+    controlPointsRaised.remove(controlPointsRaised.size()-1);
+    normals.remove(normals.size()-1);
+    squares.remove(squares.size()-1);
+    FrameData data {backFrame,controlPoint,controlPointRaised,normal,square,true};
+    return  data;
+}
+
+void FrameCalculations::reverseMagic(QVector<std::shared_ptr<MultiFrame> > &frames,QVector<Vector3D>& controlPoints,QVector<Vector3D>& controlPointsRaised,QVector<Vector3D>& normals,QVector<double>& squares,FrameData &framesAdd)
+{
+    if (framesAdd.full)
+    {
+    frames.push_back(std::make_shared<MultiFrame>(framesAdd.frame));
+    controlPoints.push_back(framesAdd.controlPoint);
+    controlPointsRaised.push_back(framesAdd.controlPointRaised);
+    normals.push_back(framesAdd.normal);
+    squares.push_back(framesAdd.square);
+    framesAdd.clear();
+    }
+}
+
 void FrameCalculations::unionWithSchedule(QVector<Vorton> &vortons, QVector<QPair<int, int> > &schedule)
 {
     QVector<Vorton> correctVortons;
@@ -244,6 +407,7 @@ Eigen::VectorXd FrameCalculations::columnCalc(const Vector3D streamVel, const QV
     Eigen::VectorXd column(matrixSize);
     for (int i=0; i<controlPoints.size(); i++)
         column(i)=Vector3D::dotProduct(-(FrameCalculations::velocity(controlPoints[i], streamVel, vortons)+Vector3D::crossProduct(angularVel, controlPoints[i]-center)), normals[i]);
+
     column(controlPoints.size())=0.0;
     return column;
 }
@@ -387,6 +551,15 @@ int FrameCalculations::universalInside(const Vorton vort,const QVector<std::pair
     }
    return -1;
 
+}
+
+void FrameCalculations::clearMovesWithoutIndexes(QVector<int> &indexes, QVector<Vorton> &vortons)
+{
+    for (int i=0; i<vortons.size();i++)
+    {
+       if (indexes.indexOf(i)==-1)
+           vortons[i].setMove(Vector3D());
+    }
 }
 
 Inside FrameCalculations::universalInsideCorrect(const Vorton vort, const QVector<std::pair<double, double> > boundaries, QVector<std::shared_ptr<MultiFrame> > &frames)
@@ -631,20 +804,14 @@ QPair<int,int> FrameCalculations::intersectsFramesVector(QVector<std::shared_ptr
     return QPair<int,int>(-1,-1);
 }
 
-void FrameCalculations::universalGetBackTriangleFrames(QVector<Vorton> &vortons,QVector<Vorton> &vortonsOriginal, QVector<std::pair<double, double> > boundaries, const double layerHeight, const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals, QVector<std::shared_ptr<MultiFrame> > &frames, bool screen)
+void FrameCalculations::universalGetBackTriangleFrames(QVector<Vorton> &vortons, QVector<Vorton> &vortonsOriginal, QVector<std::pair<double, double> > boundaries, const double layerHeight, const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals, QVector<std::shared_ptr<MultiFrame> > &frames, bool screen, Vector3D translScreen)
 {
-    QTime start=QTime::currentTime();
-    for (int i=0; i<vortons.size();i++)
+    bool check;
+    int aaa=0;
+     QTime start=QTime::currentTime();
+    for (int i=vortons.size()-1; i>=0;i--)
     {
-        if (screen==true)
-        {
-            if (FrameCalculations::insideScreen(vortons[i]))
-            {
-                vortons.remove(i);
-                counters.underScreenNum++;
-            }
-        }
-
+        check=false;
         bool result=insideFramesVector(frames,vortons[i],boundaries,VortonsPart::Center);
         if (result)
         {
@@ -662,9 +829,10 @@ void FrameCalculations::universalGetBackTriangleFrames(QVector<Vorton> &vortons,
                 double d=(rtilda-vortons[i].getMid()).length();
                 Vector3D n=frames[res.first]->getTriangle(res.second).getNormal();
                 vortons[i].translate(2.0*d*l);
+                check=true;
                 //vortons[i].translate(2.0*Vector3D::dotProduct(l,n)*d*n);
                  counters.gotBackNum++;
-               // vortons[i].rotateAroundNormal(n);
+                //vortons[i].rotateAroundNormal(n);
 
             }
             else {
@@ -686,9 +854,11 @@ void FrameCalculations::universalGetBackTriangleFrames(QVector<Vorton> &vortons,
 //            }
 
         }
+
         if (insideFramesVector(frames,vortons[i],boundaries,VortonsPart::Tail) != insideFramesVector(frames,vortons[i],boundaries,VortonsPart::Beginning))
         {
             QPair<int,int> res2=intersectsFramesVector(frames,vortons[i],VortonsPart::Tail);
+
             if (res2.first!=-1)
             {
                 vortons[i].rotateAroundNormal(frames[res2.first]->getTriangle(res2.second).getNormal().normalized());
@@ -706,9 +876,12 @@ void FrameCalculations::universalGetBackTriangleFrames(QVector<Vorton> &vortons,
         }
 
         else {
-            QPair<int,int> normNum=findMaxSolidAngle(vortons[i].getMid(),frames);
+            //QPair<int,int> normNum=findMaxSolidAngle(vortons[i].getMid(),frames);
+
+            QPair<int,int> normNum=findMaxSolidAngle(vortons[i],frames);
             double dist=(vortons[i].getMid()-frames[normNum.first]->getTriangle(normNum.second).getCenter()).length();
             Vorton test=vortons[i];
+
             if (dist<layerHeight||(insideFramesVector(frames,vortons[i],boundaries,VortonsPart::Center) || insideFramesVector(frames,vortons[i],boundaries,VortonsPart::Beginning) || insideFramesVector(frames,vortons[i],boundaries,VortonsPart::Tail)))
             {
                 test.rotateAroundNormal(frames[normNum.first]->getTriangle(normNum.second).getNormal().normalized());
@@ -716,10 +889,14 @@ void FrameCalculations::universalGetBackTriangleFrames(QVector<Vorton> &vortons,
             }
             if (!(insideFramesVector(frames,test,boundaries,VortonsPart::Center) || insideFramesVector(frames,test,boundaries,VortonsPart::Beginning) || insideFramesVector(frames,test,boundaries,VortonsPart::Tail)))
             {
+                     aaa++;
 
                  if (!(vortons[i]==test))
+                 {
+
                     counters.rotatedNum++;
                  vortons[i]=test;
+                 }
             }
             if ((insideFramesVector(frames,vortons[i],boundaries,VortonsPart::Center) || insideFramesVector(frames,vortons[i],boundaries,VortonsPart::Beginning) || insideFramesVector(frames,vortons[i],boundaries,VortonsPart::Tail)))
             {
@@ -737,8 +914,21 @@ void FrameCalculations::universalGetBackTriangleFrames(QVector<Vorton> &vortons,
             i--;
         }
 
+        if (!check)
+            vortons[i].setMove(Vector3D());
+
+        if (screen==true)
+        {
+            if (FrameCalculations::insideScreen(vortons[i],translScreen))
+            {
+                vortons.remove(i);
+                vortonsOriginal.remove(i);
+                counters.underScreenNum++;
+            }
+        }
     }
     timers.getBackAndRotateTimer=start.elapsed()*0.001;
+    qDebug()<<"AAAAAAAAAAAA="<<aaa;
 }
 
 bool FrameCalculations::universalInsideR0Correct(const Vorton vort, const QVector<std::pair<double, double> > boundaries, QVector<std::shared_ptr<MultiFrame> > &frames)
@@ -1374,8 +1564,33 @@ void FrameCalculations::correctMove(QVector<Vorton> &freeVortons, QVector<Vorton
     for (int i=0; i<freeVortons.size();i++)
     {
         freeVortons[i].setMove(copyVort[i].getMid()-freeVortons[i].getMid());
-        copyVort[i].setMove(freeVortons[i].getMove());
+
     }
+}
+
+void FrameCalculations::correctMove(QVector<Vorton> &freeVortons, QVector<Vorton> &copyVort, QVector<Vorton> &newVortons, QVector<Vorton> &copyNewVort)
+{
+    for (int i=0; i<freeVortons.size();i++)
+    {
+        freeVortons[i].setMove(copyVort[i].getMid()-freeVortons[i].getMid());
+
+    }
+    for (int i=0; i<newVortons.size();i++)
+    {
+        newVortons[i].setMove(copyNewVort[i].getMid()-newVortons[i].getMid());
+
+    }
+
+}
+
+void FrameCalculations::getBackMove(QVector<Vector3D> &moveFromGetBack, QVector<Vorton> &newVortons, QVector<Vorton> &freeVortons)
+{
+    moveFromGetBack.clear();
+    for (int i=0;i<freeVortons.size();i++)
+        moveFromGetBack.push_back(freeVortons[i].getMove());
+    for (int i=0;i<newVortons.size();i++)
+        moveFromGetBack.push_back(newVortons[i].getMove());
+
 }
 
 void FrameCalculations::universalRotate(QVector<Vorton> vortons, QVector<int> res, const double layerHeight, const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals)
@@ -1434,11 +1649,11 @@ void FrameCalculations::unionWithLift(QVector<Vorton> &vortons, double eStar, do
 {
     QTime start = QTime::currentTime();
 
-
     for (int i=vortons.size()-1; i>=0; i--)
     {
         for (int j=i-1; j>=0; j--)
         {
+
             if((vortons[i].getMid()-vortons[j].getMid()).length()<eStar)
             {
                 double psi=Vector3D::dotProduct((vortons[i].getTail()-vortons[i].getMid()).normalized(),(vortons[j].getTail()-vortons[j].getMid()).normalized());
@@ -1447,10 +1662,10 @@ void FrameCalculations::unionWithLift(QVector<Vorton> &vortons, double eStar, do
                     int normFirstNum=vortonAffiliation(vortons[i],frames);
                     int normSecondNum=vortonAffiliation(vortons[j],frames);
                     Vector3D normal=0.5*(normals[normFirstNum]+normals[normSecondNum]);
+
                     Vorton temp=vortons[j];
                     if (psi<0)
                         temp.turn();
-
                     Vector3D newMid = (fabs(vortons[i].getVorticity())*vortons[i].getMid()+fabs(temp.getVorticity())*temp.getMid())/
                     (fabs(vortons[i].getVorticity())+fabs(temp.getVorticity()));
                     Vector3D selfLen = (fabs(vortons[i].getVorticity())*(vortons[i].getTail()-vortons[i].getMid())+fabs(temp.getVorticity())*(temp.getTail()-temp.getMid()))/
@@ -1478,8 +1693,7 @@ void FrameCalculations::unionWithLift(QVector<Vorton> &vortons, double eStar, do
 void FrameCalculations::unionVortons(QVector<Vorton> &vortons, const double eStar, const double eDoubleStar, const double vortonRad, QVector<std::shared_ptr<MultiFrame> > &frames, QVector<std::pair<double, double> > boundaries)
 {
     QTime start = QTime::currentTime();
-
-
+    int insideN=0;
     for (int i=vortons.size()-1; i>=0; i--)
     {
         for (int j=i-1; j>=0; j--)
@@ -1491,8 +1705,10 @@ void FrameCalculations::unionVortons(QVector<Vorton> &vortons, const double eSta
                 {
                     Vorton temp=vortons[j];
                     if (psi<0)
+                    {
                         temp.turn();
-
+                        insideN++;
+                    }
                     Vector3D newMid = (fabs(vortons[i].getVorticity())*vortons[i].getMid()+fabs(temp.getVorticity())*temp.getMid())/
                     (fabs(vortons[i].getVorticity())+fabs(temp.getVorticity()));
                     Vector3D selfLen = (fabs(vortons[i].getVorticity())*(vortons[i].getTail()-vortons[i].getMid())+fabs(temp.getVorticity())*(temp.getTail()-temp.getMid()))/
@@ -1501,6 +1717,7 @@ void FrameCalculations::unionVortons(QVector<Vorton> &vortons, const double eSta
                     Vorton newVorton = Vorton (newMid, newMid+selfLen, newVorticity, vortonRad);
                     if (!(insideFramesVector(frames,newVorton,boundaries,VortonsPart::Center)||insideFramesVector(frames,newVorton,boundaries,VortonsPart::Beginning)||insideFramesVector(frames,newVorton,boundaries,VortonsPart::Tail)))
                     {
+
                     counters.unitedNum++;
                     vortons[i]=newVorton;
                     i--;
@@ -1513,6 +1730,8 @@ void FrameCalculations::unionVortons(QVector<Vorton> &vortons, const double eSta
             }
         }
     }
+
+
     timers.unionTimer=start.elapsed()*0.001;
 }
 
@@ -1539,7 +1758,7 @@ void FrameCalculations::unionWithRestrictions(QVector<Vorton> &vortons, const do
                     Vector3D selfLen = (fabs(vortons[i].getVorticity())*(vortons[i].getTail()-vortons[i].getMid())+fabs(temp.getVorticity())*(temp.getTail()-temp.getMid()))/
                     (fabs(vortons[i].getVorticity())+fabs(temp.getVorticity()));
                     double newVorticity=vortons[i].getVorticity()+temp.getVorticity();
-                    if (fabs(newVorticity)>1.5*fabs(maxInitialGamma))
+                    if (fabs(newVorticity)>3.0*fabs(maxInitialGamma))
                     {
                         quant++;
                         continue;
@@ -1612,7 +1831,9 @@ int FrameCalculations::vortonAffiliation(Vorton &v, QVector<std::shared_ptr<Mult
         for (int j=0; j<frames[i]->getAnglesNum();j++)
         {
             if (v==frames[i]->at(j))
+            {
                 return i;
+            };
         }
     }
 }
@@ -1625,7 +1846,8 @@ int FrameCalculations::vortonAffiliation(Vorton &v, QVector<std::shared_ptr<Mult
 void FrameCalculations::removeSmallVorticity(QVector<Vorton> &vortons,const double minVorticity)
 {
     QTime start = QTime::currentTime();
-    qDebug()<<minVorticity;
+
+
     for (int i=vortons.size()-1; i>=0; i--)
     {
         if (fabs(vortons[i].getVorticity())<minVorticity)
@@ -1761,7 +1983,7 @@ void FrameCalculations::displacementCalc(QVector<Vorton> &freeVortons, QVector<V
     timers.integrationTimer=start.elapsed()*0.001;
 }
 
-void FrameCalculations::displacementPassiveCalc(QVector<Vorton> &freeVortons, QVector<Vorton> &newVortons, QVector<Vorton> &frameVortons, double step, Vector3D streamVel, double eDelta, double fiMax, double maxMove)
+void FrameCalculations::displacementPassiveCalc(QVector<Vorton> &freeVortons, QVector<Vorton> &newVortons, QVector<Vorton> frameVortons, double step, Vector3D streamVel, double eDelta, double fiMax, double maxMove)
 {
     QTime start = QTime::currentTime();
     QVector<Vorton> vortons;
@@ -1806,12 +2028,110 @@ void FrameCalculations::displacementPassiveCalc(QVector<Vorton> &freeVortons, QV
 
     for (int i=0; i<freeVortons.size(); i++)
     {
+        if (std::isnan(resultedVec[i].getMove().length()))
+            qDebug()<<"F*cking nan";
         freeVortons[i].setMove(resultedVec[i].getMove());
         freeVortons[i].setElongation(resultedVec[i].getElongation());
     }
 
     for (int i=0; i<newVortons.size(); i++)
     {
+        if (std::isnan(resultedVec[i+freeVortons.size()].getMove().length()))
+            qDebug()<<"F*cking nan";
+        newVortons[i].setMove(resultedVec[i+freeVortons.size()].getMove());
+        newVortons[i].setElongation(resultedVec[i+freeVortons.size()].getElongation());
+    }
+    timers.integrationTimer=start.elapsed()*0.001;
+}
+
+void FrameCalculations::displacementPassiveCalcDividedMoves(QVector<Vorton> &freeVortons, QVector<Vorton> &newVortons, QVector<Vorton> frameVortons, double step, Vector3D streamVel, double eDelta, double fiMax, double maxMove,QVector<Vector3D>& moveFromFrames, QVector<Vector3D>& moveFromVortons)
+{
+    QTime start = QTime::currentTime();
+    QVector<Vorton> vortons;
+    QVector<Vorton> resultedVec;
+    QVector<Vector3D> elongationFromFrames;
+    moveFromFrames.clear();
+    moveFromVortons.clear();
+
+    vortons.append(frameVortons);
+    QVector<ParallelPassive> paralVec;
+    for (int i=0; i<freeVortons.size(); i++)
+    {
+        ParallelPassive element {&vortons, freeVortons[i], Vector3D(), step};
+        paralVec.push_back(element);
+    }
+    for (int i=0; i<newVortons.size();i++)
+    {
+        ParallelPassive element {&vortons, newVortons[i], Vector3D(), step};
+        paralVec.push_back(element);
+    }
+    resultedVec=QtConcurrent::blockingMappedReduced(paralVec, parallelDisplacementPassive, addToVortonsVec, QtConcurrent::OrderedReduce);
+    for (int i=0; i<resultedVec.size();i++)
+    {
+        moveFromFrames.push_back(resultedVec[i].getMove());
+        elongationFromFrames.push_back(resultedVec[i].getElongation());
+    }
+    resultedVec.clear();
+
+    vortons.clear();
+    vortons.append(freeVortons);
+    paralVec.clear();
+    for (int i=0; i<freeVortons.size(); i++)
+    {
+        ParallelPassive element {&vortons, freeVortons[i], Vector3D(), step};
+        paralVec.push_back(element);
+    }
+    for (int i=0; i<newVortons.size();i++)
+    {
+        ParallelPassive element {&vortons, newVortons[i], Vector3D(), step};
+        paralVec.push_back(element);
+    }
+    resultedVec=QtConcurrent::blockingMappedReduced(paralVec, parallelDisplacementPassive, addToVortonsVec, QtConcurrent::OrderedReduce);
+    for (int i=0; i<resultedVec.size();i++)
+    {
+        moveFromVortons.push_back(resultedVec[i].getMove());
+        resultedVec[i].setMove(moveFromFrames[i]+moveFromVortons[i]+streamVel*step);
+        resultedVec[i].setElongation(resultedVec[i].getElongation()+elongationFromFrames[i]);
+    }
+
+
+
+    for (int i=0; i<resultedVec.size(); i++)
+    {
+        Vector3D selfLenBef=resultedVec[i].getTail()-resultedVec[i].getMid();
+        Vector3D selfLenAft=resultedVec[i].getElongation()+selfLenBef;
+        double turnAngle=acos(Vector3D::dotProduct(selfLenBef.normalized(), selfLenAft.normalized()));
+        double lengthChange=fabs(selfLenAft.length()-selfLenBef.length());
+        if (turnAngle>fiMax)
+        {
+            resultedVec[i].setElongation(Vector3D());
+            restrictions.turnRestr++;
+        }
+        if (lengthChange>eDelta)
+        {
+            resultedVec[i].setElongation(Vector3D());
+            restrictions.elongationRestr++;
+        }
+        if (resultedVec[i].getMove().length()>maxMove)
+        {
+            resultedVec[i].setMove(Vector3D());
+            restrictions.moveRestr++;
+        }
+
+    }
+
+    for (int i=0; i<freeVortons.size(); i++)
+    {
+        if (std::isnan(resultedVec[i].getMove().length()))
+            qDebug()<<"F*cking nan";
+        freeVortons[i].setMove(resultedVec[i].getMove());
+        freeVortons[i].setElongation(resultedVec[i].getElongation());
+    }
+
+    for (int i=0; i<newVortons.size(); i++)
+    {
+        if (std::isnan(resultedVec[i+freeVortons.size()].getMove().length()))
+            qDebug()<<"F*cking nan";
         newVortons[i].setMove(resultedVec[i+freeVortons.size()].getMove());
         newVortons[i].setElongation(resultedVec[i+freeVortons.size()].getElongation());
     }
@@ -2173,6 +2493,71 @@ void FrameCalculations::forceAndTorqueCalc(const Vector3D streamVel, double stre
     }
     timers.forceTimer=start.elapsed()*0.001;
 }
+
+void FrameCalculations::calculateCp(BodyType type,const int stepNum, int stepsQuant,QVector<QVector<double>>& cpArray,   const Vector3D streamVel, const double streamPres, const double density, const QVector<std::shared_ptr<MultiFrame>>& frames, QVector<Vorton>& freeVortons, double tau, const QVector<Vector3D> &controlPointsRaised, FragmentationParameters fragPar)
+{
+    switch(type)
+    {
+    case ROTATIONBODY:
+    {
+        cpRotationBodyDegree(stepNum,stepsQuant,cpArray[0],fragPar.rotationBodyFiFragNum,streamVel,streamPres,density,frames,freeVortons,tau,controlPointsRaised,0);
+        cpRotationBodyDegree(stepNum,stepsQuant,cpArray[1],fragPar.rotationBodyFiFragNum,streamVel,streamPres,density,frames,freeVortons,tau,controlPointsRaised,90);
+        cpRotationBodyDegree(stepNum,stepsQuant,cpArray[2],fragPar.rotationBodyFiFragNum,streamVel,streamPres,density,frames,freeVortons,tau,controlPointsRaised,180);
+        cpRotationBodyDegree(stepNum,stepsQuant,cpArray[3],fragPar.rotationBodyFiFragNum,streamVel,streamPres,density,frames,freeVortons,tau,controlPointsRaised,270);
+        break;
+    }
+    case ROTATIONBOTTOMCUT:
+    {
+        cpRotationCutBodyDegree(stepNum,stepsQuant,cpArray[0],fragPar.rotationBodyFiFragNum,fragPar.rotationBodyRFragNum ,streamVel,streamPres,density,frames,freeVortons,tau,controlPointsRaised,0);
+        cpRotationCutBodyDegree(stepNum,stepsQuant,cpArray[1],fragPar.rotationBodyFiFragNum,fragPar.rotationBodyRFragNum,streamVel,streamPres,density,frames,freeVortons,tau,controlPointsRaised,90);
+        cpRotationCutBodyDegree(stepNum,stepsQuant,cpArray[2],fragPar.rotationBodyFiFragNum,fragPar.rotationBodyRFragNum,streamVel,streamPres,density,frames,freeVortons,tau,controlPointsRaised,180);
+        cpRotationCutBodyDegree(stepNum,stepsQuant,cpArray[3],fragPar.rotationBodyFiFragNum,fragPar.rotationBodyRFragNum,streamVel,streamPres,density,frames,freeVortons,tau,controlPointsRaised,270);
+        break;
+    }
+    case ROTATIONTWOBOTTOM:
+    {
+        cpRotationTwoBottomBody(stepNum,stepsQuant,cpArray[0],fragPar.rotationBodyFiFragNum,fragPar.rotationBodyPartFragNum,streamVel,streamPres,density,frames,freeVortons,tau,controlPointsRaised,0);
+        break;
+    }
+    }
+
+}
+
+QVector<double> FrameCalculations::cpAverage(BodyType type, QVector<Vector3D> &controlPoints, QVector<QVector<double> > &cpArray, const int stepsNum, FragmentationParameters fragPar)
+{
+    switch (type) {
+    case ROTATIONBODY:
+    {
+
+        cpAverage(cpArray[0],stepsNum);
+        cpAverage(cpArray[1],stepsNum);
+        cpAverage(cpArray[2],stepsNum);
+        cpAverage(cpArray[3],stepsNum);
+        QVector<double> fis;
+        fis.push_back(controlPoints[controlPoints.size()-2].x());
+        for (int i=0; i<controlPoints.size()-2;i+=fragPar.rotationBodyFiFragNum)
+            fis.push_back(controlPoints[i].x());
+        fis.push_back(controlPoints[controlPoints.size()-1].x());
+        return fis;
+    }
+    case ROTATIONBOTTOMCUT:
+    {
+
+        cpAverage(cpArray[0],stepsNum);
+        cpAverage(cpArray[1],stepsNum);
+        cpAverage(cpArray[2],stepsNum);
+        cpAverage(cpArray[3],stepsNum);
+        QVector<double> fis;
+        fis.push_back(controlPoints[controlPoints.size()-(fragPar.rotationBodyRFragNum-1)*fragPar.rotationBodyFiFragNum-2].x());
+        for (int i=0; i<controlPoints.size()-(fragPar.rotationBodyRFragNum-1)*fragPar.rotationBodyFiFragNum-2;i+=fragPar.rotationBodyFiFragNum)
+            fis.push_back(controlPoints[i].x());
+        fis.push_back(controlPoints[controlPoints.size()-1].x());
+        return fis;
+    }
+    }
+
+
+}
 /*!
 Функция суммирования соответствующих значений ср
 \param[in] stepNum Номер текущего шага
@@ -2229,7 +2614,7 @@ void FrameCalculations::cpSumCylinder(const int stepNum, int stepsQuant, QVector
     }
 }
 
-void FrameCalculations::cpSumRotationBody(const int stepNum, int stepsQuant, QVector<double> &cp, const int fiFragNum,  const Vector3D streamVel, const double streamPres, const double density, const QVector<std::shared_ptr<MultiFrame> > frames, QVector<Vorton> freeVortons, double tau, const QVector<Vector3D>& controlPointsRaised)
+void FrameCalculations::cpSumRotationBody(const int stepNum, int stepsQuant, QVector<double> &cp, const int fiFragNum,  const Vector3D streamVel, const double streamPres, const double density, const QVector<std::shared_ptr<MultiFrame>>& frames, QVector<Vorton>& freeVortons, double tau, const QVector<Vector3D>& controlPointsRaised)
 {
     int cpQuant;
     if (stepsQuant>200)
@@ -2308,18 +2693,36 @@ void FrameCalculations::cpRotationCutBodyDegree(const int stepNum, int stepsQuan
         cpQuant=stepsQuant;
     if (stepNum>=stepsQuant-cpQuant)
     {
-        double pres=pressureCalc(controlPointsRaised[controlPointsRaised.size()-2],streamVel,streamPres,density,frames,freeVortons,tau);
+        double pres=pressureCalc(controlPointsRaised[controlPointsRaised.size()-(rFragNum-1)*fiFragNum-2],streamVel,streamPres,density,frames,freeVortons,tau);
         cp[0]+=(pres-streamPres)/(density*Vector3D::dotProduct(streamVel,streamVel)*0.5);
         int j=1;
         int iStart=static_cast<int>(static_cast<double>(degree)/360.0*fiFragNum);
-        for (int i=iStart; i<controlPointsRaised.size()-rFragNum*fiFragNum-1; i=i+fiFragNum)
+        for (int i=iStart; i<controlPointsRaised.size()-(rFragNum-1)*fiFragNum-2; i=i+fiFragNum)
         {
             double pres=pressureCalc(controlPointsRaised[i],streamVel,streamPres,density,frames,freeVortons,tau);
             cp[j]+=(pres-streamPres)/(density*Vector3D::dotProduct(streamVel,streamVel)*0.5);
             j++;
         }
-        pres=pressureCalc(controlPointsRaised[controlPointsRaised.size()-1],streamVel,streamPres,density,frames,freeVortons,tau);
+        pres=pressureCalc(controlPointsRaised[controlPointsRaised.size()-(rFragNum-1)*fiFragNum-1],streamVel,streamPres,density,frames,freeVortons,tau);
         cp[j]+=(pres-streamPres)/(density*Vector3D::dotProduct(streamVel,streamVel)*0.5);
+    }
+}
+
+void FrameCalculations::cpRotationTwoBottomBody(const int stepNum, int stepsQuant, QVector<double> &cp, const int fiFragNum, const int partFragNum,const Vector3D streamVel, const double streamPres, const double density, const QVector<std::shared_ptr<MultiFrame> > frames, QVector<Vorton> freeVortons, double tau, const QVector<Vector3D> &controlPointsRaised, int degree)
+{
+    int cpQuant;
+    if (stepsQuant>200)
+        cpQuant=200;
+    else
+        cpQuant=stepsQuant;
+    if (stepNum>=stepsQuant-cpQuant)
+    {
+        for (int i=0; i<fiFragNum;i++)
+        {
+            double pres=pressureCalc(controlPointsRaised[fiFragNum*partFragNum/2+i],streamVel,streamPres,density,frames,freeVortons,tau);
+            cp[i]+=(pres-streamPres)/(density*Vector3D::dotProduct(streamVel,streamVel)*0.5);
+        }
+
     }
 }
 
@@ -3150,9 +3553,9 @@ void FrameCalculations::translateAndRotatev3(QVector<std::shared_ptr<MultiFrame>
 
     dMassSetParameters(&rocketMass,mass,massCenter.x(),massCenter.y(),massCenter.z(),inertiaTensor(0,0),inertiaTensor(1,1),inertiaTensor(2,2),inertiaTensor(0,1),inertiaTensor(0,2),inertiaTensor(1,2));
     dBodySetMass(rocket,&rocketMass);
-    dBodyAddForce(rocket,force.x(),force.y(),force.z());
+//    dBodyAddForce(rocket,force.x(),force.y(),force.z());
 //     qDebug()<<"force is "<<force.x()<<" "<< force.y()<<" "<<force.z();
-    dBodyAddTorque(rocket, tongue.x(),tongue.y(),tongue.z());
+//    dBodyAddTorque(rocket, tongue.x(),tongue.y(),tongue.z());
 //    qDebug()<<"torgue is "<<tongue.x()<<" "<< tongue.y()<<" "<<tongue.z();
     dBodySetLinearVel(rocket,linearVel.x(),linearVel.y(),linearVel.z());
     dWorldStep(world,time);
@@ -3195,6 +3598,124 @@ void FrameCalculations::translateAndRotatev3(QVector<std::shared_ptr<MultiFrame>
             frames[i]->setCenter(frames[i]->getCenter()+translation);
         }
 
+
+    for (int i=0; i<controlPoints.size(); i++)
+    {
+
+
+        newTranslate=Eigen::Vector3d(massCenter.x(),massCenter.y(),massCenter.z())+
+                rotationMatrix*inverted*Eigen::Vector3d(controlPoints[i].x()-massCenter.x(),controlPoints[i].y()-massCenter.y(),controlPoints[i].z()-massCenter.z());
+        controlPoints[i]=/*oldControlPoints[i]+*/translation+Vector3D(newTranslate.x(),newTranslate.y(),newTranslate.z());
+        newTranslate=Eigen::Vector3d(massCenter.x(),massCenter.y(),massCenter.z())+
+                rotationMatrix*inverted*Eigen::Vector3d(controlPointsRaised[i].x()-massCenter.x(),controlPointsRaised[i].y()-massCenter.y(),controlPointsRaised[i].z()-massCenter.z());
+        controlPointsRaised[i]=/*oldControlPointsRaised[i]+*/translation+Vector3D(newTranslate.x(),newTranslate.y(),newTranslate.z());
+        newTranslate=Eigen::Vector3d(massCenter.x(),massCenter.y(),massCenter.z())+
+                rotationMatrix*inverted*Eigen::Vector3d(normals[i].x()-massCenter.x(),normals[i].y()-massCenter.y(),normals[i].z()-massCenter.z());
+        normals[i]=/*oldNormals[i]+*/Vector3D(newTranslate.x(),newTranslate.y(),newTranslate.z());
+
+    }
+    for (int i=0; i<vortons.size();i++)
+    {
+        vortons[i].setMid(vortons[i].getMid()+translation);
+        vortons[i].setTail(vortons[i].getTail()+translation);
+        newTranslate=Eigen::Vector3d(center.x(),center.y(),center.z())+
+                rotationMatrix*Eigen::Vector3d(vortons[i].getMid().x()-center.x(),vortons[i].getMid().y()-center.y(),vortons[i].getMid().z()-center.z());
+        vortons[i].setMid(Vector3D(newTranslate.x(),newTranslate.y(),newTranslate.z()));
+        newTranslate=Eigen::Vector3d(center.x(),center.y(),center.z())+
+                rotationMatrix*Eigen::Vector3d(vortons[i].getTail().x()-center.x(),vortons[i].getTail().y()-center.y(),vortons[i].getTail().z()-center.z());
+         vortons[i].setTail(Vector3D(newTranslate.x(),newTranslate.y(),newTranslate.z()));
+    }
+
+    dCloseODE();
+}
+
+void FrameCalculations::translateAndRotatev3(QVector<std::shared_ptr<MultiFrame> > &frames, QVector<Vorton> &vortons, double mass, Eigen::Matrix3d inertiaTensor, Vector3D tongue, Eigen::Matrix3d &rotationMatrix, Eigen::Matrix3d &rotationNullMatrix, Vector3D force, Vector3D &center, Vector3D nullCenter, Vector3D massCenter, double time, Vector3D linearVel, QVector<Vector3D> &controlPoints, QVector<Vector3D> &normals, QVector<Vector3D> &controlPointsRaised, QVector<std::shared_ptr<MultiFrame> > &oldFrames, QVector<Vector3D> &oldControlPoints, QVector<Vector3D> &oldNormals, QVector<Vector3D> &oldControlPointsRaised, Vector3D &angVel, Vector3D &bodyNose, double &xend,QVector<QVector<Vector3D>> xGraphNodes, QVector<QVector<Vector3D>>& yGraphNodes, QVector<QVector<Vector3D>>& zGraphNodes)
+{
+    dInitODE();
+    Eigen::Matrix3d inverted=rotationNullMatrix.inverse();
+    dWorldID world = dWorldCreate();
+    dWorldSetGravity(world,0.0,0.0,0.0);
+    dBodyID rocket = dBodyCreate(world);
+    dBodySetPosition(rocket, center.x(),center.y(),center.z());
+    //nullCenter=center;
+    dMatrix3 rot;
+    for (int i=0; i<3;i++)
+        for (int j=0; j<3; j++)
+            rot[i*4+j]=rotationMatrix(i,j);
+
+    dBodySetRotation(rocket,rot);
+    dMass rocketMass;
+    dMassSetZero(&rocketMass);
+
+    dMassSetParameters(&rocketMass,mass,massCenter.x(),massCenter.y(),massCenter.z(),inertiaTensor(0,0),inertiaTensor(1,1),inertiaTensor(2,2),inertiaTensor(0,1),inertiaTensor(0,2),inertiaTensor(1,2));
+    dBodySetMass(rocket,&rocketMass);
+    dBodyAddForce(rocket,force.x(),force.y(),force.z());
+//     qDebug()<<"force is "<<force.x()<<" "<< force.y()<<" "<<force.z();
+    dBodyAddTorque(rocket, tongue.x(),tongue.y(),tongue.z());
+//    qDebug()<<"torgue is "<<tongue.x()<<" "<< tongue.y()<<" "<<tongue.z();
+    dBodySetLinearVel(rocket,linearVel.x(),linearVel.y(),linearVel.z());
+    dWorldStep(world,time);
+    const dReal* Pos;
+    const dReal* angle;
+
+    Pos = dBodyGetPosition(rocket);
+
+    float pos[3] = { Pos[0], Pos[1], Pos[2] };
+//    qDebug()<<"Position is "<<pos[0]<<" "<<pos[1]<<" "<<pos[2];
+    Vector3D translation(pos[0]-center.x(),pos[1]-center.y(),pos[2]-center.z());
+    qDebug()<<"translation is"<<translation.x()<<" "<<translation.y()<<" "<<translation.z();
+//    qDebug()<<translation.x()<<" "<<translation.y()<<" "<<translation.z();
+//    qDebug()<<"translation is "<<translation.x()<<" "<< translation.y()<<" "<<translation.z();
+    center=Vector3D(pos[0],pos[1],pos[2]);
+    bodyNose+=translation;
+    xend+=translation.x();
+    angle = dBodyGetRotation(rocket);
+    const dReal* angularVel;
+    angularVel=dBodyGetAngularVel(rocket);
+    angVel=Vector3D(angularVel[0],angularVel[1],angularVel[2]);
+    float vel[3]={angularVel[0],angularVel[1],angularVel[2]};
+    float angles[12] = {angle[0],angle[1],angle[2],angle[3],angle[4],angle[5],angle[6],angle[7],angle[8],angle[9],angle[10],angle[11]};
+    //qDebug()<<vel[0]<<" "<<vel[1]<<" "<<vel[2];
+    for (int i=0; i<3; i++)
+        for (int j=0; j<3; j++)
+            rotationMatrix(i,j)=angles[i*4+j];
+    Eigen::Vector3d newTranslate;
+    for (int i=0; i<frames.size();i++)
+        for (int j=0; j<frames[i]->getAnglesNum();j++)
+        {
+//            frames[i]->at(j).setMid(oldFrames[i]->at(j).getMid()+translation);
+//            frames[i]->at(j).setTail(oldFrames[i]->at(j).getTail()+translation);
+
+            newTranslate=Eigen::Vector3d(massCenter.x(),massCenter.y(),massCenter.z())+
+                    rotationMatrix*inverted*Eigen::Vector3d(frames[i]->at(j).getMid().x()-massCenter.x(),frames[i]->at(j).getMid().y()-massCenter.y(),frames[i]->at(j).getMid().z()-massCenter.z());
+            frames[i]->at(j).setMid(translation+Vector3D(newTranslate.x(),newTranslate.y(),newTranslate.z()));
+            newTranslate=Eigen::Vector3d(massCenter.x(),massCenter.y(),massCenter.z())+
+                                rotationMatrix*inverted*Eigen::Vector3d(frames[i]->at(j).getTail().x()-massCenter.x(),frames[i]->at(j).getTail().y()-massCenter.y(),frames[i]->at(j).getTail().z()-massCenter.z());
+            frames[i]->at(j).setTail(translation+Vector3D(newTranslate.x(),newTranslate.y(),newTranslate.z()));
+            frames[i]->setCenter(frames[i]->getCenter()+translation);
+        }
+
+    for (int i=0; i<xGraphNodes.size();i++)
+        for (int j=0;j<xGraphNodes.size();j++)
+        {
+            newTranslate=Eigen::Vector3d(massCenter.x(),massCenter.y(),massCenter.z())+
+                    rotationMatrix*inverted*Eigen::Vector3d(xGraphNodes[i][j].x()-massCenter.x(),xGraphNodes[i][j].y()-massCenter.y(),xGraphNodes[i][j].z()-massCenter.z());
+            xGraphNodes[i][j]=translation+Vector3D(newTranslate.x(),newTranslate.y(),newTranslate.z());
+        }
+    for (int i=0; i<yGraphNodes.size();i++)
+        for (int j=0;j<yGraphNodes.size();j++)
+        {
+            newTranslate=Eigen::Vector3d(massCenter.x(),massCenter.y(),massCenter.z())+
+                    rotationMatrix*inverted*Eigen::Vector3d(yGraphNodes[i][j].x()-massCenter.x(),yGraphNodes[i][j].y()-massCenter.y(),yGraphNodes[i][j].z()-massCenter.z());
+            yGraphNodes[i][j]=translation+Vector3D(newTranslate.x(),newTranslate.y(),newTranslate.z());
+        }
+    for (int i=0; i<zGraphNodes.size();i++)
+        for (int j=0;j<zGraphNodes.size();j++)
+        {
+            newTranslate=Eigen::Vector3d(massCenter.x(),massCenter.y(),massCenter.z())+
+                    rotationMatrix*inverted*Eigen::Vector3d(zGraphNodes[i][j].x()-massCenter.x(),zGraphNodes[i][j].y()-massCenter.y(),zGraphNodes[i][j].z()-massCenter.z());
+            zGraphNodes[i][j]=translation+Vector3D(newTranslate.x(),newTranslate.y(),newTranslate.z());
+        }
     for (int i=0; i<controlPoints.size(); i++)
     {
 
@@ -3659,9 +4180,9 @@ bool FrameCalculations::insideRotationCutBodyLayer(const Vorton &vort, const dou
 \param vorton Вортон
 \return Определение вортона под экран
 */
-bool FrameCalculations::insideScreen(Vorton &vort)
+bool FrameCalculations::insideScreen(Vorton &vort,Vector3D translScreen)
 {
-    if (vort.getMid().x()>0.0 || vort.getTail().x()>0.0)
+    if ((2.0*vort.getMid().x()-vort.getTail().x())>translScreen.x() || vort.getTail().x()>translScreen.x())
         return true;
     return false;
 }
@@ -3787,10 +4308,16 @@ void FrameCalculations::translateBody(const Vector3D &translation, QVector<std::
     }
 }
 
-void FrameCalculations::updateBoundaries(Vector3D &bodynose, Vector3D &translation, Vector3D &center)
+void FrameCalculations::updateBoundaries(Vector3D &bodynose, Vector3D &translation, Vector3D &center, QVector<Vorton>& freeVortons)
 {
     bodynose+=translation;
+    qDebug()<<"bodyNose: "<<bodynose.x();
     center=bodynose/2;
+    for (int i=0; i<freeVortons.size();i++)
+    {
+        freeVortons[i].setMid(freeVortons[i].getMid()+translation);
+        freeVortons[i].setTail(freeVortons[i].getTail()+translation);
+    }
 }
 
 /*!
@@ -3819,6 +4346,29 @@ QPair<int,int> FrameCalculations::findMaxSolidAngle(Vector3D point, QVector<std:
             maxAngle=frames[i]->getTriangle(j).solidAngle(point);
             closest.first=i;
             closest.second=j;
+        }
+    }
+    return closest;
+}
+
+QPair<int, int> FrameCalculations::findMaxSolidAngle(Vorton &vort, QVector<std::shared_ptr<MultiFrame> > &frames)
+{
+    QPair<int,int> closest;
+    double maxAngle=frames[0]->getTriangle(0).solidAngle(vort.getMid())+frames[0]->getTriangle(0).solidAngle(vort.getTail())+frames[0]->getTriangle(0).solidAngle(vort.getBeggining());
+    closest.first=0;
+    closest.second=0;
+
+    for (int i=0; i<frames.size();i++)
+    {
+        for (int j=0; j<frames[i]->getTrianglesNum();j++)
+        {
+        double solid=frames[i]->getTriangle(j).solidAngle(vort.getMid())+frames[i]->getTriangle(j).solidAngle(vort.getTail())+frames[i]->getTriangle(j).solidAngle(vort.getBeggining());
+        if (solid>maxAngle)
+        {
+            maxAngle=solid;
+            closest.first=i;
+            closest.second=j;
+        }
         }
     }
     return closest;

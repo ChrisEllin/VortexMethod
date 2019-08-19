@@ -20,7 +20,7 @@
       <item row="0" column="0">
        <widget class="QTabWidget" name="tabWidget">
         <property name="currentIndex">
-         <number>2</number>
+         <number>3</number>
         </property>
         <widget class="QWidget" name="tab">
          <attribute name="title">
@@ -1357,7 +1357,7 @@
               <property name="geometry">
                <rect>
                 <x>90</x>
-                <y>400</y>
+                <y>430</y>
                 <width>191</width>
                 <height>23</height>
                </rect>
@@ -1388,7 +1388,7 @@
               </property>
               <property name="geometry">
                <rect>
-                <x>90</x>
+                <x>280</x>
                 <y>430</y>
                 <width>191</width>
                 <height>23</height>
@@ -1458,21 +1458,21 @@
                 <item row="1" column="1">
                  <widget class="QLineEdit" name="ellipsoidLengthRotationCutBodyLineEdit">
                   <property name="text">
-                   <string>0.25</string>
+                   <string>1.4</string>
                   </property>
                  </widget>
                 </item>
                 <item row="2" column="1">
                  <widget class="QLineEdit" name="lengthRotationCutBodyLineEdit">
                   <property name="text">
-                   <string>3.3333</string>
+                   <string>5.0</string>
                   </property>
                  </widget>
                 </item>
                 <item row="0" column="1">
                  <widget class="QLineEdit" name="cylDiameterRotationCutBodyLineEdit">
                   <property name="text">
-                   <string>1</string>
+                   <string>2.0</string>
                   </property>
                  </widget>
                 </item>
@@ -1646,7 +1646,7 @@
                  <item row="4" column="1">
                   <widget class="QLineEdit" name="formingRBC3FormSectorThreeLength">
                    <property name="text">
-                    <string>0.2953</string>
+                    <string>0.2963</string>
                    </property>
                   </widget>
                  </item>
@@ -1679,6 +1679,19 @@
                </property>
               </item>
              </widget>
+             <widget class="QPushButton" name="rotationCutWithConcentrationBodySolverPushButton">
+              <property name="geometry">
+               <rect>
+                <x>90</x>
+                <y>400</y>
+                <width>191</width>
+                <height>23</height>
+               </rect>
+              </property>
+              <property name="text">
+               <string>Рассчитать со сгущением</string>
+              </property>
+             </widget>
             </widget>
            </item>
            <item>
@@ -1695,6 +1708,332 @@
             </widget>
            </item>
           </layout>
+         </widget>
+        </widget>
+        <widget class="QWidget" name="tab_5">
+         <attribute name="title">
+          <string>Тело вращения (двудонное)</string>
+         </attribute>
+         <widget class="QGroupBox" name="groupBox_7">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>10</y>
+            <width>529</width>
+            <height>502</height>
+           </rect>
+          </property>
+          <property name="title">
+           <string>Параметры разбиения</string>
+          </property>
+          <widget class="QLineEdit" name="epsilonRotationBodyTwoBotLineEdit">
+           <property name="geometry">
+            <rect>
+             <x>130</x>
+             <y>330</y>
+             <width>133</width>
+             <height>20</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>0.015</string>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_57">
+           <property name="geometry">
+            <rect>
+             <x>10</x>
+             <y>330</y>
+             <width>81</width>
+             <height>16</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Радиус вортона</string>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_58">
+           <property name="geometry">
+            <rect>
+             <x>10</x>
+             <y>250</y>
+             <width>111</width>
+             <height>31</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Подъем точек вычис-
+ления давления</string>
+           </property>
+          </widget>
+          <widget class="QLineEdit" name="pointsRaisingRotationBodyTwoBotLineEdit">
+           <property name="geometry">
+            <rect>
+             <x>130</x>
+             <y>260</y>
+             <width>133</width>
+             <height>20</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>0</string>
+           </property>
+          </widget>
+          <widget class="QPushButton" name="rotationBodyTwoBotSolverPushButton">
+           <property name="geometry">
+            <rect>
+             <x>90</x>
+             <y>370</y>
+             <width>191</width>
+             <height>23</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Рассчитать</string>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_59">
+           <property name="geometry">
+            <rect>
+             <x>10</x>
+             <y>20</y>
+             <width>112</width>
+             <height>16</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Число разбиений по φ</string>
+           </property>
+          </widget>
+          <widget class="QLineEdit" name="fiRotationBodyTwoBotLineEdit">
+           <property name="geometry">
+            <rect>
+             <x>129</x>
+             <y>19</y>
+             <width>133</width>
+             <height>20</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>20</string>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_60">
+           <property name="geometry">
+            <rect>
+             <x>11</x>
+             <y>45</y>
+             <width>110</width>
+             <height>31</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Число разбиений по 
+ частям</string>
+           </property>
+          </widget>
+          <widget class="QLineEdit" name="partRotationBodyTwoBotLineEdit">
+           <property name="geometry">
+            <rect>
+             <x>130</x>
+             <y>50</y>
+             <width>133</width>
+             <height>20</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>85</string>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_62">
+           <property name="geometry">
+            <rect>
+             <x>10</x>
+             <y>300</y>
+             <width>94</width>
+             <height>26</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Подъем точек для 
+ разбиения</string>
+           </property>
+          </widget>
+          <widget class="QLineEdit" name="deltaRotationBodyTwoBotLineEdit">
+           <property name="geometry">
+            <rect>
+             <x>130</x>
+             <y>300</y>
+             <width>133</width>
+             <height>20</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>0.01</string>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_63">
+           <property name="geometry">
+            <rect>
+             <x>10</x>
+             <y>160</y>
+             <width>121</width>
+             <height>41</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Начальная координата 
+ по Х</string>
+           </property>
+          </widget>
+          <widget class="QLineEdit" name="xBegRotationBodyTwoBotLineEdit">
+           <property name="geometry">
+            <rect>
+             <x>130</x>
+             <y>170</y>
+             <width>131</width>
+             <height>20</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>0.0</string>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_65">
+           <property name="geometry">
+            <rect>
+             <x>11</x>
+             <y>75</y>
+             <width>101</width>
+             <height>31</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Число разбиений по 
+ радиусу 1</string>
+           </property>
+          </widget>
+          <widget class="QLineEdit" name="rad1FragRotationBodyTwoBotLineEdit">
+           <property name="geometry">
+            <rect>
+             <x>130</x>
+             <y>80</y>
+             <width>133</width>
+             <height>20</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>3</string>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_66">
+           <property name="geometry">
+            <rect>
+             <x>10</x>
+             <y>110</y>
+             <width>101</width>
+             <height>31</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Число разбиений по 
+ радиусу 2</string>
+           </property>
+          </widget>
+          <widget class="QLineEdit" name="rad2FragRotationBodyTwoBotLineEdit">
+           <property name="geometry">
+            <rect>
+             <x>130</x>
+             <y>110</y>
+             <width>133</width>
+             <height>20</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>3</string>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_68">
+           <property name="geometry">
+            <rect>
+             <x>300</x>
+             <y>20</y>
+             <width>73</width>
+             <height>26</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Длина 
+ тела</string>
+           </property>
+          </widget>
+          <widget class="QLineEdit" name="lengthRotationBodyTwoBotLineEdit">
+           <property name="geometry">
+            <rect>
+             <x>390</x>
+             <y>20</y>
+             <width>133</width>
+             <height>20</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>2.0</string>
+           </property>
+          </widget>
+          <widget class="QLineEdit" name="rad1RotationBodyTwoBotLineEdit">
+           <property name="geometry">
+            <rect>
+             <x>390</x>
+             <y>60</y>
+             <width>133</width>
+             <height>20</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>2.0</string>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_69">
+           <property name="geometry">
+            <rect>
+             <x>300</x>
+             <y>60</y>
+             <width>73</width>
+             <height>26</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Носовой 
+ радиус тела</string>
+           </property>
+          </widget>
+          <widget class="QLineEdit" name="rad2RotationBodyTwoBotLineEdit">
+           <property name="geometry">
+            <rect>
+             <x>390</x>
+             <y>110</y>
+             <width>133</width>
+             <height>20</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>2.0</string>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_70">
+           <property name="geometry">
+            <rect>
+             <x>300</x>
+             <y>110</y>
+             <width>81</width>
+             <height>31</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Торцевой 
+ радиус тела</string>
+           </property>
+          </widget>
          </widget>
         </widget>
        </widget>
