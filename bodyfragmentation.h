@@ -39,9 +39,9 @@ struct FragmentationParameters
         \brief В данном модуле хранятся параметры, необходимые для разбиения сферы.
     */
     ///@{
-    int sphereFiFragNum; ///<Количество разбиений по fi
-    int sphereTetaFragNum; ///<Количество разбиений по teta
-    double sphereRad; ///<Радиус сферы
+    int sphereFiFragNum=0; ///<Количество разбиений по fi
+    int sphereTetaFragNum=0; ///<Количество разбиений по teta
+    double sphereRad=0.0; ///<Радиус сферы
     ///@}
 
     /*!
@@ -50,11 +50,11 @@ struct FragmentationParameters
         \brief В данном модуле хранятся параметры, необходимые для разбиения цилиндра.
     */
     ///@{
-    double cylinderDiameter; ///<Диаметр цилиндра
-    double cylinderHeight; ///<Высота цилиндра
-    int cylinderFiFragNum; ///<Количество разбиений по fi
-    int cylinderRadFragNum; ///<Количество разбиений по радиусу
-    int cylinderHeightFragNum; ///<Количество разбиений по высоте
+    double cylinderDiameter=0.0; ///<Диаметр цилиндра
+    double cylinderHeight=0.0; ///<Высота цилиндра
+    int cylinderFiFragNum=0; ///<Количество разбиений по fi
+    int cylinderRadFragNum=0; ///<Количество разбиений по радиусу
+    int cylinderHeightFragNum=0; ///<Количество разбиений по высоте
     ///@}
 
     /*!
@@ -63,13 +63,13 @@ struct FragmentationParameters
         \brief В данном модуле хранятся параметры, необходимые для разбиения тела вращения.
     */
     ///@{
-    int rotationBodyFiFragNum; ///<Количество разбиений по fi
-    int rotationBodyPartFragNum; ///<Количество разбиений по длине
-    double rotationBodyXBeg; ///<Координата начала тела по X
-    double rotationBodyXEnd; ///<Координата конца тела по Y
-    double rotationBodySectionDistance; ///< Величина среза
-    double rotationBodySectionEndDistance;
-    int rotationBodyFormingType;
+    int rotationBodyFiFragNum=0; ///<Количество разбиений по fi
+    int rotationBodyPartFragNum=0; ///<Количество разбиений по длине
+    double rotationBodyXBeg=0.0; ///<Координата начала тела по X
+    double rotationBodyXEnd=0.0; ///<Координата конца тела по Y
+    double rotationBodySectionDistance=0.0; ///< Величина среза
+    double rotationBodySectionEndDistance=0.0;
+    int rotationBodyFormingType=0;
     ///@}
 
     /*!
@@ -78,40 +78,40 @@ struct FragmentationParameters
         \brief В данном модуле хранятся дополнительные параметры, необходимые для разбиения тела вращения.
     */
     ///@{
-    int rotationBodyRFragNum; ///<Количество разбиений по радиусу
+    int rotationBodyRFragNum=0; ///<Количество разбиений по радиусу
 
-    int rotationBodyR2FragNum;
+    int rotationBodyR2FragNum=0;
 
 
     FormingTypeRBC rotationBodyRBCFormingType;
     ///@}
 
-    double formingDiameter;
-    double formingLengthSectorOne;
-    double formingLengthSectorTwo;
-    double formingTailDiameter;
-    double formingAngle;
+    double formingDiameter=0.0;
+    double formingLengthSectorOne=0.0;
+    double formingLengthSectorTwo=0.0;
+    double formingTailDiameter=0.0;
+    double formingAngle=0.0;
 
 
-    double formingEllipsoidDiameter;
+    double formingEllipsoidDiameter=0.0;
 
-    double formingEllisoidLength;
-    double formingConeLength;
-    double formingFullLength;
+    double formingEllisoidLength=0.0;
+    double formingConeLength=0.0;
+    double formingFullLength=0.0;
 
 
-    double formingRBB_R1;
-    double formingRBB_R2;
-    double formingRBB_length;
+    double formingRBB_R1=0.0;
+    double formingRBB_R2=0.0;
+    double formingRBB_length=0.0;
     /*!
         \defgroup commonParameters Общие параметры
         \ingroup fragmentationParameters
         \brief В данном модуле хранятся Общие параметры, необходимые для разбиения тела.
     */
     ///@{
-    double vortonsRad; ///<Радиус вортона
-    double delta; ///<Подъем рамок над телом
-    double pointsRaising; ///<Подъем контрольных точек для подсчета давления
+    double vortonsRad=0.0; ///<Радиус вортона
+    double delta=0.0; ///<Подъем рамок над телом
+    double pointsRaising=0.0; ///<Подъем контрольных точек для подсчета давления
     ///@}
 
 
@@ -265,8 +265,10 @@ public:
 //    BodyFragmentation(const FragmentationParameters& param, const int i, const Vector3D &bodyVel, const double tau);
     void sphereFragmentation();
     void cylinderFragmentation();
-    void calculateBoundaries(Vector3D& bodyNose,Vector3D& center, double& xend);
-    QPair<int,int> getStreamLinesSizes();
+    void calculateBoundaries(Vector3D& bodyNose, Vector3D& center, double& xend, Vector3D bodyVel, double tau, double &fullLength, bool underwater);
+
+
+     QPair<int,int> getStreamLinesSizes();
     void rotationBodyFragmantation();
     void rotationCutBodyFragmantation();
     void rotationCutBodyFragmantationWithConcentration();

@@ -1506,7 +1506,7 @@
                  <item row="0" column="1">
                   <widget class="QLineEdit" name="formingRBCDiameterLineEdit">
                    <property name="text">
-                    <string>3</string>
+                    <string>2</string>
                    </property>
                   </widget>
                  </item>
@@ -1522,7 +1522,7 @@
                  <item row="1" column="1">
                   <widget class="QLineEdit" name="formingRBCTailDiameterLineEdit">
                    <property name="text">
-                    <string>1</string>
+                    <string>1.4</string>
                    </property>
                   </widget>
                  </item>
@@ -1547,14 +1547,14 @@
                  <item row="2" column="1">
                   <widget class="QLineEdit" name="formingRBCSectorOneLength">
                    <property name="text">
-                    <string>1</string>
+                    <string>1.4</string>
                    </property>
                   </widget>
                  </item>
                  <item row="3" column="1">
                   <widget class="QLineEdit" name="formingRBCSectorTwoLength">
                    <property name="text">
-                    <string>2</string>
+                    <string>3.6</string>
                    </property>
                   </widget>
                  </item>

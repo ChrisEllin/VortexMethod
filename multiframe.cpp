@@ -345,6 +345,8 @@ bool MultiFrame::inside(Vector3D ra, Vector3D rb, int choosenNum, bool checking)
 
 int MultiFrame::getTrianglesNum()
 {
+    if (anglesNum==4)
+        return 2;
     return anglesNum;
 }
 

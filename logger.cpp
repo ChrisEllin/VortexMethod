@@ -325,7 +325,7 @@ void Logger::createFiles()
 
 }
 
-void Logger::parseSalomeMesh(const QString &path, const double raise, double vortonsRad, QVector<std::shared_ptr<MultiFrame> > &frames, QVector<Vector3D> &controlPoints, QVector<Vector3D> &normals, QVector<Vector3D> &controlPointsRaised, QVector<double> &squares)
+void Logger::parseSalomeMesh(const QString &path,  double vortonsRad, QVector<TriangleFrame> &frames, QVector<Vector3D> &controlPoints, QVector<Vector3D> &normals,  QVector<double> &squares)
 {
     QFile salomeMeshFile(path);
     if (salomeMeshFile.open(QIODevice::ReadOnly))
@@ -336,8 +336,8 @@ void Logger::parseSalomeMesh(const QString &path, const double raise, double vor
             currentline=stream.readLine();
         };
         QVector<Vector3D> vertices;
-        QVector<TriangleVectors> triangles;
-        double verticesQuant=QString(stream.readLine()).toInt();
+
+        int verticesQuant=QString(stream.readLine()).toInt();
         for (int i=0; i<verticesQuant;i++)
         {
             QStringList vertex=QString(stream.readLine()).split(" ");
@@ -348,21 +348,25 @@ void Logger::parseSalomeMesh(const QString &path, const double raise, double vor
         {
             currentline=stream.readLine();
         }
-        double trianglesQuant=QString(stream.readLine()).toInt();
+        int trianglesQuant=QString(stream.readLine()).toInt();
         for (int i=0;i<trianglesQuant;i++)
         {
-            QStringList triangle=QString(stream.readLine()).split(" ");
+            currentline=stream.readLine();
+            QStringList triangle=currentline.split(" ");
+
             TriangleVectors triangleVec;
-            triangleVec.a=vertices[triangle[0].toInt()];
-            triangleVec.b=vertices[triangle[1].toInt()];
-            triangleVec.c=vertices[triangle[2].toInt()];
-            triangleVec.calcParameters(raise);
-            frames.append(std::make_shared<MultiFrame>(3,triangleVec.center,triangleVec.a,triangleVec.b,vortonsRad));
+            triangleVec.a=vertices[triangle[0].toInt()-1];
+            triangleVec.b=vertices[triangle[1].toInt()-1];
+            triangleVec.c=vertices[triangle[2].toInt()-1];
+            triangleVec.calcParameters();
+            frames.append(MultiFrame::createTriangle(triangleVec.a,triangleVec.b,triangleVec.c,0.0,vortonsRad));
             controlPoints.append(triangleVec.center);
-            controlPointsRaised.append(triangleVec.controlPointRaised);
             normals.append(triangleVec.normal);
             squares.append(triangleVec.square);
+
         }
+        qDebug()<<currentline;
+
     }
     salomeMeshFile.close();
 }
@@ -1317,7 +1321,14 @@ void Logger::createParaviewStreamlinesFile(QVector<Vector3D> velocities,QPair<in
         streamLinesTextStream<<"POINT_DATA "+QString::number(pointsQuant)+" \n";
         streamLinesTextStream<<"VECTORS velocities float\n";
         if (pointsQuant!=velocities.size())
+        {
             qDebug()<<"Error!";
+            qDebug()<<"pointsQuant!"<<pointsQuant;
+            qDebug()<<"velocities.size!"<<velocities.size();
+            qDebug()<<"XDIM"<<xDimension;
+            qDebug()<<"YDIM"<<yDimension;
+
+        }
         for (int i=0; i<velocities.size();i++)
             streamLinesTextStream<<QString::number(velocities[i].x())+" "+QString::number(velocities[i].y())+" "+QString::number(velocities[i].z())+"\n";
         streamLinesTextStream.flush();
@@ -2845,10 +2856,9 @@ void Logger::openVortonFiles(QString vortonsDir)
 }
 
 
-void TriangleVectors::calcParameters(const double raise)
+void TriangleVectors::calcParameters()
 {
     normal=Vector3D::crossProduct(a,b).normalized();
     center=Vector3D((a.x()+b.x()+c.x())/3.0,(a.y()+b.y()+c.y())/3.0,(a.z()+b.z()+c.z())/3.0);
-    controlPointRaised=center+raise*normal;
     square=0.5*Vector3D::crossProduct(a,b).length();
 }

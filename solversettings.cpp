@@ -159,8 +159,9 @@ void SolverSettings::calcAttributes(const QString epsilon)
     on_saveSolverSettingsPushButton_clicked();
 }
 
-void SolverSettings::calcAttributes(double panelLength)
+void SolverSettings::calcAttributes(double _panelLength)
 {
+    panelLength=_panelLength;
     ui->stepLineEdit->setText(QString::number(panelLength*0.5
                               /Vector3D(ui->xVelStreamLineEdit->text().toDouble(),ui->yVelStreamLineEdit->text().toDouble(),
                                                                         ui->zVelStreamLineEdit->text().toDouble()).length()));

@@ -17,6 +17,16 @@ bool Solver::checkFinishing()
     return false;
 }
 
+void Solver::underwater()
+{
+    underwaterStart=true;
+}
+
+void Solver::setPanelLength(double avLength)
+{
+    panelLength=avLength;
+}
+
 Solver::Solver()
 {
 
@@ -3341,18 +3351,44 @@ void Solver::unifiedSolver(const FragmentationParameters &fragPar, const BodyTyp
 {
     QTime start=QTime::currentTime();
     Logger* logger=createLog(type);
-    BodyFragmentation fragmentation(type, fragPar);
-    QVector<Vector3D> controlPoints=fragmentation.getControlPoints();
-    QVector<Vector3D> normals=fragmentation.getNormals();
+    double raise=0.1;
+    QVector<Vector3D> K;
+    QVector<Vector3D> N;
+    QVector<double> S;
+
+//    QVector<TriangleFrame> framesss;
+//    logger->parseSalomeMesh(QString("D:\Mesh_1.mesh"),0.1,framesss,K,N,S);
+//    qDebug()<<"MESH_DONE";
+//    FrameCalculations calcs;
+//    QVector<Vorton> fsv;
+//    FrameCalculations::correctDirectionFrames(framesss);
+//    for (int i=0;i<N.size();i++)
+//        N[i]=-1.0*framesss[i].getNormal();
+//    QVector<Vector3D> K_p;
+//    FrameCalculations::calcControlPointsRaised(K_p,K,N,raise);
+//    emit sendNormalsVis(K,N);
+//    emit repaintGUI(fsv, framesss);
+//    return ;
+
+    QVector<Vector3D> controlPoints;
+    QVector<Vector3D> normals;
+    QVector<double> squares;
+
+    QVector<Vector3D> controlPointsRaised;
+    QVector<std::shared_ptr<MultiFrame>> frames;
+
+    BodyFragmentation fragmentation(type, fragPar,underwaterStart);
+
     emit sendNormalsVis(controlPoints,normals);
     updateMaximum(solvPar.stepsNum-1,type);
-    QVector<double> squares=fragmentation.getSquares();
-    QVector<Vector3D> controlPointsRaised=fragmentation.getControlPointsRaised();
-    QVector<std::shared_ptr<MultiFrame>> frames=fragmentation.getFrames();
+
     Vector3D center;
     Vector3D bodyNose;
     double xend;
-    fragmentation.calculateBoundaries(bodyNose,center,xend);
+    double fullLength;
+    FrameCalculations functions;
+
+
     QVector<Vorton> freeVortons;
     QVector<Vorton> newVortons;
     QVector<Vorton> frameVortons;
@@ -3379,27 +3415,72 @@ void Solver::unifiedSolver(const FragmentationParameters &fragPar, const BodyTyp
     int restrQuant;
 
     Vector3D currentSpeed;
-    if (motion==NOACCELERATE)
-        currentSpeed=solvPar.streamVel;
-    else
-        currentSpeed=solvPar.streamVel/(solvPar.acceleratedStepsNum+2);
 
+    QVector<Vorton> symFrameVorton;
+    QVector<Vorton> symFreeVortons;
+    QVector<std::shared_ptr<MultiFrame>> symFrames;
 
-    FrameCalculations functions;
+    dMatrix3 R;
+    Eigen::Matrix3d rotation;
+    Eigen::Matrix3d rotationNull;
+    Vector3D angularVel;
+
     logger->writePassport(solvPar,fragPar,fragmentation.getForming(),functions.calcFrameSizes(frames));
     logger->writeNormals(controlPoints,normals);
-    functions.matrixCalc(frames,controlPoints,normals);
+    //functions.matrixCalc(frames,controlPoints,normals);
     QVector<QVector<double>> cpArray=functions.createCpArray(type,fragPar);
     double streamLinesStep=0.2;
+    Vector3D nullCenter=center;
+
+    Vector3D translation;
+    IntegrationResults results;
     for (int i=0; i<solvPar.stepsNum; i++)
     {
         if(checkFinishing())
             return;
+
         QTime stepTime=QTime::currentTime();
 
         newVortons.clear();
+        functions.calculateRelativeVel(i,solvPar.streamVel,freeMotionPar.bodyVel,solvPar.acceleratedStepsNum,motion,currentSpeed,underwaterStart);
 
-        Eigen::VectorXd column=functions.columnCalc(currentSpeed,freeVortons,normals,controlPoints);
+        functions.recalcTau(solvPar.tau,currentSpeed,panelLength);
+        if (i==0)
+        {
+        fragmentation.calculateBoundaries(bodyNose,center,xend,freeMotionPar.bodyVel,solvPar.tau,fullLength,underwaterStart);
+        translation=freeMotionPar.bodyVel*solvPar.tau;
+        }
+        double ledge=freeMotionPar.bodyVel.length()*solvPar.tau*(i+1);
+
+        if (underwaterStart)
+            fragmentation.rotationCutBodyLaunchFragmentation(i,freeMotionPar.bodyVel,solvPar.tau,fullLength);
+
+        functions.updateImportantVectors(i,controlPoints,normals,squares,controlPointsRaised,frames,fragmentation,underwaterStart);
+        QVector<std::pair<double, double>> boundariesParallelipeped=functions.makeParallepiped(frames);
+        functions.recalcTrFrames(frames);
+        functions.getBackUnderBody(freeVortons,boundariesParallelipeped,frames);
+        QVector<std::shared_ptr<MultiFrame>> oldFrames=FrameCalculations::copyFrames(frames);
+        QVector<Vector3D> oldControlPoints=controlPoints;
+        QVector<Vector3D> oldNormals=normals;
+        QVector<Vector3D> oldControlPointsRaised=controlPointsRaised;
+
+        FrameData frameData;
+        if (i==0 && !underwaterStart)
+            functions.matrixCalc(frames,symFrames,controlPoints,normals);
+        if (fabs(ledge)<fullLength && underwaterStart)
+        {
+           symFrames=FrameCalculations::copyFrames(frames);
+            FrameCalculations::reflect(symFreeVortons,symFrameVorton,symFrames);
+
+            results=functions.integrateParameters(xend-bodyNose.x(), 1700, fragmentation.getFormingRBC());
+            //frameData=functions.framesMagic(frames,controlPoints,controlPointsRaised,normals,squares);
+            functions.matrixCalc(frames,symFrames,controlPoints,normals,underwaterStart);
+        }
+
+        tangentialVelocities.resize(controlPoints.size());
+
+
+        Eigen::VectorXd column=functions.columnCalc(currentSpeed,freeVortons+symFreeVortons,normals,angularVel,controlPoints,center);
         Eigen::VectorXd vorticities=functions.vorticitiesCalc(column);
 
 
@@ -3407,14 +3488,28 @@ void Solver::unifiedSolver(const FragmentationParameters &fragPar, const BodyTyp
         emit sendMaxGamma(*std::max_element(vorticities.data(),vorticities.data()+vorticities.size(),Vector3D::fabsCompare));
         emit sendReguliser(vorticities[vorticities.size()-1]);
         FrameCalculations::setVorticity(frames,vorticities);
+        FrameCalculations::setVorticity(symFrames,-1.0*vorticities);
 
         frameVortons=functions.getFrameVortons(frames);
         newVortons=functions.getFrameVortons(frames);
 
         int generatedNum=newVortons.size();
-        QVector<std::pair<double, double>> boundariesParallelipeped=functions.makeParalllepiped(frameVortons);
+        //QVector<std::pair<double, double>> boundariesParallelipeped=functions.makeParalllepiped(frameVortons);
 
-        normalVelocitiesSLAU=functions.normalVelocitiesCalculations(freeVortons, newVortons, frames,normals,controlPoints,currentSpeed,AFTER_SLAU);
+        functions.epsZero(frames);
+
+        functions.epsZero(symFrames);
+
+        normalVelocitiesSLAU=functions.normalVelocitiesCalculations(freeVortons, newVortons, frames,normals,controlPoints,currentSpeed,symFrames,AFTER_SLAU);
+
+
+
+        functions.epsNormal(frames,fragPar.vortonsRad);
+        functions.epsNormal(symFrames,fragPar.vortonsRad);
+
+
+
+        if (!underwaterStart)
         logger->createQuadroGraphs(i,freeVortons,frameVortons,currentSpeed,graphNodesX,graphNodesY,graphNodesZ,frames,0);
 
         functions.epsNormal(newVortons,fragPar.vortonsRad);
@@ -3423,7 +3518,8 @@ void Solver::unifiedSolver(const FragmentationParameters &fragPar, const BodyTyp
         maxGammas.clear();
         maxGammas.push_back(functions.getMaxGamma(newVortons));
 
-        normalVelocitiesEpsilon=functions.normalVelocitiesCalculations(freeVortons, newVortons, frames,normals,controlPoints,currentSpeed,AFTER_EPSILON);
+        normalVelocitiesEpsilon=functions.normalVelocitiesCalculations(freeVortons, newVortons, frames,normals,controlPoints,currentSpeed,symFrames,AFTER_EPSILON);
+        if (!underwaterStart)
         logger->createQuadroGraphs(i,freeVortons,newVortons,currentSpeed,graphNodesX,graphNodesY,graphNodesZ,frames,1);
 
         functions.unionWithLift(newVortons,0.0001*solvPar.eStar,solvPar.eDoubleStar,solvPar.deltaUp,frames,normals,boundariesParallelipeped);
@@ -3432,7 +3528,28 @@ void Solver::unifiedSolver(const FragmentationParameters &fragPar, const BodyTyp
 
         functions.removeSmallVorticity(newVortons,solvPar.minVorticity);
 
-        functions.displacementPassiveCalcDividedMoves(freeVortons,newVortons,frameVortons,solvPar.tau,currentSpeed,solvPar.eDelta,solvPar.fiMax,solvPar.maxMove,moveFromFrames,moveFromVortons);
+        functions.calcSymParameters(symFrameVorton,symFreeVortons,frameVortons,freeVortons,symFrames,frames,underwaterStart);
+
+        Vector3D velonscreen=FrameCalculations::velocity(Vector3D(0.0,1,1),Vector3D(),frameVortons+freeVortons+symFreeVortons+symFrameVorton);
+
+
+        if (fabs(ledge)<fullLength && underwaterStart)
+        {
+            dRFromEulerAngles(R,M_PI,0.0,0.0);
+            for (int i=0; i<3; i++)
+            {
+                for (int j=0; j<3; j++)
+                {
+                    rotation(i,j)=R[i*4+j];
+                    rotationNull(i,j)=rotation(i,j);
+                }
+            }
+//            rotationNull.inverse();
+        }
+
+        functions.displacementPassiveCalcDividedMoves(freeVortons,newVortons,frameVortons+symFreeVortons+symFrameVorton,solvPar.tau,currentSpeed,solvPar.eDelta,solvPar.fiMax,solvPar.maxMove,moveFromFrames,moveFromVortons);
+
+       // FrameCalculations::reflectMove(symFrameVorton,newVortons);
         //functions.displacementPassiveCalc(freeVortons,newVortons,frameVortons,solvPar.tau,currentSpeed,solvPar.eDelta,solvPar.fiMax,solvPar.maxMove);
 
         QVector<Vorton> copyVort=freeVortons;
@@ -3440,19 +3557,27 @@ void Solver::unifiedSolver(const FragmentationParameters &fragPar, const BodyTyp
         functions.displace(copyVort);
         functions.displace(copyNewVort);
 
-        functions.universalGetBackTriangleFrames(copyVort,freeVortons,boundariesParallelipeped,solvPar.layerHeight,controlPoints,normals,frames);
-        functions.universalGetBackTriangleFrames(copyNewVort,newVortons,boundariesParallelipeped,solvPar.layerHeight,controlPoints,normals,frames);
+        Vector3D translScreen=-translation;
+//        if (underwaterStart)
+//        functions.reverseMagic(frames,controlPoints,controlPointsRaised,normals,squares,frameData);
+
+        functions.universalGetBackTriangleFrames(copyVort,freeVortons,boundariesParallelipeped,solvPar.layerHeight,controlPoints,normals,frames,symFrames,underwaterStart,translScreen);
+        functions.universalGetBackTriangleFrames(copyNewVort,newVortons,boundariesParallelipeped,solvPar.layerHeight,controlPoints,normals,frames,symFrames,underwaterStart,translScreen);
 
 
         functions.correctMove(freeVortons,copyVort,newVortons,copyNewVort);
         functions.getBackMove(moveFromGetBack,copyNewVort,copyVort);
         functions.setRightMove(freeVortons,copyVort,newVortons,copyNewVort);
-
+        FrameCalculations::reflectMove(symFreeVortons,freeVortons);
         functions.epsZero(frames);
-        Vector3D force=functions.forceCalc(currentSpeed, solvPar.streamPres,solvPar.density,frames,freeVortons, solvPar.tau, squares, controlPointsRaised, normals);
+        Vector3D force;
+        Vector3D torque;
+        functions.forceAndTorqueCalc(currentSpeed, solvPar.streamPres,solvPar.density,frames+symFrames,freeVortons+symFreeVortons, solvPar.tau, squares, controlPointsRaised, normals,center,force,torque);
         forces[i]=force;
+        torques[i]=torque;
         cAerodynamics[i] = force*2.0/(solvPar.density*currentSpeed.lengthSquared()*M_PI*pow(fragmentation.getForming().diameter*0.5,2));
         functions.fillPressures(freeVortons,frames,controlPointsRaised,pressures,currentSpeed,solvPar.streamPres,solvPar.density,solvPar.tau);
+        if (!underwaterStart)
         functions.calculateCp(type,i,solvPar.stepsNum,cpArray,solvPar.streamVel,solvPar.streamPres,solvPar.density,frames,freeVortons,solvPar.tau,controlPointsRaised,fragPar);
         functions.epsNormal(frames,fragPar.vortonsRad);
 
@@ -3461,8 +3586,9 @@ void Solver::unifiedSolver(const FragmentationParameters &fragPar, const BodyTyp
 
 
         logger->createParaviewVelocityField(freeVortons,moveFromFrames,moveFromVortons,moveFromGetBack,solvPar.tau,i);
+        if (!underwaterStart)
         logger->createQuadroGraphs(i,freeVortons,frameVortons,currentSpeed,graphNodesX,graphNodesY,graphNodesZ,frames,2);
-        normalVelocitiesIntegration=functions.normalVelocitiesCalculations(freeVortons, newVortons, frames,normals,controlPoints,currentSpeed,AFTER_INTEGRATION);
+        normalVelocitiesIntegration=functions.normalVelocitiesCalculations(freeVortons, newVortons, frames,normals,controlPoints,currentSpeed,symFrames,AFTER_INTEGRATION);
 
         Counters countersBeforeIntegration=functions.getCounters();
         Timers timersBeforeIntegration=functions.getTimers();
@@ -3497,13 +3623,39 @@ void Solver::unifiedSolver(const FragmentationParameters &fragPar, const BodyTyp
 
         functions.removeFarRotationBody(freeVortons,solvPar.farDistance,center);
         functions.setMaxInitialGamma(maxInitialGamma,i,freeVortons);
-        normalVelocitiesEnd=functions.normalVelocitiesCalculations(freeVortons, newVortons, frames,normals,controlPoints,currentSpeed,IN_THE_END);
+        normalVelocitiesEnd=functions.normalVelocitiesCalculations(freeVortons, newVortons, frames,normals,controlPoints,currentSpeed,symFrames,IN_THE_END);
 
         Counters countersAfterIntegration=functions.getCounters();
         Timers timersAfterIntegration=functions.getTimers();
 
         functions.clear();
-        QPair<int,int> boundaries=fragmentation.getStreamLinesSizes();
+        emit repaintGUI(freeVortons, frames);
+        if (underwaterStart)
+        {
+        if (fabs(ledge)<fullLength)
+        {
+//            qDebug()<<fullLength;
+//            qDebug()<<fabs(ledge);
+            FrameCalculations::updateBoundaries(bodyNose,translation,center,freeVortons);
+
+            center=bodyNose/2;
+            nullCenter=center;
+        }
+        else {
+
+            Vector3D oldCenter=center;
+            functions.translateAndRotatev3(frames,freeVortons,results.mass,results.inertiaTensor,torque,rotation,rotationNull,force,center,nullCenter, results.massCenter,solvPar.tau,freeMotionPar.bodyVel,controlPoints,normals,controlPointsRaised,oldFrames,oldControlPoints,oldNormals,oldControlPointsRaised, angularVel,bodyNose,xend,graphNodesX,graphNodesY,graphNodesZ);
+
+                    }
+        }
+         functions.calcSymParameters(symFrameVorton,symFreeVortons,newVortons,freeVortons,symFrames,frames,underwaterStart);
+        QPair<int,int> boundaries;
+        if (underwaterStart)
+                boundaries=fragmentation.getStreamLinesSizes();
+        emit sendNormalsVis(controlPoints,normals);
+
+        functions.calcSymParameters(symFrameVorton,symFreeVortons,frameVortons,freeVortons,symFrames,frames,underwaterStart);
+
         logger->writeForces(force,cAerodynamics[i]);
         logger->writeLogs(i,stepTime.elapsed()*0.001,freeVortons.size(), countersBeforeIntegration,countersAfterIntegration, timersBeforeIntegration, timersAfterIntegration, restrictions);
 
@@ -3511,13 +3663,18 @@ void Solver::unifiedSolver(const FragmentationParameters &fragPar, const BodyTyp
                            FrameCalculations::velocity(center,currentSpeed,freeVortons,frames),vorticities[vorticities.size()-1],freeVortons.size(),countersBeforeIntegration,countersAfterIntegration,functions.getConditionalNum(),restrQuant);
 
         functions.velForStreamLines(velocitiesStream,currentSpeed,streamLinesStep,freeVortons,boundaries);
+        if (!underwaterStart)
         logger->createParaviewStreamlinesFile(velocitiesStream,boundaries,streamLinesStep,i);
         logger->createParaviewTraceVerticesFile(freeVortons,i);
         logger->writeGammas(maxGammas,maxInitialGamma);
+        if (!underwaterStart)
         logger->createParaviewFile(frames,pressures,normalVelocitiesSLAU,normalVelocitiesEpsilon, normalVelocitiesIntegration, normalVelocitiesEnd,i);
         updateProgress(i,type);
-        emit repaintGUI(freeVortons, frames);
 
+        QVector<std::shared_ptr<MultiFrame>> qq=FrameCalculations::copyFrames(symFrames);
+//        frames.append(qq);
+
+//        frames.remove(frames.size()-qq.size(),qq.size());
         functions.updateSpeed(currentSpeed,solvPar.streamVel,solvPar.acceleratedStepsNum,motion);
     }
     QVector<double> fis=functions.cpAverage(type,controlPoints,cpArray,solvPar.stepsNum,fragPar);

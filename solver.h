@@ -22,11 +22,15 @@ private:
     QVector<Vector3D> torques;
     QString logPath; ///<Путь к каталогу для записи результатов расчета
     MotionType motion;
+    double panelLength;
+    bool underwaterStart=false;
     bool concentration=false;
     bool checkFinishing();
 public:
     static bool interrupted;
     static bool getBackGA;
+    void underwater();
+    void setPanelLength(double avLength);
     Solver();
     void setConcentration(bool conc);
     BodyFragmentation fragmentate(const FragmentationParameters parameters, const BodyType type);
@@ -64,6 +68,7 @@ signals:
     void sendNormalsVis(QVector<Vector3D>& controlPoints, QVector<Vector3D>& normals);
     void sendMaxGamma(double maxGamma);
     void repaintGUI(const QVector<Vorton>& vortons, const QVector<std::shared_ptr<MultiFrame>>& frames);
+    void repaintGUI(const QVector<Vorton>& vortons, const QVector<TriangleFrame>& frames);
     void repaintGUI(const QVector<Vorton>& vortons, const QVector<Vorton>& gaVortons);///<Сигнал о перерисовке интерфейса
     void variatingFinished(); ///<Сигнал об окончании  варьирования
     void sendProgressSphere(const int percent); ///< Сигнал об текущем прогрессе расчета сферы

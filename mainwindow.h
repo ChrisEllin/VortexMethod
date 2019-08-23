@@ -128,6 +128,7 @@ public slots:
     void recieveProgressRotationBody(const int percentage);
     void recieveProgressRotationCutBody(const int percentage);
     void drawGUI(const QVector<Vorton>& vortons, const QVector<std::shared_ptr<MultiFrame>>& frames);
+    void drawGUI(const QVector<Vorton>& vortons, const QVector<TriangleFrame>& frames);
     void drawGUI(const QVector<Vorton>& vortons, const QVector<Vorton>& frames);
     void drawGUIGA(const QVector<Vorton>& vortons, const QVector<Vorton>& vortonsGA);
     void setNormalsVis(QVector<Vector3D>& controlPoints, QVector<Vector3D>& normals);

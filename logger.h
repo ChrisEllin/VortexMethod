@@ -34,11 +34,10 @@ struct TriangleVectors
     Vector3D b;
     Vector3D c;
     Vector3D center;
-    Vector3D controlPointRaised;
     Vector3D normal;
     double square;
 
-    void calcParameters(const double raise);
+    void calcParameters();
 };
 
 class Logger:public QObject
@@ -69,7 +68,7 @@ public:
 
     void createFiles();
 
-    void parseSalomeMesh(const QString& path, const double raise, double vortonsRad, QVector<std::shared_ptr<MultiFrame>>& frames, QVector<Vector3D>& controlPoints, QVector<Vector3D>& normals, QVector<Vector3D>& controlPointsRaised, QVector<double>& squares);
+    void parseSalomeMesh(const QString& path, double vortonsRad, QVector<TriangleFrame> &frames, QVector<Vector3D>& controlPoints, QVector<Vector3D>& normals, QVector<double>& squares);
     void writeCpGraphs(QVector<QVector<double>>& cpArray, QVector<double>& fis);
     void writeNormals(QVector<Vector3D>& controlPoints, QVector<Vector3D>& normals);
     void writeCpFile(const QVector<double> cp, const QVector<double> tetas);

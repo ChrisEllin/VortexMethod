@@ -139,7 +139,7 @@ void FrameCalculations::updateSpeed(Vector3D &currentSpeed, Vector3D streamVel, 
     }
 }
 
-QVector<double> FrameCalculations::normalVelocitiesCalculations(QVector<Vorton> &freeVortons, QVector<Vorton> &newVortons,QVector<std::shared_ptr<MultiFrame> > &frames, QVector<Vector3D> &normals, QVector<Vector3D> &controlPoints, Vector3D streamVel, PLACE_IN_SOLVER place)
+QVector<double> FrameCalculations::normalVelocitiesCalculations(QVector<Vorton> &freeVortons, QVector<Vorton> &newVortons,QVector<std::shared_ptr<MultiFrame> > &frames, QVector<Vector3D> &normals, QVector<Vector3D> &controlPoints, Vector3D streamVel, QVector<std::shared_ptr<MultiFrame>>& symFrames,PLACE_IN_SOLVER place)
 {
     QVector<double> velocities;
     switch (place)
@@ -148,6 +148,9 @@ QVector<double> FrameCalculations::normalVelocitiesCalculations(QVector<Vorton> 
     {
         for (int i=0; i<controlPoints.size();i++)
             velocities.push_back(Vector3D::dotProduct(FrameCalculations::velocity(controlPoints[i],streamVel,freeVortons,frames),normals[i]));
+        for (int i=0; i<controlPoints.size();i++)
+            velocities[i]+=(Vector3D::dotProduct(FrameCalculations::velocity(controlPoints[i],Vector3D(),freeVortons,symFrames),normals[i]));
+        qDebug()<<*std::max_element(velocities.begin(),velocities.end(),Vector3D::fabsCompare);
         break;
     }
     case AFTER_EPSILON:
@@ -170,6 +173,157 @@ QVector<double> FrameCalculations::normalVelocitiesCalculations(QVector<Vorton> 
     }
     };
     return velocities;
+}
+
+void FrameCalculations::calcSymParameters(QVector<Vorton> &symNewVortons, QVector<Vorton> &symFreeVortons, const QVector<Vorton> newVortons, const QVector<Vorton> freeVortons, QVector<std::shared_ptr<MultiFrame> > &symFrames, QVector<std::shared_ptr<MultiFrame> > &frames, bool underwaterStart)
+{
+    if (underwaterStart)
+    {
+    symNewVortons=newVortons;
+    symFreeVortons=freeVortons;
+    symFrames=FrameCalculations::copyFrames(frames);
+    FrameCalculations::reflect(symFreeVortons,symNewVortons,symFrames);
+    }
+}
+
+void FrameCalculations::getBackUnderBody(QVector<Vorton> &freeVortons, QVector<std::pair<double, double> > boundaries, QVector<std::shared_ptr<MultiFrame> > &frames)
+{
+    for (int k=0; k<freeVortons.size(); k++)
+        getBackClosestFrame(freeVortons[k],boundaries,frames);
+}
+
+void FrameCalculations::getBackClosestFrame(Vorton &vort,QVector<std::pair<double, double> > boundaries, QVector<std::shared_ptr<MultiFrame> > &frames)
+{
+    bool gotBack = false;
+    if (insideFramesVector(frames, vort,boundaries, VortonsPart::Center))
+    {
+        //если вортон внутри, то оразить центр от ближайшей рамки
+        QPair<int,int> num = findMaxSolidAngle(vort,frames);
+        Vector3D norm = frames[num.first]->getTriangle(num.second).getNormal().normalized();
+
+        //строго назад
+        Vector3D translation = Vector3D::dotProduct(frames[num.first]->getTriangle(num.second).getCenter()-vort.getMid(),norm)*2.0*norm;
+
+        //с сохранением касательной компоненты
+        //Vector3D translation = vort.move-Vector3D::dotProduct(norm,vort.move)*norm;
+
+        vort.translate(translation);
+        gotBack = true;
+
+        if (insideFramesVector(frames, vort,boundaries, VortonsPart::Center))
+            qDebug()<<"SymmetricalGetBackWasNotSuccessfull";
+    }
+
+    //если после центр вортона снаружи, а какой-то из концов внутри, надо развернуть вортон
+    if (insideFramesVector(frames, vort,boundaries, VortonsPart::Tail)||insideFramesVector(frames, vort,boundaries, VortonsPart::Beginning))
+    {
+        //найти рамку, пересекаемую отрезком
+        QPair <int, int> answer1 = intersectsFramesVector(frames, vort,VortonsPart::Tail);
+        if (answer1.second!=-1)
+        {
+            vort.rotateAroundNormal(frames[answer1.first]->getTriangle(answer1.second).getNormal().normalized());
+
+            //vortonCounters.NrotGetBack++;
+            //vortonCounters.Nback++
+        }
+
+    }
+}
+
+void FrameCalculations::getBackClosestFrameEdge(Vorton &vort, QVector<std::pair<double, double> > boundaries, QVector<std::shared_ptr<MultiFrame> > &frames)
+{
+    bool gotBack = false;
+    Vector3D norm, translation;
+    if (insideFramesVector(frames, vort,boundaries, VortonsPart::Tail))
+    {
+        //если вортон внутри, то оразить центр от ближайшей рамки
+        QPair<int,int> num = findMaxSolidAngle(vort,frames);
+        norm = frames[num.first]->getTriangle(num.second).getNormal().normalized();
+
+        //строго назад
+        translation = Vector3D::dotProduct(frames[num.first]->getTriangle(num.second).getCenter()-vort.getMid(),norm)*2.0*norm;
+
+        //с сохранением касательной компоненты
+        //Vector3D translation = vort.move-Vector3D::dotProduct(norm,vort.move)*norm;
+
+        vort.translate(translation);
+        gotBack = true;
+
+        if (insideFramesVector(frames, vort,boundaries, VortonsPart::Center))
+            qDebug()<<"SymmetricalGetBackWasNotSuccessfull";
+    }
+
+    //если после центр вортона снаружи, а какой-то из концов внутри, надо развернуть вортон
+    if (insideFramesVector(frames, vort,boundaries, VortonsPart::Beginning))
+    {
+        //найти рамку, пересекаемую отрезком
+        QPair<int,int> num = findMaxSolidAngle(vort,frames);
+        Vector3D norm2 = frames[num.first]->getTriangle(num.second).getNormal().normalized();
+        Vector3D translation2 = Vector3D::dotProduct(frames[num.first]->getTriangle(num.second).getCenter()-vort.getMid(),norm2)*2.0*norm2;
+        if (translation2.length()>translation.length())
+        {
+            translation=translation2;
+            norm=norm2;
+
+            //vortonCounters.NrotGetBack++;
+            //vortonCounters.Nback++
+        }
+
+    }
+    vort.translate(translation);
+}
+
+void FrameCalculations::recalcTrFrames(QVector<std::shared_ptr<MultiFrame> > &frames)
+{
+    for (int i=0;i<frames.size();i++)
+        frames[i]->makeTriangles();
+}
+
+void FrameCalculations::recalcTau(double &tau, Vector3D currentVel, double panelLength)
+{
+    tau=panelLength/currentVel.length();
+}
+
+void FrameCalculations::updateEnd(double &xend,const Vector3D bodyNose, const double fullLength)
+{
+    if (bodyNose.x()+fullLength>=0.0)
+        xend=0.0;
+    else {
+        xend=bodyNose.x()+fullLength;
+    }
+}
+
+void FrameCalculations::updateImportantVectors(int step, QVector<Vector3D> &controlPoints, QVector<Vector3D> &normals, QVector<double> &squares, QVector<Vector3D> &controlPointsRaised, QVector<std::shared_ptr<MultiFrame> > &frames, BodyFragmentation& frag,bool underwaterStart)
+{
+    if (underwaterStart || step==0)
+    {
+        controlPoints=frag.getControlPoints();
+        normals=frag.getNormals();
+        controlPointsRaised=frag.getControlPointsRaised();
+        squares=frag.getSquares();
+        frames=frag.getFrames();
+
+    }
+}
+
+void FrameCalculations::calculateRelativeVel(const int step, const Vector3D streamVel, const Vector3D bodyVel, const int acceleratedNum, const MotionType motion, Vector3D& currentSpeed, bool underwaterStart)
+{
+    if (motion==ACCELERATED)
+    {
+        if (step==0)
+        {
+            currentSpeed=streamVel/(acceleratedNum+2);
+        }
+        else {
+            updateSpeed(currentSpeed,streamVel,acceleratedNum,motion);
+        }
+    }
+    else
+        currentSpeed=streamVel;
+
+    if (underwaterStart)
+        currentSpeed=streamVel-bodyVel;
+
 }
 
 void FrameCalculations::fillPressures(QVector<Vorton> &freeVortons, QVector<std::shared_ptr<MultiFrame> > &frames, QVector<Vector3D> &controlPointsRaised, QVector<double> &pressures,Vector3D& streamVel, double streamPres, double density, double tau)
@@ -323,21 +477,36 @@ void FrameCalculations::epsNormal(QVector<std::shared_ptr<MultiFrame> > &frames,
         frames[i]->setRadius(eps);
 }
 
+bool FrameCalculations::fabsCompare(Vector3D a, Vector3D b)
+{
+    if (a.length()>b.length())
+        return  true;
+    return false;
+}
+
 /*!
 Рассчитывает значения элементов матрицы, составленной из произведения единичных интенсивностей от каждой из рамок на соответствующую нормаль и вычисляет обратную к ней
 \param frames Вектор рамок
 \param controlPoints Вектор контрольных точек
 \param normals Вектор нормалей
 */
-void FrameCalculations::matrixCalc(QVector<std::shared_ptr<MultiFrame> > frames, const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals)
+void FrameCalculations::matrixCalc(QVector<std::shared_ptr<MultiFrame>> frames,QVector<std::shared_ptr<MultiFrame>> symFrames, const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals, bool underwater)
 {
+
+
+
+
     matrixSize=frames.size()+1;
     matrix.resize(matrixSize,matrixSize);
     for (int i=0; i<matrixSize-1; i++)
     {
         for (int j=0; j<matrixSize-1; j++)
+        {
             //matrix(i,j)=Vector3D::dotProduct(frames[j]->qHelp(controlPoints[i]), normals[i]);
             matrix(i,j)=Vector3D::dotProduct(frames[j]->qHelp(controlPoints[i]), normals[i]);
+            matrix(i,j)-=Vector3D::dotProduct(symFrames[j]->qHelp(controlPoints[i]), normals[i]);
+        }
+
     }
     for (int i=0; i<matrixSize-1; i++)
         matrix(matrixSize-1,i)=matrix(i,matrixSize-1)=1.0; 
@@ -383,6 +552,64 @@ void FrameCalculations::matrixCalc(QVector<std::shared_ptr<MultiFrame> > frames,
 //    matrix=matrix.inverse();
 
 }
+
+void FrameCalculations::matrixCalc(QVector<std::shared_ptr<MultiFrame> > frames, const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals, bool underwater)
+{
+    matrixSize=frames.size()+1;
+    matrix.resize(matrixSize,matrixSize);
+    for (int i=0; i<matrixSize-1; i++)
+    {
+        for (int j=0; j<matrixSize-1; j++)
+        {
+            //matrix(i,j)=Vector3D::dotProduct(frames[j]->qHelp(controlPoints[i]), normals[i]);
+            matrix(i,j)=Vector3D::dotProduct(frames[j]->qHelp(controlPoints[i]), normals[i]);
+
+        }
+
+    }
+    for (int i=0; i<matrixSize-1; i++)
+        matrix(matrixSize-1,i)=matrix(i,matrixSize-1)=1.0;
+    matrix(matrixSize-1,matrixSize-1)=0.0;
+
+    double tqw=matrix.determinant();
+    QVector<double> mat(matrixSize);
+    for (int i=0; i<matrixSize; i++)
+    {
+        mat[i]=0.0;
+        for (int j=0; j<matrixSize; j++)
+        {
+            mat[i]+=matrix(i,j);
+        }
+    }
+    double normA=mat[0];
+    for (int i=1; i<matrixSize; i++)
+    {
+        if (mat[i]>normA)
+            normA=mat[i];
+    }
+//    Eigen::MatrixXd oldmatrix;
+//    oldmatrix.resize(matrixSize,matrixSize);
+//    oldmatrix=matrix;
+
+    matrix=matrix.inverse();
+    QVector<double> mat1(matrixSize);
+    for (int i=0; i<matrixSize; i++)
+    {
+        for (int j=0; j<matrixSize; j++)
+        {
+            mat1[i]+=matrix(i,j);
+        }
+    }
+    double normA1=mat1[0];
+    for (int i=1; i<matrixSize; i++)
+    {
+        if (mat1[i]>normA1)
+            normA1=mat1[i];
+    }
+    conditionalNum=normA*normA1;
+
+//    matrix=matrix.inverse();
+}
 /*!
 Рассчитывает значения столбца b для решения СЛАУ вида A*x=b, где А-матрица, х-искомый столбец.
 \param streamVel Скорость потока
@@ -402,7 +629,7 @@ Eigen::VectorXd FrameCalculations::columnCalc(const Vector3D streamVel, const QV
 }
 
 
-Eigen::VectorXd FrameCalculations::columnCalc(const Vector3D streamVel, const QVector<Vorton> &vortons, const QVector<Vector3D> &normals, const Vector3D angularVel, const QVector<Vector3D> &controlPoints, const Vector3D center)
+Eigen::VectorXd FrameCalculations::columnCalc(const Vector3D streamVel, const QVector<Vorton> vortons, const QVector<Vector3D> &normals, const Vector3D angularVel, const QVector<Vector3D> &controlPoints, const Vector3D center)
 {
     Eigen::VectorXd column(matrixSize);
     for (int i=0; i<controlPoints.size(); i++)
@@ -806,8 +1033,14 @@ QPair<int,int> FrameCalculations::intersectsFramesVector(QVector<std::shared_ptr
 
 void FrameCalculations::universalGetBackTriangleFrames(QVector<Vorton> &vortons, QVector<Vorton> &vortonsOriginal, QVector<std::pair<double, double> > boundaries, const double layerHeight, const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals, QVector<std::shared_ptr<MultiFrame> > &frames, bool screen, Vector3D translScreen)
 {
+
+}
+
+void FrameCalculations::universalGetBackTriangleFrames(QVector<Vorton> &vortons, QVector<Vorton> &vortonsOriginal, QVector<std::pair<double, double> > boundaries, const double layerHeight, const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals, QVector<std::shared_ptr<MultiFrame> > &frames, QVector<std::shared_ptr<MultiFrame> > &symFrames,bool screen, Vector3D translScreen)
+{
     bool check;
-    int aaa=0;
+    QVector<std::shared_ptr<MultiFrame>>copyFr1=copyFrames(symFrames);
+    frames.append(copyFr1);
      QTime start=QTime::currentTime();
     for (int i=vortons.size()-1; i>=0;i--)
     {
@@ -836,6 +1069,7 @@ void FrameCalculations::universalGetBackTriangleFrames(QVector<Vorton> &vortons,
 
             }
             else {
+                getBackClosestFrame(vortons[i],boundaries,frames);
                  qDebug()<<"Vorton is inside, but intersection not found!";
             }
 
@@ -870,7 +1104,8 @@ void FrameCalculations::universalGetBackTriangleFrames(QVector<Vorton> &vortons,
 
                 }
             }
-            else {       
+            else {
+                getBackClosestFrameEdge(vortons[i],boundaries,frames);
                      qDebug()<<"Can't find intersected frame! (getBack rotation)";
             }
         }
@@ -889,7 +1124,7 @@ void FrameCalculations::universalGetBackTriangleFrames(QVector<Vorton> &vortons,
             }
             if (!(insideFramesVector(frames,test,boundaries,VortonsPart::Center) || insideFramesVector(frames,test,boundaries,VortonsPart::Beginning) || insideFramesVector(frames,test,boundaries,VortonsPart::Tail)))
             {
-                     aaa++;
+
 
                  if (!(vortons[i]==test))
                  {
@@ -927,8 +1162,9 @@ void FrameCalculations::universalGetBackTriangleFrames(QVector<Vorton> &vortons,
             }
         }
     }
+    frames.remove(frames.size()-copyFr1.size(),copyFr1.size());
     timers.getBackAndRotateTimer=start.elapsed()*0.001;
-    qDebug()<<"AAAAAAAAAAAA="<<aaa;
+
 }
 
 bool FrameCalculations::universalInsideR0Correct(const Vorton vort, const QVector<std::pair<double, double> > boundaries, QVector<std::shared_ptr<MultiFrame> > &frames)
@@ -3850,6 +4086,14 @@ bool FrameCalculations::coDirectionallyCheck(const Vector3D a, const Vector3D b)
     return false;
 }
 
+void FrameCalculations::calcControlPointsRaised(QVector<Vector3D> &controlPointsRaised, QVector<Vector3D> &controlPoints, QVector<Vector3D> &normals, const double raise)
+{
+    for (int i=0; i<controlPoints.size();i++)
+    {
+        controlPointsRaised.push_back(controlPoints[i]+normals[i]*raise);
+    }
+}
+
 /*!
 Функция, добавляющая вортон в вектор. Создана для совместимости с QtConcurrent
 \param[in,out] vortons Вектор, содержащий вортоны для функции
@@ -4440,9 +4684,56 @@ void FrameCalculations::clear()
     clearCounters();
 }
 
+bool FrameCalculations::checkDirection(TriangleFrame &a, TriangleFrame &b)
+{
+    if (a.getR0()==b.getR0() && a.getR2()==b.getR2())
+        return true;
+    if (a.getR0()==b.getR1() && a.getR2()==b.getR0())
+        return true;
+    if (a.getR0()==b.getR2() && b.getR2()==b.getR1())
+        return true;
+
+    if (a.getR0()==b.getR0() && a.getR1()==b.getR1())
+        return true;
+    if (a.getR0()==b.getR1() && a.getR1()==b.getR2())
+        return true;
+    if (a.getR0()==b.getR2() && a.getR1()==b.getR0())
+        return true;
+
+    if (a.getR1()==b.getR0() && a.getR2()==b.getR1())
+        return true;
+    if (a.getR1()==b.getR1() && a.getR2()==b.getR2())
+        return true;
+    if (a.getR1()==b.getR2() && a.getR2()==b.getR0())
+        return  true;
+
+    return false;
+}
+
+void FrameCalculations::correctDirectionFrames(QVector<TriangleFrame> &frames)
+{
+    for (int i=0; i<frames.size()-1;i++)
+    {
+        for (int j=i+1;j<frames.size();j++)
+        {
+             if(checkDirection(frames[i],frames[j]))
+             {
+                 Vector3D middle=frames[j].getR0();
+                 frames[j].setR0(frames[j].getR2());
+                 frames[j].setR2(middle);
+                 frames[j].setNormal(-1.0*frames[j].getNormal());
+             }
+        }
+    }
+}
+
 QVector<std::pair<double,double>> FrameCalculations::makeParalllepiped(QVector<Vorton> newVortons)
 {
     QVector<std::pair<double,double>> boundaries(3);
+
+
+
+
     std::pair<Vorton*,Vorton*> xBoundariesIter = std::minmax_element(newVortons.begin(),newVortons.end(),xCompare);
     std::pair<double, double> xBoundaries(xBoundariesIter.first->getTail().x(),xBoundariesIter.second->getTail().x());
     boundaries[0]=xBoundaries;
@@ -4454,6 +4745,50 @@ QVector<std::pair<double,double>> FrameCalculations::makeParalllepiped(QVector<V
     boundaries[2]=zBoundaries;
     return boundaries;
 
+}
+
+QVector<std::pair<double, double> > FrameCalculations::makeParallepiped(QVector<std::shared_ptr<MultiFrame> > &frames)
+{
+    QVector<std::pair<double,double>> boundaries(3);
+    std::pair<double,double> x=std::pair<double,double>(frames[0]->at(0).getMid().x(),frames[0]->at(0).getMid().x());
+    std::pair<double,double> y=std::pair<double,double>(frames[0]->at(0).getMid().y(),frames[0]->at(0).getMid().y());
+    std::pair<double,double> z=std::pair<double,double>(frames[0]->at(0).getMid().z(),frames[0]->at(0).getMid().z());
+    for (int i=0; i<frames.size();i++)
+    {
+        for (int j=0; j<frames[i]->getAnglesNum();j++)
+        {
+            if (frames[i]->at(j).getMid().x()<x.first)
+                x.first=frames[i]->at(j).getMid().x();
+            if (frames[i]->at(j).getMid().x()>x.second)
+                x.second=frames[i]->at(j).getMid().x();
+            if (frames[i]->at(j).getTail().x()<x.first)
+                x.first=frames[i]->at(j).getTail().x();
+            if (frames[i]->at(j).getTail().x()>x.second)
+                x.second=frames[i]->at(j).getTail().x();
+
+            if (frames[i]->at(j).getMid().y()<y.first)
+                y.first=frames[i]->at(j).getMid().y();
+            if (frames[i]->at(j).getMid().y()>y.second)
+                y.second=frames[i]->at(j).getMid().y();
+            if (frames[i]->at(j).getTail().y()<y.first)
+                y.first=frames[i]->at(j).getTail().y();
+            if (frames[i]->at(j).getTail().y()>y.second)
+                y.second=frames[i]->at(j).getTail().y();
+
+            if (frames[i]->at(j).getMid().z()<z.first)
+                z.first=frames[i]->at(j).getMid().z();
+            if (frames[i]->at(j).getMid().z()>z.second)
+                z.second=frames[i]->at(j).getMid().z();
+            if (frames[i]->at(j).getTail().z()<z.first)
+                z.first=frames[i]->at(j).getTail().z();
+            if (frames[i]->at(j).getTail().z()>z.second)
+                z.second=frames[i]->at(j).getTail().z();
+        }
+    }
+    boundaries[0]=x;
+    boundaries[1]=y;
+    boundaries[2]=z;
+    return boundaries;
 }
 
 bool FrameCalculations::xCompare(const Vorton a,const Vorton b)

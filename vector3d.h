@@ -42,6 +42,7 @@ public:
     Vector3D operator -();
     double& operator[](const int i);
     static bool fabsCompare(double a, double b);
+
     static int sign(int val);
     static int sign(double val);
 };

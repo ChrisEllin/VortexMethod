@@ -55,9 +55,10 @@ protected:
     QVector<Vorton> vortons; ///<Вектор вортон-отрезков, из которых состоит рамка
     Vector3D center; ///<Центр рамки в трехмерном пространстве
     QVector<TriangleFrame> triangles;
-    virtual void makeTriangles();
+
 public:
     MultiFrame();
+    virtual void makeTriangles();
     virtual ~MultiFrame();
     MultiFrame(const int anglesNumber, const Vector3D& r0, const Vector3D& r01, const Vector3D& r11, const double eps);
     virtual Vorton &operator [] (std::size_t i);

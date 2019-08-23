@@ -71,6 +71,8 @@ MainWindow::MainWindow(QWidget *parent) :
              SLOT(drawGUI(const QVector<Vorton>&, const QVector<std::shared_ptr<MultiFrame>>&)), Qt::BlockingQueuedConnection);
     connect (solver, SIGNAL (repaintGUI(const QVector<Vorton>&, const QVector<Vorton>&)), this,
              SLOT(drawGUIGA(const QVector<Vorton>&, const QVector<Vorton>&)), Qt::BlockingQueuedConnection);
+    connect (solver, SIGNAL (repaintGUI(const QVector<Vorton>&, const QVector<TriangleFrame>&)), this,
+             SLOT(drawGUI(const QVector<Vorton>&, const QVector<TriangleFrame>&)), Qt::BlockingQueuedConnection);
     connect (solver, SIGNAL(updateSphereMaximum(const int)), ui->sphereProgressBar, SLOT(setMaximum(const int)), Qt::BlockingQueuedConnection);
     connect (solver, SIGNAL(updateCylinderMaximum(const int)), ui->cylinderProgressBar, SLOT(setMaximum(const int)), Qt::BlockingQueuedConnection);
     connect (solver, SIGNAL(updateRotationBodyMaximum(const int)), ui->rotationBodyProgressBar, SLOT(setMaximum(const int)), Qt::BlockingQueuedConnection);
@@ -1191,6 +1193,52 @@ void MainWindow::drawGUI(const QVector<Vorton> &vortons, const QVector<std::shar
     }
 }
 
+void MainWindow::drawGUI(const QVector<Vorton> &vortons, const QVector<TriangleFrame> &frames)
+{
+    clearSegments();
+    currentVortons=vortons;
+
+    for (int i=0; i<frames.size(); i++)
+    {
+
+            QVector3D t1 = Vector3D::toQVector3D(frames[i].getR0());
+            QVector3D t2 = Vector3D::toQVector3D(frames[i].getR1());
+            QVector3D t3 = Vector3D::toQVector3D(frames[i].getR2());
+            emit drawSegment(t1, t2, SArrow::Grid);
+            emit drawSegment(t2, t3, SArrow::Grid);
+            emit drawSegment(t3, t1, SArrow::Grid);
+
+    }
+    ui->freeVortonsQuantityLineEdit->setText(QString::number(vortons.size()));
+
+    if(!frames.isEmpty())
+    {
+        for (int i=0; i<vortons.size(); i++)
+    {
+        QVector3D mid=Vector3D::toQVector3D(vortons[i].getMid());
+        QVector3D tail=Vector3D::toQVector3D(vortons[i].getTail());
+        if (checkDrawing(vortons[i].getMid(),vortons[i].getTail()))
+            emit drawSegment(2.0*mid-tail, tail/*,SArrow::Grid*/);
+    }
+    }
+    else
+    {
+        for (int i=0; i<vortons.size(); i++)
+    {
+        QVector3D mid=Vector3D::toQVector3D(vortons[i].getMid());
+        QVector3D tail=Vector3D::toQVector3D(vortons[i].getTail());
+        if (checkDrawing(vortons[i].getMid(),vortons[i].getTail()))
+            emit drawSegment(2.0*mid-tail, tail,SArrow::Grid);
+    }
+    }
+
+    if (!currentControlPoints.isEmpty() && !currentNormals.isEmpty() && preprocessor->normalsDrawing())
+    {
+        for (int i=0; i<currentNormals.size();i++)
+            emit drawSegment(Vector3D::toQVector3D(currentControlPoints[i]), Vector3D::toQVector3D(currentControlPoints[i]+currentNormals[i]), SArrow::Grid);
+    }
+}
+
 
 void MainWindow::drawGUI(const QVector<Vorton> &vortons, const QVector<Vorton> &frames)
 {
@@ -1604,7 +1652,9 @@ void MainWindow::on_rotationCutBodyLaunchSolverPushButton_clicked()
     SolverParameters solvPar=settings->getSolverParameters();
     FreeMotionParameters freeMotionPar=settings->getFreeMotionParameters();
     *solver=Solver(solvPar,freeMotionPar);
-    QFuture<void> rotationCutBodyFuture=QtConcurrent::run(solver,&Solver::rotationCutBodyLaunchSolver, fragPar);
+    solver->underwater();
+    solver->setPanelLength(settings->panelLength);
+    QFuture<void> rotationCutBodyFuture=QtConcurrent::run(solver,&Solver::unifiedSolver, fragPar, ROTATIONBOTTOMCUT);
     solving=true;
 
     ui->pointsRaisingRotationCutBodyLineEdit->setDisabled(true);

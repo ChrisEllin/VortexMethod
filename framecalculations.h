@@ -137,8 +137,18 @@ public:
 
     void unionVortonsAuto(QVector<Vorton> &vortons, const double eStar, const double eDoubleStar, const  double vortonRad,QVector<std::shared_ptr<MultiFrame>> &frames, const double maxInitialGamma, int currentStep, int& restrQuant, QVector<std::pair<double, double> > boundaries=QVector<std::pair<double, double> >());
     void updateSpeed(Vector3D& currentSpeed, Vector3D streamVel, int acceleratedStepsNum, MotionType type);
-    QVector<double> normalVelocitiesCalculations(QVector<Vorton>& freeVortons, QVector<Vorton> &newVortons, QVector<std::shared_ptr<MultiFrame>>& frames, QVector<Vector3D>& normals, QVector<Vector3D>& controlPoints, Vector3D streamVel, PLACE_IN_SOLVER place);
+    QVector<double> normalVelocitiesCalculations(QVector<Vorton>& freeVortons, QVector<Vorton> &newVortons, QVector<std::shared_ptr<MultiFrame>>& frames, QVector<Vector3D>& normals, QVector<Vector3D>& controlPoints, Vector3D streamVel, QVector<std::shared_ptr<MultiFrame> > &symFrames, PLACE_IN_SOLVER place);
 
+    void calcSymParameters(QVector<Vorton>& symNewVortons, QVector<Vorton>& symFreeVortons, const QVector<Vorton> newVortons, const QVector<Vorton> freeVortons, QVector<std::shared_ptr<MultiFrame>>& symFrames, QVector<std::shared_ptr<MultiFrame>>& frames, bool underwaterStart);
+    //void updateGraphNodes(QVector<QVector<Vector3D>> graphNodesX, QVe)
+    void getBackUnderBody(QVector<Vorton>& freeVortons,QVector<std::pair<double, double> > boundaries, QVector<std::shared_ptr<MultiFrame>>& frames);
+    void getBackClosestFrame(Vorton& vort, QVector<std::pair<double, double> > boundaries, QVector<std::shared_ptr<MultiFrame>>& frames);
+    void getBackClosestFrameEdge(Vorton& vort, QVector<std::pair<double, double> > boundaries, QVector<std::shared_ptr<MultiFrame>>& frames);
+    void recalcTrFrames(QVector<std::shared_ptr<MultiFrame>>& frames);
+    void recalcTau(double& tau, Vector3D currentVel, double panelLength);
+    void updateEnd(double& xend, const Vector3D bodyNose, const double fullLength);
+    void updateImportantVectors(int step, QVector<Vector3D>& controlPoints, QVector<Vector3D>& normals, QVector<double>& squares, QVector<Vector3D>& controlPointsRaised, QVector<std::shared_ptr<MultiFrame>>& frames, BodyFragmentation &frag, bool underwaterStart);
+    void calculateRelativeVel(int step, Vector3D streamVel, Vector3D bodyVel, int acceleratedNum, const MotionType motion, Vector3D &currentSpeed, bool underwaterStart);
     void fillPressures(QVector<Vorton>& freeVortons, QVector<std::shared_ptr<MultiFrame>>& frames, QVector<Vector3D>& controlPointsRaised, QVector<double>& pressures, Vector3D &streamVel, double streamPres, double density, double tau);
     void setMaxInitialGamma(double& maxGamma, const int& stepNum, const QVector<Vorton> &freeVortons);
     void setRightMove(QVector<Vorton>& originalVort, QVector<Vorton>& copyVort);
@@ -150,9 +160,13 @@ public:
     void epsZero(QVector<std::shared_ptr<MultiFrame>> &frames);
     void epsNormal(QVector<Vorton>& newVortons, double eps);
     void epsNormal(QVector<std::shared_ptr<MultiFrame>> &frames, double eps);
-    void matrixCalc(QVector<std::shared_ptr<MultiFrame>> frames, const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals);
+
+    static bool fabsCompare(Vector3D a, Vector3D b);
+    void matrixCalc(QVector<std::shared_ptr<MultiFrame>> frames, QVector<std::shared_ptr<MultiFrame> > symFrames, const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals, bool underwater=false);
+
+    void matrixCalc(QVector<std::shared_ptr<MultiFrame>> frames,  const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals, bool underwater=false);
     Eigen::VectorXd columnCalc(const Vector3D streamVel, const QVector<Vorton> &vortons, const QVector<Vector3D> &normals, const QVector<Vector3D> controlPoints);
-    Eigen::VectorXd columnCalc(const Vector3D streamVel, const QVector<Vorton> &vortons, const QVector<Vector3D> &normals, const Vector3D angularVel, const QVector<Vector3D>& controlPoints, const Vector3D center);
+    Eigen::VectorXd columnCalc(const Vector3D streamVel, const QVector<Vorton> vortons, const QVector<Vector3D> &normals, const Vector3D angularVel, const QVector<Vector3D>& controlPoints, const Vector3D center);
     Eigen::VectorXd vorticitiesCalc(const Eigen::VectorXd& column);
      static int universalInside(const Vorton vort, const QVector<std::pair<double, double> > boundaries, QVector<std::shared_ptr<MultiFrame>>& frames);
     void clearMovesWithoutIndexes(QVector<int>& indexes, QVector<Vorton>& vortons);
@@ -160,7 +174,9 @@ public:
     void testInsideCorrect(QVector<std::shared_ptr<MultiFrame>>& frames, QVector<Vorton>& vortons, QVector<std::pair<double, double> > boundaries);
     bool insideFramesVector(QVector<std::shared_ptr<MultiFrame>>& frames, Vorton vort, QVector<std::pair<double, double> > boundaries, VortonsPart part);
     QPair<int, int> intersectsFramesVector(QVector<std::shared_ptr<MultiFrame>>& frames, Vorton vort, VortonsPart part);
-    void universalGetBackTriangleFrames(QVector<Vorton> &vortons, QVector<Vorton> &vortonsOriginal, QVector<std::pair<double, double> > boundaries, const double layerHeight,  const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals, QVector<std::shared_ptr<MultiFrame>>& frames, bool screen = false, Vector3D translScreen = Vector3D());
+    void universalGetBackTriangleFrames(QVector<Vorton> &vortons, QVector<Vorton> &vortonsOriginal, QVector<std::pair<double, double> > boundaries, const double layerHeight,  const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals, QVector<std::shared_ptr<MultiFrame>>& frames,  bool screen = false, Vector3D translScreen = Vector3D());
+
+    void universalGetBackTriangleFrames(QVector<Vorton> &vortons, QVector<Vorton> &vortonsOriginal, QVector<std::pair<double, double> > boundaries, const double layerHeight,  const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals, QVector<std::shared_ptr<MultiFrame>>& frames, QVector<std::shared_ptr<MultiFrame> > &symFrames, bool screen = false, Vector3D translScreen = Vector3D());
     static bool universalInsideR0Correct(const Vorton vort, const QVector<std::pair<double, double> > boundaries, QVector<std::shared_ptr<MultiFrame>>& frames);
     void universalGetBackR0Triangle(QVector<Vorton> &vortons, QVector<std::pair<double, double> > boundaries, const double layerHeight,  const QVector<Vector3D> &controlPoints, const QVector<Vector3D> &normals, QVector<std::shared_ptr<MultiFrame>>& frames,bool screen = false);
     static InsideWithNormal universalInsideR0CorrectSegment(const Vorton vort, QVector<std::shared_ptr<MultiFrame>>& frames);
@@ -255,7 +271,7 @@ public:
     void velForStreamLines(QVector<Vector3D>& velocities, Vector3D streamVel, double step, QVector<Vorton>& freeVortons, QPair<int, int> boundaries);
     static bool coDirectionallyCheck(const Vector3D a, const Vector3D b, const Vector3D c);
     static bool coDirectionallyCheck(const Vector3D a, const Vector3D b);
-
+    static void calcControlPointsRaised(QVector<Vector3D>& controlPointsRaised, QVector<Vector3D>& controlPoints, QVector<Vector3D>& normals, const double raise);
     static void setVorticity(QVector<std::shared_ptr<MultiFrame>> frames, const Eigen::VectorXd vorticities);
     static QVector<Vorton> getFrameVortons(QVector<std::shared_ptr<MultiFrame>> frames);
     static QVector<Vorton> getLiftedFrameVortons (QVector<std::shared_ptr<MultiFrame>> frames, const QVector<Vector3D>& normals, const double deltaUp);
@@ -303,7 +319,10 @@ public:
     void clearRestrictions();
     void clearTimers();
     void clear();
+    static bool checkDirection(TriangleFrame &a, TriangleFrame &b);
+    static void correctDirectionFrames(QVector<TriangleFrame>& frames);
     QVector<std::pair<double, double> > makeParalllepiped(QVector<Vorton> newVortons);
+    QVector<std::pair<double, double> > makeParallepiped(QVector<std::shared_ptr<MultiFrame>>& frames);
     static bool xCompare(const Vorton a, const Vorton b);
     static bool yCompare(Vorton a,Vorton b);
     static bool zCompare(Vorton a, Vorton b);

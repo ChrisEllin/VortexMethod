@@ -52,12 +52,13 @@ public:
     explicit SolverSettings(QWidget *parent = 0);
     SolverParameters getSolverParameters();
     FreeMotionParameters getFreeMotionParameters();
+    double panelLength;
     ~SolverSettings();
 
 public slots:
     void setSolverParameters(SolverParameters& newSolvPar);
     void calcAttributes(const QString epsilon);
-    void calcAttributes(double panelLength);
+    void calcAttributes(double _panelLength);
 private slots:
     void on_saveSolverSettingsPushButton_clicked();
     void on_resetSettingsPushButton_clicked();
